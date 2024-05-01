@@ -11,11 +11,14 @@ import android.view.Menu
 import android.view.MenuItem
 import com.example.musicalgames.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ToolbarTitleUpdater {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    override fun updateToolbarTitle(title: String) {
+       supportActionBar?.title = title
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

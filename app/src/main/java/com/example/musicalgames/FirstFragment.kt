@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.databinding.FragmentFirstBinding
@@ -35,13 +37,21 @@ class FirstFragment : Fragment() {
 
         //this list shall be retrieved from a database
         val gameList: List<Game> = listOf(
-            Game("Snake Escape", "Snake escape game", R.drawable.default_game_icon),
-            Game("Flappy Bird", "Snake escape game", R.drawable.default_game_icon)
+            Game("Snake Escape",
+                "Snake escape game",
+                R.drawable.default_game_icon,
+                listOf("Arcade", "Levels", "Multiplayer")),
+            Game("Flappy Bird",
+                "Flappy bird game",
+                R.drawable.default_game_icon,
+                listOf("Arcade", "Levels")
+            )
         )
 
         val adapter = GameAdapter(gameList, object : GameAdapter.OnItemClickListener{
             override fun onItemClick(game: Game) {
-                Toast.makeText(requireContext(), "clicked on ${game.name}", Toast.LENGTH_SHORT).show()
+                val bundle = bundleOf("game" to game)
+                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
             }
         })
         recyclerView.adapter = adapter
