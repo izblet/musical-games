@@ -5,10 +5,10 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/button_enable_bluetooth"
+        android:id="@+id/button_search_for_devices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enable Bluetooth"
+        android:text="Search for devices"
         android:layout_centerInParent="true" />
 
     <Button
@@ -16,5 +16,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Make Discoverable" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDevices"
+        android:layout_width="367dp"
+        android:layout_height="239dp"
+        android:layout_below="@+id/button_search_for_devices"
+        android:layout_marginTop="86dp" />
 
 </RelativeLayout>
