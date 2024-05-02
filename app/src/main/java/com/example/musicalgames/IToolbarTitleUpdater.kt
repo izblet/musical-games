@@ -1,3 +1,5 @@
 package com.example.musicalgames
 
-interface IToolbarTitleUpdater
+interface IToolbarTitleUpdater {
+    fun updateToolbarTitle(title: String)
+}
