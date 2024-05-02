@@ -12,6 +12,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -28,7 +30,7 @@ class GameCreateActivity : AppCompatActivity() {
 
     private lateinit var buttonMakeDiscoverable: Button
     private lateinit var bluetoothAdapter: BluetoothAdapter
-    private var bluetoothSocket: BluetoothSocket?=null
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,7 @@ class GameCreateActivity : AppCompatActivity() {
         bluetoothAdapter = bluetoothManager.adapter
 
 
+        startServer()
         // Initialize UI elements
         buttonMakeDiscoverable=findViewById(R.id.button_make_discoverable)
         buttonMakeDiscoverable.setOnClickListener{
@@ -45,30 +48,32 @@ class GameCreateActivity : AppCompatActivity() {
             makeDiscoverable()
         }
     }
-
-    //should be a resource
-    private val SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-    private fun connectToDevice(device: BluetoothDevice) {
-        try {
-            // Create a BluetoothSocket using the selected device's MAC address
-            bluetoothSocket = device.createRfcommSocketToServiceRecord(SPP_UUID)
-
-            // Connect the BluetoothSocket
-            bluetoothSocket?.connect()
-
-            // Connection successful, you can now send/receive data
-            toast("Connected to ${device.name}")
-
-            // Start listening for incoming data or handle UI accordingly
-            // For example, start listening for button clicks to send signals
-        } catch (e: IOException) {
-            // Connection failed, handle the exception
-            toast("Failed to connect: ${e.message}")
+    private fun startServer() {
+        val serverThread = Thread {
+            try {
+                //this should be a resource
+                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
+                val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
+                val socket: BluetoothSocket = serverSocket.accept()
+                handler.post {
+                    toast("Connected to client")
+                }
+                // Perform operations with the connected client
+                // For example, start flashing the dot
+            } catch (e: IOException) {
+                e.printStackTrace()
+                handler.post {
+                    toast("Server error: ${e.message}")
+                }
+            } catch (e: SecurityException) {
+                handler.post{
+                    toast("Server error: ${e.message}")
+                }
+            }
         }
-        catch(e: SecurityException) {
-            toast("some permissions are not there")
-        }
+        serverThread.start()
     }
+
     private fun enableBluetooth() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(arrayOf(

@@ -12,6 +12,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -30,6 +32,7 @@ class GameJoinActivity : AppCompatActivity() {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var deviceAdapter: DeviceAdapter
     private var bluetoothSocket: BluetoothSocket?=null
+    private var handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,7 @@ class GameJoinActivity : AppCompatActivity() {
                 device ->
             run {
                 initiatePairing(device)
-                connectToDevice(device)
+                connectToServer(device)
             }
         }
         recyclerViewDevices.adapter=deviceAdapter
@@ -56,6 +59,29 @@ class GameJoinActivity : AppCompatActivity() {
             enableBluetooth()
             discoverDevices()
         }
+    }
+    private fun connectToServer(serverDevice: BluetoothDevice) {
+        val connectThread = Thread {
+            try {
+                //should be a resource
+                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
+                val socket: BluetoothSocket = serverDevice.createRfcommSocketToServiceRecord(uuid)
+                socket.connect()
+                handler.post {
+                    toast("Connected to server")
+                }
+                // Send a signal to the server to keep the connection alive
+                socket.outputStream.write(0)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                handler.post {
+                    toast("Failed to connect to server: ${e.message}")
+                }
+            } catch (e: SecurityException) {
+                toast("Failed to connect to server: ${e.message}")
+            }
+        }
+        connectThread.start()
     }
     //todo: paired devices should be on a separate list
     private fun isDevicePaired(deviceToCheck: BluetoothDevice): Boolean {
@@ -94,38 +120,17 @@ class GameJoinActivity : AppCompatActivity() {
             toast("could not disconnect")
         }
     }
-    //should be a resource
-    private val SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-    private fun connectToDevice(device: BluetoothDevice) {
-        try {
-            // Create a BluetoothSocket using the selected device's MAC address
-            bluetoothSocket = device.createRfcommSocketToServiceRecord(SPP_UUID)
-
-            // Connect the BluetoothSocket
-            bluetoothSocket?.connect()
-
-            // Connection successful, you can now send/receive data
-            toast("Connected to ${device.name}")
-
-            // Start listening for incoming data or handle UI accordingly
-            // For example, start listening for button clicks to send signals
-        } catch (e: IOException) {
-            // Connection failed, handle the exception
-            toast("Failed to connect: ${e.message}")
-        }
-        catch(e: SecurityException) {
-            toast("some permissions are not there")
-        }
-    }
 
     private fun enableBluetooth() {
+        requestMultiplePermissions.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
+                Manifest.permission.BLUETOOTH_ADMIN))
         }
         else{
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -142,6 +147,7 @@ class GameJoinActivity : AppCompatActivity() {
                 this, Manifest.permission.ACCESS_COARSE_LOCATION,)
                     != PackageManager.PERMISSION_GRANTED)
         ){
+            enableBluetooth()
             toast("no permissions for location")
             //return or sth
         }
@@ -190,7 +196,6 @@ class GameJoinActivity : AppCompatActivity() {
         super.onDestroy()
         unregisterReceiver(bluetoothReceiver)
     }
-
 
     private var requestBluetooth =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
