@@ -1,28 +1,19 @@
 package com.example.musicalgames
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Build.VERSION
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.musicalgames.adapters.DeviceAdapter
 import java.io.IOException
 import java.util.UUID
 
@@ -30,6 +21,7 @@ class GameCreateActivity : AppCompatActivity() {
 
     private lateinit var buttonMakeDiscoverable: Button
     private lateinit var bluetoothAdapter: BluetoothAdapter
+    private var bluetoothSocket: BluetoothSocket?=null
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +31,20 @@ class GameCreateActivity : AppCompatActivity() {
         val bluetoothManager = getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter
 
-
-        startServer()
         // Initialize UI elements
         buttonMakeDiscoverable=findViewById(R.id.button_make_discoverable)
         buttonMakeDiscoverable.setOnClickListener{
-            enableBluetooth()
             makeDiscoverable()
         }
+        var button = findViewById<Button>(R.id.button)
+
+        // Button click listener
+        button.setOnClickListener {
+            // Send a signal to the other device to start flashing the dot
+            sendSignalToOtherDevice()
+        }
+        startServer()
+        enableBluetooth()
     }
     private fun startServer() {
         val serverThread = Thread {
@@ -54,10 +52,11 @@ class GameCreateActivity : AppCompatActivity() {
                 //this should be a resource
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
                 val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
-                val socket: BluetoothSocket = serverSocket.accept()
+                bluetoothSocket = serverSocket.accept()
                 handler.post {
                     toast("Connected to client")
                 }
+                startListeningForSignals()
                 // Perform operations with the connected client
                 // For example, start flashing the dot
             } catch (e: IOException) {
@@ -119,4 +118,52 @@ class GameCreateActivity : AppCompatActivity() {
                 Log.d("test006", "${it.key} = ${it.value}")
             }
         }
+
+
+    //this will be in a different class
+
+    // Method to send a signal to the other device
+    private fun sendSignalToOtherDevice() {
+        val outputStream = bluetoothSocket!!.outputStream
+        try {
+            // Send a signal to the other device (for example, send a byte indicating the action)
+            outputStream.write(1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            // Handle the exception
+        }
+    }
+
+    // Method to listen for incoming signals
+    private fun startListeningForSignals() {
+        val inputStream = bluetoothSocket!!.inputStream
+        val buffer = ByteArray(1024)
+        var bytes: Int
+        val thread = Thread {
+            try {
+                while (true) {
+                    // Read from the input stream
+                    bytes = inputStream.read(buffer)
+                    // Process the received data
+                    if (bytes != -1) {
+                        // Interpret the received signal (e.g., start flashing the dot)
+                        handler.post {
+                            startFlashingDot()
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                // Handle the exception
+            }
+        }
+        thread.start()
+    }
+
+    // Method to start flashing the dot
+    private fun startFlashingDot() {
+        // Implement dot flashing logic here (toggle visibility of dot view)
+        var dotView = findViewById<View>(R.id.dotView)
+        dotView.visibility = if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
+    }
 }

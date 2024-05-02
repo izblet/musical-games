@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -59,19 +60,27 @@ class GameJoinActivity : AppCompatActivity() {
             enableBluetooth()
             discoverDevices()
         }
+        var button = findViewById<Button>(R.id.button)
+
+        // Button click listener
+        button.setOnClickListener {
+            // Send a signal to the other device to start flashing the dot
+            sendSignalToOtherDevice()
+        }
     }
     private fun connectToServer(serverDevice: BluetoothDevice) {
         val connectThread = Thread {
             try {
                 //should be a resource
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
-                val socket: BluetoothSocket = serverDevice.createRfcommSocketToServiceRecord(uuid)
-                socket.connect()
+                bluetoothSocket = serverDevice.createRfcommSocketToServiceRecord(uuid)
+                bluetoothSocket!!.connect()
                 handler.post {
                     toast("Connected to server")
                 }
                 // Send a signal to the server to keep the connection alive
-                socket.outputStream.write(0)
+                bluetoothSocket!!.outputStream.write(0)
+                startListeningForSignals()
             } catch (e: IOException) {
                 e.printStackTrace()
                 handler.post {
@@ -213,4 +222,51 @@ class GameJoinActivity : AppCompatActivity() {
                 Log.d("test006", "${it.key} = ${it.value}")
             }
         }
+
+   //this will be in a different class
+
+    // Method to send a signal to the other device
+    private fun sendSignalToOtherDevice() {
+        val outputStream = bluetoothSocket!!.outputStream
+        try {
+            // Send a signal to the other device (for example, send a byte indicating the action)
+            outputStream.write(1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            // Handle the exception
+        }
+    }
+
+    // Method to listen for incoming signals
+    private fun startListeningForSignals() {
+        val inputStream = bluetoothSocket!!.inputStream
+        val buffer = ByteArray(1024)
+        var bytes: Int
+        val thread = Thread {
+            try {
+                while (true) {
+                    // Read from the input stream
+                    bytes = inputStream.read(buffer)
+                    // Process the received data
+                    if (bytes != -1) {
+                        // Interpret the received signal (e.g., start flashing the dot)
+                        handler.post {
+                            startFlashingDot()
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                // Handle the exception
+            }
+        }
+        thread.start()
+    }
+
+    // Method to start flashing the dot
+    private fun startFlashingDot() {
+        // Implement dot flashing logic here (toggle visibility of dot view)
+        var dotView = findViewById<View>(R.id.dotView)
+        dotView.visibility = if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
+    }
 }
