@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 
-class DeviceAdapter(private val devices: List<BluetoothDevice>) :
+class DeviceAdapter(private val devices: List<BluetoothDevice>, private val onItemClick: (BluetoothDevice)->Unit) :
     RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,6 +30,7 @@ class DeviceAdapter(private val devices: List<BluetoothDevice>) :
         try {
             //the check is ugly and probably should be changed
             holder.deviceName.text = device.name ?: "Unknown Device"
+            holder.itemView.setOnClickListener { onItemClick(device) }
         }catch (e: SecurityException) {
             //TODO: this is just temporary, think about how to handle it
             holder.deviceName.text = "Unknown Device"

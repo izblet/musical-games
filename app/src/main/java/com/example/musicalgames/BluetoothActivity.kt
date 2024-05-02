@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +37,9 @@ class BluetoothActivity : AppCompatActivity() {
         bluetoothAdapter = bluetoothManager.adapter
 
         val recyclerViewDevices = findViewById<RecyclerView>(R.id.recyclerViewDevices)
-        deviceAdapter = DeviceAdapter(discoveredDevices)
+        deviceAdapter = DeviceAdapter(discoveredDevices) {
+            device ->initiatePairing(device)
+        }
         recyclerViewDevices.adapter=deviceAdapter
         recyclerViewDevices.layoutManager = LinearLayoutManager(this)
 
@@ -54,6 +57,17 @@ class BluetoothActivity : AppCompatActivity() {
         }
     }
 
+    private fun initiatePairing(device: BluetoothDevice) {
+        try {
+            if (device.createBond()) {
+                toast("connected")
+            } else {
+                toast("could not connect")
+            }
+        } catch(e: SecurityException) {
+            toast("security exception on connect")
+        }
+    }
     private fun enableBluetooth() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(arrayOf(
@@ -119,6 +133,7 @@ class BluetoothActivity : AppCompatActivity() {
 
                 }
                 BluetoothDevice.ACTION_PAIRING_REQUEST -> {
+                    toast("pairing request")
                     // Handle pairing request
                     val device: BluetoothDevice? =
                         if(VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
