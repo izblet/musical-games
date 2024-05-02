@@ -11,4 +11,10 @@
         android:text="Enable Bluetooth"
         android:layout_centerInParent="true" />
 
+    <Button
+        android:id="@+id/button_make_discoverable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make Discoverable" />
+
 </RelativeLayout>
