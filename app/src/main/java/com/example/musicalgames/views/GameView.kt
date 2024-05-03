@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -69,6 +70,27 @@ class GameView(context: Context) : View(context) {
 
         for (pipe in pipes) {
             pipe.move()
+
+            val birdRect = RectF(
+                bird.x - bird.radius,
+                bird.y - bird.radius,
+                bird.x + bird.radius,
+                bird.y+bird.radius
+            )
+            val topPipeRect = RectF(
+                pipe.x.toFloat(),
+                0f,
+                pipe.x.toFloat() + Pipe.WIDTH,
+                pipe.topHeight.toFloat()
+            )
+            val bottomPipeRect = RectF(
+                pipe.x.toFloat(),
+                pipe.bottomY.toFloat(),
+                pipe.x.toFloat() + Pipe.WIDTH,
+                height.toFloat()  // Use the height of the GameView as the bottom boundary
+            )
+            if(birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect))
+                toast("collision")
         }
         pipes.removeAll { it.x+Pipe.WIDTH<0 }
         invalidate()
