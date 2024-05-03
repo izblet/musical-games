@@ -18,7 +18,7 @@ class BirdController(private val pitchRecogniser: PitchRecogniser) {
             targetY?.let {
                 val deltaY = (it - bird.y) / 10
                 if(bird.y+deltaY>0 && bird.y+deltaY<maxCoordinate)
-                bird.y = bird.y+deltaY
+                    bird.y = bird.y+deltaY
             }
         }
     }

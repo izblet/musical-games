@@ -54,6 +54,16 @@ class PitchRecogniser (context: Context){
         }
     }
 
+    fun hzToOutput(hz: Double): Double {
+        // Constants taken from the link you provided
+        val PT_OFFSET = 25.58
+        val PT_SLOPE = 63.07
+        val FMIN = 10.0
+        val BINS_PER_OCTAVE = 12.0
+
+        val cqtBin = BINS_PER_OCTAVE * (Math.log(hz / FMIN) / Math.log(2.0)) - PT_OFFSET
+        return (cqtBin / PT_SLOPE)
+    }
     fun getPitch(): Float {
         val pitch = recognizePitch()
         return pitch ?: -1f // Return -1 if pitch recognition failed
@@ -92,20 +102,22 @@ class PitchRecogniser (context: Context){
         }
 
         var result: Float ?= null
-        var maxConfidence:Float = 0f
+        var maxConfidence = 0f
         for(i in 0 until outputSize) {
             if(1f-uncertainties[i]>maxConfidence) {
                 maxConfidence = 1f-uncertainties[i]
                 result=pitches[i]
             }
         }
+        if(result==null)
+            return null
 
-        // Placeholder function for pitch recognition
-        // Replace this with your actual pitch recognition logic
-        // Example: call your TensorFlow model to recognize pitch from audioData
+        val normalizedC4 = hzToOutput(261.63)
+        val normalizedC5 = hzToOutput(523.25)
 
-        // For now, return a random value as a placeholder
-        return result
+        val normalizedResult = (result-normalizedC4)/(normalizedC5-normalizedC4)
+
+        return normalizedResult.toFloat()
     }
     fun startRecording() {
         try {
