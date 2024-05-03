@@ -1,6 +1,5 @@
 package com.example.musicalgames.models
 
-class Bird(var x: Int, var y: Int, val width: Int, val height: Int)
 
 class Pipe(
     var x: Int,
