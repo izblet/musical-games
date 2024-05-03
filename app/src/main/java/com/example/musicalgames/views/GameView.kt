@@ -9,10 +9,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
-import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.models.Bird
 import com.example.musicalgames.models.Pipe
-import com.example.musicalgames.models.PitchRecogniser
 import kotlin.random.Random
 
 
@@ -26,18 +24,17 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         const val PIPE_GAP = 200
         const val PIPE_DISTANCE = 400
     }
+    fun getRandomPipe(lastPipeX: Int): Pipe {
+        return Pipe(
+            lastPipeX + PIPE_DISTANCE,
+            generateRandomHeight(),
+            PIPE_GAP
+        )
+    }
 
     fun addPipes() {
         viewTreeObserver.addOnGlobalLayoutListener {
-            for (i in 1..3) {
-                pipes.add(
-                    Pipe(
-                        screenWidth + i * PIPE_DISTANCE,
-                        generateRandomHeight(),
-                        PIPE_GAP
-                    )
-                )
-            }
+            pipes.add(getRandomPipe(screenWidth))
         }
     }
     fun toast(text: String) {
@@ -95,6 +92,8 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             }
         }
         pipes.removeAll { it.x+Pipe.WIDTH<0 }
+        if(pipes.size!=0 && pipes.last().isVisible(width))
+            pipes.add(getRandomPipe(pipes.last().x))
         invalidate()
 
     }

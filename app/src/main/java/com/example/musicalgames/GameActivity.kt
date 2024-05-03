@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
 import com.example.musicalgames.models.PitchRecogniser
