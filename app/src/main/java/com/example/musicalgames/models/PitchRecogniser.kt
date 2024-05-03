@@ -9,7 +9,6 @@ import kotlin.concurrent.thread
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.lang.Exception
-import java.lang.Math.ceil
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 import kotlin.math.pow
@@ -39,7 +38,9 @@ class PitchRecogniser (context: Context){
     private fun loadModel(context: Context, modelFile: String) {
         try {
             val model = loadModelFile(context, modelFile)
-            interpreter = Interpreter(model)
+            var options = Interpreter.Options()
+            options.setNumThreads(4)
+            interpreter = Interpreter(model, options)
         } catch (e: Exception) {
             throw e
         }

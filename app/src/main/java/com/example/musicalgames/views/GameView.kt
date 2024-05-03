@@ -18,15 +18,9 @@ import kotlin.random.Random
 
 class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pipes = mutableListOf<Pipe>()
-    private val bird: Bird = Bird()
+    val bird: Bird = Bird()
     private val paint = Paint()
     private var targetY: Float?=null
-    private var pitchRecogniser: PitchRecogniser ?=null
-    private var birdController: BirdController ?=null
-    fun setPitchRecogniser(pitchRecogniser: PitchRecogniser) {
-        this.pitchRecogniser=pitchRecogniser
-        birdController = BirdController(pitchRecogniser)
-    }
 
     companion object {
         const val PIPE_GAP = 200
@@ -75,7 +69,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun update() {
-        birdController?.updatePosition(bird, height.toFloat())
+
         for (pipe in pipes) {
             pipe.move()
             val birdRect = RectF(

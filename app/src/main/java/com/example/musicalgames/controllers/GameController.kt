@@ -1,12 +1,14 @@
 package com.example.musicalgames.controllers
 
 import android.os.Handler
+import android.os.Looper
 import com.example.musicalgames.views.GameView
 
-class GameController(private val gameView: GameView) {
+class GameController(private val gameView: GameView, private val birdController: BirdController) {
     private var isGameRunning = false
     private val handler = Handler()
     private val frameRateMillis = 1000 / 60  // Update at 60 frames per second
+    var backgroundHandler = Handler(Looper.getMainLooper())
 
     fun startGame() {
         // Initialize game state, reset score, etc.
@@ -26,16 +28,17 @@ class GameController(private val gameView: GameView) {
         handler.post(object : Runnable {
             override fun run() {
                 if (isGameRunning) {
+                    backgroundHandler.post{
+                        //TODO:accessing a variable that is supposed to be private is suboptimal
+                        birdController.updatePosition(gameView.bird, gameView.height.toFloat())
+                    }
+
                     gameView.update()  // Update game state
                     gameView.invalidate()  // Redraw the view
                     handler.postDelayed(this, frameRateMillis.toLong())
                 }
             }
         })
-    }
-
-    fun handleTap() {
-        // Handle tap or touch input (e.g., bird flap)
     }
 
     fun handleCollision() {

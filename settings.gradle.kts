@@ -3,6 +3,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+
     }
 }
 dependencyResolutionManagement {
@@ -10,6 +11,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { // repo for TFLite snapshot
+            name = "ossrh-snapshot"
+            url = uri("http://oss.sonatype.org/content/repositories/snapshots")
+            isAllowInsecureProtocol = true
+        }
     }
 }
 

@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
 import com.example.musicalgames.models.PitchRecogniser
 import com.example.musicalgames.views.GameView
@@ -20,11 +21,12 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pitchRecogniser = PitchRecogniser(this)
+        val birdController = BirdController(pitchRecogniser)
+
         setContentView(R.layout.activity_game)
 
         gameView = findViewById(R.id.gameView)
-        gameView.setPitchRecogniser(pitchRecogniser)
-        gameController = GameController(gameView)
+        gameController = GameController(gameView, birdController)
 
         val button = findViewById<Button>(R.id.startGameButton)
         button.setOnClickListener {
