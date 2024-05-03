@@ -8,14 +8,11 @@ class GameController(private val gameView: GameView) {
     private val handler = Handler()
     private val frameRateMillis = 1000 / 60  // Update at 60 frames per second
 
-    init {
-        // Start the game loop when the GameController is created
-        startGameLoop()
-    }
-
     fun startGame() {
         // Initialize game state, reset score, etc.
         isGameRunning = true
+        gameView.addPipes()
+        startGameLoop()
         // Add any additional initialization logic as needed
     }
 

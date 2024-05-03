@@ -50,4 +50,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("org.tensorflow:tensorflow-lite:0.0.0-nightly-SNAPSHOT")
+    //implementation("org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0.nightly-SNAPSHOT")
 }

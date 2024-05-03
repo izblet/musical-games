@@ -4,7 +4,6 @@ package com.example.musicalgames.models
 class Pipe(
     var x: Int,
     var topHeight: Int,
-    var bottomHeight: Int,
     var gap: Int
 ) {
     companion object {

@@ -5,32 +5,40 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.models.Bird
 import com.example.musicalgames.models.Pipe
+import com.example.musicalgames.models.PitchRecogniser
 import kotlin.random.Random
 
 
-class GameView(context: Context) : View(context) {
+class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pipes = mutableListOf<Pipe>()
     private val bird: Bird = Bird()
     private val paint = Paint()
     private var targetY: Float?=null
+    private var pitchRecogniser: PitchRecogniser ?=null
+    private var birdController: BirdController ?=null
+    fun setPitchRecogniser(pitchRecogniser: PitchRecogniser) {
+        this.pitchRecogniser=pitchRecogniser
+        birdController = BirdController(pitchRecogniser)
+    }
 
     companion object {
         const val PIPE_GAP = 200
         const val PIPE_DISTANCE = 400
     }
 
-    init {
+    fun addPipes() {
         viewTreeObserver.addOnGlobalLayoutListener {
             for (i in 1..3) {
                 pipes.add(
                     Pipe(
                         screenWidth + i * PIPE_DISTANCE,
-                        generateRandomHeight(),
                         generateRandomHeight(),
                         PIPE_GAP
                     )
@@ -38,7 +46,7 @@ class GameView(context: Context) : View(context) {
             }
         }
     }
-    private fun toast(text: String) {
+    fun toast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
@@ -89,15 +97,13 @@ class GameView(context: Context) : View(context) {
                 pipe.x.toFloat() + Pipe.WIDTH,
                 height.toFloat()  // Use the height of the GameView as the bottom boundary
             )
-            if(birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect))
-                toast("collision")
+            if(birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)) {
+                //collision
+            }
         }
         pipes.removeAll { it.x+Pipe.WIDTH<0 }
         invalidate()
-        targetY?.let {
-            val deltaY = (it-bird.y)/10
-            bird.y +=deltaY
-        }
+
     }
 
     private fun generateRandomHeight(): Int {

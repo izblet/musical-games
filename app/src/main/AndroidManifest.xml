@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!--for speaking to devices-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
         android:allowBackup="true"
@@ -56,6 +58,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity"
+            android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
