@@ -12,6 +12,7 @@ import java.lang.Exception
 import java.lang.Math.ceil
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import kotlin.math.pow
 
 class PitchRecogniser (context: Context){
 
@@ -68,7 +69,13 @@ class PitchRecogniser (context: Context){
         val pitch = recognizePitch()
         return pitch ?: -1f // Return -1 if pitch recognition failed
     }
-
+    private fun calculateEnergy(audioData: ShortArray): Float {
+        var sum = 0.0
+        for (sample in audioData) {
+            sum += sample.toFloat().pow(2)
+        }
+        return (sum / audioData.size).toFloat()
+    }
     private fun recognizePitch(): Float? {
         if (ringBufferFull < ringBufferLength) {
             return null
@@ -81,6 +88,9 @@ class PitchRecogniser (context: Context){
         System.arraycopy(audioBufferRing, start, temp, 0, ringBufferLength - start)
         if(start!=0)
             System.arraycopy(audioBufferRing, 0, temp, ringBufferLength - start, start)
+
+        if(calculateEnergy(temp)<2000)
+            return null
 
         val maxAbsValue = Short.MAX_VALUE.toFloat() // 32767
         val audioData :FloatArray = temp.map { it.toFloat() / maxAbsValue }.toFloatArray()
