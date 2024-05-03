@@ -33,6 +33,7 @@ class GameActivity : AppCompatActivity() {
             button.visibility = View.GONE
         }
 
+        //TODO:you should disable start button until permissions
         requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
     }
 
@@ -41,7 +42,7 @@ class GameActivity : AppCompatActivity() {
             ActivityResultContracts.RequestMultiplePermissions()) { }
     override fun onDestroy() {
         super.onDestroy()
-        pitchRecogniser.stopRecording()
+        pitchRecogniser.release()
         gameController.stopGame()
     }
 }

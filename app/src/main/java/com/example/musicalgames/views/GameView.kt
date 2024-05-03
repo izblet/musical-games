@@ -75,10 +75,9 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun update() {
-
+        birdController?.updatePosition(bird, height.toFloat())
         for (pipe in pipes) {
             pipe.move()
-
             val birdRect = RectF(
                 bird.x - bird.radius,
                 bird.y - bird.radius,
