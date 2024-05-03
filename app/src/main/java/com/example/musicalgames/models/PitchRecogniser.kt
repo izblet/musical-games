@@ -9,6 +9,7 @@ import kotlin.concurrent.thread
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.lang.Exception
+import java.lang.Math.ceil
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
 
@@ -36,25 +37,20 @@ class PitchRecogniser (context: Context){
 
     private fun loadModel(context: Context, modelFile: String) {
         try {
-            Log.d("PitchRecogniser", "Loading model: $modelFile")
             val model = loadModelFile(context, modelFile)
             interpreter = Interpreter(model)
-            Log.d("PitchRecogniser", "Model loaded successfully")
         } catch (e: Exception) {
-            Log.e("PitchRecogniser", "Error loading model: ${e.message}", e)
             throw e
         }
     }
 
     private fun loadModelFile(context: Context, modelFile: String): MappedByteBuffer {
-        Log.d("PitchRecogniser", "Loading model file: $modelFile")
         val fileDescriptor = context.assets.openFd(modelFile)
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
         val fileChannel = inputStream.channel
         val startOffset = fileDescriptor.startOffset
         val declaredLength = fileDescriptor.declaredLength
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength).apply {
-            Log.d("PitchRecogniser", "Model file loaded successfully")
         }
     }
 
@@ -64,25 +60,39 @@ class PitchRecogniser (context: Context){
     }
 
     private fun recognizePitch(): Float? {
-        Log.d("PitchRecogniser", "Recognizing pitch")
-        Log.d("PitchRecogniser", "Buffer size is $bufferSize")
         if (ringBufferFull < ringBufferLength) {
-            Log.d("PitchRecogniser", "Not enough data in the buffer to recognize pitch: $ringBufferFull")
             return null
         }
 
         //we know that the ring buffer is full, so the start will be right after the end
         //ring buffer index points to the first element not set
         val start = ringBufferIndex
-        val end = (ringBufferIndex-1 ) % ringBufferLength
-        val audioData = {
-            val temp = ShortArray(ringBufferLength)
-            System.arraycopy(audioBufferRing, start, temp, 0, ringBufferLength - start)
-            System.arraycopy(audioBufferRing, 0, temp, ringBufferLength - start, end)
-            temp
-        }
+        val temp = ShortArray(ringBufferLength)
+        System.arraycopy(audioBufferRing, start, temp, 0, ringBufferLength - start)
+        if(start!=0)
+            System.arraycopy(audioBufferRing, 0, temp, ringBufferLength - start, start)
 
-        Log.d("PitchRecogniser", "Pitch recognized successfully")
+        val maxAbsValue = Short.MAX_VALUE.toFloat() // 32767
+        val audioData :FloatArray = temp.map { it.toFloat() / maxAbsValue }.toFloatArray()
+
+        val inputs = arrayOf<Any>(audioData)
+        val outputs = HashMap<Int, Any>()
+
+        //TODO: check if and whyyy
+        val outputSize = ceil(audioData.size/512.0).toInt()
+        val pitches = FloatArray(outputSize)
+        val uncertainties = FloatArray(outputSize)
+        outputs[0]=pitches
+        outputs[1]=uncertainties
+
+        try {
+            interpreter.runForMultipleInputsOutputs(inputs, outputs)
+        } catch (e: Exception) {
+            Log.e("EXCEPTION", e.toString())
+        }
+        for((index, element) in pitches.withIndex())
+            Log.e("PITCH", "Pitch $index: $element")
+
         // Placeholder function for pitch recognition
         // Replace this with your actual pitch recognition logic
         // Example: call your TensorFlow model to recognize pitch from audioData
@@ -92,7 +102,6 @@ class PitchRecogniser (context: Context){
     }
     fun startRecording() {
         try {
-            Log.d("PitchRecogniser", "Starting recording")
             audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
@@ -105,7 +114,6 @@ class PitchRecogniser (context: Context){
             recordingThread = thread(start = true) {
                 while (recording) {
                     val bytesRead = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
-                    Log.d("PitchRecogniser", "Bytes read: $bytesRead")
                     // Update bufferIndex
                     for (i in 0 until bytesRead) {
                         audioBufferRing[ringBufferIndex] = audioBuffer[i]
@@ -113,22 +121,18 @@ class PitchRecogniser (context: Context){
                         if(ringBufferFull<ringBufferLength)
                             ringBufferFull++
                     }
-                    Log.d("PitchRecogniser", "Buffer index: $ringBufferIndex, Buffer length: $ringBufferLength")
                 }
             }
         } catch (e: SecurityException) {
-            Log.e("PitchRecogniser", "Security exception: ${e.message}", e)
             // Handle the case where the RECORD_AUDIO permission is not granted
             // You might want to inform the user or log an error message
             throw e
         } catch (e: Exception) {
-            Log.e("PitchRecogniser", "Error starting recording: ${e.message}", e)
             throw e
         }
     }
 
     fun stopRecording() {
-        Log.d("PitchRecogniser", "Stopping recording")
         recording = false
         recordingThread?.join() // Wait for the recording thread to finish
         audioRecord?.stop()
@@ -138,7 +142,7 @@ class PitchRecogniser (context: Context){
 
     fun release() {
         stopRecording()
-        Log.d("PitchRecogniser", "Releasing resources")
+        interpreter.close()
         audioRecord?.stop()
         audioRecord?.release()
     }
