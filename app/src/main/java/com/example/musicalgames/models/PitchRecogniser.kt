@@ -79,7 +79,7 @@ class PitchRecogniser (context: Context){
         val outputs = HashMap<Int, Any>()
 
         //TODO: check if and whyyy
-        val outputSize = ceil(audioData.size/512.0).toInt()
+        val outputSize = 3
         val pitches = FloatArray(outputSize)
         val uncertainties = FloatArray(outputSize)
         outputs[0]=pitches
@@ -90,15 +90,22 @@ class PitchRecogniser (context: Context){
         } catch (e: Exception) {
             Log.e("EXCEPTION", e.toString())
         }
-        for((index, element) in pitches.withIndex())
-            Log.e("PITCH", "Pitch $index: $element")
+
+        var result: Float ?= null
+        var maxConfidence:Float = 0f
+        for(i in 0 until outputSize) {
+            if(1f-uncertainties[i]>maxConfidence) {
+                maxConfidence = 1f-uncertainties[i]
+                result=pitches[i]
+            }
+        }
 
         // Placeholder function for pitch recognition
         // Replace this with your actual pitch recognition logic
         // Example: call your TensorFlow model to recognize pitch from audioData
 
         // For now, return a random value as a placeholder
-        return (Math.random()).toFloat()
+        return result
     }
     fun startRecording() {
         try {
