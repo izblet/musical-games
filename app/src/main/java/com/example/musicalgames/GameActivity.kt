@@ -1,21 +1,25 @@
 package com.example.musicalgames
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.widget.Toast
 import android.Manifest
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
 import com.example.musicalgames.models.PitchRecogniser
+import com.example.musicalgames.views.GameEndListener
 import com.example.musicalgames.views.GameView
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), GameEndListener {
     private lateinit var gameView: GameView
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser
+    private var endListener: GameEndListener? =null
+    fun setEndListener(listener: GameEndListener) {
+        endListener=listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +29,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
 
         gameView = findViewById(R.id.gameView)
+        gameView.setEndListener(this)
         gameController = GameController(gameView, birdController)
 
         val button = findViewById<Button>(R.id.startGameButton)
@@ -41,6 +46,10 @@ class GameActivity : AppCompatActivity() {
     private val requestMultiplePermissions =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()) { }
+    override fun onEndGame() {
+        Toast.makeText(this, "collision", Toast.LENGTH_SHORT).show()
+        gameController.stopGame()
+    }
     override fun onDestroy() {
         super.onDestroy()
         pitchRecogniser.release()

@@ -12,13 +12,19 @@ import android.widget.Toast
 import com.example.musicalgames.models.Bird
 import com.example.musicalgames.models.Pipe
 import kotlin.random.Random
-
+interface GameEndListener {
+    fun onEndGame()
+}
 
 class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pipes = mutableListOf<Pipe>()
     val bird: Bird = Bird()
     private val paint = Paint()
     private var targetY: Float?=null
+    private var endListener: GameEndListener? =null
+    fun setEndListener(listener: GameEndListener) {
+        endListener=listener
+    }
 
     companion object {
         const val PIPE_GAP = 200
@@ -88,7 +94,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 height.toFloat()  // Use the height of the GameView as the bottom boundary
             )
             if(birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)) {
-                //collision
+                endListener?.onEndGame()
             }
         }
         pipes.removeAll { it.x+Pipe.WIDTH<0 }
