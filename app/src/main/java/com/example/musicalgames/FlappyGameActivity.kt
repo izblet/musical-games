@@ -13,7 +13,7 @@ import com.example.musicalgames.models.PitchRecogniser
 import com.example.musicalgames.views.GameEndListener
 import com.example.musicalgames.views.FloppyGameView
 
-class FloppyGameActivity : AppCompatActivity(), GameEndListener {
+class FlappyGameActivity : AppCompatActivity(), GameEndListener {
     private lateinit var gameView: FloppyGameView
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser

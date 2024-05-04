@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation.AnimationListener
@@ -54,6 +55,15 @@ class EscapeGameActivity : AppCompatActivity() {
                 pianoKeyColors.add(false)
             }
         }
+        keyboardRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // Remove the listener to avoid multiple calls
+                keyboardRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                // Set the position of dotImageView above the keyboardRecyclerView
+                dotImageView.y = (keyboardRecyclerView.top - dotImageView.height).toFloat()
+            }
+        })
 
         val adapter = KeyboardAdapter(pianoKeyColors, keyWidth)
         keyboardRecyclerView.adapter = adapter

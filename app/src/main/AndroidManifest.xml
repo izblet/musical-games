@@ -40,16 +40,20 @@
             android:name=".BluetoothActivity"
             android:exported="true" />
         <activity
+            android:parentActivityName=".BluetoothActivity"
             android:name=".GameJoinActivity"
             android:exported="true" />
         <activity
+            android:parentActivityName=".BluetoothActivity"
             android:name=".GameCreateActivity"
             android:exported="true" />
         <activity
-            android:name=".FloppyGameActivity"
+            android:parentActivityName=".MainActivity"
+            android:name=".FlappyGameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
         <activity
+            android:parentActivityName=".MainActivity"
             android:name=".EscapeGameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />

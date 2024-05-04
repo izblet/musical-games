@@ -42,7 +42,10 @@ class SecondFragment : Fragment() {
 
         (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(game.name)
         val optionsAdapter = OptionsAdapter(game.options) {
-            option -> launchGameActivity()//Toast.makeText(requireContext(), "Clicked on $option", Toast.LENGTH_SHORT).show()
+            option->
+                if(game.name=="Flappy Bird")
+                    launchFlappyGameActivity()//Toast.makeText(requireContext(), "Clicked on $option", Toast.LENGTH_SHORT).show()
+                else launchEscapeGameActivity()
         }
         binding.optionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -53,8 +56,12 @@ class SecondFragment : Fragment() {
         val intent = Intent(activity, BluetoothActivity::class.java)
         startActivity(intent)
     }
-    private fun launchGameActivity() {
+    private fun launchEscapeGameActivity() {
         val intent = Intent(activity, EscapeGameActivity::class.java)
+        startActivity(intent)
+    }
+    private fun launchFlappyGameActivity() {
+        val intent = Intent(activity, FlappyGameActivity::class.java)
         startActivity(intent)
     }
 
