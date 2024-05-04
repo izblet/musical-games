@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
+import com.example.musicalgames.wrappers.SPICEModelManager
 import com.example.musicalgames.utils.MusicUtil as MU
 import kotlin.concurrent.thread
 import org.tensorflow.lite.Interpreter
@@ -31,31 +32,12 @@ class PitchRecogniser (context: Context){
     private var ringBufferFull = 0
     private var audioRecord: AudioRecord? = null
 
-    private lateinit var interpreter: Interpreter
+    private var SPICE: SPICEModelManager? = null
+
     init {
-        loadModel(context, "spice.tflite")
+        SPICE = SPICEModelManager(context, "spice.tflite")
     }
 
-    private fun loadModel(context: Context, modelFile: String) {
-        try {
-            val model = loadModelFile(context, modelFile)
-            var options = Interpreter.Options()
-            options.setNumThreads(4)
-            interpreter = Interpreter(model, options)
-        } catch (e: Exception) {
-            throw e
-        }
-    }
-
-    private fun loadModelFile(context: Context, modelFile: String): MappedByteBuffer {
-        val fileDescriptor = context.assets.openFd(modelFile)
-        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
-        val fileChannel = inputStream.channel
-        val startOffset = fileDescriptor.startOffset
-        val declaredLength = fileDescriptor.declaredLength
-        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength).apply {
-        }
-    }
 
     fun getPitch(): Float {
         val pitch = recognizePitch()
@@ -87,37 +69,18 @@ class PitchRecogniser (context: Context){
         val maxAbsValue = Short.MAX_VALUE.toFloat() // 32767
         val audioData :FloatArray = temp.map { it.toFloat() / maxAbsValue }.toFloatArray()
 
-        val inputs = arrayOf<Any>(audioData)
-        val outputs = HashMap<Int, Any>()
+        //HERE STARTS THE CODE THAT CAN BE MOVED
 
         //TODO: check if and whyyy
         val outputSize = 3
-        val pitches = FloatArray(outputSize)
-        val uncertainties = FloatArray(outputSize)
-        outputs[0]=pitches
-        outputs[1]=uncertainties
-
-        try {
-            interpreter.runForMultipleInputsOutputs(inputs, outputs)
-        } catch (e: Exception) {
-            Log.e("EXCEPTION", e.toString())
-        }
-
-        var result: Float ?= null
-        var maxConfidence = 0f
-        for(i in 0 until outputSize) {
-            if(1f-uncertainties[i]>maxConfidence) {
-                maxConfidence = 1f-uncertainties[i]
-                result=pitches[i]
-            }
-        }
-        if(result==null)
-            return null
+        val result = SPICE?.getDominantPitch(audioData, outputSize, outputSize)
+            ?: return null
 
         val minListenedFrequency = MU.spice("C2")
         val maxListenedFrequency = MU.spice("C6")
         val minScreenFreq = (MU.spice("G3")+MU.spice("F#3"))/2
         val maxScreenFreq = (MU.spice("G4")+MU.spice("G#4"))/2
+
         if(result< minListenedFrequency || result> maxListenedFrequency)
             return null
 
@@ -167,7 +130,7 @@ class PitchRecogniser (context: Context){
 
     fun release() {
         stopRecording()
-        interpreter.close()
+        SPICE?.close()
         audioRecord?.stop()
         audioRecord?.release()
     }
