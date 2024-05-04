@@ -11,10 +11,10 @@ import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
 import com.example.musicalgames.models.PitchRecogniser
 import com.example.musicalgames.views.GameEndListener
-import com.example.musicalgames.views.GameView
+import com.example.musicalgames.views.FloppyGameView
 
-class GameActivity : AppCompatActivity(), GameEndListener {
-    private lateinit var gameView: GameView
+class FloppyGameActivity : AppCompatActivity(), GameEndListener {
+    private lateinit var gameView: FloppyGameView
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser
     private var endListener: GameEndListener? =null
@@ -27,7 +27,7 @@ class GameActivity : AppCompatActivity(), GameEndListener {
         pitchRecogniser = PitchRecogniser(this)
         val birdController = BirdController(pitchRecogniser)
 
-        setContentView(R.layout.activity_game)
+        setContentView(R.layout.activity_game_floppy)
 
         gameView = findViewById(R.id.gameView)
         gameView.setEndListener(this)

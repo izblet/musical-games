@@ -2,9 +2,9 @@ package com.example.musicalgames.controllers
 
 import android.os.Handler
 import android.os.Looper
-import com.example.musicalgames.views.GameView
+import com.example.musicalgames.views.FloppyGameView
 
-class GameController(private val gameView: GameView, private val birdController: BirdController) {
+class GameController(private val gameView: FloppyGameView, private val birdController: BirdController) {
     private var isGameRunning = false
     private val handler = Handler()
     private val frameRateMillis = 1000 / 60  // Update at 60 frames per second

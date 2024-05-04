@@ -36,18 +36,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BluetoothActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".GameJoinActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".GameCreateActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".GameActivity"
+        <activity
+            android:name=".BluetoothActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GameJoinActivity"
+            android:exported="true" />
+        <activity
+            android:name=".GameCreateActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FloppyGameActivity"
             android:screenOrientation="landscape"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+        <activity
+            android:name=".EscapeGameActivity"
+            android:screenOrientation="landscape"
+            android:exported="true" />
     </application>
 </manifest>

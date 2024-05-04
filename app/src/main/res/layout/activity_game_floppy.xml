@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Start Game" />
 
-    <com.example.musicalgames.views.GameView
+    <com.example.musicalgames.views.FloppyGameView
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

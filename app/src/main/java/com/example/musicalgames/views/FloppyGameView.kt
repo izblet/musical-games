@@ -16,7 +16,7 @@ interface GameEndListener {
     fun onEndGame()
 }
 
-class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pipes = mutableListOf<Pipe>()
     val bird: Bird = Bird()
     private val paint = Paint()
