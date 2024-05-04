@@ -4,9 +4,6 @@ import android.bluetooth.BluetoothSocket
 import java.io.IOException
 import kotlin.jvm.Throws
 
-interface SocketListener {
-
-}
 class BluetoothSocketManager {
     fun startListening(bluetoothSocket: BluetoothSocket, onMessage: (Int)->Unit) {
         val inputStream = bluetoothSocket.inputStream
