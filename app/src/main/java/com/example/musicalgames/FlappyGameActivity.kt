@@ -36,7 +36,7 @@ class FlappyGameActivity : AppCompatActivity(), GameEndListener {
         val button = findViewById<Button>(R.id.startGameButton)
         button.setOnClickListener {
             gameController.startGame()
-            pitchRecogniser.startRecording()
+            pitchRecogniser.start()
             button.visibility = View.GONE
         }
 
