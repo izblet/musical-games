@@ -3,6 +3,7 @@ package com.example.musicalgames.adapters
 import android.Manifest
 import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,10 +31,13 @@ class DeviceAdapter(private val devices: List<BluetoothDevice>, private val onIt
         try {
             //the check is ugly and probably should be changed
             holder.deviceName.text = device.name ?: "Unknown Device"
+            //TODO: temporary solution
+            if(holder.deviceName.text == "Unknown Device")
+                holder.itemView.visibility=View.GONE
             holder.itemView.setOnClickListener { onItemClick(device) }
         }catch (e: SecurityException) {
             //TODO: this is just temporary, think about how to handle it
-            holder.deviceName.text = "Unknown Device"
+            Log.e("Bluetooth_devices","deviceadapterexception: $e")
         }
     }
 
