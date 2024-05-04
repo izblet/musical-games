@@ -9,6 +9,7 @@ import com.example.musicalgames.R
 class KeyboardAdapter(private val keys: MutableList<Int>, private val keyWidth: Int) :
     RecyclerView.Adapter<KeyboardAdapter.KeyViewHolder>() {
     private var onItemClickListener: ((position:Int)->Unit)? = null
+    private var disabled= false
 
     //TODO:
     inner class KeyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -25,10 +26,16 @@ class KeyboardAdapter(private val keys: MutableList<Int>, private val keyWidth: 
         val keyView = holder.itemView.findViewById<View>(R.id.keyView)
         keyView.setBackgroundColor(keys[position])
 
-        holder.itemView.setOnClickListener { onItemClickListener?.invoke(position) }
+        holder.itemView.setOnClickListener {
+            if(!disabled)
+                onItemClickListener?.invoke(position)
+        }
     }
     fun setOnItemClickListener(listener: (position: Int)->Unit) {
         onItemClickListener=listener
+    }
+    fun setDisable(disable: Boolean) {
+        disabled=disable
     }
 
     override fun getItemCount(): Int {

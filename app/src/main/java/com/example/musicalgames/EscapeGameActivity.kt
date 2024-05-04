@@ -1,12 +1,14 @@
 package com.example.musicalgames
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.animation.AnimatorListenerAdapter
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation.AnimationListener
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
@@ -36,17 +38,20 @@ class EscapeGameActivity : AppCompatActivity() {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
-        val numKeys = 12 // Total number of keys in the keyboard
+        val numKeys = 24 // Total number of keys in the keyboard
         val keyWidth = screenWidth / numKeys
 
+        val whitekeys = listOf<Int>(
+            0,2,4,5,7,9,11
+        )
         // Create a list of colors for each key
         val pianoKeyColors = mutableListOf<Int>()
         for (i in 0 until numKeys) {
             // For simplicity, every third key is black. Adjust this logic as needed.
-            if (i % 3 != 0) {
-                pianoKeyColors.add(Color.BLACK)
-            } else {
+            if (i % 12 in whitekeys) {
                 pianoKeyColors.add(Color.WHITE)
+            } else {
+                pianoKeyColors.add(Color.BLACK)
             }
         }
 
@@ -100,7 +105,14 @@ class EscapeGameActivity : AppCompatActivity() {
 
                 // Start the down animation after the up animation completes
                 animatorYDown.startDelay = durationYUp
+                adapter.setDisable(true)
                 animatorYDown.start()
+                animatorSet.addListener(object: AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        super.onAnimationEnd(animation)
+                        adapter.setDisable(false)
+                    }
+                })
             }
         }
 
