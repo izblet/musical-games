@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 
-class KeyboardAdapter(private val keys: MutableList<Int>, private val keyWidth: Int) :
+class KeyboardAdapter(private val whiteKeys: MutableList<Boolean>, private val keyWidth: Int) :
     RecyclerView.Adapter<KeyboardAdapter.KeyViewHolder>() {
     private var onItemClickListener: ((position:Int)->Unit)? = null
     private var disabled= false
@@ -24,7 +24,10 @@ class KeyboardAdapter(private val keys: MutableList<Int>, private val keyWidth: 
 
     override fun onBindViewHolder(holder: KeyViewHolder, position: Int) {
         val keyView = holder.itemView.findViewById<View>(R.id.keyView)
-        keyView.setBackgroundColor(keys[position])
+        if(whiteKeys[position])
+            keyView.setBackgroundResource(R.drawable.white_key)
+        else
+            keyView.setBackgroundResource(R.drawable.black_key)
 
         holder.itemView.setOnClickListener {
             if(!disabled)
@@ -39,6 +42,6 @@ class KeyboardAdapter(private val keys: MutableList<Int>, private val keyWidth: 
     }
 
     override fun getItemCount(): Int {
-        return keys.size
+        return whiteKeys.size
     }
 }

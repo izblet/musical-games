@@ -45,13 +45,13 @@ class EscapeGameActivity : AppCompatActivity() {
             0,2,4,5,7,9,11
         )
         // Create a list of colors for each key
-        val pianoKeyColors = mutableListOf<Int>()
+        val pianoKeyColors = mutableListOf<Boolean>()
         for (i in 0 until numKeys) {
             // For simplicity, every third key is black. Adjust this logic as needed.
             if (i % 12 in whitekeys) {
-                pianoKeyColors.add(Color.WHITE)
+                pianoKeyColors.add(true)
             } else {
-                pianoKeyColors.add(Color.BLACK)
+                pianoKeyColors.add(false)
             }
         }
 
@@ -59,7 +59,6 @@ class EscapeGameActivity : AppCompatActivity() {
         keyboardRecyclerView.adapter = adapter
         adapter.setOnItemClickListener { position->
             val keyView = layoutManager.findViewByPosition(position)
-            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
             keyView?.let {
                 val targetX = it.x + it.width/2 - dotImageView.width/2
                 val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
