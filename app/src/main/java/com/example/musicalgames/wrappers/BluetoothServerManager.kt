@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.Intent
+import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
 import java.io.IOException
@@ -18,17 +19,15 @@ interface ServerEventListener {
     fun onClientConnected()
     fun onClientDisconnected()
 }
-class BluetoothServerManager (context: Context){
+class BluetoothServerManager (context: Context, activityResultRegistry: ActivityResultRegistry) : BluetoothConnectionManager(context, activityResultRegistry){
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothSocket: BluetoothSocket?=null
-    private var context: Context
     private var listener: ServerEventListener?=null
     private val socketManager = BluetoothSocketManager()
 
     init {
         val bluetoothManager = getSystemService(context, BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager!!.adapter
-        this.context =context
     }
     fun subscribe(listener: ServerEventListener) {
         this.listener=listener

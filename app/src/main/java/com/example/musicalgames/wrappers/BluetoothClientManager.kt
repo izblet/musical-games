@@ -10,14 +10,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
 import java.io.IOException
 import java.util.UUID
 import kotlin.jvm.Throws
 
-interface BluetoothEventListener {
+interface BluetoothClientListener {
     fun onDeviceFound(device: BluetoothDevice?)
     fun onDevicePaired()
     fun onDeviceConnected()
@@ -25,22 +25,19 @@ interface BluetoothEventListener {
     fun onMessageReceived(message: Int)
 }
 
-class BluetoothClientManager(context: Context) {
+class BluetoothClientManager(context: Context, activityResultRegistry: ActivityResultRegistry) : BluetoothConnectionManager(context, activityResultRegistry) {
     private var bluetoothAdapter: BluetoothAdapter
     private var bluetoothSocket: BluetoothSocket?=null
-    private var listener: BluetoothEventListener? = null
-    private var context: Context? = null
+    private var listener: BluetoothClientListener? = null
     private var socketManager = BluetoothSocketManager()
 
-    fun registerListener(listener: BluetoothEventListener) {
+    fun registerListener(listener: BluetoothClientListener) {
         this.listener=listener
     }
 
     init {
         val bluetoothManager = getSystemService(context,BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager!!.adapter
-        this.context=context
-
     }
 
     fun sendMessage(i: Int) {

@@ -1,13 +1,7 @@
 package com.example.musicalgames
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -20,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.DeviceAdapter
 import com.example.musicalgames.wrappers.BluetoothClientManager
-import com.example.musicalgames.wrappers.BluetoothEventListener
+import com.example.musicalgames.wrappers.BluetoothClientListener
 
-class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
+class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
 
     private lateinit var buttonDeviceSearch: Button
     private lateinit var deviceAdapter: DeviceAdapter
@@ -33,7 +27,8 @@ class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_join)
 
-        bluetooth = BluetoothClientManager(this)
+        val registry = activityResultRegistry
+        bluetooth = BluetoothClientManager(this, registry)
         bluetooth.registerListener(this)
         val recyclerViewDevices = findViewById<RecyclerView>(R.id.recyclerViewDevices)
         deviceAdapter = DeviceAdapter(discoveredDevices) {
@@ -50,7 +45,7 @@ class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
         // Initialize UI elements
         buttonDeviceSearch = findViewById(R.id.button_search_for_devices)
         buttonDeviceSearch.setOnClickListener {
-            enableBluetooth()
+            bluetooth.enableBluetooth()
             discoverDevices()
         }
         var button = findViewById<Button>(R.id.button)
@@ -65,22 +60,7 @@ class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
 
     //todo: paired devices should be on a separate list
 
-    private fun enableBluetooth() {
-        requestMultiplePermissions.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            requestMultiplePermissions.launch(arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.BLUETOOTH_ADMIN))
-        }
-        else{
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            requestBluetooth.launch(enableBtIntent)
-        }
-    }
+
 
     override fun onDeviceFound(device: BluetoothDevice?) {
         toast("device found")
@@ -120,7 +100,7 @@ class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
                 this, Manifest.permission.ACCESS_COARSE_LOCATION,)
                     != PackageManager.PERMISSION_GRANTED)
         ){
-            enableBluetooth()
+            bluetooth.enableBluetooth()
             toast("no permissions for location")
             //return or sth
         }
@@ -137,24 +117,6 @@ class GameJoinActivity : AppCompatActivity(), BluetoothEventListener {
         super.onDestroy()
         bluetooth.destroy()
     }
-
-    private var requestBluetooth =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                //granted
-            }else{
-                //deny
-            }
-        }
-
-    private val requestMultiplePermissions =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permissions.entries.forEach {
-                Log.d("test006", "${it.key} = ${it.value}")
-            }
-        }
-
 
 
     // Method to start flashing the dot

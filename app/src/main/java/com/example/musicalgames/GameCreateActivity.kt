@@ -23,7 +23,8 @@ class GameCreateActivity : AppCompatActivity(), ServerEventListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_create)
         // Initialize BluetoothAdapter
-        bluetoothServerManager= BluetoothServerManager(this)
+        val registry = activityResultRegistry
+        bluetoothServerManager= BluetoothServerManager(this, registry)
         bluetoothServerManager.subscribe(this)
 
         // Initialize UI elements
@@ -40,44 +41,12 @@ class GameCreateActivity : AppCompatActivity(), ServerEventListener {
             bluetoothServerManager.sendMessage(1)
         }
         bluetoothServerManager.startServer()
-        enableBluetooth()
+        bluetoothServerManager.enableBluetooth()
     }
 
-    private fun enableBluetooth() {
-        requestMultiplePermissions.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            requestMultiplePermissions.launch(arrayOf(
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.BLUETOOTH_ADMIN))
-        }
-        else{
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            requestBluetooth.launch(enableBtIntent)
-        }
-    }
     private fun toast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
-
-    private var requestBluetooth =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                //granted
-            }else{
-                //deny
-            }
-        }
-
-    private val requestMultiplePermissions: ActivityResultLauncher<Array<String>> =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permissions.entries.forEach {
-                Log.d("test006", "${it.key} = ${it.value}")
-            }
-        }
 
     override fun onDestroy() {
         super.onDestroy()
