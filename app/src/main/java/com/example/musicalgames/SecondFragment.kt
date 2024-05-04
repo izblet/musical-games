@@ -57,7 +57,7 @@ class SecondFragment : Fragment() {
         startActivity(intent)
     }
     private fun launchEscapeGameActivity() {
-        val intent = Intent(activity, EscapeGameActivity::class.java)
+        val intent = Intent(activity, PianoChaseActivity::class.java)
         startActivity(intent)
     }
     private fun launchFlappyGameActivity() {

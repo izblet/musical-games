@@ -3,28 +3,24 @@ import android.animation.AnimatorSet
 import android.animation.AnimatorListenerAdapter
 import android.animation.Animator
 import android.animation.ValueAnimator
-import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.Animation.AnimationListener
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
 
-class EscapeGameActivity : AppCompatActivity() {
+class PianoChaseActivity : AppCompatActivity() {
     private lateinit var dotImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game_escape)
+        setContentView(R.layout.activity_game_chase)
 
         dotImageView= findViewById(R.id.dot)
 

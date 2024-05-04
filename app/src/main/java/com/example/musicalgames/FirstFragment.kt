@@ -37,12 +37,12 @@ class FirstFragment : Fragment() {
 
         //this list shall be retrieved from a database
         val gameList: List<Game> = listOf(
-            Game("Snake Escape",
-                "Snake escape game",
+            Game("Piano Chase",
+                "Multiplayer chase game on a piano",
                 R.drawable.default_game_icon,
                 listOf("Arcade", "Levels", "Multiplayer")),
             Game("Flappy Bird",
-                "Flappy bird game",
+                "Flappy bird game controlled with voice",
                 R.drawable.default_game_icon,
                 listOf("Arcade", "Levels")
             )

@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
+import com.example.musicalgames.utils.MusicUtil as MU
 import kotlin.concurrent.thread
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
@@ -56,16 +57,6 @@ class PitchRecogniser (context: Context){
         }
     }
 
-    fun hzToOutput(hz: Double): Double {
-        // Constants taken from the link you provided
-        val PT_OFFSET = 25.58
-        val PT_SLOPE = 63.07
-        val FMIN = 10.0
-        val BINS_PER_OCTAVE = 12.0
-
-        val cqtBin = BINS_PER_OCTAVE * (Math.log(hz / FMIN) / Math.log(2.0)) - PT_OFFSET
-        return (cqtBin / PT_SLOPE)
-    }
     fun getPitch(): Float {
         val pitch = recognizePitch()
         return pitch ?: -1f // Return -1 if pitch recognition failed
@@ -123,14 +114,16 @@ class PitchRecogniser (context: Context){
         if(result==null)
             return null
 
-        val normalizedC4 = hzToOutput(261.63)
-        val normalizedC5 = hzToOutput(523.25)
-        val normalizedG3 = hzToOutput(195.99)
-        val normalizedG4 = hzToOutput(392.995)
+        val minListenedFrequency = MU.spice("C2")
+        val maxListenedFrequency = MU.spice("C6")
+        val minScreenFreq = (MU.spice("G3")+MU.spice("F#3"))/2
+        val maxScreenFreq = (MU.spice("G4")+MU.spice("G#4"))/2
+        if(result< minListenedFrequency || result> maxListenedFrequency)
+            return null
 
-        val normalizedResult = (result-normalizedG3)/(normalizedG4-normalizedG3)
+        val rangeNormalizedResult = (result-minScreenFreq)/(maxScreenFreq-minScreenFreq)
 
-        return normalizedResult.toFloat()
+        return rangeNormalizedResult.toFloat()
     }
     fun startRecording() {
         try {
