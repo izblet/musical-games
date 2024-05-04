@@ -45,7 +45,7 @@ class SecondFragment : Fragment() {
             option->
                 if(game.name=="Flappy Bird")
                     launchFlappyGameActivity()//Toast.makeText(requireContext(), "Clicked on $option", Toast.LENGTH_SHORT).show()
-                else launchBluetoothActivity()
+                else launchPianoChaseActivity()
         }
         binding.optionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -56,7 +56,7 @@ class SecondFragment : Fragment() {
         val intent = Intent(activity, BluetoothActivity::class.java)
         startActivity(intent)
     }
-    private fun launchEscapeGameActivity() {
+    private fun launchPianoChaseActivity() {
         val intent = Intent(activity, PianoChaseActivity::class.java)
         startActivity(intent)
     }
