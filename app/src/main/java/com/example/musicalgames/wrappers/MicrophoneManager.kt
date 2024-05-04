@@ -1,5 +1,6 @@
 package com.example.musicalgames.wrappers
 
+import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
@@ -38,6 +39,7 @@ class MicrophoneManager {
         return temp
     }
 
+    @SuppressLint("MissingPermission")
     @Throws
     fun startRecording() {
             audioRecord = AudioRecord(

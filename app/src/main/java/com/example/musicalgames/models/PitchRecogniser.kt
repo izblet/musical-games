@@ -1,14 +1,9 @@
 package com.example.musicalgames.models
 
 import android.content.Context
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
 import com.example.musicalgames.wrappers.MicrophoneManager
 import com.example.musicalgames.wrappers.SPICEModelManager
 import com.example.musicalgames.utils.MusicUtil as MU
-import kotlin.concurrent.thread
-import java.lang.Exception
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context){
@@ -36,7 +31,6 @@ class PitchRecogniser (context: Context){
 
         var buffer: ShortArray = microphone?.getBufferIfFull() ?: return null
 
-        //HERE STARTS THE ACTUAL CODE OF THE FUNCTION
         if(calculateEnergy(buffer)<2500)
             return null
 
