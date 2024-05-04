@@ -1,6 +1,7 @@
 package com.example.musicalgames
 import android.os.Bundle
 import android.Manifest
+import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -49,6 +50,9 @@ class GameActivity : AppCompatActivity(), GameEndListener {
     override fun onEndGame() {
         Toast.makeText(this, "collision", Toast.LENGTH_SHORT).show()
         gameController.stopGame()
+        Handler().postDelayed({
+            finish()
+        }, 1000)
     }
     override fun onDestroy() {
         super.onDestroy()

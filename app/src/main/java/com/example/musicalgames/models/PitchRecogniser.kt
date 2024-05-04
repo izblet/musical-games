@@ -90,7 +90,7 @@ class PitchRecogniser (context: Context){
         if(start!=0)
             System.arraycopy(audioBufferRing, 0, temp, ringBufferLength - start, start)
 
-        if(calculateEnergy(temp)<2000)
+        if(calculateEnergy(temp)<2500)
             return null
 
         val maxAbsValue = Short.MAX_VALUE.toFloat() // 32767
@@ -125,8 +125,10 @@ class PitchRecogniser (context: Context){
 
         val normalizedC4 = hzToOutput(261.63)
         val normalizedC5 = hzToOutput(523.25)
+        val normalizedG3 = hzToOutput(195.99)
+        val normalizedG4 = hzToOutput(392.995)
 
-        val normalizedResult = (result-normalizedC4)/(normalizedC5-normalizedC4)
+        val normalizedResult = (result-normalizedG3)/(normalizedG4-normalizedG3)
 
         return normalizedResult.toFloat()
     }
