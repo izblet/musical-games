@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -56,33 +58,36 @@ class EscapeGameActivity : AppCompatActivity() {
             keyView?.let {
                 val targetX = it.x + it.width/2 - dotImageView.width/2
                 val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
+                val maxY = targetY -200f
+
+
                 // Create ValueAnimator for x-coordinate animation
                 val animatorX = ValueAnimator.ofFloat(dotImageView.x, targetX)
                 animatorX.addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     dotImageView.x = value
                 }
-                animatorX.interpolator = AccelerateDecelerateInterpolator()
+                animatorX.interpolator = LinearInterpolator()
                 val durationX = 500L // Adjust duration as needed
                 animatorX.duration = durationX
 
                 // Create ValueAnimator for y-coordinate animation (move up)
-                val animatorYUp = ValueAnimator.ofFloat(targetY, targetY - 100f) // Adjust jump height as needed
+                val animatorYUp = ValueAnimator.ofFloat(targetY, maxY) // Adjust jump height as needed
                 animatorYUp.addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     dotImageView.y = value
                 }
-                animatorYUp.interpolator = AccelerateDecelerateInterpolator()
+                animatorYUp.interpolator = DecelerateInterpolator()
                 val durationYUp = 250L // Adjust duration as needed
                 animatorYUp.duration = durationYUp
 
                 // Create ValueAnimator for y-coordinate animation (move down)
-                val animatorYDown = ValueAnimator.ofFloat(targetY - 100f, targetY) // Adjust jump height as needed
+                val animatorYDown = ValueAnimator.ofFloat(maxY, targetY) // Adjust jump height as needed
                 animatorYDown.addUpdateListener { animation ->
                     val value = animation.animatedValue as Float
                     dotImageView.y = value
                 }
-                animatorYDown.interpolator = AccelerateDecelerateInterpolator()
+                animatorYDown.interpolator = AccelerateInterpolator()
                 val durationYDown = 250L // Adjust duration as needed
                 animatorYDown.duration = durationYDown
 
