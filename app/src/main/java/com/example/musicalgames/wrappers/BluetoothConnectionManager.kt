@@ -10,13 +10,7 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
-abstract class BluetoothConnectionManager(context: Context, activityRegistry: ActivityResultRegistry) {
-    protected var context: Context
-    private var activityRegistry: ActivityResultRegistry
-    init {
-        this.context = context
-        this.activityRegistry = activityRegistry
-    }
+abstract class BluetoothConnectionManager(protected var context: Context, private var activityRegistry: ActivityResultRegistry) {
 
     fun enableBluetooth() {
         requestMultiplePermissions.launch(

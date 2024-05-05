@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
 
 class PianoChaseActivity : AppCompatActivity() {
+    //TODO: change this class into pianoChaseView so that creating the activities doesn't kill you
     private lateinit var dotImageView: ImageView
     fun getAnimation(targetX: Float, targetY:Float, maxY:Float): AnimatorSet {
         // Create ValueAnimator for x-coordinate animation
