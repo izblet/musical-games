@@ -78,8 +78,8 @@ class PianoChaseActivity : AppCompatActivity() {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
-        val numKeys = 24 // Total number of keys in the keyboard
-        val minKey = MusicUtil.midi("C3")
+        val numKeys = 18 // Total number of keys in the keyboard
+        val minKey = MusicUtil.midi("C4")
         val keyWidth = screenWidth / numKeys
 
         // Create a list of colors for each key
@@ -101,6 +101,8 @@ class PianoChaseActivity : AppCompatActivity() {
         keyboardRecyclerView.adapter = adapter
 
         adapter.setOnItemClickListener { position->
+            val keyNote = pianoKeys[position]
+            soundPlayer.play(keyNote.frequency)
             val keyView = layoutManager.findViewByPosition(position)
             keyView?.let {
                 val targetX = it.x + it.width/2 - dotImageView.width/2

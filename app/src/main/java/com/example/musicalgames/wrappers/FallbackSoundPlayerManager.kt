@@ -13,70 +13,71 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.PI
+import kotlin.math.log2
+import kotlin.math.pow
 import kotlin.math.round
 import kotlin.math.sin
 
-class FallbackSoundPlayerManager(private var context: Context): SoundPlayerManager {
+class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerManager {
     private var audioTrack: AudioTrack? = null
     private val sampleRate = 44100 // Sample rate in Hz
     private val durationInSeconds = 3 // Duration of the sound in seconds
-    private val bufferSize: Int
     private var buffer: ShortArray? = null
     private val permissions = arrayOf(
         Manifest.permission.MODIFY_AUDIO_SETTINGS,
         Manifest.permission.RECORD_AUDIO
         // Add other permissions as needed
     )
-    override fun listPermissions():Array<String> {
+
+    override fun listPermissions(): Array<String> {
         return permissions
     }
 
     init {
-        bufferSize = AudioTrack.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT)
+        val bufferSizeInBytes = AudioTrack.getMinBufferSize(
+            sampleRate,
+            AudioFormat.CHANNEL_OUT_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        )
+        val bufferSizeInShorts = bufferSizeInBytes / 2 // 2 bytes per short
+        buffer = ShortArray(bufferSizeInShorts)
     }
 
     override fun play(frequency: Double) {
-        if (audioTrack?.state == AudioTrack.STATE_INITIALIZED) {
-            audioTrack?.stop()
-            audioTrack?.release()
-        }
+        stopSound() // Stop any ongoing sound
 
         audioTrack = AudioTrack(
             AudioManager.STREAM_MUSIC,
             sampleRate,
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize,
+            buffer!!.size * 2, // Double the buffer size for longer duration
             AudioTrack.MODE_STREAM
         )
 
-        buffer = ShortArray(bufferSize)
         audioTrack?.play()
 
-        val numSamples = durationInSeconds * sampleRate
         val angularFrequency = 2 * PI * frequency / sampleRate
+        val numSamples = buffer!!.size
 
-        for (i in 0 until numSamples) {
-            val sample = round(sin(angularFrequency * i) * Short.MAX_VALUE).toInt().toShort()
-            buffer!![i % bufferSize] = sample
-
-            if (i % bufferSize == 0) {
-                audioTrack?.write(buffer!!, 0, bufferSize)
-            }
+        for (i in buffer!!.indices) {
+            val amplitudeFactor = getAmplitudeFactor(frequency)
+            val sample = (amplitudeFactor*sin(angularFrequency * i) * Short.MAX_VALUE * (1 - i.toFloat() / numSamples)).toInt().toShort()
+            buffer!![i] = sample
         }
 
-        // Write any remaining samples to the AudioTrack
-        audioTrack?.write(buffer!!, 0, numSamples % bufferSize)
-        runBlocking {
-            launch {
-                delay(500) // Delay for 500 milliseconds (half a second)
-                stopSound()
-            }
-        }
+        audioTrack?.write(buffer!!, 0, buffer!!.size)
     }
+
+    private fun getAmplitudeFactor(frequency: Double): Double {
+        val factor = (log2(MusicUtil.frequency("C3"))/log2(frequency)).pow(3)
+        return factor
+    }
+
     override fun play(note: String) {
         play(MusicUtil.frequency(note))
     }
+
     override fun play(midiCode: Int) {
         play(MusicUtil.frequency(midiCode))
     }
@@ -86,5 +87,4 @@ class FallbackSoundPlayerManager(private var context: Context): SoundPlayerManag
         audioTrack?.release()
         audioTrack = null
     }
-
 }

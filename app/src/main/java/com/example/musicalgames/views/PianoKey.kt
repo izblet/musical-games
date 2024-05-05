@@ -22,6 +22,9 @@ class PianoKey@JvmOverloads constructor(
         else
             setBackgroundResource(R.drawable.black_key)
     }
+    fun getFrequency() : Double?{
+        return note?.frequency
+    }
 
     init {
         id = R.id.keyView
