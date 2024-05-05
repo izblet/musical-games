@@ -14,10 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
+import com.example.musicalgames.models.Note
+import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.views.PianoKey
+import com.example.musicalgames.wrappers.FallbackSoundPlayerManager
 
 class PianoChaseActivity : AppCompatActivity() {
     //TODO: change this class into pianoChaseView so that creating the activities doesn't kill you
     private lateinit var dotImageView: ImageView
+    private val soundPlayer = FallbackSoundPlayerManager(this)
     fun getAnimation(targetX: Float, targetY:Float, maxY:Float): AnimatorSet {
         // Create ValueAnimator for x-coordinate animation
         val animatorX = ValueAnimator.ofFloat(dotImageView.x, targetX)
@@ -74,21 +79,14 @@ class PianoChaseActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
         val numKeys = 24 // Total number of keys in the keyboard
+        val minKey = MusicUtil.midi("C3")
         val keyWidth = screenWidth / numKeys
 
-        val whitekeys = listOf<Int>(
-            0,2,4,5,7,9,11
-        )
         // Create a list of colors for each key
-        val pianoKeyColors = mutableListOf<Boolean>()
-        for (i in 0 until numKeys) {
-            // For simplicity, every third key is black. Adjust this logic as needed.
-            if (i % 12 in whitekeys) {
-                pianoKeyColors.add(true)
-            } else {
-                pianoKeyColors.add(false)
-            }
-        }
+        val pianoKeys = mutableListOf<Note>()
+        for (i in 0 until numKeys)
+            pianoKeys.add(Note(minKey+i))
+
         keyboardRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // Remove the listener to avoid multiple calls
@@ -99,7 +97,7 @@ class PianoChaseActivity : AppCompatActivity() {
             }
         })
 
-        val adapter = KeyboardAdapter(pianoKeyColors, keyWidth)
+        val adapter = KeyboardAdapter(pianoKeys, keyWidth)
         keyboardRecyclerView.adapter = adapter
 
         adapter.setOnItemClickListener { position->

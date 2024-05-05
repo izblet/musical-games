@@ -119,7 +119,6 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Handle discovered devices
                     val device: BluetoothDevice? =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             intent.getParcelableExtra(

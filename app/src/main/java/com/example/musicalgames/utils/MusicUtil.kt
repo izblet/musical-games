@@ -1,5 +1,10 @@
 package com.example.musicalgames.utils
 
+import android.util.Log
+import com.example.musicalgames.models.Note
+import kotlin.math.log2
+import kotlin.math.round
+
 // MusicUtils.kt
 object MusicUtil {
     private val noteToFrequencyMap = mapOf(
@@ -19,8 +24,21 @@ object MusicUtil {
         return frequency
     }
 
-    fun frequencyToMidi(frequency: Double): Int {
+    @Throws(IllegalArgumentException::class)
+    fun notename(frequency: Double): String {
+        // Calculate the octave of the given frequency
+        val noteNum = round(12*log2(frequency/440.0)+49)
+        val note = (noteNum+8).toInt()%12
+        return noteToFrequencyMap.keys.elementAt(note)
+       }
+    fun isWhite(note: Note): Boolean {
+        return isWhite(note.name)
+    }
+    fun midi(frequency: Double): Int {
         return (12 * (Math.log(frequency / 440.0) / Math.log(2.0)) + 69).toInt()
+    }
+    fun midi(note: String) : Int {
+        return midi(frequency(note))
     }
 
     fun frequency(midiCode: Int): Double {
@@ -29,9 +47,19 @@ object MusicUtil {
     fun spice(note: String): Double {
         return spice(frequency(note))
     }
+    fun notename(midicode: Int):String {
+        return notename(frequency(midicode))
+    }
+
+    fun isWhite(note: String) :Boolean {
+        return !note.contains('#')
+    }
+    fun isWhite(midiNote: Int): Boolean {
+        return isWhite(notename(midiNote))
+    }
 
     fun spice(hz: Double): Double {
-        // Constants taken from the link you provided
+        //TODO: move to resources
         val PT_OFFSET = 25.58
         val PT_SLOPE = 63.07
         val FMIN = 10.0

@@ -16,7 +16,7 @@ import kotlin.math.PI
 import kotlin.math.round
 import kotlin.math.sin
 
-class FallbackSoundPlayerManager(private var context: Context, private var activityRegistry: ActivityResultRegistry): SoundPlayerManager {
+class FallbackSoundPlayerManager(private var context: Context): SoundPlayerManager {
     private var audioTrack: AudioTrack? = null
     private val sampleRate = 44100 // Sample rate in Hz
     private val durationInSeconds = 3 // Duration of the sound in seconds

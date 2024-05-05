@@ -2,20 +2,22 @@ package com.example.musicalgames.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
+import com.example.musicalgames.models.Note
+import com.example.musicalgames.views.PianoKey
 
-class KeyboardAdapter(private val whiteKeys: MutableList<Boolean>, private val keyWidth: Int) :
+class KeyboardAdapter(private val keys: MutableList<Note>, private val keyWidth: Int) :
     RecyclerView.Adapter<KeyboardAdapter.KeyViewHolder>() {
     private var onItemClickListener: ((position:Int)->Unit)? = null
     private var disabled= false
 
     //TODO:
-    inner class KeyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class KeyViewHolder(val pianoKey: PianoKey) : RecyclerView.ViewHolder(pianoKey)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KeyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.key_item, parent, false)
+        //val view = LayoutInflater.from(parent.context).inflate(R.layout.key_item, parent, false)
+        val view = PianoKey(parent.context)
         val layoutParams = view.layoutParams
         layoutParams.width = keyWidth
         view.layoutParams = layoutParams
@@ -23,12 +25,8 @@ class KeyboardAdapter(private val whiteKeys: MutableList<Boolean>, private val k
     }
 
     override fun onBindViewHolder(holder: KeyViewHolder, position: Int) {
-        val keyView = holder.itemView.findViewById<View>(R.id.keyView)
-        if(whiteKeys[position])
-            keyView.setBackgroundResource(R.drawable.white_key)
-        else
-            keyView.setBackgroundResource(R.drawable.black_key)
-
+        val note = keys[position]
+        holder.pianoKey.setNote(note)
         holder.itemView.setOnClickListener {
             if(!disabled)
                 onItemClickListener?.invoke(position)
@@ -42,6 +40,6 @@ class KeyboardAdapter(private val whiteKeys: MutableList<Boolean>, private val k
     }
 
     override fun getItemCount(): Int {
-        return whiteKeys.size
+        return keys.size
     }
 }
