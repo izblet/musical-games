@@ -45,7 +45,7 @@ class SecondFragment : Fragment() {
             option->
                 if(game.name=="Flappy Bird")
                     launchFlappyGameActivity()//Toast.makeText(requireContext(), "Clicked on $option", Toast.LENGTH_SHORT).show()
-                else launchPianoChaseActivity()
+                else launchBluetoothActivity()
         }
         binding.optionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

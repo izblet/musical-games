@@ -9,38 +9,32 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.musicalgames.utils.PermissionsUtil
 
-abstract class BluetoothConnectionManager(protected var context: Context, private var activityRegistry: ActivityResultRegistry) {
-
-    fun enableBluetooth() {
-        requestMultiplePermissions.launch(
-            arrayOf(
+abstract class BluetoothConnectionManager(protected var context: Context, activityRegistry: ActivityResultRegistry) {
+    private var permissionLauncher: ActivityResultLauncher<Array<String>>
+    protected var permissions: Array<String>
+    init {
+        permissionLauncher=PermissionsUtil.registerLauncher(activityRegistry)
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.S) {
+            permissions= arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            requestMultiplePermissions.launch(
-                arrayOf(
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_ADMIN
-                )
-            )
-        } else {
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_ADMIN)
+        }
+        else permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+    fun enableBluetooth() {
+        PermissionsUtil.askMissingPermissions(permissions, context, permissionLauncher)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             requestBluetooth.launch(enableBtIntent)
         }
     }
-
-    private val requestMultiplePermissions: ActivityResultLauncher<Array<String>> =
-        activityRegistry.register(
-            "multiple_permissions",
-            ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permissions.entries.forEach {
-                Log.d("test006", "${it.key} = ${it.value}")
-            }
-        }
 
     private val requestBluetooth: ActivityResultLauncher<Intent> =
         activityRegistry.register(
