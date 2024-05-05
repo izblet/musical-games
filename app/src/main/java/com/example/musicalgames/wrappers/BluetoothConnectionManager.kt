@@ -27,6 +27,12 @@ abstract class BluetoothConnectionManager(protected var context: Context, activi
         else permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION)
     }
+    fun listPermissions(): Array<String> {
+        return permissions
+    }
+    fun checkPermissions(): Boolean {
+        return PermissionsUtil.checkAllPermissions(permissions, context)
+    }
     fun enableBluetooth() {
         PermissionsUtil.askMissingPermissions(permissions, context, permissionLauncher)
 
@@ -46,4 +52,5 @@ abstract class BluetoothConnectionManager(protected var context: Context, activi
                 //deny
             }
         }
+    abstract fun connected():Boolean
 }

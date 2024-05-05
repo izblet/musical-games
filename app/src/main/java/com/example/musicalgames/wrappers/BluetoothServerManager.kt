@@ -32,7 +32,9 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
     fun subscribe(listener: ServerEventListener) {
         this.listener=listener
     }
-
+    override fun connected(): Boolean {
+        return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
+    }
     @SuppressLint("MissingPermission")
     fun startServer() {
         val serverThread = Thread {

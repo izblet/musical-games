@@ -31,6 +31,9 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     private var listener: BluetoothClientListener? = null
     private var socketManager = BluetoothSocketManager()
 
+    override fun connected(): Boolean {
+        return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
+    }
     fun registerListener(listener: BluetoothClientListener) {
         this.listener=listener
     }
@@ -114,7 +117,6 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     // BroadcastReceiver for Bluetooth events
     private val bluetoothReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Toast.makeText(context, "found device", Toast.LENGTH_SHORT).show()
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     // Handle discovered devices

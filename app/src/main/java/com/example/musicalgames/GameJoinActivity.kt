@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.DeviceAdapter
+import com.example.musicalgames.utils.PermissionsUtil
 import com.example.musicalgames.wrappers.BluetoothClientManager
 import com.example.musicalgames.wrappers.BluetoothClientListener
 
@@ -31,6 +32,7 @@ class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
         bluetooth = BluetoothClientManager(this, registry)
         bluetooth.registerListener(this)
         val recyclerViewDevices = findViewById<RecyclerView>(R.id.recyclerViewDevices)
+
         deviceAdapter = DeviceAdapter(discoveredDevices) {
                 device ->
             run {
@@ -45,7 +47,6 @@ class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
         // Initialize UI elements
         buttonDeviceSearch = findViewById(R.id.button_search_for_devices)
         buttonDeviceSearch.setOnClickListener {
-            bluetooth.enableBluetooth()
             discoverDevices()
         }
         var button = findViewById<Button>(R.id.button)
@@ -53,17 +54,16 @@ class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
         // Button click listener
         button.setOnClickListener {
             // Send a signal to the other device to start flashing the dot
-            bluetooth.sendMessage(1)
-
+            if(bluetooth.connected())
+                bluetooth.sendMessage(1)
         }
+
+        bluetooth.enableBluetooth()
     }
 
     //todo: paired devices should be on a separate list
 
-
-
     override fun onDeviceFound(device: BluetoothDevice?) {
-        toast("device found")
         device?.let {
             if(!discoveredDevices.contains(it)) {
                 discoveredDevices.add(it)
@@ -91,20 +91,10 @@ class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
     }
 
     private fun discoverDevices() {
-
         discoveredDevices.clear()
-        if((ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION,)
-                    != PackageManager.PERMISSION_GRANTED)
-            ||(ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION,)
-                    != PackageManager.PERMISSION_GRANTED)
-        ){
+
+        if(!bluetooth.checkPermissions())
             bluetooth.enableBluetooth()
-            toast("no permissions for location")
-            //return or sth
-        }
-        else toast("location permitted")
 
         // Register BroadcastReceiver for Bluetooth discovery events
         bluetooth.discover()

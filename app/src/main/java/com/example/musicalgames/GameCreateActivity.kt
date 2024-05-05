@@ -1,15 +1,9 @@
 package com.example.musicalgames
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicalgames.wrappers.BluetoothServerManager
 import com.example.musicalgames.wrappers.ServerEventListener
@@ -37,8 +31,8 @@ class GameCreateActivity : AppCompatActivity(), ServerEventListener {
         // Button click listener
         button.setOnClickListener {
             // Send a signal to the other device to start flashing the dot
-
-            bluetoothServerManager.sendMessage(1)
+            if(bluetoothServerManager.connected())
+                bluetoothServerManager.sendMessage(1)
         }
         bluetoothServerManager.startServer()
         bluetoothServerManager.enableBluetooth()
