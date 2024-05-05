@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.startActivity
 import java.io.IOException
 import java.util.UUID
 
@@ -19,18 +18,23 @@ interface ServerEventListener {
     fun onClientConnected()
     fun onClientDisconnected()
 }
-class BluetoothServerManager (context: Context, activityResultRegistry: ActivityResultRegistry) : BluetoothConnectionManager(context, activityResultRegistry){
+class BluetoothServerManager (context: Context, activityResultRegistry: ActivityResultRegistry) :
+    BluetoothConnectionManager(context, activityResultRegistry), ConnectionSocket {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothSocket: BluetoothSocket?=null
-    private var listener: ServerEventListener?=null
+    private var serverListener: ServerEventListener?=null
+    private var socketListener: ConnectionSocketListener?=null
     private val socketManager = BluetoothSocketManager()
 
     init {
         val bluetoothManager = getSystemService(context, BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager!!.adapter
     }
-    fun subscribe(listener: ServerEventListener) {
-        this.listener=listener
+    fun bluetoothSubscribe(listener: ServerEventListener) {
+        this.serverListener=listener
+    }
+    fun socketSubscribe(listener: ConnectionSocketListener) {
+        this.socketListener=listener
     }
     override fun connected(): Boolean {
         return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
@@ -43,10 +47,13 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
                 val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
                 bluetoothSocket = serverSocket.accept()
-                listener?.onClientConnected()
-                socketManager.startListening(bluetoothSocket!!, {message->listener?.onMessageReceived(message)})
+                serverListener?.onClientConnected()
+                socketManager.startListening(bluetoothSocket!!) { message ->
+                    serverListener?.onMessageReceived(message)
+                    socketListener?.onMessage(message)
+                }
             } catch (e: Exception) {
-               listener?.onServerStartFail(e)
+               serverListener?.onServerStartFail(e)
             }
         }
         serverThread.start()
@@ -59,7 +66,7 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
         }
         context.startActivity(discoverableIntent)
     }
-    fun sendMessage(message: Int) {
+    override fun sendMessage(message: Int) {
         socketManager.sendMessage(bluetoothSocket!!, message)
     }
     fun releaseResources() {

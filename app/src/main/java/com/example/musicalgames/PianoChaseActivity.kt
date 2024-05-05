@@ -4,6 +4,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
@@ -16,13 +17,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
 import com.example.musicalgames.models.Note
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.views.PianoKey
+import com.example.musicalgames.wrappers.ConnectionSocket
+import com.example.musicalgames.wrappers.ConnectionSocketListener
 import com.example.musicalgames.wrappers.FallbackSoundPlayerManager
 
-class PianoChaseActivity : AppCompatActivity() {
+class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
     //TODO: change this class into pianoChaseView so that creating the activities doesn't kill you
     private lateinit var dotImageView: ImageView
     private val soundPlayer = FallbackSoundPlayerManager(this)
+    private var opponent: ConnectionSocket?=null
+    private var currentField: Int? = null
+    private val handler =Handler()
+    fun setOpponent(opponent: ConnectionSocket) {
+        this.opponent=opponent
+    }
     fun getAnimation(targetX: Float, targetY:Float, maxY:Float): AnimatorSet {
         // Create ValueAnimator for x-coordinate animation
         val animatorX = ValueAnimator.ofFloat(dotImageView.x, targetX)
@@ -102,7 +110,9 @@ class PianoChaseActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener { position->
             val keyNote = pianoKeys[position]
+            //TODO: this is probably blocking, should not be
             soundPlayer.play(keyNote.frequency)
+            currentField=null
             val keyView = layoutManager.findViewByPosition(position)
             keyView?.let {
                 val targetX = it.x + it.width/2 - dotImageView.width/2
@@ -116,11 +126,23 @@ class PianoChaseActivity : AppCompatActivity() {
                 animatorSet.addListener(object: AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         super.onAnimationEnd(animation)
-                        adapter.setDisable(false)
+                        handler.postDelayed({adapter.setDisable(false)},100)//TODO: probably should be enabled slightly later, with adjustable time
+                        currentField=position
+                        opponent?.sendMessage(position)
                     }
                 })
             }
         }
 
+    }
+    override fun onMessage(i: Int) {
+        if(i==-1) {
+            //game over
+        }
+        if(currentField==i){
+            //game over
+            opponent?.sendMessage(-1)
+        }
+        //TODO("Not yet implemented")
     }
 }

@@ -1,5 +1,4 @@
 package com.example.musicalgames
-import android.Manifest
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -19,7 +18,7 @@ class GameCreateActivity : AppCompatActivity(), ServerEventListener {
         // Initialize BluetoothAdapter
         val registry = activityResultRegistry
         bluetoothServerManager= BluetoothServerManager(this, registry)
-        bluetoothServerManager.subscribe(this)
+        bluetoothServerManager.bluetoothSubscribe(this)
 
         // Initialize UI elements
         buttonMakeDiscoverable=findViewById(R.id.button_make_discoverable)

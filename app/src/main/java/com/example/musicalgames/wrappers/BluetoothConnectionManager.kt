@@ -11,7 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicalgames.utils.PermissionsUtil
 
-abstract class BluetoothConnectionManager(protected var context: Context, activityRegistry: ActivityResultRegistry) {
+abstract class BluetoothConnectionManager(protected var context: Context, activityRegistry: ActivityResultRegistry) :ConnectionSocket {
     private var permissionLauncher: ActivityResultLauncher<Array<String>>
     protected var permissions: Array<String>
     init {

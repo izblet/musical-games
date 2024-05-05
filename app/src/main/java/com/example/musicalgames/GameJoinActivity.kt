@@ -1,19 +1,13 @@
 package com.example.musicalgames
-import android.Manifest
 import android.bluetooth.BluetoothDevice
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.DeviceAdapter
-import com.example.musicalgames.utils.PermissionsUtil
 import com.example.musicalgames.wrappers.BluetoothClientManager
 import com.example.musicalgames.wrappers.BluetoothClientListener
 
@@ -30,7 +24,7 @@ class GameJoinActivity : AppCompatActivity(), BluetoothClientListener {
 
         val registry = activityResultRegistry
         bluetooth = BluetoothClientManager(this, registry)
-        bluetooth.registerListener(this)
+        bluetooth.bluetoothSubscribe(this)
         val recyclerViewDevices = findViewById<RecyclerView>(R.id.recyclerViewDevices)
 
         deviceAdapter = DeviceAdapter(discoveredDevices) {
