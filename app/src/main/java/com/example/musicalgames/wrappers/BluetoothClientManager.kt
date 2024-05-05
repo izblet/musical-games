@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
+import com.example.musicalgames.R
 import java.io.IOException
 import java.util.UUID
 import kotlin.jvm.Throws
@@ -93,7 +94,7 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
                 bluetoothSocket!!.connect()
                 bluetoothListener?.onDeviceConnected()
                 // Send a signal to the server to keep the connection alive
-                bluetoothSocket!!.outputStream.write(0)
+                bluetoothSocket!!.outputStream.write(R.integer.CONNECTED)
 
                 socketManager.startListening(bluetoothSocket!!) { message ->
                     bluetoothListener?.onMessageReceived(message)

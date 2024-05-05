@@ -22,6 +22,15 @@ import com.example.musicalgames.wrappers.ConnectionSocketListener
 import com.example.musicalgames.wrappers.FallbackSoundPlayerManager
 
 class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
+    companion object {
+        const val MIN_KEY = "C4"
+        const val KEY_NUM = 18
+        const val KEYBOARD_DISABLE_MS = 100L
+        const val JUMP_HEIGHT = 200f
+        const val JUMP_MS = 500L
+        const val JUMP_RANGE = KEY_NUM
+    }
+
     //TODO: change this class into pianoChaseView so that creating the activities doesn't kill you
     private lateinit var dotImageView: ImageView
     private val soundPlayer = FallbackSoundPlayerManager(this)
@@ -32,40 +41,37 @@ class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
         this.opponent=opponent
     }
     fun getAnimation(targetX: Float, targetY:Float, maxY:Float): AnimatorSet {
-        // Create ValueAnimator for x-coordinate animation
         val animatorX = ValueAnimator.ofFloat(dotImageView.x, targetX)
         animatorX.addUpdateListener { animation ->
             val value = animation.animatedValue as Float
             dotImageView.x = value
         }
         animatorX.interpolator = LinearInterpolator()
-        val durationX = 500L // Adjust duration as needed
+        val durationX = JUMP_MS
         animatorX.duration = durationX
 
-        // Create ValueAnimator for y-coordinate animation (move up)
-        val animatorYUp = ValueAnimator.ofFloat(targetY, maxY) // Adjust jump height as needed
+        val animatorYUp = ValueAnimator.ofFloat(targetY, maxY) //
         animatorYUp.addUpdateListener { animation ->
             val value = animation.animatedValue as Float
             dotImageView.y = value
         }
         animatorYUp.interpolator = DecelerateInterpolator()
-        val durationYUp = 250L // Adjust duration as needed
+        val durationYUp = JUMP_MS/2
         animatorYUp.duration = durationYUp
 
-        // Create ValueAnimator for y-coordinate animation (move down)
-        val animatorYDown = ValueAnimator.ofFloat(maxY, targetY) // Adjust jump height as needed
+        val animatorYDown = ValueAnimator.ofFloat(maxY, targetY)
         animatorYDown.addUpdateListener { animation ->
             val value = animation.animatedValue as Float
             dotImageView.y = value
         }
         animatorYDown.interpolator = AccelerateInterpolator()
-        val durationYDown = 250L // Adjust duration as needed
+        val durationYDown = JUMP_MS/2
         animatorYDown.duration = durationYDown
 
         animatorYDown.startDelay = durationYUp
-        // Create AnimatorSet to synchronize animations
+
         val animatorSet = AnimatorSet()
-        animatorSet.playTogether(animatorX, animatorYUp, animatorYDown) // Start x and y animations together
+        animatorSet.playTogether(animatorX, animatorYUp, animatorYDown)
         return animatorSet
     }
 
@@ -75,32 +81,24 @@ class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
 
         dotImageView= findViewById(R.id.dot)
 
-        // Set listener to handle animation end
-
-        // Set up RecyclerView for keyboard
         val keyboardRecyclerView: RecyclerView = findViewById(R.id.keyboardRecyclerView)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         keyboardRecyclerView.layoutManager = layoutManager
 
-        // Calculate the width of each key dynamically
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
-        val numKeys = 18 // Total number of keys in the keyboard
-        val minKey = MusicUtil.midi("C4")
-        val keyWidth = screenWidth / numKeys
+        val minKey = MusicUtil.midi(MIN_KEY)
+        val keyWidth = screenWidth / KEY_NUM
 
-        // Create a list of colors for each key
         val pianoKeys = mutableListOf<Note>()
-        for (i in 0 until numKeys)
+        for (i in 0 until KEY_NUM)
             pianoKeys.add(Note(minKey+i))
 
         keyboardRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                // Remove the listener to avoid multiple calls
                 keyboardRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                // Set the position of dotImageView above the keyboardRecyclerView
                 dotImageView.y = (keyboardRecyclerView.top - dotImageView.height).toFloat()
             }
         })
@@ -117,16 +115,15 @@ class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
             keyView?.let {
                 val targetX = it.x + it.width/2 - dotImageView.width/2
                 val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
-                val maxY = targetY -200f
+                val maxY = targetY - JUMP_HEIGHT
                 var animatorSet = getAnimation(targetX, targetY, maxY)
-                // Start the animations
-                // Start the down animation after the up animation completes
+
                 adapter.setDisable(true)
                 animatorSet.start()
                 animatorSet.addListener(object: AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         super.onAnimationEnd(animation)
-                        handler.postDelayed({adapter.setDisable(false)},100)//TODO: probably should be enabled slightly later, with adjustable time
+                        handler.postDelayed({adapter.setDisable(false)}, KEYBOARD_DISABLE_MS)
                         currentField=position
                         opponent?.sendMessage(position)
                     }
@@ -136,13 +133,12 @@ class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
 
     }
     override fun onMessage(i: Int) {
-        if(i==-1) {
+        if(i==R.integer.GAME_END) {
             //game over
         }
         if(currentField==i){
             //game over
-            opponent?.sendMessage(-1)
+            opponent?.sendMessage(R.integer.GAME_END)
         }
-        //TODO("Not yet implemented")
     }
 }

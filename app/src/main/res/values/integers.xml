@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- negative values of socket messages reserved for codes -->
+    <integer name="CONNECTED">-1</integer>
+    <integer name="GAME_START">-2</integer>
+    <integer name="GAME_END">-3</integer>
+</resources>
