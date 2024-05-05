@@ -21,7 +21,7 @@ import com.example.musicalgames.wrappers.ConnectionSocket
 import com.example.musicalgames.wrappers.ConnectionSocketListener
 import com.example.musicalgames.wrappers.FallbackSoundPlayerManager
 
-class PianoChaseActivity : AppCompatActivity(), ConnectionSocketListener {
+class PianoChaseGameFragment : AppCompatActivity(), ConnectionSocketListener {
     companion object {
         const val MIN_KEY = "C4"
         const val KEY_NUM = 18
