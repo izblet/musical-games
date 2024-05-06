@@ -197,16 +197,16 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onDevicePaired() {
-        //TODO("Not yet implemented")
+        //TODO: interfaces should be divideddd
     }
 
     override fun onConnected() {
-        //TODO("Not yet implemented")
     }
 
     override fun onDisconnected(exception: Exception) {
         requireActivity().runOnUiThread {
             opponent.bluetoothUnsubscribe()
+            toast("you got disconnected")
             findNavController().navigate(R.id.action_pianoChaseGameFragment2_to_modeChooseFragment)
         }
     }
