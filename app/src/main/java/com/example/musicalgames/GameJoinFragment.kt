@@ -120,10 +120,4 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
-
-    private fun startFlashingDot() {
-        val dotView = requireView().findViewById<View>(R.id.dotView)
-        dotView.visibility = if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
-    }
-
 }

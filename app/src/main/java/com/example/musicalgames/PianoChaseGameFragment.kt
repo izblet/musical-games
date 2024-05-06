@@ -44,6 +44,9 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     private lateinit var opponent: BluetoothConnectionManager
     private var currentField: Int? = null
     private val handler = Handler()
+    private var score = 0
+    private var opponentScore = 0
+    private var playerTurn = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +67,8 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         dotImageView = view.findViewById(R.id.dot)
         keyboardRecyclerView = view.findViewById(R.id.keyboardRecyclerView)
         val viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        if(viewModel.server!!)
+            playerTurn=false
         opponent = viewModel.bluetoothManager!!
         opponent.bluetoothSubscribe(this)
 
@@ -90,26 +95,29 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         keyboardRecyclerView.adapter = adapter
 
         adapter.setOnItemClickListener { position->
-            val keyNote = pianoKeys[position]
-            soundPlayer.play(keyNote.frequency)
-            currentField=null
-            val keyView = layoutManager.findViewByPosition(position)
-            keyView?.let {
-                val targetX = it.x + it.width/2 - dotImageView.width/2
-                val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
-                val maxY = targetY - JUMP_HEIGHT
-                var animatorSet = getAnimation(targetX, targetY, maxY)
+            if(playerTurn) {
+                playerTurn=false
+                val keyNote = pianoKeys[position]
+                soundPlayer.play(keyNote.frequency)
+                currentField = null
+                val keyView = layoutManager.findViewByPosition(position)
+                keyView?.let {
+                    val targetX = it.x + it.width / 2 - dotImageView.width / 2
+                    val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
+                    val maxY = targetY - JUMP_HEIGHT
+                    var animatorSet = getAnimation(targetX, targetY, maxY)
 
-                adapter.setDisable(true)
-                animatorSet.start()
-                animatorSet.addListener(object: AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        super.onAnimationEnd(animation)
-                        handler.postDelayed({adapter.setDisable(false)}, KEYBOARD_DISABLE_MS)
-                        currentField=position
-                        opponent?.sendMessage(position)
-                    }
-                })
+                    //adapter.setDisable(true)
+                    animatorSet.start()
+                    animatorSet.addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            super.onAnimationEnd(animation)
+                            //handler.postDelayed({adapter.setDisable(false)}, KEYBOARD_DISABLE_MS)
+                            currentField = position
+                            opponent.sendMessage(position)
+                        }
+                    })
+                }
             }
         }
     }
@@ -157,11 +165,15 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     override fun onMessageReceived(i: Int) {
         Log.d("Message", "received, current field: $currentField, message field: $i")
         if(i==R.integer.GAME_END) {
-            toast("the end")
+            score++
+            toast("Found player Your score: $score, opponent score: $opponentScore")
+            return
         }
+        playerTurn=true
         if(currentField==i){
-            toast("the end")
-            opponent?.sendMessage(R.integer.GAME_END)
+            opponentScore++
+            toast("Player found you. Your score: $score, opponent score: $opponentScore")
+            opponent.sendMessage(R.integer.GAME_END)
         }
     }
 
