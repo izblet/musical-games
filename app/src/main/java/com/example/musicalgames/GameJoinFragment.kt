@@ -68,13 +68,15 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
 
         // Button click listener
         button.setOnClickListener {
-            if(bluetooth.connected())
-            {
-                bluetooth.bluetoothUnsubscribe()
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                findNavController().navigate(R.id.action_gameJoinFragment_to_pianoChaseGameFragment2)
-            }
-
+            startGame()
+        }
+    }
+    private fun startGame() {
+        if(bluetooth.connected())
+        {
+            bluetooth.bluetoothUnsubscribe()
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            findNavController().navigate(R.id.action_gameJoinFragment_to_pianoChaseGameFragment2)
         }
     }
 
@@ -94,7 +96,7 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
     override fun onConnected() {
         //TODO("Not yet implemented")
         requireActivity().runOnUiThread {
-            toast("Connected")
+            startGame()
         }
     }
 

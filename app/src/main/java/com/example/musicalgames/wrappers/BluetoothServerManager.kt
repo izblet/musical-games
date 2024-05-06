@@ -42,10 +42,11 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
             val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
             bluetoothSocket = serverSocket.accept()
             serverListener?.onConnected()
-            socketManager.startListening(bluetoothSocket!!) { message ->
+            socketManager.startListening(bluetoothSocket!!,{ message ->
                 serverListener?.onMessageReceived(message)
-            }
+            }, { e-> serverListener?.onDisconnected(e)})
         } catch (e: Exception) {
+            serverListener?.onDisconnected(e)
         }
 
         }

@@ -7,7 +7,8 @@ import java.nio.ByteOrder
 import kotlin.jvm.Throws
 
 class BluetoothSocketManager {
-    fun startListening(bluetoothSocket: BluetoothSocket, onMessage: (Int)->Unit) {
+    @Throws
+    fun startListening(bluetoothSocket: BluetoothSocket, onMessage: (Int)->Unit, onError: (e:Exception)->Unit) {
         val inputStream = bluetoothSocket.inputStream
         val buffer = ByteArray(4)
         var bytes: Int
@@ -20,8 +21,7 @@ class BluetoothSocketManager {
                     }
                 }
             } catch (e: IOException) {
-                e.printStackTrace()
-                // Handle the exception
+                onError(e)
             }
         }
         thread.start()

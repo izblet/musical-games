@@ -77,7 +77,7 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
         // Start Bluetooth device discovery
         var started = bluetoothAdapter.startDiscovery()
         if(!started)
-            Toast.makeText(context, "try manually setting the location", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "try manually turning on location", Toast.LENGTH_SHORT).show()
     }
 
     @SuppressLint("MissingPermission")
@@ -103,9 +103,9 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
                 // Send a signal to the server to keep the connection alive
                 socketManager.sendMessage(bluetoothSocket!!, R.integer.CONNECTED)
 
-                socketManager.startListening(bluetoothSocket!!) { message ->
+                socketManager.startListening(bluetoothSocket!!, { message ->
                     bluetoothListener?.onMessageReceived(message)
-                }
+                }, {e->bluetoothListener?.onDisconnected(e)})
             } catch (e: IOException) {
                 e.printStackTrace()
                 bluetoothListener?.onDisconnected(e)

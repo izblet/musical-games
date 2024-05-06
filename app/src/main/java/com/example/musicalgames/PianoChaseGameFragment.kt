@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
@@ -179,7 +180,7 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
             Log.d("Message", "received, current field: $currentField, message field: $i")
             if (i == R.integer.GAME_END) {
                 score++
-                toast("Found player Your score: $score, opponent score: $opponentScore")
+                toast("you found the opponent")
                 updateScores()
             }
             else {
@@ -187,7 +188,7 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
                 playerTurn = true
                 if (currentField == i) {
                     opponentScore++
-                    toast("Player found you. Your score: $score, opponent score: $opponentScore")
+                    toast("opponent found you")
                     opponent.sendMessage(R.integer.GAME_END)
                 }
                 updateScores()
@@ -204,7 +205,10 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onDisconnected(exception: Exception) {
-        //TODO("Not yet implemented")
+        requireActivity().runOnUiThread {
+            opponent.bluetoothUnsubscribe()
+            findNavController().navigate(R.id.action_pianoChaseGameFragment2_to_modeChooseFragment)
+        }
     }
 
     override fun onDeviceFound(device: BluetoothDevice?) {

@@ -53,12 +53,6 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
         // Button click listener
         button.setOnClickListener {
 
-            if(bluetoothServerManager.connected()) {
-                bluetoothServerManager.bluetoothUnsubscribe()
-                requireActivity().requestedOrientation =
-                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
-            }
         }
         bluetoothServerManager.bluetoothSubscribe(this)
         bluetoothServerManager.startServer()
@@ -68,12 +62,14 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
-    // Method to start flashing the dot
-    private fun startFlashingDot() {
-            val dotView = requireView().findViewById<View>(R.id.dotView)
-            dotView.visibility =
-                if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
+    private fun startGame() {
+        if(bluetoothServerManager.connected()) {
+            bluetoothServerManager.bluetoothUnsubscribe()
+            requireActivity().requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
         }
+    }
 
     override fun onMessageReceived(message: Int) {
         //TODO("Not yet implemented")
@@ -84,7 +80,9 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onConnected() {
-        //TODO("Not yet implemented")
+        requireActivity().runOnUiThread {
+            startGame()
+        }
     }
 
     override fun onDisconnected(exception: Exception) {
