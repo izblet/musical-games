@@ -51,6 +51,7 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
 
         deviceAdapter = DeviceAdapter(discoveredDevices) { device ->
             if(!bluetooth.connected()) {
+                toast("connecting...")
                 bluetooth.pair(device)
                 bluetooth.connectToServer(device)
             }
@@ -61,6 +62,7 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
         // Initialize UI elements
         buttonDeviceSearch = view.findViewById(R.id.button_search_for_devices)
         buttonDeviceSearch.setOnClickListener {
+            toast("starting discovery")
             discoverDevices()
         }
 
@@ -101,7 +103,10 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onDisconnected(exception: Exception) {
-        Log.e("Bluetooth", "could not connect")
+        requireActivity().runOnUiThread {
+            toast("could not connect, try again")
+        }
+        Log.e("Bluetooth", "could not connect $exception")
     }
 
 
