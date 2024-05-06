@@ -8,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.databinding.FragmentFirstBinding
 import com.example.musicalgames.models.Game
+import com.example.musicalgames.viewmodels.MainViewModel
+import com.example.musicalgames.viewmodels.MultiplayerViewModel
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -24,6 +27,7 @@ class FirstFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +39,8 @@ class FirstFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
 
+
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         //this list shall be retrieved from a database
         val gameList: List<Game> = listOf(
             Game("Piano Chase",
@@ -50,23 +56,14 @@ class FirstFragment : Fragment() {
 
         val adapter = GameAdapter(gameList, object : GameAdapter.OnItemClickListener{
             override fun onItemClick(game: Game) {
-                val bundle = bundleOf("game" to game)
-                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
+                viewModel.chosenGame=game
+                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             }
         })
         recyclerView.adapter = adapter
         return binding.root
 
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-       // binding.buttonFirst.setOnClickListener {
-       //     findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-       // }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -7,10 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicalgames.databinding.FragmentSecondBinding
 import com.example.musicalgames.models.Game
+import com.example.musicalgames.viewmodels.MainViewModel
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -23,6 +25,7 @@ class SecondFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var viewModel: MainViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,18 +36,22 @@ class SecondFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        var game = viewModel.chosenGame!!
+        (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(game.name)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val game: Game = arguments?.getParcelable("game") ?: Game("","",0,emptyList())
-
-        val navController = findNavController()
-        val destination = navController.currentDestination
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val game: Game = viewModel.chosenGame!!
 
         (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(game.name)
         val optionsAdapter = OptionsAdapter(game.options) {
             option->
                 if(game.name=="Flappy Bird")
-                    launchFlappyGameActivity()//Toast.makeText(requireContext(), "Clicked on $option", Toast.LENGTH_SHORT).show()
+                    launchFlappyGameActivity()
                 else launchBluetoothActivity()
         }
         binding.optionsRecyclerView.apply {
