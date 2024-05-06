@@ -70,7 +70,7 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
     override fun sendMessage(message: Int) {
         socketManager.sendMessage(bluetoothSocket!!, message)
     }
-    fun releaseResources() {
+    override fun releaseResources() {
         try {
             bluetoothSocket?.close()
         } catch (e: IOException) {

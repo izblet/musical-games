@@ -33,6 +33,13 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     private var bluetoothListener: BluetoothClientListener? = null
     private var socketManager = BluetoothSocketManager()
     private var receiverRegistered = false
+    override fun releaseResources() {
+        try {
+            bluetoothSocket?.close()
+        } catch (e: IOException) {
+            // Handle the exception, if necessary
+        }
+    }
 
     override fun connected(): Boolean {
         return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)

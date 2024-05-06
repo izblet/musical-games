@@ -27,6 +27,7 @@ abstract class BluetoothConnectionManager(protected var context: Context, activi
         else permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION)
     }
+    abstract fun releaseResources()
     fun listPermissions(): Array<String> {
         return permissions
     }

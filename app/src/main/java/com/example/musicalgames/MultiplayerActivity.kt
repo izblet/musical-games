@@ -23,4 +23,9 @@ class MultiplayerActivity : AppCompatActivity() {
         navController.navigate(R.id.modeChooseFragment)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.bluetoothManager?.releaseResources()
+    }
+
 }
