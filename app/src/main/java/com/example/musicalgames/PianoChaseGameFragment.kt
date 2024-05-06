@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
+import com.example.musicalgames.databinding.FragmentGameChaseBinding
 import com.example.musicalgames.models.Note
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.viewmodels.MultiplayerViewModel
@@ -38,6 +39,7 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         const val JUMP_RANGE = KEY_NUM
     }
 
+    private lateinit var binding: FragmentGameChaseBinding
     private lateinit var dotImageView: ImageView
     private lateinit var keyboardRecyclerView: RecyclerView
     private val soundPlayer by lazy { FallbackSoundPlayerManager(requireContext()) }
@@ -47,13 +49,15 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     private var score = 0
     private var opponentScore = 0
     private var playerTurn = true
+    private lateinit var viewModel:MultiplayerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_game_chase, container, false)
+        binding = FragmentGameChaseBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -61,17 +65,23 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
+    private fun updateScores() {
+        binding.playerScoreTextView.text = "score: $score"
+        binding.opponentScoreTextView.text = "opponent score: $opponentScore"
+        binding.turnStatusTextView.text = if(playerTurn) "your turn" else "opponent's turn"
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         dotImageView = view.findViewById(R.id.dot)
         keyboardRecyclerView = view.findViewById(R.id.keyboardRecyclerView)
-        val viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
         if(viewModel.server!!)
             playerTurn=false
         opponent = viewModel.bluetoothManager!!
         opponent.bluetoothSubscribe(this)
 
+        updateScores()
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         keyboardRecyclerView.layoutManager = layoutManager
 
@@ -97,6 +107,7 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         adapter.setOnItemClickListener { position->
             if(playerTurn) {
                 playerTurn=false
+                updateScores()
                 val keyNote = pianoKeys[position]
                 soundPlayer.play(keyNote.frequency)
                 currentField = null
@@ -163,17 +174,24 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
         }
     }
     override fun onMessageReceived(i: Int) {
-        Log.d("Message", "received, current field: $currentField, message field: $i")
-        if(i==R.integer.GAME_END) {
-            score++
-            toast("Found player Your score: $score, opponent score: $opponentScore")
-            return
-        }
-        playerTurn=true
-        if(currentField==i){
-            opponentScore++
-            toast("Player found you. Your score: $score, opponent score: $opponentScore")
-            opponent.sendMessage(R.integer.GAME_END)
+        requireActivity().runOnUiThread {
+
+            Log.d("Message", "received, current field: $currentField, message field: $i")
+            if (i == R.integer.GAME_END) {
+                score++
+                toast("Found player Your score: $score, opponent score: $opponentScore")
+                updateScores()
+            }
+            else {
+
+                playerTurn = true
+                if (currentField == i) {
+                    opponentScore++
+                    toast("Player found you. Your score: $score, opponent score: $opponentScore")
+                    opponent.sendMessage(R.integer.GAME_END)
+                }
+                updateScores()
+            }
         }
     }
 
