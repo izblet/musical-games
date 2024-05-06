@@ -47,6 +47,7 @@
         <activity
             android:name=".MultiplayerActivity"
             android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true" />
 
         <activity

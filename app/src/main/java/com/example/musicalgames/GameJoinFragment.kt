@@ -1,6 +1,7 @@
 package com.example.musicalgames
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.DeviceAdapter
@@ -63,9 +65,12 @@ class GameJoinFragment : Fragment(), BluetoothClientListener {
 
         // Button click listener
         button.setOnClickListener {
-            // Send a signal to the other device to start flashing the dot
-            if (bluetooth.connected())
-                bluetooth.sendMessage(1)
+            if(bluetooth.connected())
+            {
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+            }
+
         }
     }
 
