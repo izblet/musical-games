@@ -11,31 +11,25 @@ import androidx.core.content.ContextCompat.getSystemService
 import java.io.IOException
 import java.util.UUID
 
-interface ServerEventListener {
-    fun onMessageReceived(message:Int)
-    fun onServerStarted()
-    fun onServerStartFail(exception: Exception)
-    fun onClientConnected()
-    fun onClientDisconnected()
-}
 class BluetoothServerManager (context: Context, activityResultRegistry: ActivityResultRegistry) :
-    BluetoothConnectionManager(context, activityResultRegistry), ConnectionSocket {
+    BluetoothConnectionManager(context, activityResultRegistry){
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothSocket: BluetoothSocket?=null
-    private var serverListener: ServerEventListener?=null
-    private var socketListener: ConnectionSocketListener?=null
+    private var serverListener: BluetoothEventListener?=null
     private val socketManager = BluetoothSocketManager()
 
     init {
         val bluetoothManager = getSystemService(context, BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager!!.adapter
     }
-    fun bluetoothSubscribe(listener: ServerEventListener) {
+    override fun bluetoothSubscribe(listener: BluetoothEventListener) {
         this.serverListener=listener
     }
-    fun socketSubscribe(listener: ConnectionSocketListener) {
-        this.socketListener=listener
+    override fun bluetoothUnsubscribe() {
+        //TODO should check if the listener is in fact the listener
+        this.serverListener=null
     }
+
     override fun connected(): Boolean {
         return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
     }
@@ -47,13 +41,11 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
             val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
             val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
             bluetoothSocket = serverSocket.accept()
-            serverListener?.onClientConnected()
+            serverListener?.onConnected()
             socketManager.startListening(bluetoothSocket!!) { message ->
                 serverListener?.onMessageReceived(message)
-                socketListener?.onMessage(message)
             }
         } catch (e: Exception) {
-           serverListener?.onServerStartFail(e)
         }
 
         }

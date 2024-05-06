@@ -3,6 +3,7 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.DeviceAdapter
 import com.example.musicalgames.viewmodels.MultiplayerViewModel
 import com.example.musicalgames.wrappers.BluetoothClientManager
-import com.example.musicalgames.wrappers.BluetoothClientListener
+import com.example.musicalgames.wrappers.BluetoothEventListener
 
 
-class GameJoinFragment : Fragment(), BluetoothClientListener {
+class GameJoinFragment : Fragment(), BluetoothEventListener {
     private lateinit var viewModel: MultiplayerViewModel
     private lateinit var buttonDeviceSearch: Button
     private lateinit var deviceAdapter: DeviceAdapter
@@ -49,8 +50,10 @@ class GameJoinFragment : Fragment(), BluetoothClientListener {
         val recyclerViewDevices = view.findViewById<RecyclerView>(R.id.recyclerViewDevices)
 
         deviceAdapter = DeviceAdapter(discoveredDevices) { device ->
-            bluetooth.pair(device)
-            bluetooth.connectToServer(device)
+            if(!bluetooth.connected()) {
+                bluetooth.pair(device)
+                bluetooth.connectToServer(device)
+            }
         }
         recyclerViewDevices.adapter = deviceAdapter
         recyclerViewDevices.layoutManager = LinearLayoutManager(requireContext())
@@ -67,6 +70,7 @@ class GameJoinFragment : Fragment(), BluetoothClientListener {
         button.setOnClickListener {
             if(bluetooth.connected())
             {
+                bluetooth.bluetoothUnsubscribe()
                 requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 findNavController().navigate(R.id.action_gameJoinFragment_to_pianoChaseGameFragment2)
             }
@@ -87,18 +91,19 @@ class GameJoinFragment : Fragment(), BluetoothClientListener {
         //TODO: Implement if needed
     }
 
-    override fun onDeviceConnected() {
-        //TODO: Implement if needed
+    override fun onConnected() {
+        //TODO("Not yet implemented")
+        requireActivity().runOnUiThread {
+            toast("Connected")
+        }
     }
 
-    override fun onConnectionFailed(e: Exception) {
-        //TODO: Implement if needed
+    override fun onDisconnected(exception: Exception) {
+        Log.e("Bluetooth", "could not connect")
     }
+
 
     override fun onMessageReceived(message: Int) {
-        requireActivity().runOnUiThread {
-            startFlashingDot()
-        }
     }
 
     private fun discoverDevices() {

@@ -3,10 +3,11 @@ import android.animation.AnimatorSet
 import android.animation.AnimatorListenerAdapter
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.bluetooth.BluetoothDevice
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,16 +16,19 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.adapters.KeyboardAdapter
 import com.example.musicalgames.models.Note
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.wrappers.ConnectionSocket
-import com.example.musicalgames.wrappers.ConnectionSocketListener
+import com.example.musicalgames.viewmodels.MultiplayerViewModel
+import com.example.musicalgames.wrappers.BluetoothConnectionManager
+import com.example.musicalgames.wrappers.BluetoothEventListener
 import com.example.musicalgames.wrappers.FallbackSoundPlayerManager
-class PianoChaseGameFragment : Fragment(), ConnectionSocketListener {
+class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     companion object {
         const val MIN_KEY = "C4"
         const val KEY_NUM = 18
@@ -37,7 +41,7 @@ class PianoChaseGameFragment : Fragment(), ConnectionSocketListener {
     private lateinit var dotImageView: ImageView
     private lateinit var keyboardRecyclerView: RecyclerView
     private val soundPlayer by lazy { FallbackSoundPlayerManager(requireContext()) }
-    private var opponent: ConnectionSocket? = null
+    private lateinit var opponent: BluetoothConnectionManager
     private var currentField: Int? = null
     private val handler = Handler()
 
@@ -59,6 +63,9 @@ class PianoChaseGameFragment : Fragment(), ConnectionSocketListener {
 
         dotImageView = view.findViewById(R.id.dot)
         keyboardRecyclerView = view.findViewById(R.id.keyboardRecyclerView)
+        val viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        opponent = viewModel.bluetoothManager!!
+        opponent.bluetoothSubscribe(this)
 
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         keyboardRecyclerView.layoutManager = layoutManager
@@ -142,13 +149,35 @@ class PianoChaseGameFragment : Fragment(), ConnectionSocketListener {
         return animatorSet
     }
 
-    override fun onMessage(i: Int) {
+    private fun toast(message: String) {
+        requireActivity().runOnUiThread{
+            Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+    override fun onMessageReceived(i: Int) {
+        Log.d("Message", "received, current field: $currentField, message field: $i")
         if(i==R.integer.GAME_END) {
-            //game over
+            toast("the end")
         }
         if(currentField==i){
-            //game over
+            toast("the end")
             opponent?.sendMessage(R.integer.GAME_END)
         }
+    }
+
+    override fun onDevicePaired() {
+        //TODO("Not yet implemented")
+    }
+
+    override fun onConnected() {
+        //TODO("Not yet implemented")
+    }
+
+    override fun onDisconnected(exception: Exception) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun onDeviceFound(device: BluetoothDevice?) {
+        //TODO("Not yet implemented")
     }
 }

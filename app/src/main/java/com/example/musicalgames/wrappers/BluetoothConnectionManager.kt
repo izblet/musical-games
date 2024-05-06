@@ -11,7 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.musicalgames.utils.PermissionsUtil
 
-abstract class BluetoothConnectionManager(protected var context: Context, activityRegistry: ActivityResultRegistry) :ConnectionSocket {
+abstract class BluetoothConnectionManager(protected var context: Context, activityRegistry: ActivityResultRegistry) {
     private var permissionLauncher: ActivityResultLauncher<Array<String>>
     protected var permissions: Array<String>
     init {
@@ -27,6 +27,8 @@ abstract class BluetoothConnectionManager(protected var context: Context, activi
         else permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION)
     }
+    abstract fun bluetoothUnsubscribe()
+    abstract fun bluetoothSubscribe(listener: BluetoothEventListener)
     abstract fun releaseResources()
     fun listPermissions(): Array<String> {
         return permissions
@@ -42,6 +44,8 @@ abstract class BluetoothConnectionManager(protected var context: Context, activi
             requestBluetooth.launch(enableBtIntent)
         }
     }
+
+    abstract fun sendMessage(message: Int)
 
     private val requestBluetooth: ActivityResultLauncher<Intent> =
         activityRegistry.register(

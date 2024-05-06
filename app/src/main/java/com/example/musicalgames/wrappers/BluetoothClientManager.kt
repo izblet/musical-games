@@ -17,24 +17,20 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.example.musicalgames.R
 import java.io.IOException
 import java.util.UUID
+import java.util.logging.SocketHandler
 import kotlin.jvm.Throws
 
-interface BluetoothClientListener {
-    fun onDeviceFound(device: BluetoothDevice?)
-    fun onDevicePaired()
-    fun onDeviceConnected()
-    fun onConnectionFailed(e: Exception)
-    fun onMessageReceived(message: Int)
-}
-
 class BluetoothClientManager(context: Context, activityResultRegistry: ActivityResultRegistry) :
-    BluetoothConnectionManager(context, activityResultRegistry), ConnectionSocket {
+    BluetoothConnectionManager(context, activityResultRegistry) {
     private var bluetoothAdapter: BluetoothAdapter
     private var bluetoothSocket: BluetoothSocket?=null
-    private var socketListener: ConnectionSocketListener?=null
-    private var bluetoothListener: BluetoothClientListener? = null
+    private var bluetoothListener: BluetoothEventListener? = null
     private var socketManager = BluetoothSocketManager()
     private var receiverRegistered = false
+    override fun bluetoothUnsubscribe() {
+        bluetoothListener=null
+    }
+
     override fun releaseResources() {
         try {
             bluetoothSocket?.close()
@@ -46,11 +42,8 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     override fun connected(): Boolean {
         return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
     }
-    fun bluetoothSubscribe(listener: BluetoothClientListener) {
+    override fun bluetoothSubscribe(listener: BluetoothEventListener) {
         this.bluetoothListener=listener
-    }
-    fun socketSubscribe(listener: ConnectionSocketListener) {
-        this.socketListener=listener
     }
 
     init {
@@ -106,17 +99,16 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
                 val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
                 bluetoothSocket = serverDevice.createRfcommSocketToServiceRecord(uuid)
                 bluetoothSocket!!.connect()
-                bluetoothListener?.onDeviceConnected()
+                bluetoothListener?.onConnected()
                 // Send a signal to the server to keep the connection alive
-                bluetoothSocket!!.outputStream.write(R.integer.CONNECTED)
+                socketManager.sendMessage(bluetoothSocket!!, R.integer.CONNECTED)
 
                 socketManager.startListening(bluetoothSocket!!) { message ->
                     bluetoothListener?.onMessageReceived(message)
-                    socketListener?.onMessage(message)
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
-                bluetoothListener?.onConnectionFailed(e)
+                bluetoothListener?.onDisconnected(e)
             }
         }
         connectThread.start()

@@ -1,4 +1,5 @@
 package com.example.musicalgames
+import android.bluetooth.BluetoothDevice
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.viewmodels.MultiplayerViewModel
+import com.example.musicalgames.wrappers.BluetoothEventListener
 import com.example.musicalgames.wrappers.BluetoothServerManager
-import com.example.musicalgames.wrappers.ServerEventListener
 
 
-class GameCreateFragment : Fragment(), ServerEventListener {
+class GameCreateFragment : Fragment(), BluetoothEventListener {
 
     private lateinit var buttonMakeDiscoverable: Button
     private lateinit var viewModel: MultiplayerViewModel
@@ -53,6 +54,7 @@ class GameCreateFragment : Fragment(), ServerEventListener {
         button.setOnClickListener {
 
             if(bluetoothServerManager.connected()) {
+                bluetoothServerManager.bluetoothUnsubscribe()
                 requireActivity().requestedOrientation =
                     ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
@@ -74,23 +76,23 @@ class GameCreateFragment : Fragment(), ServerEventListener {
         }
 
     override fun onMessageReceived(message: Int) {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 
-    override fun onServerStarted() {
-        TODO("Not yet implemented")
+    override fun onDevicePaired() {
+        //TODO("Not yet implemented")
     }
 
-    override fun onServerStartFail(exception: Exception) {
-        TODO("Not yet implemented")
+    override fun onConnected() {
+        //TODO("Not yet implemented")
     }
 
-    override fun onClientConnected() {
-        TODO("Not yet implemented")
+    override fun onDisconnected(exception: Exception) {
+        //TODO("Not yet implemented")
     }
 
-    override fun onClientDisconnected() {
-        TODO("Not yet implemented")
+    override fun onDeviceFound(device: BluetoothDevice?) {
+        //TODO("Not yet implemented")
     }
 
 }
