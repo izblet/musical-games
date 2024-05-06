@@ -1,6 +1,7 @@
 package com.example.musicalgames.models
 
 import android.content.Context
+import com.example.musicalgames.R
 import com.example.musicalgames.wrappers.MicrophoneManager
 import com.example.musicalgames.wrappers.SPICEModelManager
 import com.example.musicalgames.utils.MusicUtil as MU
@@ -22,7 +23,7 @@ class PitchRecogniser (context: Context){
     private var microphone: MicrophoneManager? = null
 
     init {
-        SPICE = SPICEModelManager(context, "spice.tflite")
+        SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
         microphone = MicrophoneManager()
     }
 

@@ -54,10 +54,5 @@
             android:name=".FlappyGameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
-        <activity
-            android:parentActivityName=".MainActivity"
-            android:name=".PianoChaseGameFragment"
-            android:screenOrientation="landscape"
-            android:exported="true" />
     </application>
 </manifest>

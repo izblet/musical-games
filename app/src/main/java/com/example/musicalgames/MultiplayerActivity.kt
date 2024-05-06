@@ -30,12 +30,14 @@ class MultiplayerActivity : AppCompatActivity(), ServerFragmentListener, ClientF
 
     override fun onCreated(fragment: ServerSettable) {
         //TODO: Exception if cannot be cast probably
-        fragment.setConnectionManager(connectionManager!! as BluetoothServerManager)
+        if(connectionManager!=null)//this can happen (rotating the screen for example)
+            fragment.setConnectionManager(connectionManager!! as BluetoothServerManager)
     }
 
     override fun onCreated(fragment: ClientSettable) {
         //TODO: Exception if cannot be cast probably
-        fragment.setConnectionManager(connectionManager!! as BluetoothClientManager)
+        if(connectionManager!=null)
+            fragment.setConnectionManager(connectionManager!! as BluetoothClientManager)
     }
 
     override fun modeChosen(isServer: Boolean) {

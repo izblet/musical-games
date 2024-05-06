@@ -14,6 +14,12 @@
         <action
             android:id="@+id/action_modeChooseFragment_to_bluetoothGameJoinFragment"
             app:destination="@id/bluetoothGameJoinFragment" />
+        <action
+            android:id="@+id/action_modeChooseFragment_to_gameJoinFragment"
+            app:destination="@id/gameJoinFragment" />
+        <action
+            android:id="@+id/action_modeChooseFragment_to_gameCreateFragment"
+            app:destination="@id/gameCreateFragment" />
     </fragment>
     <fragment
         android:id="@+id/bluetoothGameCreateFragment"
@@ -23,4 +29,24 @@
         android:id="@+id/bluetoothGameJoinFragment"
         android:name="com.example.musicalgames.BluetoothGameJoinFragment"
         android:label="BluetoothGameJoinFragment" />
+    <fragment
+        android:id="@+id/gameJoinFragment"
+        android:name="com.example.musicalgames.GameJoinFragment"
+        android:label="GameJoinFragment" >
+        <action
+            android:id="@+id/action_gameJoinFragment_to_pianoChaseGameFragment2"
+            app:destination="@id/pianoChaseGameFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameCreateFragment"
+        android:name="com.example.musicalgames.GameCreateFragment"
+        android:label="GameCreateFragment" >
+        <action
+            android:id="@+id/action_gameCreateFragment_to_pianoChaseGameFragment2"
+            app:destination="@id/pianoChaseGameFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/pianoChaseGameFragment2"
+        android:name="com.example.musicalgames.PianoChaseGameFragment"
+        android:label="PianoChaseGameFragment" />
 </navigation>

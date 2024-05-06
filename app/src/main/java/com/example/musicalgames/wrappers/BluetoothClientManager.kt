@@ -32,6 +32,7 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     private var socketListener: ConnectionSocketListener?=null
     private var bluetoothListener: BluetoothClientListener? = null
     private var socketManager = BluetoothSocketManager()
+    private var receiverRegistered = false
 
     override fun connected(): Boolean {
         return (bluetoothSocket!=null && bluetoothSocket!!.isConnected)
@@ -56,7 +57,8 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     }
     fun destroy() {
         disconnect()
-        context!!.unregisterReceiver(bluetoothReceiver)
+        if(receiverRegistered)
+            context!!.unregisterReceiver(bluetoothReceiver)
     }
 
     @SuppressLint("MissingPermission")
@@ -67,6 +69,7 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
             addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
         }
         context!!.registerReceiver(bluetoothReceiver, filter)
+        receiverRegistered=true
 
         // Start Bluetooth device discovery
         var started = bluetoothAdapter.startDiscovery()

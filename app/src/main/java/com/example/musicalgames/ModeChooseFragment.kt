@@ -47,11 +47,11 @@ class ModeChooseFragment : Fragment() {
 
     private fun launchCreateActivity() {
         modeListener!!.modeChosen(true)
-        findNavController().navigate(R.id.action_modeChooseFragment_to_bluetoothGameCreateFragment)
+        findNavController().navigate(R.id.action_modeChooseFragment_to_gameCreateFragment)
     }
 
     private fun launchJoinActivity() {
         modeListener!!.modeChosen(false)
-        findNavController().navigate(R.id.action_modeChooseFragment_to_bluetoothGameJoinFragment)
+        findNavController().navigate(R.id.action_modeChooseFragment_to_gameJoinFragment)
     }
 }
