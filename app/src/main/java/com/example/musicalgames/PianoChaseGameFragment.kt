@@ -31,7 +31,6 @@ class PianoChaseGameFragment : AppCompatActivity(), ConnectionSocketListener {
         const val JUMP_RANGE = KEY_NUM
     }
 
-    //TODO: change this class into pianoChaseView so that creating the activities doesn't kill you
     private lateinit var dotImageView: ImageView
     private val soundPlayer = FallbackSoundPlayerManager(this)
     private var opponent: ConnectionSocket?=null
