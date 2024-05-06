@@ -1,5 +1,4 @@
 package com.example.musicalgames
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -53,13 +52,15 @@ class GameCreateFragment : Fragment(), ServerEventListener {
         // Button click listener
         button.setOnClickListener {
 
-            //if(bluetooth.connected())
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+            if(bluetoothServerManager.connected()) {
+                requireActivity().requestedOrientation =
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+            }
         }
-        bluetoothServerManager!!.bluetoothSubscribe(this)
-        bluetoothServerManager!!.startServer()
-        bluetoothServerManager!!.enableBluetooth()
+        bluetoothServerManager.bluetoothSubscribe(this)
+        bluetoothServerManager.startServer()
+        bluetoothServerManager.enableBluetooth()
     }
     private fun toast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
@@ -67,30 +68,29 @@ class GameCreateFragment : Fragment(), ServerEventListener {
 
     // Method to start flashing the dot
     private fun startFlashingDot() {
-        val dotView = requireView().findViewById<View>(R.id.dotView)
-        dotView.visibility = if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
-    }
+            val dotView = requireView().findViewById<View>(R.id.dotView)
+            dotView.visibility =
+                if (dotView.visibility == View.VISIBLE) View.INVISIBLE else View.VISIBLE
+        }
 
     override fun onMessageReceived(message: Int) {
-        requireActivity().runOnUiThread {
-            startFlashingDot()
-        }
+        TODO("Not yet implemented")
     }
 
     override fun onServerStarted() {
-        //TODO("Not yet implemented")
+        TODO("Not yet implemented")
     }
 
     override fun onServerStartFail(exception: Exception) {
-        //TODO("Not yet implemented")
+        TODO("Not yet implemented")
     }
 
     override fun onClientConnected() {
-        //TODO("Not yet implemented")
+        TODO("Not yet implemented")
     }
 
     override fun onClientDisconnected() {
-        //TODO("Not yet implemented")
+        TODO("Not yet implemented")
     }
 
 }

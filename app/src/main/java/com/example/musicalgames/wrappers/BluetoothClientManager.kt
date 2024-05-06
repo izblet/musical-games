@@ -10,6 +10,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.musicalgames.R
@@ -65,7 +67,7 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     fun destroy() {
         disconnect()
         if(receiverRegistered)
-            context!!.unregisterReceiver(bluetoothReceiver)
+            context.unregisterReceiver(bluetoothReceiver)
     }
 
     @SuppressLint("MissingPermission")
@@ -75,12 +77,14 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
             addAction(BluetoothDevice.ACTION_FOUND)
             addAction(BluetoothDevice.ACTION_PAIRING_REQUEST)
         }
-        context!!.registerReceiver(bluetoothReceiver, filter)
+        //TODO: register the receiver elsewhere
+        context.registerReceiver(bluetoothReceiver, filter)
         receiverRegistered=true
 
         // Start Bluetooth device discovery
         var started = bluetoothAdapter.startDiscovery()
-        //TODO: if not started request user to manually turn on location
+        if(!started)
+            Toast.makeText(context, "try manually setting the location", Toast.LENGTH_SHORT).show()
     }
 
     @SuppressLint("MissingPermission")

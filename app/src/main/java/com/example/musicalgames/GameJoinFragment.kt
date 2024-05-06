@@ -67,8 +67,8 @@ class GameJoinFragment : Fragment(), BluetoothClientListener {
         button.setOnClickListener {
             if(bluetooth.connected())
             {
-                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-                findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+                requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                findNavController().navigate(R.id.action_gameJoinFragment_to_pianoChaseGameFragment2)
             }
 
         }
