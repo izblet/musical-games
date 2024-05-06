@@ -42,19 +42,20 @@ class BluetoothServerManager (context: Context, activityResultRegistry: Activity
     @SuppressLint("MissingPermission")
     fun startServer() {
         val serverThread = Thread {
-            try {
-                //this should be a resource
-                val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
-                val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
-                bluetoothSocket = serverSocket.accept()
-                serverListener?.onClientConnected()
-                socketManager.startListening(bluetoothSocket!!) { message ->
-                    serverListener?.onMessageReceived(message)
-                    socketListener?.onMessage(message)
-                }
-            } catch (e: Exception) {
-               serverListener?.onServerStartFail(e)
+        try {
+            //this should be a resource
+            val uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // SPP UUID
+            val serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("BluetoothServer", uuid)
+            bluetoothSocket = serverSocket.accept()
+            serverListener?.onClientConnected()
+            socketManager.startListening(bluetoothSocket!!) { message ->
+                serverListener?.onMessageReceived(message)
+                socketListener?.onMessage(message)
             }
+        } catch (e: Exception) {
+           serverListener?.onServerStartFail(e)
+        }
+
         }
         serverThread.start()
     }

@@ -1,28 +1,20 @@
 package com.example.musicalgames
 import android.content.Context
-import android.content.Intent
 import android.view.ViewGroup
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.musicalgames.viewmodels.MultiplayerViewModel
+import com.example.musicalgames.wrappers.BluetoothClientManager
+import com.example.musicalgames.wrappers.BluetoothServerManager
 
 
 class ModeChooseFragment : Fragment() {
-    private var modeListener: GameTypeListener?=null
-    override fun onAttach(context: Context) {
-        Toast.makeText(context, "Createdddd", Toast.LENGTH_SHORT).show()
-        super.onAttach(context)
-        if (context is GameTypeListener) {
-            modeListener=context
-        } else {
-            throw RuntimeException("$context must implement FragmentCommunication")
-        }
-    }
+    private lateinit var viewModel: MultiplayerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +23,13 @@ class ModeChooseFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.activity_bluetooth, container, false)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel=ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
 
         val buttonCreate = view.findViewById<Button>(R.id.button_make_discoverable)
         buttonCreate.setOnClickListener {
@@ -42,16 +41,17 @@ class ModeChooseFragment : Fragment() {
             launchJoinActivity()
         }
 
-        return view
     }
 
     private fun launchCreateActivity() {
-        modeListener!!.modeChosen(true)
+        viewModel.server=true
+        viewModel.bluetoothManager=BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
         findNavController().navigate(R.id.action_modeChooseFragment_to_gameCreateFragment)
     }
 
     private fun launchJoinActivity() {
-        modeListener!!.modeChosen(false)
+        viewModel.server=false
+        viewModel.bluetoothManager=BluetoothClientManager(requireActivity(), requireActivity().activityResultRegistry)
         findNavController().navigate(R.id.action_modeChooseFragment_to_gameJoinFragment)
     }
 }

@@ -3,6 +3,7 @@ import android.animation.AnimatorSet
 import android.animation.AnimatorListenerAdapter
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -48,7 +49,17 @@ class PianoChaseGameFragment : Fragment(), ConnectionSocketListener {
     ): View? {
         return inflater.inflate(R.layout.fragment_game_chase, container, false)
     }
+    override fun onResume() {
+        super.onResume()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
 
+    /*
+        override fun onPause() {
+            super.onPause()
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+*/
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

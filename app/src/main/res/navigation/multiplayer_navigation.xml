@@ -23,11 +23,11 @@
     </fragment>
     <fragment
         android:id="@+id/bluetoothGameCreateFragment"
-        android:name="com.example.musicalgames.BluetoothGameCreateFragment"
+        android:name="com.example.musicalgames.DemoCreate"
         android:label="BluetoothGameCreateFragment" />
     <fragment
         android:id="@+id/bluetoothGameJoinFragment"
-        android:name="com.example.musicalgames.BluetoothGameJoinFragment"
+        android:name="com.example.musicalgames.DemoJoin"
         android:label="BluetoothGameJoinFragment" />
     <fragment
         android:id="@+id/gameJoinFragment"
