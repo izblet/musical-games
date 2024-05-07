@@ -203,11 +203,18 @@ class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
     override fun onConnected() {
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        opponent.bluetoothUnsubscribe()
+    }
+
     override fun onDisconnected(exception: Exception) {
-        requireActivity().runOnUiThread {
-            opponent.bluetoothUnsubscribe()
-            toast("you got disconnected")
-            findNavController().navigate(R.id.action_pianoChaseGameFragment2_to_modeChooseFragment)
+        if(isAdded) {
+            requireActivity().runOnUiThread {
+                opponent.bluetoothUnsubscribe()
+                toast("you got disconnected")
+                findNavController().navigate(R.id.action_pianoChaseGameFragment2_to_modeChooseFragment)
+            }
         }
     }
 
