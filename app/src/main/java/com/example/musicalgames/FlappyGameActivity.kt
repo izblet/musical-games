@@ -62,6 +62,11 @@ class FlappyGameActivity : AppCompatActivity(), GameEndListener {
     private val requestMultiplePermissions =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()) { permission->{}}
+
+    override fun onPause() {
+        super.onPause()
+        onEndGame()
+    }
     override fun onEndGame() {
         Toast.makeText(this, "collision", Toast.LENGTH_SHORT).show()
         gameController.stopGame()
