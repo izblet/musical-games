@@ -66,12 +66,6 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
             discoverDevices()
         }
 
-        val button = view.findViewById<Button>(R.id.button)
-
-        // Button click listener
-        button.setOnClickListener {
-            startGame()
-        }
     }
     private fun startGame() {
         if(bluetooth.connected())

@@ -6,36 +6,22 @@
 
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_search_for_devices"
-        android:layout_marginBottom="267dp"
-        android:text="Toggle Dot" />
-
-    <View
-        android:id="@+id/dotView"
-        android:layout_width="26dp"
-        android:layout_height="30dp"
-        android:layout_above="@+id/button_search_for_devices"
-        android:layout_marginBottom="109dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/circle_shape"
-        android:visibility="invisible" />
-
-    <Button
         android:id="@+id/button_search_for_devices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search for devices"
-        android:layout_centerInParent="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="Search for devices" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDevices"
         android:layout_width="367dp"
         android:layout_height="239dp"
         android:layout_below="@+id/button_search_for_devices"
-        android:layout_marginTop="86dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" />
 
 
 </RelativeLayout>

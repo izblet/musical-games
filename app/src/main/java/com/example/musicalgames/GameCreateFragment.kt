@@ -48,12 +48,8 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
             bluetoothServerManager.makeDiscoverable()
         }
 
-        val button = view.findViewById<Button>(R.id.button_toggle)
-
         // Button click listener
-        button.setOnClickListener {
 
-        }
         bluetoothServerManager.bluetoothSubscribe(this)
         bluetoothServerManager.startServer()
         bluetoothServerManager.enableBluetooth()
