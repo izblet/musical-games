@@ -3,5 +3,12 @@
     <style name="Base.Theme.MusicalGames" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+                <!-- Customize your light theme here. -->
+                <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+                <item name="colorPrimary">@color/blue</item>
+                <item name="colorOnPrimary">@color/white</item>
+                <item name="colorPrimaryDark">@color/darkblue</item>
+
+
     </style>
 </resources>
