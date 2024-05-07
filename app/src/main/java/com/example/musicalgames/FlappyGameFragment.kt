@@ -10,9 +10,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
 import com.example.musicalgames.models.PitchRecogniser
+import com.example.musicalgames.viewmodels.FlappyViewModel
+import com.example.musicalgames.viewmodels.MultiplayerViewModel
 import com.example.musicalgames.views.FloppyGameView
 import com.example.musicalgames.views.GameEndListener
 
@@ -67,8 +71,10 @@ class FlappyGameFragment : Fragment(), GameEndListener {
         }
 
     override fun onEndGame() {
-        Toast.makeText(requireActivity(),"collision", Toast.LENGTH_SHORT).show()
-        // Handle game end here
+        val viewModel = ViewModelProvider(requireActivity()).get(FlappyViewModel::class.java)
+        viewModel.score= gameView.getScore()
+        gameController.stopGame()
+        findNavController().navigate(R.id.gameEndedFragment)
     }
 
     override fun onDestroy() {

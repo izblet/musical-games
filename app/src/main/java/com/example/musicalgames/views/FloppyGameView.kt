@@ -129,6 +129,9 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         invalidate()
     }
 
+    fun getScore() : Int {
+        return score
+    }
     private fun generateRandomHeight(): Int {
         return Random.nextInt(200, height - PIPE_GAP - 200)
     }

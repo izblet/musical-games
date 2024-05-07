@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flappy_navigation"
+    app:startDestination="@id/flappyGameFragment">
+
+    <fragment
+        android:id="@+id/flappyGameFragment"
+        android:name="com.example.musicalgames.FlappyGameFragment"
+        android:label="FlappyGameFragment" >
+
+        <action
+            android:id="@+id/action_flappyGameFragment_to_gameEndedFragment"
+            app:destination="@id/gameEndedFragment">
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/gameEndedFragment"
+        android:name="com.example.musicalgames.GameEndedFragment"
+        android:label="GameEndedFragment" />
+</navigation>
