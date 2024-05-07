@@ -1,20 +1,16 @@
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
-    <com.example.musicalgames.views.FloppyGameView
-        android:id="@+id/gameView"
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black" />
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/startGameButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Game"
-        android:layout_gravity="center" />
+    </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>
