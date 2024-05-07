@@ -20,16 +20,24 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private val pipes = mutableListOf<Pipe>()
     val bird: Bird = Bird()
     private val paint = Paint()
-    private var targetY: Float?=null
-    private var endListener: GameEndListener? =null
+    private var targetY: Float? = null
+    private var endListener: GameEndListener? = null
+    private var score = 0
+
+    private val scorePaint = Paint().apply {
+        color = Color.BLACK
+        textSize = 48f
+    }
+
     fun setEndListener(listener: GameEndListener) {
-        endListener=listener
+        endListener = listener
     }
 
     companion object {
         const val PIPE_GAP = 200
         const val PIPE_DISTANCE = 400
     }
+
     fun getRandomPipe(lastPipeX: Int): Pipe {
         return Pipe(
             lastPipeX + PIPE_DISTANCE,
@@ -43,10 +51,10 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             pipes.add(getRandomPipe(screenWidth))
         }
     }
+
     fun toast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
-
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -59,10 +67,13 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             canvas.drawRect(pipe.x.toFloat(), 0f, (pipe.x + Pipe.WIDTH).toFloat(), pipe.topHeight.toFloat(), paint)
             canvas.drawRect(pipe.x.toFloat(), pipe.bottomY.toFloat(), (pipe.x + Pipe.WIDTH).toFloat(), height.toFloat(), paint)
         }
+
+        // Draw the score
+        canvas.drawText("Score: $score", 20f, 60f, scorePaint)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when(event?.action) {
+        when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 targetY = event.y
                 return true
@@ -72,14 +83,13 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     fun update() {
-
         for (pipe in pipes) {
             pipe.move()
             val birdRect = RectF(
                 bird.x - bird.radius,
                 bird.y - bird.radius,
                 bird.x + bird.radius,
-                bird.y+bird.radius
+                bird.y + bird.radius
             )
             val topPipeRect = RectF(
                 pipe.x.toFloat(),
@@ -93,15 +103,20 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
                 pipe.x.toFloat() + Pipe.WIDTH,
                 height.toFloat()  // Use the height of the GameView as the bottom boundary
             )
-            if(birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)) {
+            if (birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)) {
                 endListener?.onEndGame()
             }
         }
-        pipes.removeAll { it.x+Pipe.WIDTH<0 }
-        if(pipes.size!=0 && pipes.last().isVisible(width))
+
+        // Check if the bird has passed a pipe
+        if (pipes.isNotEmpty() && bird.x > pipes[0].x + Pipe.WIDTH && bird.x < pipes[0].x + Pipe.WIDTH + 5) {
+            score++
+        }
+
+        pipes.removeAll { it.x + Pipe.WIDTH < 0 }
+        if (pipes.size != 0 && pipes.last().isVisible(width))
             pipes.add(getRandomPipe(pipes.last().x))
         invalidate()
-
     }
 
     private fun generateRandomHeight(): Int {
