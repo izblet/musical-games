@@ -9,12 +9,15 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.example.musicalgames.R
 import com.example.musicalgames.models.Bird
 import com.example.musicalgames.models.Pipe
 import kotlin.random.Random
 interface GameEndListener {
     fun onEndGame()
 }
+
 
 class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private val pipes = mutableListOf<Pipe>()
@@ -25,9 +28,12 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private var score = 0
 
     private val scorePaint = Paint().apply {
-        color = Color.BLACK
+        color = ContextCompat.getColor(context, R.color.white)
         textSize = 48f
     }
+
+    private val backgroundColor = ContextCompat.getColor(context, R.color.black)
+    private val pipeColor = ContextCompat.getColor(context, R.color.blue)
 
     fun setEndListener(listener: GameEndListener) {
         endListener = listener
@@ -58,10 +64,14 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        // Draw background
+        canvas.drawColor(backgroundColor)
+
         paint.color = Color.RED
         canvas.drawCircle(bird.x, bird.y, bird.radius, paint)
 
-        paint.color = Color.GREEN
+        paint.color = pipeColor
 
         for (pipe in pipes) {
             canvas.drawRect(pipe.x.toFloat(), 0f, (pipe.x + Pipe.WIDTH).toFloat(), pipe.topHeight.toFloat(), paint)
