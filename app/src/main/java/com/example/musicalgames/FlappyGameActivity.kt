@@ -1,12 +1,14 @@
 package com.example.musicalgames
 import android.os.Bundle
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.controllers.BirdController
 import com.example.musicalgames.controllers.GameController
@@ -36,18 +38,30 @@ class FlappyGameActivity : AppCompatActivity(), GameEndListener {
 
         val button = findViewById<Button>(R.id.startGameButton)
         button.setOnClickListener {
-            gameController.startGame()
-            pitchRecogniser.start()
-            button.visibility = View.GONE
+            if(checkPermissions()) {
+                gameController.startGame()
+                pitchRecogniser.start()
+                button.visibility = View.GONE
+            }
+            else
+                requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
         }
 
         //TODO:you should disable start button until permissions
-        requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
+        if(!checkPermissions())
+            requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
+    }
+
+    private fun checkPermissions(): Boolean {
+        val permissionResult = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.RECORD_AUDIO
+        )
+        return permissionResult == PackageManager.PERMISSION_GRANTED
     }
 
     private val requestMultiplePermissions =
         registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()) { }
+            ActivityResultContracts.RequestMultiplePermissions()) { permission->{}}
     override fun onEndGame() {
         Toast.makeText(this, "collision", Toast.LENGTH_SHORT).show()
         gameController.stopGame()
