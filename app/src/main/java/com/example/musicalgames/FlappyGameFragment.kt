@@ -73,6 +73,7 @@ class FlappyGameFragment : Fragment(), GameEndListener {
     override fun onEndGame() {
         val viewModel = ViewModelProvider(requireActivity()).get(FlappyViewModel::class.java)
         viewModel.score= gameView.getScore()
+        pitchRecogniser.release()
         gameController.stopGame()
         findNavController().navigate(R.id.gameEndedFragment)
     }
