@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import kotlinx.coroutines.Job
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
 interface GameEndListener {
     fun onEndGame()
@@ -76,12 +77,13 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         // Draw the score
         canvas.drawText("Score: $score", 20f, 60f, scorePaint)
     }
-    suspend fun updateBird(viewHeight: Float) {
-        bird!!.updatePosition(viewHeight)
+    fun updateBird(viewHeight: Float) {
+        bird!!.updateTarget(viewHeight)
 
     }
 
     fun updateView(viewHeight: Float) {
+        bird!!.updatePosition(viewHeight)
         for (pipe in pipes) {
             pipe.move()
 
@@ -104,7 +106,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         return score
     }
     private fun generateRandomHeight(): Float {
-        return Random.nextInt(200, (height - PIPE_GAP - 200).toInt()).toFloat();
+        return Random.nextInt(200, (height - PIPE_GAP - 200).toInt()).toFloat()
     }
 
     private val screenWidth: Int
@@ -146,7 +148,7 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
     private var x: Float = 100f
     private var y: Float = 100f
     private val radius: Float=20f
-    private var targetY:Float = 0f
+    private var targetY = AtomicReference(0f)
     private val paint = Paint()
     init {
         paint.color = Color.RED
@@ -178,21 +180,24 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
         )
         return birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)
     }
-
-    fun updatePosition(maxCoordinate: Float) {
-        val pitch = pitchRecogniser.getPitch()
+    fun updateTarget(maxCoordinate: Float) {
         //pitch is -1 if does not exist because of an error or low confidence level
         //otherwise it is a number between 0 and 1, but with different semantics than that of tensorflow
         //0 is the bottom of the screen, 1 is the top of the screen
-        targetY = if(pitch == -1f) {
-            y + 15
-        } else {
-            (1-pitch)*maxCoordinate //1-pitch is here because we are getting coordinates from top
-        }
 
+        val pitch = pitchRecogniser.getPitch()
+        targetY.set(
+            if(pitch == -1f)
+                y + 15
+            else
+                (1-pitch)*maxCoordinate //1-pitch is here because we are getting coordinates from top
+        )
+    }
+
+    fun updatePosition(maxCoordinate: Float) {
         //the position of the bird display will be calculated (maxCoordinate*value)
         targetY.let {
-            val deltaY = (it - y) / 10
+            val deltaY = (it.get() - y) / 10
             if(y+deltaY>0 && y+deltaY<maxCoordinate)
                 y += deltaY
         }
