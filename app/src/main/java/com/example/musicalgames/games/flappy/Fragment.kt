@@ -25,17 +25,23 @@ class Fragment : Fragment(), GameEndListener {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
 
-        pitchRecogniser = PitchRecogniser(requireContext())
-        val birdController = BirdController(pitchRecogniser)
+        val minPitch = "G3"
+        val maxPitch = "G4"
+        val minListenedPitch = "C2"
+        val maxListenedPitch = "C6"
+
+        pitchRecogniser = PitchRecogniser(requireContext(),
+            minPitch, maxPitch, minListenedPitch, maxListenedPitch)
 
         gameView = rootView.findViewById(R.id.gameView)
         gameView.setEndListener(this)
-        gameController = GameController(gameView, birdController)
+        gameView.setBird(Bird(pitchRecogniser))
+        gameController = GameController(gameView)
 
         val startGameButton = rootView.findViewById<Button>(R.id.startGameButton)
         startGameButton.setOnClickListener {
             if (checkPermissions()) {
-                gameController.startGame()
+                gameController.startGame(this)
                 pitchRecogniser.start()
                 startGameButton.visibility = View.GONE
             } else {
@@ -67,14 +73,14 @@ class Fragment : Fragment(), GameEndListener {
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
         viewModel.score= gameView.getScore()
         pitchRecogniser.release()
-        gameController.stopGame()
+        gameController.endGame()
         findNavController().navigate(R.id.gameEndedFragment)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         pitchRecogniser.release()
-        gameController.stopGame()
+        gameController.endGame()
     }
 }
 

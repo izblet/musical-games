@@ -2,47 +2,54 @@ package com.example.musicalgames.games.flappy
 
 import android.os.Handler
 import android.os.Looper
-import com.example.musicalgames.games.flappy.BirdController
-import com.example.musicalgames.games.flappy.FloppyGameView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class GameController(private val gameView: FloppyGameView, private val birdController: BirdController) {
+class GameController(private val gameView: FloppyGameView) {
     private var isGameRunning = false
     private val handler = Handler()
-    private val frameRateMillis = 1000 / 60  // Update at 60 frames per second
-    var backgroundHandler = Handler(Looper.getMainLooper())
+    private val frameRateMillis = 1000 / 60 // 60 frames per second
+    private var birdUpdateJob: Job? = null
 
-    fun startGame() {
-        // Initialize game state, reset score, etc.
+    fun startGame(owner: LifecycleOwner) {
         isGameRunning = true
         gameView.addPipes()
-        startGameLoop()
-        // Add any additional initialization logic as needed
+        startGameLoop(owner)
     }
 
-    fun stopGame() {
-        // Stop the game loop and clean up resources
+    fun pauseGame() {
         isGameRunning = false
-        // Add any additional cleanup logic as needed
     }
 
-    private fun startGameLoop() {
+    fun endGame() {
+        isGameRunning = false
+        birdUpdateJob?.cancel()
+    }
+
+    private fun startGameLoop(owner: LifecycleOwner) {
+        birdUpdateJob = owner.lifecycleScope.launch {
+            while (isGameRunning) {
+                withContext(Dispatchers.IO) {
+                    gameView.updateBird(gameView.height.toFloat())
+                }
+                delay(frameRateMillis.toLong())
+            }
+        }
+
         handler.post(object : Runnable {
             override fun run() {
                 if (isGameRunning) {
-                    backgroundHandler.post{
-                        //TODO:accessing a variable that is supposed to be private is suboptimal
-                        birdController.updatePosition(gameView.bird, gameView.height.toFloat())
-                    }
-
-                    gameView.update()  // Update game state
-                    gameView.invalidate()  // Redraw the view
+                    gameView.updateView(gameView.height.toFloat())
+                    gameView.invalidate()
                     handler.postDelayed(this, frameRateMillis.toLong())
                 }
             }
         })
     }
 
-    fun handleCollision() {
-        // Handle collision between bird and pipes
-    }
 }

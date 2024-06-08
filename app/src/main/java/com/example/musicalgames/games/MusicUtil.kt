@@ -45,6 +45,9 @@ object MusicUtil {
     fun spice(note: String): Double {
         return spice(frequency(note))
     }
+    fun spice(midiNote: Int): Double {
+        return spice(frequency(midiNote))
+    }
     fun notename(midicode: Int):String {
         return notename(frequency(midicode))
     }

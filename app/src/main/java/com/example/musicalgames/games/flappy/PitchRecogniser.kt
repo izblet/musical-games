@@ -7,25 +7,30 @@ import com.example.musicalgames.wrappers.sound_recording.SPICEModelManager
 import com.example.musicalgames.games.MusicUtil as MU
 import kotlin.math.pow
 
-class PitchRecogniser (context: Context){
-
-    companion object {
-        const val THRESHOLD_ENERGY= 30000
-        const val UNDEFINED=-1f
-
-        val MIN_PITCH = MU.spice("C2")
-        val MAX_PITCH = MU.spice("C6")
-        val NORMALIZED_MIN= (MU.spice("G3")+MU.spice("F#3"))/2
-        val NORMALIZED_MAX = (MU.spice("G4")+MU.spice("G#4"))/2
-
-    }
+class PitchRecogniser (context: Context,
+                       minNormalized: String, maxNormalized: String,
+                       minRecognised: String, maxRecognised: String){
     private var SPICE: SPICEModelManager? = null
     private var microphone: MicrophoneManager? = null
+
+    private val minPitch = MU.spice(minRecognised)
+    private val maxPitch = MU.spice(maxRecognised)
+
+    // we want to normalise to exactly between min and min-1
+    private val normalizedMin = (MU.spice(minNormalized) + MU.spice(MU.midi(minNormalized)-1)) / 2
+    // we want to normalise to exactly between min and min+1
+    private val normalizedMax = (MU.spice(maxNormalized) + MU.spice(MU.midi(maxNormalized)+1)) / 2
 
     init {
         SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
         microphone = MicrophoneManager()
     }
+
+    companion object {
+        const val THRESHOLD_ENERGY= 30000
+        const val UNDEFINED=-1f
+    }
+
 
     fun getPitch(): Float {
         val pitch = recognizePitch()
@@ -53,10 +58,10 @@ class PitchRecogniser (context: Context){
         val result = SPICE?.getDominantPitch(audioData, outputSize, outputSize)
             ?: return null
 
-        if(result< MIN_PITCH || result> MAX_PITCH)
+        if(result< minPitch || result> maxPitch)
             return null
 
-        val rangeNormalizedResult = (result- NORMALIZED_MIN)/(NORMALIZED_MAX - NORMALIZED_MIN)
+        val rangeNormalizedResult = (result - normalizedMin)/(normalizedMax - normalizedMin)
 
         return rangeNormalizedResult.toFloat()
     }
