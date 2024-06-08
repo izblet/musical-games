@@ -26,6 +26,9 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private var minNote: Int? = null
     private var maxNote: Int? = null
 
+    private var minVisible: Double? = null
+    private var maxVisible: Double? = null
+
     private var viewModel: ViewModel? = null
 
     private val scorePaint = Paint().apply {
@@ -42,9 +45,12 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     fun setViewModel (viewModel: ViewModel) {
         this.viewModel=viewModel
         this.pitchRecogniser = viewModel.pitchRecogniser
-        this.bird = Bird(pitchRecogniser!!)
         this.minNote = MusicUtil.midi(viewModel.minRange)
         this.maxNote = MusicUtil.midi(viewModel.maxRange)
+        this.minVisible = MusicUtil.spiceNoteBottomEnd(minNote!!-1)
+        this.maxVisible = MusicUtil.spiceNoteTopEnd(maxNote!!+1)
+
+        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!)
     }
 
     private fun getRandomPipe(): Pipe {
@@ -52,14 +58,14 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             pipeColor,
             1f,
             generateRandomGap(minNote!!,maxNote!!),
-            minNote!!,
-            maxNote!!
+            minVisible!!,
+            maxVisible!!
         )
     }
 
     private fun generateRandomGap(min: Int, max: Int): Int {
         //returns a note that will correspond to the gap
-        return Random.nextInt(min+1, max)
+        return Random.nextInt(min, max+1)
     }
 
     fun addPipes() {
@@ -87,12 +93,12 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         // Draw the score
         canvas.drawText("Score: $score", 20f, 60f, scorePaint)
     }
-    fun updateBird(viewHeight: Float) {
+    fun updateBird() {
         bird!!.updateTarget()
 
     }
 
-    fun updateView(viewHeight: Float) {
+    fun updateView() {
         bird!!.updatePosition()
         for (pipe in pipes) {
             pipe.move()
@@ -121,8 +127,8 @@ class Pipe(
     color: Int,
     var x: Float,
     private val gap: Int,
-    minNote: Int,
-    maxNote: Int
+    private val minVisible: Double,
+    private val maxVisible: Double
 ) {
     //x is the coordinate of left side of the pipe, gap is the coordinate of the middle of the gap
     companion object {
@@ -132,8 +138,6 @@ class Pipe(
     }
 
     private val paint = Paint()
-    private val minVisible = MusicUtil.spiceNoteBottomEnd(minNote)
-    private val maxVisible = MusicUtil.spiceNoteTopEnd(maxNote)
     init {
         paint.color=color
     }
@@ -177,12 +181,12 @@ class Pipe(
     }
 }
 
-class Bird(private val pitchRecogniser: PitchRecogniser) {
+class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: Double, private val maxPitch: Double) {
     //should be passed in the constructor
     private var x: Float = 0.5f
     private var y: Float = 0.1f
-    private val radius: Float=0.03f
-    private val downwardSpeed = 0.03f
+    private val radius: Float=0.02f
+    private val downwardSpeed = 0.025f
     private val moveSpeedDiv = 10
     private var targetY = AtomicReference(0f)
     private val paint = Paint()
@@ -196,7 +200,7 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
         return x > pipe.x + Pipe.WIDTH && x < pipe.x + Pipe.WIDTH + Pipe.SPEED
     }
     fun intersects(pipe: Pipe, width:Float, height:Float):Boolean {
-        // the radius is vertical radius, when displayed on the screen it is scaled
+        // the radius is vertical radius, when displayed on the screen it has to be scaled
         val horizontalRadius = radius*(width/height)
         val birdRect = RectF(
             x - horizontalRadius,
@@ -211,16 +215,15 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
     }
     fun updateTarget() {
         //pitch is -1 if does not exist because of an error or low confidence level
-        //otherwise it is a number between 0 and 1, but with different semantics than that of tensorflow
-        //0 is the bottom of the screen, 1 is the top of the screen
-
+        //otherwise it is a number between 0 and 1 corresponding to spice value of the note
         val pitch = pitchRecogniser.getPitch()
-        targetY.set(
-            if(pitch == -1f)
-                y + downwardSpeed
-            else
-                (1-pitch) //1-pitch is here because we are getting coordinates from top
-        )
+
+        if(pitch == -1f)
+            targetY.set(y+downwardSpeed)
+        else {
+            val normalizedPitch = MusicUtil.normalize(pitch.toDouble(), minPitch, maxPitch)
+            targetY.set(1-normalizedPitch.toFloat())
+        }
     }
 
     fun updatePosition() {

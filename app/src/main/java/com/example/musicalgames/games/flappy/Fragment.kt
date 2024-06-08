@@ -32,7 +32,7 @@ class Fragment : Fragment(), GameEndListener {
         val maxListenedPitch = "C6"
 
         pitchRecogniser = PitchRecogniser(requireContext(),
-            viewModel.minRange, viewModel.maxRange, minListenedPitch, maxListenedPitch)
+             minListenedPitch, maxListenedPitch)
 
         gameView = rootView.findViewById(R.id.gameView)
         gameView.setEndListener(this)

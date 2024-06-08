@@ -35,7 +35,7 @@ class GameController(private val gameView: FloppyGameView) {
         birdUpdateJob = owner.lifecycleScope.launch {
             while (isGameRunning) {
                 withContext(Dispatchers.IO) {
-                    gameView.updateBird(gameView.height.toFloat())
+                    gameView.updateBird()
                 }
                 delay(frameRateMillis.toLong())
             }
@@ -44,7 +44,7 @@ class GameController(private val gameView: FloppyGameView) {
         handler.post(object : Runnable {
             override fun run() {
                 if (isGameRunning) {
-                    gameView.updateView(gameView.height.toFloat())
+                    gameView.updateView()
                     gameView.invalidate()
                     handler.postDelayed(this, frameRateMillis.toLong())
                 }

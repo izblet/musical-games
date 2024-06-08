@@ -8,18 +8,12 @@ import com.example.musicalgames.games.MusicUtil as MU
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context,
-                       minNormalized: String, maxNormalized: String,
                        minRecognised: String, maxRecognised: String){
     private var SPICE: SPICEModelManager? = null
     private var microphone: MicrophoneManager? = null
 
     val minPitch = MU.spice(minRecognised)
     val maxPitch = MU.spice(maxRecognised)
-
-    // we want to normalise to exactly between min and min-1
-    val normalizeMin = MU.spiceNoteBottomEnd(MU.midi(minNormalized))
-    // we want to normalise to exactly between min and min+1
-    val normalizeMax = MU.spiceNoteTopEnd(MU.midi(maxNormalized))
 
     init {
         SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
@@ -61,9 +55,7 @@ class PitchRecogniser (context: Context,
         if(result< minPitch || result> maxPitch)
             return null
 
-        val rangeNormalizedResult = (result - normalizeMin)/(normalizeMax - normalizeMin)
-
-        return rangeNormalizedResult.toFloat()
+        return result
     }
     fun start() {
         microphone?.startRecording()
