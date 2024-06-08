@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.databinding.FragmentSecondBinding
-import com.example.musicalgames.games.flappy.Activity as FlappyActivity
-import com.example.musicalgames.games.chase.Activity as ChaseActivity
+import com.example.musicalgames.games.flappy.GameActivity as FlappyActivity
+import com.example.musicalgames.games.chase.GameActivity as ChaseActivity
 
 class FragmentModeChoose : Fragment() {
 

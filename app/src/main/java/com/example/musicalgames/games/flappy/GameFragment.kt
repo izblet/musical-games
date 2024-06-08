@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 
-class Fragment : Fragment(), GameEndListener {
+class GameFragment : Fragment(), GameEndListener {
     private lateinit var gameView: FloppyGameView
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser
@@ -25,6 +25,8 @@ class Fragment : Fragment(), GameEndListener {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        gameView = rootView.findViewById(R.id.gameView)
+        gameView.setEndListener(this)
 
         viewModel.maxRange = "G4"
         viewModel.minRange = "G3"
@@ -34,8 +36,6 @@ class Fragment : Fragment(), GameEndListener {
         pitchRecogniser = PitchRecogniser(requireContext(),
              minListenedPitch, maxListenedPitch)
 
-        gameView = rootView.findViewById(R.id.gameView)
-        gameView.setEndListener(this)
         viewModel.pitchRecogniser = pitchRecogniser
         gameView.setViewModel(viewModel)
 

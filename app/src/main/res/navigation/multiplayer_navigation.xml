@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/pianoChaseGameFragment2"
-        android:name="com.example.musicalgames.games.chase.PianoChaseGameFragment"
+        android:name="com.example.musicalgames.games.chase.GameFragment"
         android:label="PianoChaseGameFragment" >
         <action
             android:id="@+id/action_pianoChaseGameFragment2_to_modeChooseFragment"

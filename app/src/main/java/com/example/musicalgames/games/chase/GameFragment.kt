@@ -6,8 +6,6 @@ import android.animation.ValueAnimator
 import android.bluetooth.BluetoothDevice
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +28,7 @@ import com.example.musicalgames.games.chase.connection.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothConnectionManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.sound_playing.FallbackSoundPlayerManager
-class PianoChaseGameFragment : Fragment(), BluetoothEventListener {
+class GameFragment : Fragment(), BluetoothEventListener {
     companion object {
         const val MIN_KEY = "C4"
         const val KEY_NUM = 18

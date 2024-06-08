@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/flappyGameFragment"
-        android:name="com.example.musicalgames.games.flappy.Fragment"
+        android:name="com.example.musicalgames.games.flappy.GameFragment"
         android:label="FlappyGameFragment" >
 
         <action

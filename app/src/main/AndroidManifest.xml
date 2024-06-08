@@ -44,14 +44,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".games.chase.Activity"
+            android:name=".games.chase.GameActivity"
             android:parentActivityName=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true" />
 
         <activity
             android:parentActivityName=".MainActivity"
-            android:name=".games.flappy.Activity"
+            android:name=".games.flappy.GameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
     </application>

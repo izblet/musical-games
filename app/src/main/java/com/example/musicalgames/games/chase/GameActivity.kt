@@ -7,7 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 import com.example.musicalgames.games.chase.connection.MultiplayerViewModel
 
-class Activity : AppCompatActivity() {
+class GameActivity : AppCompatActivity() {
     private lateinit var viewModel: MultiplayerViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
