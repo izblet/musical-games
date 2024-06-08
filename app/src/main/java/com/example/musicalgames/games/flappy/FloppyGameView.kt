@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import com.example.musicalgames.games.MusicUtil
-import kotlinx.coroutines.Job
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
 interface GameEndListener {
@@ -94,7 +93,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     fun updateView(viewHeight: Float) {
-        bird!!.updatePosition(viewHeight)
+        bird!!.updatePosition()
         for (pipe in pipes) {
             pipe.move()
 
@@ -224,11 +223,11 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
         )
     }
 
-    fun updatePosition(maxCoordinate: Float) {
+    fun updatePosition() {
         //the position of the bird display will be calculated (maxCoordinate*value)
         targetY.let {
             val deltaY = (it.get() - y) / moveSpeedDiv
-            if(y+deltaY>0 && y+deltaY<maxCoordinate)
+            if(y+deltaY>0 && y+deltaY<1)
                 y += deltaY
         }
     }
