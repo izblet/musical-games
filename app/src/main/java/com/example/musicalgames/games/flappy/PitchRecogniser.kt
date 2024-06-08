@@ -13,13 +13,13 @@ class PitchRecogniser (context: Context,
     private var SPICE: SPICEModelManager? = null
     private var microphone: MicrophoneManager? = null
 
-    private val minPitch = MU.spice(minRecognised)
-    private val maxPitch = MU.spice(maxRecognised)
+    val minPitch = MU.spice(minRecognised)
+    val maxPitch = MU.spice(maxRecognised)
 
     // we want to normalise to exactly between min and min-1
-    private val normalizedMin = (MU.spice(minNormalized) + MU.spice(MU.midi(minNormalized)-1)) / 2
+    val normalizeMin = MU.spiceNoteBottomEnd(MU.midi(minNormalized))
     // we want to normalise to exactly between min and min+1
-    private val normalizedMax = (MU.spice(maxNormalized) + MU.spice(MU.midi(maxNormalized)+1)) / 2
+    val normalizeMax = MU.spiceNoteTopEnd(MU.midi(maxNormalized))
 
     init {
         SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
@@ -61,7 +61,7 @@ class PitchRecogniser (context: Context,
         if(result< minPitch || result> maxPitch)
             return null
 
-        val rangeNormalizedResult = (result - normalizedMin)/(normalizedMax - normalizedMin)
+        val rangeNormalizedResult = (result - normalizeMin)/(normalizeMax - normalizeMin)
 
         return rangeNormalizedResult.toFloat()
     }

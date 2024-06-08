@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
+import com.example.musicalgames.games.MusicUtil
 import kotlinx.coroutines.Job
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.random.Random
@@ -18,11 +19,15 @@ interface GameEndListener {
 }
 
 class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+    private var endListener: GameEndListener? = null
+    private var pitchRecogniser: PitchRecogniser? = null
     private val pipes = mutableListOf<Pipe>()
     private var bird: Bird? = null
-    private var endListener: GameEndListener? = null
     private var score = 0
-    private var updateBird: Job? = null
+    private var minNote: Int? = null
+    private var maxNote: Int? = null
+
+    private var viewModel: ViewModel? = null
 
     private val scorePaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.white)
@@ -35,28 +40,33 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     fun setEndListener(listener: GameEndListener) {
         endListener = listener
     }
-    fun setBird(bird: Bird) {
-        this.bird = bird
+    fun setViewModel (viewModel: ViewModel) {
+        this.viewModel=viewModel
+        this.pitchRecogniser = viewModel.pitchRecogniser
+        this.bird = Bird(pitchRecogniser!!)
+        this.minNote = MusicUtil.midi(viewModel.minRange)
+        this.maxNote = MusicUtil.midi(viewModel.maxRange)
     }
 
-    companion object {
-        const val PIPE_GAP = 200f
-        const val PIPE_DISTANCE = 400
-    }
-
-    fun getRandomPipe(lastPipeX: Float): Pipe {
+    private fun getRandomPipe(): Pipe {
         return Pipe(
             pipeColor,
-            lastPipeX + PIPE_DISTANCE,
-            generateRandomHeight(),
-            PIPE_GAP
+            1f,
+            generateRandomGap(minNote!!,maxNote!!),
+            minNote!!,
+            maxNote!!
         )
+    }
+
+    private fun generateRandomGap(min: Int, max: Int): Int {
+        //returns a note that will correspond to the gap
+        return Random.nextInt(min+1, max)
     }
 
     fun addPipes() {
         viewTreeObserver.addOnGlobalLayoutListener {
             if(pipes.size == 0 )
-                pipes.add(getRandomPipe(screenWidth.toFloat()))
+                pipes.add(getRandomPipe())
         }
     }
 
@@ -68,17 +78,18 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         super.onDraw(canvas)
 
         canvas.drawColor(backgroundColor)
-        bird!!.draw(canvas)
+
+        bird!!.draw(canvas, height.toFloat(), width.toFloat())
 
         for (pipe in pipes) {
-            pipe.draw(canvas, height.toFloat())
+            pipe.draw(canvas, height.toFloat(), width.toFloat())
         }
 
         // Draw the score
         canvas.drawText("Score: $score", 20f, 60f, scorePaint)
     }
     fun updateBird(viewHeight: Float) {
-        bird!!.updateTarget(viewHeight)
+        bird!!.updateTarget()
 
     }
 
@@ -87,17 +98,17 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         for (pipe in pipes) {
             pipe.move()
 
-            if (bird!!.intersects(pipe))
+            if (bird!!.intersects(pipe, height.toFloat(), width.toFloat()))
                 endListener?.onEndGame()
+
+            else if(bird!!.passing(pipe))
+                score++
         }
 
-        // Check if the bird has passed a pipe
-        if (pipes.isNotEmpty() && bird!!.passing(pipes[0]))
-            score++
-
         pipes.removeAll { it.x + Pipe.WIDTH < 0 }
-        if (pipes.size != 0 && pipes.last().isVisible(width))
-            pipes.add(getRandomPipe(pipes.last().x))
+
+        if (pipes.size != 0 && pipes.last().passedLastPosition())
+            pipes.add(getRandomPipe())
 
         invalidate()
     }
@@ -105,27 +116,25 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     fun getScore() : Int {
         return score
     }
-    private fun generateRandomHeight(): Float {
-        return Random.nextInt(200, (height - PIPE_GAP - 200).toInt()).toFloat()
-    }
-
-    private val screenWidth: Int
-        get() = resources.displayMetrics.widthPixels
 }
 
 class Pipe(
-    val color: Int,
+    color: Int,
     var x: Float,
-    var topHeight: Float,
-    gap: Float
+    private val gap: Int,
+    minNote: Int,
+    maxNote: Int
 ) {
+    //x is the coordinate of left side of the pipe, gap is the coordinate of the middle of the gap
     companion object {
-        const val WIDTH = 100
-        const val SPEED = 5
+        const val WIDTH = 0.05f
+        const val SPEED = 0.002f
+        const val PIPE_SPACE = 0.3f
     }
 
     private val paint = Paint()
-    val bottomY = topHeight + gap
+    private val minVisible = MusicUtil.spiceNoteBottomEnd(minNote)
+    private val maxVisible = MusicUtil.spiceNoteTopEnd(maxNote)
     init {
         paint.color=color
     }
@@ -133,54 +142,75 @@ class Pipe(
     fun move() {
         x -= SPEED
     }
-    fun draw(canvas: Canvas, screenHeight: Float) {
-        canvas.drawRect(x, 0f, x + WIDTH, topHeight, paint)
-        canvas.drawRect(x, bottomY, x + WIDTH, screenHeight, paint)
+    fun getTopRect():RectF {
+        val nextNote = gap+1;
+        val topEnd = 1f - MusicUtil.normalize(nextNote, minVisible, maxVisible)
+        val leftEnd = x;
+        val rightEnd = x + WIDTH
+        return RectF(leftEnd, 0f, rightEnd, topEnd.toFloat())
+    }
+    fun getBottomRect():RectF {
+        val prevNote = gap-1;
+        val bottomEnd = 1f - MusicUtil.normalize(prevNote, minVisible, maxVisible)
+        val leftEnd = x;
+        val rightEnd = x + WIDTH
+        return RectF(leftEnd, bottomEnd.toFloat(), rightEnd, 1f)
+    }
+    private fun scale(rect: RectF, scaleX:Float, scaleY:Float) {
+        rect.left *=scaleX
+        rect.top *=scaleY
+        rect.right*=scaleX
+        rect.bottom*=scaleY
     }
 
-    fun isVisible(screenWidth: Int): Boolean {
-        return x + WIDTH > 0 && x < screenWidth
+    fun draw(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
+        val topRect = getTopRect()
+        scale(topRect, screenWidth, screenHeight)
+        val bottomRect = getBottomRect()
+        scale(bottomRect, screenWidth, screenHeight)
+
+        canvas.drawRect(topRect, paint)
+        canvas.drawRect(bottomRect, paint)
+    }
+
+    fun passedLastPosition() : Boolean {
+        return x < (1f- PIPE_SPACE)
     }
 }
 
 class Bird(private val pitchRecogniser: PitchRecogniser) {
     //should be passed in the constructor
-    private var x: Float = 100f
-    private var y: Float = 100f
-    private val radius: Float=20f
+    private var x: Float = 0.5f
+    private var y: Float = 0.1f
+    private val radius: Float=0.03f
+    private val downwardSpeed = 0.03f
+    private val moveSpeedDiv = 10
     private var targetY = AtomicReference(0f)
     private val paint = Paint()
     init {
         paint.color = Color.RED
     }
-    fun draw(canvas: Canvas) {
-        canvas.drawCircle(x, y, radius, paint)
+    fun draw(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
+        canvas.drawCircle(x*screenWidth, y*screenHeight, radius*screenHeight, paint)
     }
     fun passing(pipe: Pipe) : Boolean {
         return x > pipe.x + Pipe.WIDTH && x < pipe.x + Pipe.WIDTH + Pipe.SPEED
     }
-    fun intersects(pipe: Pipe):Boolean {
+    fun intersects(pipe: Pipe, width:Float, height:Float):Boolean {
+        // the radius is vertical radius, when displayed on the screen it is scaled
+        val horizontalRadius = radius*(width/height)
         val birdRect = RectF(
-            x - radius,
+            x - horizontalRadius,
             y - radius,
-            x + radius,
+            x + horizontalRadius,
             y + radius
         )
-        val topPipeRect = RectF(
-            pipe.x,
-            0f,
-            pipe.x + Pipe.WIDTH,
-            pipe.topHeight
-        )
-        val bottomPipeRect = RectF(
-            pipe.x,
-            pipe.bottomY,
-            pipe.x + Pipe.WIDTH,
-            Float.MAX_VALUE
-        )
+        val topPipeRect = pipe.getTopRect()
+        val bottomPipeRect = pipe.getBottomRect()
+
         return birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)
     }
-    fun updateTarget(maxCoordinate: Float) {
+    fun updateTarget() {
         //pitch is -1 if does not exist because of an error or low confidence level
         //otherwise it is a number between 0 and 1, but with different semantics than that of tensorflow
         //0 is the bottom of the screen, 1 is the top of the screen
@@ -188,16 +218,16 @@ class Bird(private val pitchRecogniser: PitchRecogniser) {
         val pitch = pitchRecogniser.getPitch()
         targetY.set(
             if(pitch == -1f)
-                y + 15
+                y + downwardSpeed
             else
-                (1-pitch)*maxCoordinate //1-pitch is here because we are getting coordinates from top
+                (1-pitch) //1-pitch is here because we are getting coordinates from top
         )
     }
 
     fun updatePosition(maxCoordinate: Float) {
         //the position of the bird display will be calculated (maxCoordinate*value)
         targetY.let {
-            val deltaY = (it.get() - y) / 10
+            val deltaY = (it.get() - y) / moveSpeedDiv
             if(y+deltaY>0 && y+deltaY<maxCoordinate)
                 y += deltaY
         }

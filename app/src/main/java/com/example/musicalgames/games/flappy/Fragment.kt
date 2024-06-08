@@ -24,18 +24,21 @@ class Fragment : Fragment(), GameEndListener {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
+        val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
 
-        val minPitch = "G3"
-        val maxPitch = "G4"
+        viewModel.maxRange = "G4"
+        viewModel.minRange = "G3"
         val minListenedPitch = "C2"
         val maxListenedPitch = "C6"
 
         pitchRecogniser = PitchRecogniser(requireContext(),
-            minPitch, maxPitch, minListenedPitch, maxListenedPitch)
+            viewModel.minRange, viewModel.maxRange, minListenedPitch, maxListenedPitch)
 
         gameView = rootView.findViewById(R.id.gameView)
         gameView.setEndListener(this)
-        gameView.setBird(Bird(pitchRecogniser))
+        viewModel.pitchRecogniser = pitchRecogniser
+        gameView.setViewModel(viewModel)
+
         gameController = GameController(gameView)
 
         val startGameButton = rootView.findViewById<Button>(R.id.startGameButton)

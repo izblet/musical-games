@@ -48,6 +48,19 @@ object MusicUtil {
     fun spice(midiNote: Int): Double {
         return spice(frequency(midiNote))
     }
+    fun spiceNoteTopEnd(note:Int): Double {
+        return (spice(note) + spice(note+1)) / 2
+    }
+
+    fun spiceNoteBottomEnd(note:Int): Double {
+        return (spice(note) + spice(note-1)) / 2
+    }
+    fun normalize(note: String, min:Double, max:Double) : Double {
+        return (spice(note)-min)/(max-min)
+    }
+    fun normalize(midicode: Int, min: Double, max:Double): Double {
+        return (spice(midicode)-min)/(max-min)
+    }
     fun notename(midicode: Int):String {
         return notename(frequency(midicode))
     }
