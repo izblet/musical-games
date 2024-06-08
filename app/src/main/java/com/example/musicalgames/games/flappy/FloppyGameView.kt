@@ -47,10 +47,16 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         this.pitchRecogniser = viewModel.pitchRecogniser
         this.minNote = MusicUtil.midi(viewModel.minRange)
         this.maxNote = MusicUtil.midi(viewModel.maxRange)
-        this.minVisible = MusicUtil.spiceNoteBottomEnd(minNote!!-1)
-        this.maxVisible = MusicUtil.spiceNoteTopEnd(maxNote!!+1)
 
-        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!)
+        val notespace = 1
+        this.minVisible = MusicUtil.spiceNoteBottomEnd(minNote!!-notespace)
+        this.maxVisible = MusicUtil.spiceNoteTopEnd(maxNote!!+notespace)
+
+        //the +1 at the end is because we are adding half a note above and below in bottom/top end
+        val displayedNotesNum = (maxNote!!-minNote!!+1)+2*notespace+1
+        val pitchSize = 1/displayedNotesNum.toFloat()
+
+        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!, pitchSize.toFloat())
     }
 
     private fun getRandomPipe(): Pipe {
@@ -181,13 +187,13 @@ class Pipe(
     }
 }
 
-class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: Double, private val maxPitch: Double) {
+class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: Double, private val maxPitch: Double, pitchSize: Float) {
     //should be passed in the constructor
     private var x: Float = 0.5f
     private var y: Float = 0.1f
-    private val radius: Float=0.02f
+    private val radius: Float= (pitchSize/4)
     private val downwardSpeed = 0.025f
-    private val moveSpeedDiv = 10
+    private val moveSpeedDiv = 20
     private var targetY = AtomicReference(0f)
     private val paint = Paint()
     init {
