@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.musicalgames.FirstFragment"
+        android:name="com.example.musicalgames.main_app.FragmentGameChoose"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -18,13 +18,13 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.musicalgames.SecondFragment"
+        android:name="com.example.musicalgames.main_app.FragmentModeChoose"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
         <argument
             android:name="game"
-            app:argType="com.example.musicalgames.models.Game"/>
+            app:argType="com.example.musicalgames.main_app.Game"/>
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />

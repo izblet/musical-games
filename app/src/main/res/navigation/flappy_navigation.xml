@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/flappyGameFragment"
-        android:name="com.example.musicalgames.FlappyGameFragment"
+        android:name="com.example.musicalgames.games.flappy.Fragment"
         android:label="FlappyGameFragment" >
 
         <action
@@ -16,6 +16,6 @@
     </fragment>
     <fragment
         android:id="@+id/gameEndedFragment"
-        android:name="com.example.musicalgames.GameEndedFragment"
+        android:name="com.example.musicalgames.games.GameEndedFragment"
         android:label="GameEndedFragment" />
 </navigation>

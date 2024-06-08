@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/modeChooseFragment"
-        android:name="com.example.musicalgames.ModeChooseFragment"
+        android:name="com.example.musicalgames.games.chase.connection.ModeChooseFragment"
         android:label="ModeChooseFragment" >
         <action
             android:id="@+id/action_modeChooseFragment_to_bluetoothGameCreateFragment"
@@ -31,7 +31,7 @@
         android:label="BluetoothGameJoinFragment" />
     <fragment
         android:id="@+id/gameJoinFragment"
-        android:name="com.example.musicalgames.GameJoinFragment"
+        android:name="com.example.musicalgames.games.chase.connection.GameJoinFragment"
         android:label="GameJoinFragment" >
         <action
             android:id="@+id/action_gameJoinFragment_to_pianoChaseGameFragment2"
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameCreateFragment"
-        android:name="com.example.musicalgames.GameCreateFragment"
+        android:name="com.example.musicalgames.games.chase.connection.GameCreateFragment"
         android:label="GameCreateFragment" >
         <action
             android:id="@+id/action_gameCreateFragment_to_pianoChaseGameFragment2"
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/pianoChaseGameFragment2"
-        android:name="com.example.musicalgames.PianoChaseGameFragment"
+        android:name="com.example.musicalgames.games.chase.PianoChaseGameFragment"
         android:label="PianoChaseGameFragment" >
         <action
             android:id="@+id/action_pianoChaseGameFragment2_to_modeChooseFragment"
