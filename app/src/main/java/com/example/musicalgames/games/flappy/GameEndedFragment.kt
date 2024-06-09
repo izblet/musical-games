@@ -1,4 +1,4 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.games.flappy
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.R
-import com.example.musicalgames.games.flappy.ViewModel
+import kotlinx.coroutines.launch
 
 class GameEndedFragment : Fragment() {
 
@@ -34,6 +36,16 @@ class GameEndedFragment : Fragment() {
 
         // Set the score text
         textScore.text = "Your Score: ${viewModel.score}"
+
+        lifecycleScope.launch {
+            val isHighScore = viewModel.checkHighScore()
+            // Update the message on the endgame screen based on the result
+            if (isHighScore) {
+                view.findViewById<TextView>(R.id.text_high_score).text = "New High Score!"
+            } else {
+                view.findViewById<TextView>(R.id.text_high_score).text = ""
+            }
+        }
 
         // Set click listener for the exit button
         buttonExit.setOnClickListener {

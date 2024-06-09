@@ -16,6 +16,6 @@
     </fragment>
     <fragment
         android:id="@+id/gameEndedFragment"
-        android:name="com.example.musicalgames.games.GameEndedFragment"
+        android:name="com.example.musicalgames.games.flappy.GameEndedFragment"
         android:label="GameEndedFragment" />
 </navigation>

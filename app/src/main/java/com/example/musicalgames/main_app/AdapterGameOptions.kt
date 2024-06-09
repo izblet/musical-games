@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 
 class AdapterGameOptions(
-    private val options: List<String>,
-    private val onItemClick: (String) -> Unit
+    private val options: List<GameOption>,
+    private val onItemClick: (GameOption) -> Unit
 ) : RecyclerView.Adapter<AdapterGameOptions.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,7 +19,7 @@ class AdapterGameOptions(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val option = options[position]
-        holder.bind(option)
+        holder.bind(option.getString())
         holder.itemView.setOnClickListener { onItemClick(option) }
     }
 

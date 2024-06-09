@@ -24,9 +24,20 @@
 
         <argument
             android:name="game"
-            app:argType="com.example.musicalgames.main_app.Game"/>
+            app:argType="com.example.musicalgames.main_app.GameInfo"/>
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_fragmentHighScore"
+            app:destination="@id/fragmentHighScore" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentHighScore"
+        android:name="com.example.musicalgames.main_app.FragmentHighScore"
+        android:label="FragmentHighScore" >
+        <action
+            android:id="@+id/action_fragmentHighScore_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>

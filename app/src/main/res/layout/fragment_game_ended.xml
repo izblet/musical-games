@@ -30,6 +30,14 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
+        <TextView
+            android:id="@+id/text_high_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You have beaten your highest score!"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
     </LinearLayout>
 
     <Button

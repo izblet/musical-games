@@ -30,25 +30,17 @@ class FragmentGameChoose : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
 
-
         // chosen game will be saved in the viewModel
         viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
         //this list shall be retrieved from a database
-        val gameList: List<Game> = listOf(
-            Game("Piano Chase",
-                "Multiplayer chase game on a piano",
-                R.drawable.default_game_icon,
-                listOf("Arcade", "Levels", "Multiplayer")),
-            Game("Flappy Bird",
-                "Flappy bird game controlled with voice",
-                R.drawable.default_game_icon,
-                listOf("Arcade", "Levels")
-            )
+        val gameList = listOf(
+            Game.CHASE,
+            Game.FLAPPY
         )
 
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
             override fun onItemClick(game: Game) {
-                viewModel.chosenGame=game
+                viewModel.game=game
                 findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             }
         })

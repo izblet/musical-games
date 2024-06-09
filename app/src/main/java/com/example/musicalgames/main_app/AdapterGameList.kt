@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 
-class AdapterGameList(private val gameList: List<Game>, private val onItemClickListener: OnItemClickListener) :
+class AdapterGameList(private val gameInfoList: List<Game>, private val onItemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<AdapterGameList.GameViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
@@ -16,7 +16,7 @@ class AdapterGameList(private val gameList: List<Game>, private val onItemClickL
     }
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
-        val game = gameList[position]
+        val game = gameInfoList[position]
         holder.bind(game)
         holder.itemView.setOnClickListener {
             onItemClickListener.onItemClick(game)
@@ -24,7 +24,7 @@ class AdapterGameList(private val gameList: List<Game>, private val onItemClickL
     }
 
     override fun getItemCount(): Int {
-        return gameList.size
+        return gameInfoList.size
     }
 
     inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -32,9 +32,10 @@ class AdapterGameList(private val gameList: List<Game>, private val onItemClickL
         private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
         fun bind(game: Game) {
-            iconImageView.setImageResource(game.iconResourceId)
-            nameTextView.text = game.name
-            descriptionTextView.text = game.description
+            val gameInfo = GameMap.gameInfos[game]!!
+            iconImageView.setImageResource(gameInfo.iconResourceId)
+            nameTextView.text = gameInfo.name
+            descriptionTextView.text = gameInfo.description
         }
     }
     interface OnItemClickListener {
