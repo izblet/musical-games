@@ -18,8 +18,14 @@ class GameActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
+        val create = intent.getBooleanExtra("create", true)
+
         // Navigate to the ModeChooseFragment as the initial destination
-        navController.navigate(R.id.modeChooseFragment)
+        if(create)
+            navController.navigate(R.id.gameCreateFragment)
+        else
+            navController.navigate(R.id.gameJoinFragment)
+        //navController.navigate(R.id.modeChooseFragment)
     }
 
     override fun onDestroy() {

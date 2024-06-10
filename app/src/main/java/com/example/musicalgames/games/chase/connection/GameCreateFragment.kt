@@ -32,6 +32,8 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        viewModel.server=true
+        viewModel.bluetoothManager= BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
 
         //it has to be correct, but you can never be too cautious
         if(viewModel.bluetoothManager!! is BluetoothServerManager) {

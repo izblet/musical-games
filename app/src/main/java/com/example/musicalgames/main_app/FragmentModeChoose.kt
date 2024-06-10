@@ -55,15 +55,20 @@ class FragmentModeChoose : Fragment() {
                     launchHighScores()
                 else if(viewModel.game == Game.FLAPPY)
                     launchFlappyGameActivity()
-                else launchPianoChaseActivity()
+                else if(option == GameOption.GAME_CREATE)
+                    launchPianoChaseActivity(true)
+                else
+                    launchPianoChaseActivity(false)
         }
         binding.optionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = optionsAdapter
         }
     }
-   private fun launchPianoChaseActivity() {
-        val intent = Intent(activity, ChaseActivity::class.java)
+   private fun launchPianoChaseActivity(create: Boolean) {
+        val intent = Intent(activity, ChaseActivity::class.java). apply {
+            putExtra("create", create)
+        }
         startActivity(intent)
     }
     private fun launchFlappyGameActivity() {

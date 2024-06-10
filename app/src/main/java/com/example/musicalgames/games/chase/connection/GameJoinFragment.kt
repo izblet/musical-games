@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 import com.example.musicalgames.wrappers.bluetooth.BluetoothClientManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
+import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 
 
 class GameJoinFragment : Fragment(), BluetoothEventListener {
@@ -36,12 +37,10 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
-        if(viewModel.bluetoothManager is BluetoothClientManager) {
-            bluetooth=viewModel.bluetoothManager as BluetoothClientManager
-        }
-        else {
-            //TODO
-        }
+        viewModel.server=true
+        viewModel.bluetoothManager= BluetoothClientManager(requireActivity(), requireActivity().activityResultRegistry)
+        bluetooth=viewModel.bluetoothManager as BluetoothClientManager
+
         bluetooth.bluetoothSubscribe(this)
         bluetooth.enableBluetooth()
 
