@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentHighScoreBinding
 import com.example.musicalgames.games.HighScore
@@ -36,7 +37,8 @@ class FragmentHighScore : Fragment() {
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-
+        val gameName = GameMap.gameInfos[viewModel.game!!]!!.name
+        (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle("$gameName - high scores")
         val gameId = GameMap.gameInfos[viewModel.game!!]!!.id
 
         lifecycleScope.launch {

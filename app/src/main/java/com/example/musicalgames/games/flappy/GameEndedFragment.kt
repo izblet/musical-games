@@ -1,5 +1,6 @@
 package com.example.musicalgames.games.flappy
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +44,7 @@ class GameEndedFragment : Fragment() {
             if (isHighScore) {
                 view.findViewById<TextView>(R.id.text_high_score).text = "New High Score!"
             } else {
-                view.findViewById<TextView>(R.id.text_high_score).text = ""
+                view.findViewById<TextView>(R.id.text_high_score).visibility = View.GONE
             }
         }
 
