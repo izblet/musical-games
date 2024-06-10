@@ -41,6 +41,7 @@ class FragmentGameChoose : Fragment() {
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
             override fun onItemClick(game: Game) {
                 viewModel.game=game
+                viewModel.gameOptions = GameMap.gameInfos[game]!!.options
                 findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             }
         })

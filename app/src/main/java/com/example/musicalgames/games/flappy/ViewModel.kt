@@ -11,7 +11,7 @@ import com.example.musicalgames.main_app.GameOption
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
-    private var gameOption: GameOption? = null
+    var gameOption: GameOption? = null
     var score = 0
     var pitchRecogniser: PitchRecogniser? = null
     var minRange: String = "G3"
@@ -20,12 +20,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
 
     suspend fun checkHighScore(): Boolean {
-        val highScores: List<HighScore> = highScoreDao.getHighScores(gameId)
-        //TODO: MODE_ID
-        highScoreDao.insertAndTrim(HighScore(gameId = gameId, modeId = "", score = score))
+        val highScores: List<HighScore> = highScoreDao.getHighScores(gameId,
+            gameOption!!.toString()
+        )
+
+        highScoreDao.insertAndTrim(HighScore(gameId = gameId, modeId = gameOption!!.toString(), score = score))
 
         return if (highScores.isNotEmpty())
             score > highScores[0].score
+
         else true
     }
 

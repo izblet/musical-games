@@ -3,12 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/labelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="highest score:"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Score"
-        android:textSize="20sp" />
+        android:layout_marginStart="8dp"
+        android:textSize="16sp" />
 </LinearLayout>

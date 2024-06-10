@@ -23,8 +23,8 @@ interface HighScoreDao {
                 "(SELECT id FROM high_scores WHERE gameId=:gameId ORDER BY score DESC LIMIT :limit)")
         suspend fun deleteAfter(gameId: Int, limit: Int)
 
-        @Query("SELECT * FROM high_scores WHERE gameId =:gameId ORDER BY score DESC")
-        suspend fun getHighScores(gameId: Int): List<HighScore>
+        @Query("SELECT * FROM high_scores WHERE gameId =:gameId AND modeId = :modeId ORDER BY score DESC")
+        suspend fun getHighScores(gameId: Int, modeId: String): List<HighScore>
         @Transaction
         suspend fun insertAndTrim(highScore: HighScore) {
                 insert(highScore)

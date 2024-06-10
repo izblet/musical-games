@@ -8,9 +8,10 @@ import com.example.musicalgames.games.HighScoreDao
 
 class ViewModel(application: Application): AndroidViewModel(application) {
     var game: Game? = null
+    var gameOptions: List<GameOption>? = null
     private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
 
-    suspend fun getHighScores(gameId: Int): List<HighScore> {
-        return highScoreDao.getHighScores(gameId)
+    suspend fun getHighScores(gameId: Int, modeId: GameOption): List<HighScore> {
+        return highScoreDao.getHighScores(gameId, modeId.toString())
     }
 }

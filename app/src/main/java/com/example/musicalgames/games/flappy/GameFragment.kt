@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
+import com.example.musicalgames.main_app.GameOption
 
 class GameFragment : Fragment(), GameEndListener {
     private lateinit var gameView: FloppyGameView
@@ -30,6 +31,7 @@ class GameFragment : Fragment(), GameEndListener {
 
         viewModel.maxRange = "G4"
         viewModel.minRange = "G3"
+        viewModel.gameOption = GameOption.ARCADE
         val minListenedPitch = "C2"
         val maxListenedPitch = "C6"
 
