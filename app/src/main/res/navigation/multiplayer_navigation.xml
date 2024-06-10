@@ -2,33 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/multiplayer_navigation"
-    app:startDestination="@id/modeChooseFragment">
+    app:startDestination="@id/gameCreateFragment">
 
-    <fragment
-        android:id="@+id/modeChooseFragment"
-        android:name="com.example.musicalgames.games.chase.connection.ModeChooseFragment"
-        android:label="ModeChooseFragment" >
-        <action
-            android:id="@+id/action_modeChooseFragment_to_bluetoothGameCreateFragment"
-            app:destination="@id/bluetoothGameCreateFragment" />
-        <action
-            android:id="@+id/action_modeChooseFragment_to_bluetoothGameJoinFragment"
-            app:destination="@id/bluetoothGameJoinFragment" />
-        <action
-            android:id="@+id/action_modeChooseFragment_to_gameJoinFragment"
-            app:destination="@id/gameJoinFragment" />
-        <action
-            android:id="@+id/action_modeChooseFragment_to_gameCreateFragment"
-            app:destination="@id/gameCreateFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/bluetoothGameCreateFragment"
-        android:name="com.example.musicalgames.DemoCreate"
-        android:label="BluetoothGameCreateFragment" />
-    <fragment
-        android:id="@+id/bluetoothGameJoinFragment"
-        android:name="com.example.musicalgames.DemoJoin"
-        android:label="BluetoothGameJoinFragment" />
     <fragment
         android:id="@+id/gameJoinFragment"
         android:name="com.example.musicalgames.games.chase.connection.GameJoinFragment"
@@ -48,9 +23,5 @@
     <fragment
         android:id="@+id/pianoChaseGameFragment2"
         android:name="com.example.musicalgames.games.chase.GameFragment"
-        android:label="PianoChaseGameFragment" >
-        <action
-            android:id="@+id/action_pianoChaseGameFragment2_to_modeChooseFragment"
-            app:destination="@id/modeChooseFragment" />
-    </fragment>
+        android:label="PianoChaseGameFragment" />
 </navigation>
