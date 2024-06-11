@@ -68,8 +68,7 @@ object MusicUtil {
         return noteLetter(frequency(midicode))
     }
     fun noteoctave(midicode: Int): Int {
-        val noteNum = midicode-21
-        return noteNum/12 +1
+        return midicode/12 -1
     }
     fun noteName(midicode: Int): String {
         return noteLetter(midicode)+ noteoctave(midicode)

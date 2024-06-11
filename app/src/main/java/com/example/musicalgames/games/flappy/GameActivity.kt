@@ -2,9 +2,12 @@ package com.example.musicalgames.games.flappy
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
+import com.example.musicalgames.main_app.GameOption
+import com.example.musicalgames.games.flappy.ViewModel
 
 class GameActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -16,10 +19,14 @@ class GameActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         val arcade = intent.getBooleanExtra("isArcade", true)
+        val viewModel = ViewModelProvider(this)[ViewModel::class.java]
+        viewModel.gameType = if(arcade) GameOption.ARCADE else GameOption.LEVELS
 
-        if(arcade)
+        if(arcade) {
             navController.navigate(R.id.flappyGameFragment)
-        else
+        }
+        else {
             navController.navigate(R.id.fragmentLevelList)
+        }
     }
 }

@@ -109,8 +109,11 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             if (bird!!.intersects(pipe, height.toFloat(), width.toFloat()))
                 endListener?.onEndGame()
 
-            else if(bird!!.passing(pipe))
+            else if(bird!!.passing(pipe)) {
                 score++
+                if(viewModel!!.endAfter == score)
+                    endListener?.onEndGame()
+            }
         }
 
         pipes.removeAll { it.x + Pipe.WIDTH < 0 }

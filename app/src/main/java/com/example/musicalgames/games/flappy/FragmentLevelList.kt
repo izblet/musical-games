@@ -15,6 +15,7 @@ import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
 import com.example.musicalgames.games.MusicUtil.midi
 import com.example.musicalgames.games.MusicUtil.noteName
+import com.example.musicalgames.main_app.GameOption
 
 
 class FragmentLevelList : Fragment() {
@@ -41,6 +42,7 @@ class FragmentLevelList : Fragment() {
 
                 val adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener{
                         override fun onItemClick(level: Level) {
+                                viewModel.gameType = GameOption.LEVELS
                                 viewModel.minRange=level.minPitch
                                 viewModel.maxRange=noteName(midi(level.minPitch)+level.keyNum-1)
                                 viewModel.endAfter=level.endAfter
