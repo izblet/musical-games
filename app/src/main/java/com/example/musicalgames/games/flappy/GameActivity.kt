@@ -11,7 +11,15 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_floppy)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+        val navController = navHostFragment.navController
+
+        val arcade = intent.getBooleanExtra("isArcade", true)
+
+        if(arcade)
+            navController.navigate(R.id.flappyGameFragment)
+        else
+            navController.navigate(R.id.fragmentLevelList)
     }
 }

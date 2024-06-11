@@ -24,13 +24,14 @@ enum class Game {
     FLAPPY,
     CHASE
 }
+
 @Parcelize
 data class GameInfo (
     val id: Int,
     val name: String,
     val description: String,
     val iconResourceId: Int,
-    val options: List<GameOption>
+    val options: List<GameOption>,
 ) : Parcelable
 
 object GameMap {

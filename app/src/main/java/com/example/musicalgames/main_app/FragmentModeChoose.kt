@@ -53,8 +53,12 @@ class FragmentModeChoose : Fragment() {
             option->
                 if(option == GameOption.HIGH_SCORES)
                     launchHighScores()
-                else if(viewModel.game == Game.FLAPPY)
-                    launchFlappyGameActivity()
+                else if(viewModel.game == Game.FLAPPY) {
+                    if(option == GameOption.ARCADE)
+                        launchFlappyGame(true)
+                    else if(option == GameOption.LEVELS)
+                        launchFlappyGame(false)
+                }
                 else if(option == GameOption.GAME_CREATE)
                     launchPianoChaseActivity(true)
                 else
@@ -71,8 +75,10 @@ class FragmentModeChoose : Fragment() {
         }
         startActivity(intent)
     }
-    private fun launchFlappyGameActivity() {
-        val intent = Intent(activity, FlappyActivity::class.java)
+    private fun launchFlappyGame(isArcade: Boolean) {
+        val intent = Intent(activity, FlappyActivity::class.java). apply {
+            putExtra("isArcade", isArcade)
+        }
         startActivity(intent)
     }
 

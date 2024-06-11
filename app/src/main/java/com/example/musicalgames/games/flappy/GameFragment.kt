@@ -31,7 +31,7 @@ class GameFragment : Fragment(), GameEndListener {
 
         viewModel.maxRange = "G4"
         viewModel.minRange = "G3"
-        viewModel.gameOption = GameOption.ARCADE
+        viewModel.gameType = GameOption.ARCADE
         val minListenedPitch = "C2"
         val maxListenedPitch = "C6"
 

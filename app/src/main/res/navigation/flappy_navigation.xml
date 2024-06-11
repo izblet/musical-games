@@ -18,4 +18,12 @@
         android:id="@+id/gameEndedFragment"
         android:name="com.example.musicalgames.games.flappy.GameEndedFragment"
         android:label="GameEndedFragment" />
+    <fragment
+        android:id="@+id/fragmentLevelList"
+        android:name="com.example.musicalgames.games.flappy.FragmentLevelList"
+        android:label="FragmentLevelList" >
+        <action
+            android:id="@+id/action_fragmentLevelList_to_flappyGameFragment"
+            app:destination="@id/flappyGameFragment" />
+    </fragment>
 </navigation>

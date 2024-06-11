@@ -45,12 +45,12 @@ class ModeChooseFragment : Fragment() {
     private fun launchCreateActivity() {
         viewModel.server=true
         viewModel.bluetoothManager= BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
-        findNavController().navigate(R.id.action_modeChooseFragment_to_gameCreateFragment)
+        //findNavController().navigate(R.id.action_modeChooseFragment_to_gameCreateFragment)
     }
 
     private fun launchJoinActivity() {
         viewModel.server=false
         viewModel.bluetoothManager= BluetoothClientManager(requireActivity(), requireActivity().activityResultRegistry)
-        findNavController().navigate(R.id.action_modeChooseFragment_to_gameJoinFragment)
+        //findNavController().navigate(R.id.action_modeChooseFragment_to_gameJoinFragment)
     }
 }

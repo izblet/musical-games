@@ -209,7 +209,7 @@ class GameFragment : Fragment(), BluetoothEventListener {
             requireActivity().runOnUiThread {
                 opponent.bluetoothUnsubscribe()
                 toast("you got disconnected")
-                findNavController().navigate(R.id.action_pianoChaseGameFragment2_to_modeChooseFragment)
+                activity?.onBackPressed()
             }
         }
     }

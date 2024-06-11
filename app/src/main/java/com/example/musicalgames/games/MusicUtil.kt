@@ -23,7 +23,7 @@ object MusicUtil {
     }
 
     @Throws(IllegalArgumentException::class)
-    fun notename(frequency: Double): String {
+    fun noteLetter(frequency: Double): String {
         // Calculate the octave of the given frequency
         val noteNum = round(12*log2(frequency/440.0)+49)
         val note = (noteNum+8).toInt()%12
@@ -64,15 +64,22 @@ object MusicUtil {
     fun normalize(spiceNote: Double, min: Double, max: Double):Double {
         return (spiceNote-min)/(max-min)
     }
-    fun notename(midicode: Int):String {
-        return notename(frequency(midicode))
+    fun noteLetter(midicode: Int):String {
+        return noteLetter(frequency(midicode))
+    }
+    fun noteoctave(midicode: Int): Int {
+        val noteNum = midicode-21
+        return noteNum/12 +1
+    }
+    fun noteName(midicode: Int): String {
+        return noteLetter(midicode)+ noteoctave(midicode)
     }
 
     fun isWhite(note: String) :Boolean {
         return !note.contains('#')
     }
     fun isWhite(midiNote: Int): Boolean {
-        return isWhite(notename(midiNote))
+        return isWhite(noteLetter(midiNote))
     }
 
     fun spice(hz: Double): Double {
@@ -84,5 +91,19 @@ object MusicUtil {
 
         val cqtBin = BINS_PER_OCTAVE * (Math.log(hz / FMIN) / Math.log(2.0)) - PT_OFFSET
         return (cqtBin / PT_SLOPE)
+    }
+
+    fun getWhiteKeysFrom(firstPitch: String, num: Int) : List<Int> {
+        val result: MutableList<Int> = mutableListOf()
+        var pitch = midi(firstPitch)
+        while(result.size<num) {
+            if(isWhite(pitch))
+                result.add(pitch++)
+            else pitch++
+        }
+        return result
+    }
+    fun getKeyIntervalFrom(pitch: String, num: Int): Int {
+        return midi(pitch)+num
     }
 }
