@@ -43,11 +43,13 @@ class FragmentHighScore : Fragment() {
 
         lifecycleScope.launch {
             val allHighScores = mutableListOf<HighScoreSection>()
-            for(option in viewModel.gameOptions!!) {
+            //TODO: this will be changed when other modes are introduced
+            val option = GameOption.ARCADE
+            //for(option in viewModel.gameOptions!!) {
                 val highScores = viewModel.getHighScores(gameId, option)
                 if(highScores.isNotEmpty())
                     allHighScores.add(HighScoreSection(option.toString(), highScores))
-            }
+            //}
             adapter.setHighScoreSections(allHighScores)
         }
         return view
