@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.bluetooth.BluetoothDevice
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.example.musicalgames.games.MusicUtil
 import com.example.musicalgames.games.chase.connection.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothConnectionManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
+import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.FallbackSoundPlayerManager
 class GameFragment : Fragment(), BluetoothEventListener {
     companion object {
@@ -41,7 +43,7 @@ class GameFragment : Fragment(), BluetoothEventListener {
     private lateinit var binding: FragmentGameChaseBinding
     private lateinit var dotImageView: ImageView
     private lateinit var keyboardRecyclerView: RecyclerView
-    private val soundPlayer by lazy { FallbackSoundPlayerManager(requireContext()) }
+    private val soundPlayer by lazy { DefaultSoundPlayerManager(requireContext()) }
     private lateinit var opponent: BluetoothConnectionManager
     private var currentField: Int? = null
     private var score = 0
@@ -74,9 +76,10 @@ class GameFragment : Fragment(), BluetoothEventListener {
         dotImageView = view.findViewById(R.id.dot)
         keyboardRecyclerView = view.findViewById(R.id.keyboardRecyclerView)
         viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
-        if(viewModel.server!!)
-            playerTurn=false
+        playerTurn = viewModel.server!!
         opponent = viewModel.bluetoothManager!!
+        if(!opponent.connected())
+            Log.e("Bluetooth", "Opponent not connected")
         opponent.bluetoothSubscribe(this)
 
         updateScores()
@@ -107,7 +110,7 @@ class GameFragment : Fragment(), BluetoothEventListener {
                 playerTurn=false
                 updateScores()
                 val keyNote = pianoKeys[position]
-                soundPlayer.play(keyNote.frequency)
+                soundPlayer.play(keyNote.midiCode)
                 currentField = null
                 val keyView = layoutManager.findViewByPosition(position)
                 keyView?.let {
@@ -173,7 +176,7 @@ class GameFragment : Fragment(), BluetoothEventListener {
     }
     override fun onMessageReceived(i: Int) {
         requireActivity().runOnUiThread {
-
+            Log.d("message", "mesage received")
             if (i == R.integer.GAME_END) {
                 score++
                 toast("you found the opponent")
@@ -205,6 +208,7 @@ class GameFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onDisconnected(exception: Exception) {
+        Log.e("disconnect", "Disconnect")
         if(isAdded) {
             requireActivity().runOnUiThread {
                 opponent.bluetoothUnsubscribe()

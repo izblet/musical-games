@@ -1,7 +1,9 @@
 package com.example.musicalgames.games.chase.connection
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,80 +17,72 @@ import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 
 
+
 class GameCreateFragment : Fragment(), BluetoothEventListener {
 
     private lateinit var buttonMakeDiscoverable: Button
     private lateinit var viewModel: MultiplayerViewModel
     private lateinit var bluetoothServerManager: BluetoothServerManager
-   override fun onCreateView(
+
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_game_create, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_game_create, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
-        viewModel.server=true
-        viewModel.bluetoothManager= BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
+        viewModel.server = true
+        bluetoothServerManager = BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
 
-        //it has to be correct, but you can never be too cautious
-        if(viewModel.bluetoothManager!! is BluetoothServerManager) {
-            bluetoothServerManager = viewModel.bluetoothManager as BluetoothServerManager
-        }
-        else {
-            //TODO
-        }
-
-        // Initialize UI elements
         buttonMakeDiscoverable = view.findViewById(R.id.button_make_discoverable)
-
         buttonMakeDiscoverable.setOnClickListener {
             bluetoothServerManager.makeDiscoverable()
         }
 
-        // Button click listener
-
         bluetoothServerManager.bluetoothSubscribe(this)
-        bluetoothServerManager.startServer()
+        Log.e("Bluetooth", "creating the server")
         bluetoothServerManager.enableBluetooth()
+        bluetoothServerManager.startServer()
     }
+
     private fun toast(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     private fun startGame() {
-        if(bluetoothServerManager.connected()) {
+        if (bluetoothServerManager.connected()) {
             bluetoothServerManager.bluetoothUnsubscribe()
-            requireActivity().requestedOrientation =
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            viewModel.bluetoothManager=bluetoothServerManager
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+        } else {
+            Log.e("Bluetooth", "not starting, manager not connected")
         }
     }
 
     override fun onMessageReceived(message: Int) {
-        //TODO("Not yet implemented")
+        // Handle received message
     }
 
     override fun onDevicePaired() {
-        //TODO("Not yet implemented")
+        // Handle device paired
     }
 
     override fun onConnected() {
+        Log.e("Bluetooth", "Device connected")
         requireActivity().runOnUiThread {
             startGame()
         }
     }
 
     override fun onDisconnected(exception: Exception) {
-        //TODO("Not yet implemented")
+        Log.e("Bluetooth", "Disconnected: ${exception.message}")
     }
 
     override fun onDeviceFound(device: BluetoothDevice?) {
-        //TODO("Not yet implemented")
+        // Handle device found
     }
-
 }

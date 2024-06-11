@@ -19,7 +19,6 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
     private val permissions = arrayOf(
         Manifest.permission.MODIFY_AUDIO_SETTINGS,
         Manifest.permission.RECORD_AUDIO
-        // Add other permissions as needed
     )
 
     override fun listPermissions(): Array<String> {
@@ -32,19 +31,19 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT
         )
-        val bufferSizeInShorts = bufferSizeInBytes / 2 // 2 bytes per short
+        val bufferSizeInShorts = bufferSizeInBytes / 2
         buffer = ShortArray(bufferSizeInShorts)
     }
 
     override fun play(frequency: Double) {
-        stopSound() // Stop any ongoing sound
+        stopSound()
 
         audioTrack = AudioTrack(
             AudioManager.STREAM_MUSIC,
             sampleRate,
             AudioFormat.CHANNEL_OUT_MONO,
             AudioFormat.ENCODING_PCM_16BIT,
-            buffer!!.size * 2, // Double the buffer size for longer duration
+            buffer!!.size * 2,
             AudioTrack.MODE_STREAM
         )
 

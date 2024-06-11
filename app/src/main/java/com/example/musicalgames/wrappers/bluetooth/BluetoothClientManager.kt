@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultRegistry
 import androidx.core.content.ContextCompat.getSystemService
@@ -31,7 +32,10 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
 
     override fun releaseResources() {
         try {
-            bluetoothSocket?.close()
+            if(bluetoothSocket!!.isConnected)
+                bluetoothSocket?.close()
+            else
+                Log.e("Bluetooth", "socket not connected, cannot disconnect")
         } catch (e: IOException) {
             // Handle the exception, if necessary
         }
@@ -50,10 +54,16 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     }
 
     override fun sendMessage(i: Int) {
-        socketManager.sendMessage(bluetoothSocket!!, i)
+        if(connected())
+            socketManager.sendMessage(bluetoothSocket!!, i)
+        else
+            Log.e("Bluetooth", "cannot send message, socket not connected")
     }
     private fun disconnect() {
-        bluetoothSocket?.close()
+        if(connected())
+            bluetoothSocket?.close()
+        else
+            Log.e("Bluetooth", "cannot disconnect, not connected")
     }
     fun destroy() {
         disconnect()
@@ -81,7 +91,8 @@ class BluetoothClientManager(context: Context, activityResultRegistry: ActivityR
     @SuppressLint("MissingPermission")
     @Throws
     fun pair(device: BluetoothDevice) {
-        disconnect()
+        if(connected())
+            disconnect()
         if(isDevicePaired(device))
             return
         if (device.createBond()) {
