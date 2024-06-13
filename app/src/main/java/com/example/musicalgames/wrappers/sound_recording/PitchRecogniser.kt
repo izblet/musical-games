@@ -1,10 +1,8 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.wrappers.sound_recording
 
 import android.content.Context
 import com.example.musicalgames.R
-import com.example.musicalgames.wrappers.sound_recording.MicrophoneManager
-import com.example.musicalgames.wrappers.sound_recording.SPICEModelManager
-import com.example.musicalgames.games.MusicUtil as MU
+import com.example.musicalgames.utils.MusicUtil as MU
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context,
@@ -39,12 +37,12 @@ class PitchRecogniser (context: Context,
     }
     private fun recognizePitch(): Float? {
 
-        var buffer: ShortArray = microphone?.getBufferIfFull() ?: return null
+        val buffer: ShortArray = microphone?.getBufferIfFull() ?: return null
 
         if(calculateEnergy(buffer)< THRESHOLD_ENERGY)
             return null
 
-        val maxAbsValue = Short.MAX_VALUE.toFloat() // 32767
+        val maxAbsValue = Short.MAX_VALUE.toFloat()
         val audioData :FloatArray = buffer.map { it.toFloat() / maxAbsValue }.toFloatArray()
 
 

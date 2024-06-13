@@ -25,15 +25,10 @@ class DeviceAdapter(private val devices: List<BluetoothDevice>, private val onIt
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = devices[position]
         try {
-            //the check is ugly and probably should be changed
             holder.deviceName.text = device.name ?: "Unknown Device"
-            //TODO: temporary solution
-            /*if(holder.deviceName.text == "Unknown Device")
-                holder.itemView.visibility=View.GONE*/
             holder.itemView.setOnClickListener { onItemClick(device) }
         }catch (e: SecurityException) {
-            //TODO: this is just temporary, think about how to handle it
-            Log.e("Bluetooth_devices","deviceadapterexception: $e")
+            Log.e("Bluetooth","Device Adapter Exception: $e")
         }
     }
 

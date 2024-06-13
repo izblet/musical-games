@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFirstBinding
+import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
 
 class FragmentGameChoose : Fragment() {
 

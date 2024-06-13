@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.games.flappy.level_list
 
 import androidx.room.Dao
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
 const val LEN_INF = -1
 object DefaultLevels {
     val baseLevels: List<Level> = generateLevels()

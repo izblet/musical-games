@@ -23,8 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentGameChaseBinding
-import com.example.musicalgames.games.Note
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.games.chase.keyboard.KeyboardAdapter
 import com.example.musicalgames.wrappers.bluetooth.BluetoothConnectionManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
@@ -42,20 +43,22 @@ class GameFragment : Fragment(), BluetoothEventListener {
 
     private lateinit var binding: FragmentGameChaseBinding
     private lateinit var dotImageView: ImageView
-    private lateinit var keyboardRecyclerView: RecyclerView
+
     private val soundPlayer by lazy { DefaultSoundPlayerManager(requireContext()) }
     private lateinit var opponent: BluetoothConnectionManager
+
     private var currentField: Int? = null
     private var score = 0
     private var opponentScore = 0
     private var playerTurn = true
-    private lateinit var viewModel: MultiplayerViewModel
+
+    private lateinit var viewModel: ViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentGameChaseBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -66,41 +69,51 @@ class GameFragment : Fragment(), BluetoothEventListener {
     }
 
     private fun updateScores() {
-        binding.playerScoreTextView.text = "score: $score"
-        binding.opponentScoreTextView.text = "opponent score: $opponentScore"
-        binding.turnStatusTextView.text = if(playerTurn) "your turn" else "opponent's turn"
+        binding.playerScoreTextView.text = getString(R.string.your_score_string, viewModel.score.toString())
+        binding.opponentScoreTextView.text = getString(R.string.opponent_score_string, viewModel.opponentScore.toString())
+
+        binding.turnStatusTextView.text =
+            if(playerTurn)
+                getString(R.string.your_turn_string)
+            else
+                getString(R.string.opponent_turn_string)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         dotImageView = view.findViewById(R.id.dot)
-        keyboardRecyclerView = view.findViewById(R.id.keyboardRecyclerView)
-        viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        val keyboardRecyclerView : RecyclerView = view.findViewById(R.id.keyboardRecyclerView)
+        viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
         playerTurn = viewModel.server!!
         opponent = viewModel.bluetoothManager!!
+
         if(!opponent.connected())
-            Log.e("Bluetooth", "Opponent not connected")
+            onDisconnected(java.lang.Exception("Opponent not connected"))
+
         opponent.bluetoothSubscribe(this)
 
         updateScores()
+
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         keyboardRecyclerView.layoutManager = layoutManager
 
-        val displayMetrics = resources.displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val minKey = MusicUtil.midi(MIN_KEY)
-        val keyWidth = screenWidth / KEY_NUM
-
-        val pianoKeys = mutableListOf<Note>()
-        for (i in 0 until KEY_NUM)
-            pianoKeys.add(Note(minKey+i))
-
         keyboardRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
+                //we want to set the position of the dot only after the keyboard is set
                 keyboardRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 dotImageView.y = (keyboardRecyclerView.top - dotImageView.height).toFloat()
             }
         })
+
+        //the piano keys have to be scaled depending on the size of the screen
+        val displayMetrics = resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val minKey = MusicUtil.midi(MIN_KEY)
+        val keyWidth = screenWidth / KEY_NUM
+        val pianoKeys = mutableListOf<Note>()
+        for (i in 0 until KEY_NUM)
+            pianoKeys.add(Note(minKey+i))
+
 
         val adapter = KeyboardAdapter(pianoKeys, keyWidth)
         keyboardRecyclerView.adapter = adapter
@@ -117,14 +130,12 @@ class GameFragment : Fragment(), BluetoothEventListener {
                     val targetX = it.x + it.width / 2 - dotImageView.width / 2
                     val targetY = (keyboardRecyclerView.top - dotImageView.height).toFloat()
                     val maxY = targetY - JUMP_HEIGHT
-                    var animatorSet = getAnimation(targetX, targetY, maxY)
+                    val animatorSet = getAnimation(targetX, targetY, maxY)
 
-                    //adapter.setDisable(true)
                     animatorSet.start()
                     animatorSet.addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator) {
                             super.onAnimationEnd(animation)
-                            //handler.postDelayed({adapter.setDisable(false)}, KEYBOARD_DISABLE_MS)
                             currentField = position
                             opponent.sendMessage(position)
                         }
@@ -133,6 +144,60 @@ class GameFragment : Fragment(), BluetoothEventListener {
             }
         }
     }
+    override fun onMessageReceived(message: Int) {
+        requireActivity().runOnUiThread {
+            if (message == R.integer.GAME_END) {
+                score++
+                if(score== END_SCORE) {
+                    endGame()
+                }
+                toast("you found the opponent")
+                updateScores()
+            }
+            else {
+
+                playerTurn = true
+                if (currentField == message) {
+                    opponentScore++
+                    if(opponentScore== END_SCORE) {
+                        endGame()
+                    }
+                    toast("opponent found you")
+                    opponent.sendMessage(R.integer.GAME_END)
+                }
+                updateScores()
+            }
+        }
+    }
+
+    private fun endGame() {
+        viewModel.score=score
+        viewModel.opponentScore = opponentScore
+        opponent.bluetoothUnsubscribe()
+
+        findNavController().navigate(R.id.action_gameFragment2_to_gameEndedFragment3)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        opponent.bluetoothUnsubscribe()
+    }
+
+    override fun onDisconnected(exception: Exception) {
+        Log.e("disconnect", "Disconnect")
+        if(isAdded) {
+            requireActivity().runOnUiThread {
+                opponent.bluetoothUnsubscribe()
+                toast("you got disconnected")
+                activity?.onBackPressed()
+            }
+        }
+    }
+
+    //TODO: the interfaces should be divided - the following are not needed here
+    override fun onDevicePaired() {}
+    override fun onConnected() {}
+    override fun onDeviceFound(device: BluetoothDevice?) {}
 
     private fun getAnimation(targetX: Float, targetY:Float, maxY:Float): AnimatorSet {
         val animatorX = ValueAnimator.ofFloat(dotImageView.x, targetX)
@@ -168,68 +233,9 @@ class GameFragment : Fragment(), BluetoothEventListener {
         animatorSet.playTogether(animatorX, animatorYUp, animatorYDown)
         return animatorSet
     }
-
     private fun toast(message: String) {
         requireActivity().runOnUiThread{
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
         }
-    }
-    private fun endGame() {
-        viewModel.score=score
-        viewModel.opponentScore = opponentScore
-        findNavController().navigate(R.id.action_gameFragment2_to_gameEndedFragment3)
-    }
-    override fun onMessageReceived(i: Int) {
-        requireActivity().runOnUiThread {
-            Log.d("message", "mesage received")
-            if (i == R.integer.GAME_END) {
-                score++
-                if(score== END_SCORE) {
-                    endGame()
-                }
-                toast("you found the opponent")
-                updateScores()
-            }
-            else {
-
-                playerTurn = true
-                if (currentField == i) {
-                    opponentScore++
-                    if(opponentScore== END_SCORE) {
-                        endGame()
-                    }
-                    toast("opponent found you")
-                    opponent.sendMessage(R.integer.GAME_END)
-                }
-                updateScores()
-            }
-        }
-    }
-
-    override fun onDevicePaired() {
-        //TODO: interfaces should be divideddd
-    }
-
-    override fun onConnected() {
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        opponent.bluetoothUnsubscribe()
-    }
-
-    override fun onDisconnected(exception: Exception) {
-        Log.e("disconnect", "Disconnect")
-        if(isAdded) {
-            requireActivity().runOnUiThread {
-                opponent.bluetoothUnsubscribe()
-                toast("you got disconnected")
-                activity?.onBackPressed()
-            }
-        }
-    }
-
-    override fun onDeviceFound(device: BluetoothDevice?) {
-        //TODO("Not yet implemented")
     }
 }

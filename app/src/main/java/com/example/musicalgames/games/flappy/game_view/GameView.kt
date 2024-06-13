@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.games.flappy.game_view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,7 +8,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.games.flappy.ViewModel
 import kotlin.random.Random
 interface GameEndListener {
     fun onEndGame()

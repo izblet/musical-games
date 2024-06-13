@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
-import com.example.musicalgames.games.chase.MultiplayerViewModel
+import com.example.musicalgames.games.chase.ViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 
@@ -21,7 +20,7 @@ import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 class GameCreateFragment : Fragment(), BluetoothEventListener {
 
     private lateinit var buttonMakeDiscoverable: Button
-    private lateinit var viewModel: MultiplayerViewModel
+    private lateinit var viewModel: ViewModel
     private lateinit var bluetoothServerManager: BluetoothServerManager
 
     override fun onCreateView(
@@ -33,8 +32,7 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
-        viewModel.server = true
+        viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
         bluetoothServerManager = BluetoothServerManager(requireActivity(), requireActivity().activityResultRegistry)
 
         buttonMakeDiscoverable = view.findViewById(R.id.button_make_discoverable)
@@ -43,18 +41,14 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
         }
 
         bluetoothServerManager.bluetoothSubscribe(this)
-        Log.e("Bluetooth", "creating the server")
         bluetoothServerManager.enableBluetooth()
         bluetoothServerManager.startServer()
-    }
-
-    private fun toast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     private fun startGame() {
         if (bluetoothServerManager.connected()) {
             bluetoothServerManager.bluetoothUnsubscribe()
+            viewModel.server = true
             viewModel.bluetoothManager=bluetoothServerManager
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             requireActivity().runOnUiThread {
@@ -63,6 +57,10 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
         } else {
             Log.e("Bluetooth", "not starting, manager not connected")
         }
+    }
+
+    override fun onDisconnected(exception: Exception) {
+        Log.e("Bluetooth", "Disconnected: ${exception.message}")
     }
 
     override fun onMessageReceived(message: Int) {
@@ -74,15 +72,11 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
     }
 
     override fun onConnected() {
-        Log.e("Bluetooth", "Device connected")
         requireActivity().runOnUiThread {
             startGame()
         }
     }
 
-    override fun onDisconnected(exception: Exception) {
-        Log.e("Bluetooth", "Disconnected: ${exception.message}")
-    }
 
     override fun onDeviceFound(device: BluetoothDevice?) {
         // Handle device found

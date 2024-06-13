@@ -5,9 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.HighScore
 import com.example.musicalgames.games.HighScoreDao
-import com.example.musicalgames.main_app.Game
-import com.example.musicalgames.main_app.GameMap
-import com.example.musicalgames.main_app.GameOption
+import com.example.musicalgames.games.flappy.level_list.LEN_INF
+import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.games.GameOption
+import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id

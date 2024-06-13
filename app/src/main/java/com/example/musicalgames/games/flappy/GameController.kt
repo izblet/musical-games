@@ -1,9 +1,9 @@
 package com.example.musicalgames.games.flappy
 
 import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

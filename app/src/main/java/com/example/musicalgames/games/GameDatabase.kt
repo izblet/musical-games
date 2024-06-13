@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.room.Database;
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.musicalgames.games.HighScore;
-import com.example.musicalgames.games.flappy.Level
-import com.example.musicalgames.games.flappy.LevelDao
+import com.example.musicalgames.games.flappy.level_list.Level
+import com.example.musicalgames.games.flappy.level_list.LevelDao
 
 @Database(entities = [Level::class, HighScore::class], version = 1, exportSchema = false)
 abstract class GameDatabase : RoomDatabase() {

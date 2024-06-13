@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
 
 
 class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManager {

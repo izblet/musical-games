@@ -1,5 +1,5 @@
-package com.example.musicalgames.games
-import com.example.musicalgames.games.MusicUtil as MU
+package com.example.musicalgames.utils
+import com.example.musicalgames.utils.MusicUtil as MU
 data class Note (val name: String, val frequency: Double, val midiCode: Int) {
     constructor(frequency: Double) :
         this(MU.noteLetter(frequency), frequency, MU.midi(frequency))

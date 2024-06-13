@@ -1,9 +1,9 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.games.flappy.game_view
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
 
 class Pipe(
     color: Int,

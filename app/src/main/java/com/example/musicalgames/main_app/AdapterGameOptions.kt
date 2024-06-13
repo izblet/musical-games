@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
+import com.example.musicalgames.games.GameOption
 
 class AdapterGameOptions(
     private val options: List<GameOption>,

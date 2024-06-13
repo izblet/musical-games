@@ -1,12 +1,12 @@
-package com.example.musicalgames.games.chase
+package com.example.musicalgames.games.chase.keyboard
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.games.Note
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.MusicUtil
 
 class PianoKey@JvmOverloads constructor(
     context: Context,
@@ -22,9 +22,6 @@ class PianoKey@JvmOverloads constructor(
         else
             setBackgroundResource(R.drawable.black_key)
     }
-    fun getFrequency() : Double?{
-        return note?.frequency
-    }
 
     init {
         id = R.id.keyView
@@ -32,8 +29,5 @@ class PianoKey@JvmOverloads constructor(
             ConstraintLayout.LayoutParams.WRAP_CONTENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
         )
-        //scaleType = ImageView.ScaleType.FIT_XY
-
-
     }
 }

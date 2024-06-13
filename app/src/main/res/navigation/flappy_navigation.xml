@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flappy_navigation"
-    app:startDestination="@id/flappyGameFragment">
+    app:startDestination="@id/fragmentLevelList">
 
     <fragment
         android:id="@+id/flappyGameFragment"
@@ -20,7 +20,7 @@
         android:label="GameEndedFragment" />
     <fragment
         android:id="@+id/fragmentLevelList"
-        android:name="com.example.musicalgames.games.flappy.FragmentLevelList"
+        android:name="com.example.musicalgames.games.flappy.level_list.FragmentLevelList"
         android:label="FragmentLevelList" >
         <action
             android:id="@+id/action_fragmentLevelList_to_flappyGameFragment"

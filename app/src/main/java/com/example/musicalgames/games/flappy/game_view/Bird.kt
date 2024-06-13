@@ -1,10 +1,11 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.games.flappy.game_view
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 import java.util.concurrent.atomic.AtomicReference
 
 class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: Double, private val maxPitch: Double, pitchSize: Float) {

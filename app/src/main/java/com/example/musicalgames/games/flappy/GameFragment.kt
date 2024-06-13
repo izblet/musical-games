@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
-import com.example.musicalgames.main_app.GameOption
+import com.example.musicalgames.games.flappy.game_view.FloppyGameView
+import com.example.musicalgames.games.flappy.game_view.GameEndListener
+import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class GameFragment : Fragment(), GameEndListener {
     private lateinit var gameView: FloppyGameView

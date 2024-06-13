@@ -1,6 +1,5 @@
 package com.example.musicalgames.games.flappy
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +7,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.R
-import com.example.musicalgames.main_app.GameOption
+import com.example.musicalgames.games.GameOption
 import kotlinx.coroutines.launch
 
 class GameEndedFragment : Fragment() {

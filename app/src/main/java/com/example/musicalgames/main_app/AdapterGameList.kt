@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
+import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
 
 class AdapterGameList(private val gameInfoList: List<Game>, private val onItemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<AdapterGameList.GameViewHolder>() {

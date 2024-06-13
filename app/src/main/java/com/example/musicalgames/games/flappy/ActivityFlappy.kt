@@ -6,10 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
-import com.example.musicalgames.main_app.GameOption
-import com.example.musicalgames.games.flappy.ViewModel
+import com.example.musicalgames.games.GameOption
 
-class GameActivity : AppCompatActivity() {
+class ActivityFlappy : AppCompatActivity() {
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,5 +27,9 @@ class GameActivity : AppCompatActivity() {
         else {
             navController.navigate(R.id.fragmentLevelList)
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.games.flappy.level_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
-import com.example.musicalgames.games.MusicUtil.midi
-import com.example.musicalgames.games.MusicUtil.noteName
-import com.example.musicalgames.main_app.GameOption
+import com.example.musicalgames.utils.MusicUtil.midi
+import com.example.musicalgames.utils.MusicUtil.noteName
+import com.example.musicalgames.games.flappy.ViewModel
+import com.example.musicalgames.games.GameOption
 
 
 class FragmentLevelList : Fragment() {
@@ -40,7 +41,7 @@ class FragmentLevelList : Fragment() {
                 viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
                 val levelList = DefaultLevels.baseLevels
 
-                val adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener{
+                val adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener {
                         override fun onItemClick(level: Level) {
                                 viewModel.gameType = GameOption.LEVELS
                                 viewModel.minRange=level.minPitch

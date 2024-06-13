@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.games
 
 import android.os.Parcelable
 import com.example.musicalgames.R
@@ -41,7 +41,7 @@ object GameMap {
                 "Piano Chase",
                 "Multiplayer chase game on a piano",
                 R.drawable.default_game_icon,
-                listOf(GameOption.HIGH_SCORES, GameOption.GAME_CREATE, GameOption.GAME_JOIN)),
+                listOf(GameOption.GAME_CREATE, GameOption.GAME_JOIN)),
         Game.FLAPPY to
             GameInfo(
                 2,

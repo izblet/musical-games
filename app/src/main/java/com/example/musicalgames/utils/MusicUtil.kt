@@ -1,4 +1,4 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.utils
 
 import kotlin.math.log2
 import kotlin.math.round
@@ -71,7 +71,7 @@ object MusicUtil {
         return midicode/12 -1
     }
     fun noteName(midicode: Int): String {
-        return noteLetter(midicode)+ noteoctave(midicode)
+        return noteLetter(midicode) + noteoctave(midicode)
     }
 
     fun isWhite(note: String) :Boolean {
@@ -103,6 +103,6 @@ object MusicUtil {
         return result
     }
     fun getKeyIntervalFrom(pitch: String, num: Int): Int {
-        return midi(pitch)+num
+        return midi(pitch) +num
     }
 }

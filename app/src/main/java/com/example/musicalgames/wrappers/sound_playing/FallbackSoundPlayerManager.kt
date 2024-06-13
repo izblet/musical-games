@@ -5,7 +5,7 @@ import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
-import com.example.musicalgames.games.MusicUtil
+import com.example.musicalgames.utils.MusicUtil
 import kotlin.math.PI
 import kotlin.math.log2
 import kotlin.math.pow

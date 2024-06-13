@@ -20,11 +20,11 @@
         android:id="@+id/SecondFragment"
         android:name="com.example.musicalgames.main_app.FragmentModeChoose"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_mode_choose">
 
         <argument
             android:name="game"
-            app:argType="com.example.musicalgames.main_app.GameInfo"/>
+            app:argType="com.example.musicalgames.games.GameInfo"/>
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />

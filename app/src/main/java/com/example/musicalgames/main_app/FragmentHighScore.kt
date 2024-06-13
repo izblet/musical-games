@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentHighScoreBinding
+import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.games.HighScore
 import kotlinx.coroutines.launch
 

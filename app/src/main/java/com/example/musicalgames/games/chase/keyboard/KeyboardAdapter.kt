@@ -1,18 +1,16 @@
-package com.example.musicalgames.games.chase
+package com.example.musicalgames.games.chase.keyboard
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicalgames.games.Note
+import com.example.musicalgames.utils.Note
 
 class KeyboardAdapter(private val keys: MutableList<Note>, private val keyWidth: Int) :
     RecyclerView.Adapter<KeyboardAdapter.KeyViewHolder>() {
     private var onItemClickListener: ((position:Int)->Unit)? = null
     private var disabled= false
 
-    //TODO:
     inner class KeyViewHolder(val pianoKey: PianoKey) : RecyclerView.ViewHolder(pianoKey)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KeyViewHolder {
-        //val view = LayoutInflater.from(parent.context).inflate(R.layout.key_item, parent, false)
         val view = PianoKey(parent.context)
         val layoutParams = view.layoutParams
         layoutParams.width = keyWidth
@@ -31,6 +29,8 @@ class KeyboardAdapter(private val keys: MutableList<Note>, private val keyWidth:
     fun setOnItemClickListener(listener: (position: Int)->Unit) {
         onItemClickListener=listener
     }
+
+    //Not used for now but might be in the future
     fun setDisable(disable: Boolean) {
         disabled=disable
     }

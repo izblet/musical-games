@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.chase;
+package com.example.musicalgames.games.chase
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,7 +23,7 @@ class GameEndedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProvider(requireActivity()).get(MultiplayerViewModel::class.java)
+        val viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
 
         val headMessage = view.findViewById<TextView>(R.id.text_game_ended)
         val textScore = view.findViewById<TextView>(R.id.text_score)
@@ -31,12 +31,12 @@ class GameEndedFragment : Fragment() {
         val buttonExit = view.findViewById<Button>(R.id.button_exit)
 
         if(viewModel.score> viewModel.opponentScore)
-            headMessage.text = "You have won!"
+            headMessage.text = getString(R.string.win_string)
         else
-            headMessage.text = "You have lost!"
+            headMessage.text = getString(R.string.lost_string)
 
-        textScore.text = "Your score: ${viewModel.score}"
-        textDescription.text = "Opponent's score: ${viewModel.opponentScore}"
+        textScore.text = getString(R.string.your_score_string, viewModel.score.toString())
+        textDescription.text = getString(R.string.opponent_score_string, viewModel.opponentScore.toString())
         buttonExit.setOnClickListener {
            requireActivity().finish()
         }

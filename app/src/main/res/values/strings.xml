@@ -8,4 +8,10 @@
     <string name="previous">Previous</string>
     <string name="lorem_ipsum">lorem</string>
     <string name="spice_model">spice.tflite</string>
+    <string name="win_string">You have won!</string>
+    <string name="lost_string">You have lost!</string>
+    <string name="your_score_string">Your score: %1$s</string>
+    <string name="opponent_score_string">Opponent\'s score: %1$s</string>
+    <string name="your_turn_string">your turn</string>
+    <string name="opponent_turn_string">opponent\'s turn</string>
 </resources>
