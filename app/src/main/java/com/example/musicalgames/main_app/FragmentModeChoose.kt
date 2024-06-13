@@ -16,6 +16,7 @@ import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GameOption
+import com.example.musicalgames.games.flappy.ActivityFlappy.Companion.ARCADE_EXTRA
 import com.example.musicalgames.games.flappy.ActivityFlappy as FlappyActivity
 import com.example.musicalgames.games.chase.ActivityChase as ChaseActivity
 
@@ -78,7 +79,7 @@ class FragmentModeChoose : Fragment() {
     }
     private fun launchFlappyGame(isArcade: Boolean) {
         val intent = Intent(activity, FlappyActivity::class.java).apply {
-            putExtra("isArcade", isArcade)
+            putExtra(ARCADE_EXTRA, isArcade)
         }
         startActivity(intent)
     }

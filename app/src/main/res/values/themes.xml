@@ -10,6 +10,7 @@
         <item name="android:colorButtonNormal">@color/blue</item>
         <item name="android:navigationBarColor">@color/blue</item>
         <item name="android:windowBackground">@color/blue</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Theme.MusicalGames" parent="Base.Theme.MusicalGames" >

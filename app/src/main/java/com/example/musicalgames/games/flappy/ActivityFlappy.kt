@@ -9,7 +9,9 @@ import com.example.musicalgames.R
 import com.example.musicalgames.games.GameOption
 
 class ActivityFlappy : AppCompatActivity() {
-    private lateinit var navController: NavController
+    companion object {
+        const val ARCADE_EXTRA = "isArcade"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_floppy)
@@ -17,7 +19,7 @@ class ActivityFlappy : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val arcade = intent.getBooleanExtra("isArcade", true)
+        val arcade = intent.getBooleanExtra(ARCADE_EXTRA, true)
         val viewModel = ViewModelProvider(this)[ViewModel::class.java]
         viewModel.gameType = if(arcade) GameOption.ARCADE else GameOption.LEVELS
 
