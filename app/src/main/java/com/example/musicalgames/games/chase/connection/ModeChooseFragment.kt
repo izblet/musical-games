@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
+import com.example.musicalgames.games.chase.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothClientManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 

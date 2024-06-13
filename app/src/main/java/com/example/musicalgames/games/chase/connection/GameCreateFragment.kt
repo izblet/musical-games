@@ -1,6 +1,5 @@
 package com.example.musicalgames.games.chase.connection
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
+import com.example.musicalgames.games.chase.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 
@@ -57,7 +57,9 @@ class GameCreateFragment : Fragment(), BluetoothEventListener {
             bluetoothServerManager.bluetoothUnsubscribe()
             viewModel.bluetoothManager=bluetoothServerManager
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            findNavController().navigate(R.id.action_gameCreateFragment_to_pianoChaseGameFragment2)
+            requireActivity().runOnUiThread {
+                findNavController().navigate(R.id.action_gameCreateFragment_to_gameFragment2)
+            }
         } else {
             Log.e("Bluetooth", "not starting, manager not connected")
         }

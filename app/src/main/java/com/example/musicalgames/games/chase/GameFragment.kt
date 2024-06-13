@@ -25,19 +25,19 @@ import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentGameChaseBinding
 import com.example.musicalgames.games.Note
 import com.example.musicalgames.games.MusicUtil
-import com.example.musicalgames.games.chase.connection.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothConnectionManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
-import com.example.musicalgames.wrappers.sound_playing.FallbackSoundPlayerManager
+
 class GameFragment : Fragment(), BluetoothEventListener {
     companion object {
-        const val MIN_KEY = "C4"
+        const val MIN_KEY = "E3"
         const val KEY_NUM = 18
         const val KEYBOARD_DISABLE_MS = 100L
         const val JUMP_HEIGHT = 200f
         const val JUMP_MS = 500L
         const val JUMP_RANGE = KEY_NUM
+        const val END_SCORE = 10
     }
 
     private lateinit var binding: FragmentGameChaseBinding
@@ -174,11 +174,19 @@ class GameFragment : Fragment(), BluetoothEventListener {
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
         }
     }
+    private fun endGame() {
+        viewModel.score=score
+        viewModel.opponentScore = opponentScore
+        findNavController().navigate(R.id.action_gameFragment2_to_gameEndedFragment3)
+    }
     override fun onMessageReceived(i: Int) {
         requireActivity().runOnUiThread {
             Log.d("message", "mesage received")
             if (i == R.integer.GAME_END) {
                 score++
+                if(score== END_SCORE) {
+                    endGame()
+                }
                 toast("you found the opponent")
                 updateScores()
             }
@@ -187,6 +195,9 @@ class GameFragment : Fragment(), BluetoothEventListener {
                 playerTurn = true
                 if (currentField == i) {
                     opponentScore++
+                    if(opponentScore== END_SCORE) {
+                        endGame()
+                    }
                     toast("opponent found you")
                     opponent.sendMessage(R.integer.GAME_END)
                 }

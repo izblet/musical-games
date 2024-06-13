@@ -14,9 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
+import com.example.musicalgames.games.chase.MultiplayerViewModel
 import com.example.musicalgames.wrappers.bluetooth.BluetoothClientManager
 import com.example.musicalgames.wrappers.bluetooth.BluetoothEventListener
-import com.example.musicalgames.wrappers.bluetooth.BluetoothServerManager
 
 
 class GameJoinFragment : Fragment(), BluetoothEventListener {
@@ -69,7 +69,7 @@ class GameJoinFragment : Fragment(), BluetoothEventListener {
         {
             bluetooth.bluetoothUnsubscribe()
             requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            findNavController().navigate(R.id.action_gameJoinFragment_to_pianoChaseGameFragment2)
+            findNavController().navigate(R.id.action_gameJoinFragment_to_gameFragment2)
         }
     }
 

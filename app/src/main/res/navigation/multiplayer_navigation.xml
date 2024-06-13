@@ -9,19 +9,27 @@
         android:name="com.example.musicalgames.games.chase.connection.GameJoinFragment"
         android:label="GameJoinFragment" >
         <action
-            android:id="@+id/action_gameJoinFragment_to_pianoChaseGameFragment2"
-            app:destination="@id/pianoChaseGameFragment2" />
+            android:id="@+id/action_gameJoinFragment_to_gameFragment2"
+            app:destination="@id/gameFragment2" />
     </fragment>
     <fragment
         android:id="@+id/gameCreateFragment"
         android:name="com.example.musicalgames.games.chase.connection.GameCreateFragment"
         android:label="GameCreateFragment" >
         <action
-            android:id="@+id/action_gameCreateFragment_to_pianoChaseGameFragment2"
-            app:destination="@id/pianoChaseGameFragment2" />
+            android:id="@+id/action_gameCreateFragment_to_gameFragment2"
+            app:destination="@id/gameFragment2" />
     </fragment>
     <fragment
-        android:id="@+id/pianoChaseGameFragment2"
+        android:id="@+id/gameEndedFragment3"
+        android:name="com.example.musicalgames.games.chase.GameEndedFragment"
+        android:label="GameEndedFragment" />
+    <fragment
+        android:id="@+id/gameFragment2"
         android:name="com.example.musicalgames.games.chase.GameFragment"
-        android:label="PianoChaseGameFragment" />
+        android:label="GameFragment" >
+        <action
+            android:id="@+id/action_gameFragment2_to_gameEndedFragment3"
+            app:destination="@id/gameEndedFragment3" />
+    </fragment>
 </navigation>

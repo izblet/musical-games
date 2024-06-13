@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
-import com.example.musicalgames.games.chase.connection.MultiplayerViewModel
 
 class GameActivity : AppCompatActivity() {
     private lateinit var viewModel: MultiplayerViewModel

@@ -22,7 +22,6 @@ class GameEndedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game_ended, container, false)
     }
 
@@ -30,9 +29,7 @@ class GameEndedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-        // Set up any necessary logic here
 
-        // Find views
         val headMessage = view.findViewById<TextView>(R.id.text_game_ended)
         val textScore = view.findViewById<TextView>(R.id.text_score)
         val textDescription = view.findViewById<TextView>(R.id.text_high_score)
@@ -52,12 +49,10 @@ class GameEndedFragment : Fragment() {
 
         }
         else {
-            // Set the score text
             textScore.text = "Your Score: ${viewModel.score}"
 
             lifecycleScope.launch {
                 val isHighScore = viewModel.checkHighScore()
-                // Update the message on the endgame screen based on the result
                 if (isHighScore) {
                     textDescription.text = "New High Score!"
                 } else {
@@ -66,7 +61,6 @@ class GameEndedFragment : Fragment() {
             }
         }
 
-        // Set click listener for the exit button
         buttonExit.setOnClickListener {
            requireActivity().finish()
         }
