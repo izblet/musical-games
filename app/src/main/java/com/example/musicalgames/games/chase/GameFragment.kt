@@ -69,8 +69,8 @@ class GameFragment : Fragment(), BluetoothEventListener {
     }
 
     private fun updateScores() {
-        binding.playerScoreTextView.text = getString(R.string.your_score_string, viewModel.score.toString())
-        binding.opponentScoreTextView.text = getString(R.string.opponent_score_string, viewModel.opponentScore.toString())
+        binding.playerScoreTextView.text = getString(R.string.your_score_string, score.toString())
+        binding.opponentScoreTextView.text = getString(R.string.opponent_score_string, opponentScore.toString())
 
         binding.turnStatusTextView.text =
             if(playerTurn)
