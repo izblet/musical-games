@@ -13,7 +13,7 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
     private var x: Float = 0.5f
     private var y: Float = 0.1f
     private val radius: Float= (pitchSize/4)
-    private val downwardSpeed = 0.025f
+    private val downwardSpeed = 0.020f
     private val moveSpeedDiv = 20
     private var targetY = AtomicReference(0f)
     private val paint = Paint()

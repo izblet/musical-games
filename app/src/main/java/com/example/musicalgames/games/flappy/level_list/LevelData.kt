@@ -21,24 +21,13 @@ object DefaultLevels {
         for(size in listOf(3,4,5,6,7)) {
             val notes = MusicUtil.getWhiteKeysFrom("C4", size)
             val lastNote = notes[notes.size-1]
-            val name = "C4 to "+noteName(lastNote)+", only white keys"
+            val name = "C major basic, $size notes"
+            val description = "C4 to "+noteName(lastNote)+", white keys, 20 pipes"
             levels.add(
-                Level(-1,minPitch, noteName(lastNote), notes, name, 20)
+                Level(-1,minPitch, noteName(lastNote), notes, name, description,20)
             )
         }
-        /*
-        for(size in listOf(8, 10, 12)) {
-            for (startKey in MusicUtil.getWhiteKeysFrom("F3", 8)) {
-                    val startName = MusicUtil.noteName(startKey)
-                    val endName = MusicUtil.noteName(MusicUtil.getKeyIntervalFrom(startName, size-1))
-                    val levelName = "$startName to $endName"
-                    levels.add(
-                        Level(minPitch = startName, keyNum = size, name = levelName, endAfter=20)
-                    )
-                }
-        }
 
-         */
         return levels
     }
 }
@@ -48,6 +37,7 @@ data class Level(
     val maxPitch: String,
     val keyList: List<Int>,
     val name: String,
+    val description: String,
     val endAfter: Int
 )
 
@@ -58,6 +48,7 @@ data class DatabaseLevel(
     val maxPitch: String, //max pitch that is to be displayed
     val listOfMidiKeys: String, //list of integers corresponding to a
     val name: String,
+    val description: String,
     val endAfter: Int
 )
 
@@ -72,11 +63,11 @@ interface LevelDao {
 
     private fun DatabaseLevel.toLevel(): Level {
         val listOfInts: List<Int> = listOfMidiKeys.split(DELIMITER).map {it.toInt()}
-        return Level(id, minPitch, maxPitch, listOfInts, name, endAfter)
+        return Level(id, minPitch, maxPitch, listOfInts, name, description, endAfter)
     }
     private fun Level.toDatabaseLevel(): DatabaseLevel {
         val stringList = keyList.joinToString(separator = DELIMITER)
-        return DatabaseLevel(id, minPitch, maxPitch, stringList, name, endAfter)
+        return DatabaseLevel(id, minPitch, maxPitch, stringList, name, description, endAfter)
     }
     /*suspend fun insert(level: Level) {
         insert(level.toDatabaseLevel())

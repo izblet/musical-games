@@ -83,7 +83,7 @@ class FragmentLevelList : Fragment() {
                         fun bind(level: Level) {
                                 nameTextView.text = level.name
                                 if(level.endAfter!= LEN_INF)
-                                        descriptionTextView.text = "To pass: ${level.endAfter} pipes"
+                                        descriptionTextView.text = level.description
                                 else
                                         descriptionTextView.text = "Arcade"
                         }
