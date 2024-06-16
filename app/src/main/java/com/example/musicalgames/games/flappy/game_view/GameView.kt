@@ -11,6 +11,7 @@ import com.example.musicalgames.R
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 import com.example.musicalgames.games.flappy.ViewModel
+import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import kotlin.random.Random
 interface GameEndListener {
     fun onEndGame()
@@ -25,6 +26,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private var minNote: Int? = null
     private var maxNote: Int? = null
     private var pitchSize: Float? = null
+    private var createdPipes = 0
 
     private var minVisible: Double? = null
     private var maxVisible: Double? = null
@@ -60,6 +62,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     private fun getRandomPipe(): Pipe {
+        createdPipes++
         return Pipe(
             pipeColor,
             1f,
@@ -76,13 +79,6 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private fun generateRandomGap(min: Int, max: Int): Int {
         //returns a note that will correspond to the gap
         return Random.nextInt(min, max+1)
-    }
-
-    fun addPipes() {
-        viewTreeObserver.addOnGlobalLayoutListener {
-            if(pipes.size == 0 )
-                pipes.add(getRandomPipe())
-        }
     }
 
     fun toast(text: String) {
@@ -125,8 +121,10 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
 
         pipes.removeAll { it.x + Pipe.WIDTH < 0 }
 
-        if (pipes.size == 0 || pipes.last().passedLastPosition())
-            pipes.add(getRandomPipe())
+        if(viewModel!!.endAfter == LEN_INF || createdPipes < viewModel!!.endAfter) {
+            if (pipes.size == 0 || pipes.last().passedLastPosition())
+                pipes.add(getRandomPipe())
+        }
 
         invalidate()
     }

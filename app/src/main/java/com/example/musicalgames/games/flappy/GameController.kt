@@ -18,7 +18,6 @@ class GameController(private val gameView: FloppyGameView) {
 
     fun startGame(owner: LifecycleOwner) {
         isGameRunning = true
-        gameView.addPipes()
         startGameLoop(owner)
     }
 
