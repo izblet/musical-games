@@ -6,6 +6,8 @@ import android.graphics.Paint
 import android.graphics.RectF
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
+import java.lang.Float.max
+import java.lang.Float.min
 import java.util.concurrent.atomic.AtomicReference
 
 class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: Double, private val maxPitch: Double, pitchSize: Float) {
@@ -27,7 +29,7 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
         return x > pipe.x + Pipe.WIDTH && x < pipe.x + Pipe.WIDTH + Pipe.SPEED
     }
 
-    fun pointInsideEllipse(x: Float, y: Float, cx: Float, cy: Float, a: Float, b: Float): Boolean {
+    private fun pointInsideEllipse(x: Float, y: Float, cx: Float, cy: Float, a: Float, b: Float): Boolean {
         val dx = x - cx
         val dy = y - cy
         return (dx * dx) / (a * a) + (dy * dy) / (b * b) <= 1
@@ -47,13 +49,13 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
 
         if(birdRect.intersect(topPipeRect)) {
             if(y<topPipeRect.left) {
-                //the ellipse would have to intersect the left corner
-                if(pointInsideEllipse(topPipeRect.left, topPipeRect.bottom, x, y, horizontalRadius, radius))
+                //the ellipse would have to intersect the left corner or left side
+                if(pointInsideEllipse(topPipeRect.left, min(topPipeRect.bottom, y), x, y, horizontalRadius, radius))
                     return true
 
             } else if(topPipeRect.right<y) {
-                //the ellipse would have to intersect the right corner
-                if(pointInsideEllipse(topPipeRect.right, topPipeRect.bottom, x, y, horizontalRadius, radius))
+                //the ellipse would have to intersect the right corner or side
+                if(pointInsideEllipse(topPipeRect.right, min(topPipeRect.bottom, y), x, y, horizontalRadius, radius))
                     return true
             }
             else {
@@ -65,13 +67,13 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
         }
         if(birdRect.intersect(bottomPipeRect)) {
             if(y<bottomPipeRect.left) {
-                //the ellipse would have to intersect the left corner
-                if(pointInsideEllipse(bottomPipeRect.left, bottomPipeRect.top, x, y, horizontalRadius, radius))
+                //the ellipse would have to intersect the left corner or side
+                if(pointInsideEllipse(bottomPipeRect.left, max(bottomPipeRect.top,y), x, y, horizontalRadius, radius))
                     return true
 
             } else if(bottomPipeRect.right<y) {
                 //the ellipse would have to intersect the right corner
-                if(pointInsideEllipse(bottomPipeRect.right, bottomPipeRect.top, x, y, horizontalRadius, radius))
+                if(pointInsideEllipse(bottomPipeRect.right, max(bottomPipeRect.top,y), x, y, horizontalRadius, radius))
                     return true
             }
             else {
