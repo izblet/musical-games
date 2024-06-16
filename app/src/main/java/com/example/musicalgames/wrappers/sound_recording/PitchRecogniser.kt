@@ -46,7 +46,7 @@ class PitchRecogniser (context: Context,
         val audioData :FloatArray = buffer.map { it.toFloat() / maxAbsValue }.toFloatArray()
 
 
-        val outputSize = 3
+        val outputSize = 7
         val result = SPICE?.getDominantPitch(audioData, outputSize, outputSize)
             ?: return null
 

@@ -19,7 +19,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     var minRange: String = "G3"
     var maxRange: String = "G4"
     var endAfter: Int = LEN_INF
-    var gapPositions: List<Int>? = null
+    var gapPositions: List<Int> = listOf()
 
 
     private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()

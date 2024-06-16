@@ -15,7 +15,7 @@ class MicrophoneManager {
 
     private var recordingThread: Thread? = null
     private var recording = false
-    private val bufferDurationMs = 64 // Duration of the buffer in milliseconds
+    private val bufferDurationMs = 200 // Duration of the buffer in milliseconds
     private val ringBufferLength = sampleRate * bufferDurationMs / 1000 // Length of the buffer in samples
     private val audioBuffer = ShortArray(bufferSize)
     private val audioBufferRing = ShortArray(ringBufferLength)
