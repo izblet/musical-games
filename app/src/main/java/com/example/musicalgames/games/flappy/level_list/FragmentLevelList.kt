@@ -30,7 +30,7 @@ class FragmentLevelList : Fragment() {
         override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
-        ): View? {
+        ): View {
                 _binding = FragmentFlappyLevelsBinding.inflate(inflater, container, false)
 
                 val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
@@ -45,7 +45,8 @@ class FragmentLevelList : Fragment() {
                         override fun onItemClick(level: Level) {
                                 viewModel.gameType = GameOption.LEVELS
                                 viewModel.minRange=level.minPitch
-                                viewModel.maxRange=noteName(midi(level.minPitch)+level.keyNum-1)
+                                viewModel.maxRange=level.maxPitch
+                                viewModel.gapPositions=level.keyList
                                 viewModel.endAfter=level.endAfter
                                 findNavController().navigate(R.id.action_fragmentLevelList_to_flappyGameFragment)
                         }

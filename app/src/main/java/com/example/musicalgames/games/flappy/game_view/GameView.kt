@@ -63,11 +63,14 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         return Pipe(
             pipeColor,
             1f,
-            generateRandomGap(minNote!!,maxNote!!),
+            getRandom(viewModel!!.gapPositions!!),
             minVisible!!,
             maxVisible!!,
             pitchSize!!
         )
+    }
+    private fun getRandom(notes: List<Int>): Int {
+        return notes[Random.nextInt(0, notes.size)]
     }
 
     private fun generateRandomGap(min: Int, max: Int): Int {

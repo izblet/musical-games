@@ -43,7 +43,7 @@ class Pipe(
         return RectF(leftEnd, keyEnd, rightEnd, keyStart) to color
 
     }
-    fun getGapKeys(): List<Pair<RectF, Int>> {
+    private fun getGapKeys(): List<Pair<RectF, Int>> {
         val keys = mutableListOf<Pair<RectF, Int>>()
         val note = gap
         val halfKey = pitchSize/2
