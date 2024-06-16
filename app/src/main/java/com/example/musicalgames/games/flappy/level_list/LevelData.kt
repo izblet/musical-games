@@ -22,9 +22,9 @@ object DefaultLevels {
             val notes = MusicUtil.getWhiteKeysFrom("C4", size)
             val lastNote = notes[notes.size-1]
             val name = "C major basic, $size notes"
-            val description = "C4 to "+noteName(lastNote)+", white keys, 20 pipes"
+            val description = "C4 to "+noteName(lastNote)+", white keys, arcade"
             levels.add(
-                Level(-1,minPitch, noteName(lastNote), notes, name, description,20)
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
             )
         }
 

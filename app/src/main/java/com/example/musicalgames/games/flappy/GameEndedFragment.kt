@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.example.musicalgames.R
 import com.example.musicalgames.games.GameOption
 import kotlinx.coroutines.launch
@@ -32,9 +34,12 @@ class GameEndedFragment : Fragment() {
         val textScore = view.findViewById<TextView>(R.id.text_score)
         val textDescription = view.findViewById<TextView>(R.id.text_high_score)
         val buttonExit = view.findViewById<Button>(R.id.button_exit)
+        val buttonRetry = view.findViewById<Button>(R.id.button_retry)
 
         if(viewModel.gameType == GameOption.LEVELS) {
-
+            textScore.text = "Your Score: ${viewModel.score}"
+            textDescription.visibility = View.GONE
+            /*
             if(viewModel.score == viewModel.endAfter) {
                 headMessage.text = "You have passed the level!"
                 textDescription.visibility=View.GONE
@@ -44,6 +49,8 @@ class GameEndedFragment : Fragment() {
                 textScore.text = "Your score: ${viewModel.score}"
                 textDescription.text = "Score needed: ${viewModel.endAfter}"
             }
+
+             */
 
         }
         else {
@@ -61,6 +68,9 @@ class GameEndedFragment : Fragment() {
 
         buttonExit.setOnClickListener {
            requireActivity().finish()
+        }
+        buttonRetry.setOnClickListener {
+            findNavController().navigate(R.id.action_gameEndedFragment_to_flappyGameFragment)
         }
     }
 

@@ -48,12 +48,12 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
         //return birdRect.intersect(topPipeRect) || birdRect.intersect(bottomPipeRect)
 
         if(birdRect.intersect(topPipeRect)) {
-            if(y<topPipeRect.left) {
+            if(x<topPipeRect.left) {
                 //the ellipse would have to intersect the left corner or left side
                 if(pointInsideEllipse(topPipeRect.left, min(topPipeRect.bottom, y), x, y, horizontalRadius, radius))
                     return true
 
-            } else if(topPipeRect.right<y) {
+            } else if(topPipeRect.right<x) {
                 //the ellipse would have to intersect the right corner or side
                 if(pointInsideEllipse(topPipeRect.right, min(topPipeRect.bottom, y), x, y, horizontalRadius, radius))
                     return true
@@ -66,12 +66,12 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
 
         }
         if(birdRect.intersect(bottomPipeRect)) {
-            if(y<bottomPipeRect.left) {
+            if(x<bottomPipeRect.left) {
                 //the ellipse would have to intersect the left corner or side
                 if(pointInsideEllipse(bottomPipeRect.left, max(bottomPipeRect.top,y), x, y, horizontalRadius, radius))
                     return true
 
-            } else if(bottomPipeRect.right<y) {
+            } else if(bottomPipeRect.right<x) {
                 //the ellipse would have to intersect the right corner
                 if(pointInsideEllipse(bottomPipeRect.right, max(bottomPipeRect.top,y), x, y, horizontalRadius, radius))
                     return true

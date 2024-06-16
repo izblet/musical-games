@@ -3,7 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        >
     <LinearLayout
         android:id="@+id/box_layout"
         android:layout_width="wrap_content"
@@ -37,16 +42,26 @@
             android:text="You have beaten your highest score!"
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
-
     </LinearLayout>
 
     <Button
         android:id="@+id/button_exit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Exit"
         android:layout_below="@id/box_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:text="Exit" />
 
+    <Button
+        android:id="@+id/button_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_exit"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="Retry" />
+    </LinearLayout>
 </RelativeLayout>
