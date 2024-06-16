@@ -17,6 +17,7 @@ import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.games.flappy.ActivityFlappy.Companion.ARCADE_EXTRA
+import com.example.musicalgames.games.sight_sing.ActivitySightSing
 import com.example.musicalgames.games.flappy.ActivityFlappy as FlappyActivity
 import com.example.musicalgames.games.chase.ActivityChase as ChaseActivity
 
@@ -61,6 +62,8 @@ class FragmentModeChoose : Fragment() {
                     else if(option == GameOption.LEVELS)
                         launchFlappyGame(false)
                 }
+                else if(viewModel.game == Game.SIGHT_SING)
+                    launchSightSingActivity()
                 else if(option == GameOption.GAME_CREATE)
                     launchPianoChaseActivity(true)
                 else
@@ -81,6 +84,10 @@ class FragmentModeChoose : Fragment() {
         val intent = Intent(activity, FlappyActivity::class.java).apply {
             putExtra(ARCADE_EXTRA, isArcade)
         }
+        startActivity(intent)
+    }
+    private fun launchSightSingActivity() {
+        val intent = Intent(activity, ActivitySightSing::class.java)
         startActivity(intent)
     }
 

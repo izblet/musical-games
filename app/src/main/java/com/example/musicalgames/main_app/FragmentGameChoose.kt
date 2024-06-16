@@ -37,7 +37,8 @@ class FragmentGameChoose : Fragment() {
         //this list shall be retrieved from a database
         val gameList = listOf(
             Game.CHASE,
-            Game.FLAPPY
+            Game.FLAPPY,
+            Game.SIGHT_SING
         )
 
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{

@@ -1,22 +1,25 @@
 package com.example.musicalgames.games.flappy.game_view
 
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import com.example.musicalgames.utils.MusicUtil
+import kotlinx.coroutines.withContext
 
 class Pipe(
     color: Int,
     var x: Float,
     private val gap: Int,
     private val minVisible: Double,
-    private val maxVisible: Double
+    private val maxVisible: Double,
+    private val pitchSize: Float
 ) {
     //x is the coordinate of left side of the pipe, gap is the coordinate of the middle of the gap
     companion object {
         const val WIDTH = 0.05f
         const val SPEED = 0.002f
-        const val PIPE_SPACE = 0.3f
+        const val PIPE_SPACE = 0.3f//space between pipes
     }
 
     private val paint = Paint()
@@ -27,17 +30,61 @@ class Pipe(
     fun move() {
         x -= SPEED
     }
-    fun getTopRect(): RectF {
-        val nextNote = gap+1;
-        val topEnd = 1f - MusicUtil.normalize(nextNote, minVisible, maxVisible)
+    fun getTopKeys(): List<Pair<RectF, Int>> {
+        val keys = mutableListOf<Pair<RectF, Int>>()
+        var halfKey = pitchSize/2
+
+        var note = gap+1;//the key that is currently drawn
         val leftEnd = x;
         val rightEnd = x + WIDTH
+
+        while(MusicUtil.spice(note)-halfKey<maxVisible) {
+            val keyStart =
+                (1f - MusicUtil.normalize(note, minVisible, maxVisible)).toFloat() + halfKey
+            val keyEnd = keyStart - 2*halfKey
+
+            val color = if (MusicUtil.isWhite(note)) Color.WHITE else Color.BLACK
+            val rect =RectF(leftEnd, keyEnd, rightEnd, keyStart)
+            keys.add(rect to color)
+
+            note++
+        }
+
+        return keys
+    }
+    fun getBottomKeys(): List<Pair<RectF, Int>> {
+        val keys = mutableListOf<Pair<RectF, Int>>()
+        var halfKey = pitchSize/2
+
+        var note = gap-1;//the key that is currently drawn
+        val leftEnd = x;
+        val rightEnd = x + WIDTH
+
+        while(MusicUtil.spice(note)+halfKey>minVisible) {
+            val keyStart =
+                (1f - MusicUtil.normalize(note, minVisible, maxVisible)).toFloat() + halfKey
+            val keyEnd = keyStart - 2*halfKey
+
+            val color = if (MusicUtil.isWhite(note)) Color.WHITE else Color.BLACK
+            val rect =RectF(leftEnd, keyEnd, rightEnd, keyStart)
+            keys.add(rect to color)
+
+            note--
+        }
+
+        return keys
+    }
+    fun getTopRect(): RectF {
+        val nextNote = gap+1;
+        val topEnd = 1f -MusicUtil.normalize(nextNote, minVisible, maxVisible)+pitchSize/2
+        val leftEnd = x;
+        val rightEnd = x+ WIDTH
         return RectF(leftEnd, 0f, rightEnd, topEnd.toFloat())
     }
     fun getBottomRect(): RectF {
         val prevNote = gap-1;
-        val bottomEnd = 1f - MusicUtil.normalize(prevNote, minVisible, maxVisible)
-        val leftEnd = x;
+        val bottomEnd = 1f - MusicUtil.normalize(prevNote, minVisible, maxVisible) - pitchSize/2
+        val leftEnd = x
         val rightEnd = x + WIDTH
         return RectF(leftEnd, bottomEnd.toFloat(), rightEnd, 1f)
     }
@@ -49,13 +96,25 @@ class Pipe(
     }
 
     fun draw(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
-        val topRect = getTopRect()
-        scale(topRect, screenWidth, screenHeight)
-        val bottomRect = getBottomRect()
-        scale(bottomRect, screenWidth, screenHeight)
+        //val topRect = getTopRect()
+        //scale(topRect, screenWidth, screenHeight)
+        //val bottomRect = getBottomRect()
+        //scale(bottomRect, screenWidth, screenHeight)
+        //paint.color = Color.GRAY
+        //canvas.drawRect(topRect, paint)
+        //canvas.drawRect(bottomRect, paint)
 
-        canvas.drawRect(topRect, paint)
-        canvas.drawRect(bottomRect, paint)
+
+        val topKeys = getTopKeys()
+        val bottomKeys = getBottomKeys()
+
+        val allKeys = topKeys+bottomKeys
+
+        allKeys.forEach{ (rect, color)->
+            scale(rect, screenWidth, screenHeight)
+            paint.color = color
+            canvas.drawRect(rect, paint)
+        }
     }
 
     fun passedLastPosition() : Boolean {

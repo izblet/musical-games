@@ -54,5 +54,9 @@
             android:name=".games.flappy.ActivityFlappy"
             android:screenOrientation="landscape"
             android:exported="true" />
+
+        <activity android:name=".games.sight_sing.ActivitySightSing"
+            android:parentActivityName=".MainActivity"
+            android:exported="true"/>
     </application>
 </manifest>

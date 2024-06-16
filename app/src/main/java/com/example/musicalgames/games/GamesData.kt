@@ -22,7 +22,8 @@ enum class GameOption {
 }
 enum class Game {
     FLAPPY,
-    CHASE
+    CHASE,
+    SIGHT_SING
 }
 
 @Parcelize
@@ -49,7 +50,15 @@ object GameMap {
                 "Flappy bird game controlled with voice",
                 R.drawable.default_game_icon,
                 listOf(GameOption.HIGH_SCORES, GameOption.ARCADE, GameOption.LEVELS)
-            )
+            ),
+        Game.SIGHT_SING to
+            GameInfo(2,
+                "Sight sing",
+                "Sight singing exercise",
+                R.drawable.default_game_icon,
+                listOf(GameOption.LEVELS)
+            ),
+
     )
 }
 

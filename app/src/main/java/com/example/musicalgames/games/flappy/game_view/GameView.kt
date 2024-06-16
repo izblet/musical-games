@@ -24,6 +24,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private var score = 0
     private var minNote: Int? = null
     private var maxNote: Int? = null
+    private var pitchSize: Float? = null
 
     private var minVisible: Double? = null
     private var maxVisible: Double? = null
@@ -35,7 +36,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
         textSize = 48f
     }
 
-    private val backgroundColor = ContextCompat.getColor(context, R.color.black)
+    private val backgroundColor = ContextCompat.getColor(context, R.color.blue)
     private val pipeColor = ContextCompat.getColor(context, R.color.blue)
 
     fun setEndListener(listener: GameEndListener) {
@@ -53,9 +54,9 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
 
         //the +1 at the end is because we are adding half a note above and below in bottom/top end
         val displayedNotesNum = (maxNote!!-minNote!!+1)+2*notespace+1
-        val pitchSize = 1/displayedNotesNum.toFloat()
+        pitchSize = 1/displayedNotesNum.toFloat()
 
-        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!, pitchSize.toFloat())
+        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!, pitchSize!!)
     }
 
     private fun getRandomPipe(): Pipe {
@@ -64,7 +65,8 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             1f,
             generateRandomGap(minNote!!,maxNote!!),
             minVisible!!,
-            maxVisible!!
+            maxVisible!!,
+            pitchSize!!
         )
     }
 
@@ -120,7 +122,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
 
         pipes.removeAll { it.x + Pipe.WIDTH < 0 }
 
-        if (pipes.size != 0 && pipes.last().passedLastPosition())
+        if (pipes.size == 0 || pipes.last().passedLastPosition())
             pipes.add(getRandomPipe())
 
         invalidate()

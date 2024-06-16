@@ -2,6 +2,8 @@ package com.example.musicalgames.games.flappy
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +16,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 import com.example.musicalgames.games.flappy.game_view.GameEndListener
+import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class GameFragment : Fragment(), GameEndListener {
     private lateinit var gameView: FloppyGameView
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser
-
+    private val soundPlayer by lazy { DefaultSoundPlayerManager(requireContext()) }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,8 +48,16 @@ class GameFragment : Fragment(), GameEndListener {
         val startGameButton = rootView.findViewById<Button>(R.id.startGameButton)
         startGameButton.setOnClickListener {
             if (checkPermissions()) {
-                gameController.startGame(this)
                 pitchRecogniser.start()
+                soundPlayer.play(viewModel.minRange)
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed(
+                    {soundPlayer.play(viewModel.maxRange)},
+                    1000
+                )
+                handler.postDelayed({
+                    gameController.startGame(this)
+                }, 2000)
                 startGameButton.visibility = View.GONE
             } else {
                 requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
