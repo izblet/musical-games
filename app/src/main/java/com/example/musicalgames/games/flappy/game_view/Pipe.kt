@@ -30,45 +30,51 @@ class Pipe(
     fun move() {
         x -= SPEED
     }
-    fun getTopKeys(): List<Pair<RectF, Int>> {
-        val keys = mutableListOf<Pair<RectF, Int>>()
-        var halfKey = pitchSize/2
 
-        var note = gap+1;//the key that is currently drawn
+    private fun getKeyRect(note: Int, whiteColor: Int, blackColor: Int): Pair<RectF, Int> {
         val leftEnd = x;
         val rightEnd = x + WIDTH
+        val halfKey = pitchSize/2
+        val keyStart =
+            (1f - MusicUtil.normalize(note, minVisible, maxVisible)).toFloat() + halfKey
+        val keyEnd = keyStart - 2*halfKey
+
+        val color = if (MusicUtil.isWhite(note)) whiteColor else blackColor
+        return RectF(leftEnd, keyEnd, rightEnd, keyStart) to color
+
+    }
+    fun getGapKeys(): List<Pair<RectF, Int>> {
+        val keys = mutableListOf<Pair<RectF, Int>>()
+        val note = gap
+        val halfKey = pitchSize/2
+
+        //TODO: the colors should come from somewhere else
+        keys.add(getKeyRect(note,
+            Color.argb(50,250, 250, 250),
+            Color.argb(50,0,0,0)))
+        return keys
+    }
+    private fun getTopKeys(): List<Pair<RectF, Int>> {
+        val keys = mutableListOf<Pair<RectF, Int>>()
+        val halfKey = pitchSize/2
+
+        var note = gap+1;//the key that is currently drawn
 
         while(MusicUtil.spice(note)-halfKey<maxVisible) {
-            val keyStart =
-                (1f - MusicUtil.normalize(note, minVisible, maxVisible)).toFloat() + halfKey
-            val keyEnd = keyStart - 2*halfKey
-
-            val color = if (MusicUtil.isWhite(note)) Color.WHITE else Color.BLACK
-            val rect =RectF(leftEnd, keyEnd, rightEnd, keyStart)
-            keys.add(rect to color)
-
+            keys.add(getKeyRect(note, Color.WHITE, Color.BLACK))
             note++
         }
 
         return keys
     }
-    fun getBottomKeys(): List<Pair<RectF, Int>> {
+    private fun getBottomKeys(): List<Pair<RectF, Int>> {
         val keys = mutableListOf<Pair<RectF, Int>>()
-        var halfKey = pitchSize/2
 
+        val halfKey = pitchSize/2
         var note = gap-1;//the key that is currently drawn
-        val leftEnd = x;
-        val rightEnd = x + WIDTH
 
         while(MusicUtil.spice(note)+halfKey>minVisible) {
-            val keyStart =
-                (1f - MusicUtil.normalize(note, minVisible, maxVisible)).toFloat() + halfKey
-            val keyEnd = keyStart - 2*halfKey
-
-            val color = if (MusicUtil.isWhite(note)) Color.WHITE else Color.BLACK
-            val rect =RectF(leftEnd, keyEnd, rightEnd, keyStart)
-            keys.add(rect to color)
-
+            keys.add(getKeyRect(note, Color.WHITE, Color.BLACK))
             note--
         }
 
@@ -107,8 +113,8 @@ class Pipe(
 
         val topKeys = getTopKeys()
         val bottomKeys = getBottomKeys()
-
-        val allKeys = topKeys+bottomKeys
+        val gapKeys = getGapKeys()
+        val allKeys = topKeys+bottomKeys+gapKeys
 
         allKeys.forEach{ (rect, color)->
             scale(rect, screenWidth, screenHeight)
