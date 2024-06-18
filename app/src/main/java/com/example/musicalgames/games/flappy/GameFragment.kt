@@ -51,13 +51,20 @@ class GameFragment : Fragment(), GameEndListener {
                 pitchRecogniser.start()
                 soundPlayer.play(viewModel.minRange)
                 val handler = Handler(Looper.getMainLooper())
+                //TODO: this is of course temporary - played sounds should be a part of the level class or sth
+                //  maybe a field called "resolution" that the boundaries resolve to
+                //  or just simply the root
                 handler.postDelayed(
                     {soundPlayer.play(viewModel.maxRange)},
                     1000
                 )
+                handler.postDelayed(
+                    {soundPlayer.play("C4")},
+                    2000
+                )
                 handler.postDelayed({
                     gameController.startGame(this)
-                }, 2000)
+                }, 3000)
                 startGameButton.visibility = View.GONE
             } else {
                 requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
