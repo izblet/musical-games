@@ -31,7 +31,7 @@ object DefaultLevels {
 
         for(size in listOf(3,4)) {
             val notes = MusicUtil.getWhiteKeysTo("C4", size)
-            val lastNote = notes[0]
+            val lastNote = notes[notes.size-1]
             val firstNote = notes[0]
             val name = "C major, ${noteName(lastNote)} to C4"
             val description = "white keys, arcade"
@@ -53,7 +53,7 @@ object DefaultLevels {
         for(size in listOf(5,6)) {
             val notes = MusicUtil.getWhiteKeysTo("C4", size)
             val firstNote = notes[0]
-            val lastNote = notes[0]
+            val lastNote = notes[notes.size-1]
             val name = "C major, ${noteName(lastNote)} to C4"
             val description = "white keys, arcade"
             levels.add(
@@ -87,7 +87,7 @@ object DefaultLevels {
         for(size in listOf(7)) {
             val notes = MusicUtil.getWhiteKeysTo("C4", size)
             val firstNote = notes[0]
-            val lastNote = notes[0]
+            val lastNote = notes[notes.size-1]
             val name = "C major, ${noteName(lastNote)} to C4"
             val description = "white keys, arcade"
             levels.add(
