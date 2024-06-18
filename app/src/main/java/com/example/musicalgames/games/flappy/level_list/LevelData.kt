@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
 import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteName
 
 const val LEN_INF = -1
@@ -18,11 +19,81 @@ object DefaultLevels {
         val levels = mutableListOf<Level>()
         val minPitch = "C4"
         val maxPitch = "C5"
-        for(size in listOf(3,4,5,6,7)) {
+        for(size in listOf(3,4)) {
             val notes = MusicUtil.getWhiteKeysFrom("C4", size)
             val lastNote = notes[notes.size-1]
-            val name = "C major basic, $size notes"
-            val description = "C4 to "+noteName(lastNote)+", white keys, arcade"
+            val name = "C major, C4 to ${noteName(lastNote)}"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+
+        for(size in listOf(3,4)) {
+            val notes = MusicUtil.getWhiteKeysTo("C4", size)
+            val lastNote = notes[0]
+            val name = "C major, ${noteName(lastNote)} to C4"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+
+        for(size in listOf(5, 6)) {
+            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
+            val lastNote = notes[notes.size-1]
+            val name = "C major, C4 to ${noteName(lastNote)}"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+        for(size in listOf(5,6)) {
+            val notes = MusicUtil.getWhiteKeysTo("C4", size)
+            val lastNote = notes[0]
+            val name = "C major, ${noteName(lastNote)} to C4"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+
+        for(size in listOf(3,4)) {
+            val notesBelow = MusicUtil.getWhiteKeysTo("C4", size)
+            val notes = notesBelow.slice(notesBelow.indices) + MusicUtil.getWhiteKeysFrom("C4", size)
+
+            val firstNote = notes[0]
+            val lastNote = notes[notes.size-1]
+            val name = "C major ${noteName(firstNote)} to ${noteName(lastNote)}"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+        for(size in listOf(7)) {
+            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
+            val lastNote = notes[notes.size-1]
+            val name = "C major, C4 to ${noteName(lastNote)}"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+
+        for(size in listOf(7)) {
+            val notes = MusicUtil.getWhiteKeysTo("C4", size)
+            val lastNote = notes[0]
+            val name = "C major, ${noteName(lastNote)} to C4"
+            val description = "white keys, arcade"
+            levels.add(
+                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
+            )
+        }
+        for(size in listOf(8)) {
+            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
+            val lastNote = notes[notes.size-1]
+            val name = "C major, C4 octave"
+            val description = "white keys, arcade"
             levels.add(
                 Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
             )

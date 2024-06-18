@@ -97,10 +97,20 @@ object MusicUtil {
         var pitch = midi(firstPitch)
         while(result.size<num) {
             if(isWhite(pitch))
-                result.add(pitch++)
-            else pitch++
+                result.add(pitch)
+            pitch++
         }
         return result
+    }
+    fun getWhiteKeysTo(lastPitch: String, num: Int) : List<Int> {
+        val result: MutableList<Int> = mutableListOf()
+        var pitch = midi(lastPitch)
+        while(result.size<num) {
+            if(isWhite(pitch))
+                result.add(pitch)
+            pitch--
+        }
+        return result.reversed()
     }
     fun getKeyIntervalFrom(pitch: String, num: Int): Int {
         return midi(pitch) +num
