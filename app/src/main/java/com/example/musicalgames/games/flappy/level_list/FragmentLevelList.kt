@@ -43,11 +43,13 @@ class FragmentLevelList : Fragment() {
 
                 val adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener {
                         override fun onItemClick(level: Level) {
+                                ViewModel.getIntentWithExtra(activity!!, level)
                                 viewModel.gameType = GameOption.LEVELS
                                 viewModel.minRange=level.minPitch
                                 viewModel.maxRange=level.maxPitch
                                 viewModel.gapPositions=level.keyList
                                 viewModel.endAfter=level.endAfter
+
                                 findNavController().navigate(R.id.action_fragmentLevelList_to_flappyGameFragment)
                         }
                 })

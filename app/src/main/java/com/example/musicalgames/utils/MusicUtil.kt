@@ -92,9 +92,9 @@ object MusicUtil {
         return (cqtBin / PT_SLOPE)
     }
 
-    fun getWhiteKeysFrom(firstPitch: String, num: Int) : List<Int> {
+    fun getWhiteKeysFrom(firstPitch: Int, num: Int) : List<Int> {
         val result: MutableList<Int> = mutableListOf()
-        var pitch = midi(firstPitch)
+        var pitch = firstPitch
         while(result.size<num) {
             if(isWhite(pitch))
                 result.add(pitch)
@@ -102,9 +102,9 @@ object MusicUtil {
         }
         return result
     }
-    fun getWhiteKeysTo(lastPitch: String, num: Int) : List<Int> {
+    fun getWhiteKeysTo(lastPitch: Int, num: Int) : List<Int> {
         val result: MutableList<Int> = mutableListOf()
-        var pitch = midi(lastPitch)
+        var pitch = lastPitch
         while(result.size<num) {
             if(isWhite(pitch))
                 result.add(pitch)

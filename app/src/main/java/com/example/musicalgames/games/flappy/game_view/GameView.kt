@@ -47,8 +47,8 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     fun setViewModel (viewModel: ViewModel) {
         this.viewModel=viewModel
         this.pitchRecogniser = viewModel.pitchRecogniser
-        this.minNote = MusicUtil.midi(viewModel.minRange)
-        this.maxNote = MusicUtil.midi(viewModel.maxRange)
+        this.minNote = viewModel.minRange
+        this.maxNote = viewModel.maxRange
 
         val notespace = 1
         this.minVisible = MusicUtil.spiceNoteBottomEnd(minNote!!-notespace)

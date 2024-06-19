@@ -8,110 +8,61 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.midi
+import com.example.musicalgames.utils.MusicUtil.noteLetter
 import com.example.musicalgames.utils.MusicUtil.noteName
 
 const val LEN_INF = -1
 const val DELIMITER = ","
 object DefaultLevels {
-    val baseLevels: List<Level> = generateLevels()
+    val baseLevels: List<Level> = generateMajorLevels()
+    private fun generateArcadeLevel(notes: List<Int>, root: Int, mode: String): Level {
+        val minPitch = notes[0]
+        val maxPitch = notes[notes.size-1]
 
-    private fun generateLevels():List<Level> {
+        val name = "${noteName(minPitch)} to ${noteName(maxPitch)}, root: ${noteLetter(root)} $mode"
+        val description = "Arcade"
+        return Level(-1, minPitch, maxPitch, root, notes, name, description, LEN_INF)
+
+    }
+
+    private fun generateMajorLevels():List<Level> {
         val levels = mutableListOf<Level>()
-        val minPitch = "C4"
-        val maxPitch = "C5"
-        for(size in listOf(3,4)) {
-            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
-            val lastNote = notes[notes.size-1]
-            val name = "C major, C4 to ${noteName(lastNote)}"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,minPitch, noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
 
-        for(size in listOf(3,4)) {
-            val notes = MusicUtil.getWhiteKeysTo("C4", size)
-            val lastNote = notes[notes.size-1]
-            val firstNote = notes[0]
-            val name = "C major, ${noteName(firstNote)} to C4"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
+        val rootNote = midi("C4")
 
-        for(size in listOf(5, 6)) {
-            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major, C4 to ${noteName(lastNote)}"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1, noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
-        for(size in listOf(5,6)) {
-            val notes = MusicUtil.getWhiteKeysTo("C4", size)
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major, ${noteName(firstNote)} to C4"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
+        for(sizeList in listOf(listOf(3,4), listOf(5,6), listOf(7), listOf(8))) {
+            //generate levels with notes above root
+            for(size in sizeList) {
+                val notes = MusicUtil.getWhiteKeysFrom(rootNote, size)
+                levels.add(generateArcadeLevel(notes, rootNote, "major"))
+            }
+            //generate levels with notes below root
+            for (size in sizeList) {
+                val notes = MusicUtil.getWhiteKeysTo(rootNote, size)
+                levels.add(generateArcadeLevel(notes, rootNote, "major"))
+            }
 
-        for(size in listOf(3,4)) {
-            val notesBelow = MusicUtil.getWhiteKeysTo("C4", size)
-            val notes = notesBelow.slice(notesBelow.indices) + MusicUtil.getWhiteKeysFrom("C4", size)
-
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major ${noteName(firstNote)} to ${noteName(lastNote)}"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
-        for(size in listOf(7)) {
-            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major, C4 to ${noteName(lastNote)}"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
-
-        for(size in listOf(7)) {
-            val notes = MusicUtil.getWhiteKeysTo("C4", size)
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major, ${noteName(firstNote)} to C4"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
-        }
-        for(size in listOf(8)) {
-            val notes = MusicUtil.getWhiteKeysFrom("C4", size)
-            val firstNote = notes[0]
-            val lastNote = notes[notes.size-1]
-            val name = "C major, C4 octave"
-            val description = "white keys, arcade"
-            levels.add(
-                Level(-1,noteName(firstNote), noteName(lastNote), notes, name, description, LEN_INF)
-            )
+            //generate levels that concat notes below and notes above
+            for(size in sizeList) {
+                var notes = MusicUtil.getWhiteKeysTo(rootNote, size)
+                notes = notes.slice(0..(notes.size - 2)) + MusicUtil.getWhiteKeysFrom(rootNote, size)
+                levels.add(generateArcadeLevel(notes, rootNote, "major"))
+            }
         }
 
         return levels
     }
 }
+data class Package(
+    val name:String,
+    val description: String,
+    val levelList: List<Level>,
+)
 data class Level(
     val id: Int,
-    val minPitch: String,
-    val maxPitch: String,
+    val minPitch: Int,
+    val maxPitch: Int,
+    val root: Int,
     val keyList: List<Int>,
     val name: String,
     val description: String,
@@ -121,9 +72,10 @@ data class Level(
 @Entity(tableName = "flappy_levels")
 data class DatabaseLevel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val minPitch: String, //min pitch that is to be displayed
-    val maxPitch: String, //max pitch that is to be displayed
-    val listOfMidiKeys: String, //list of integers corresponding to a
+    val minPitch: Int, //min pitch that is to be displayed
+    val maxPitch: Int, //max pitch that is to be displayed
+    val root: Int,
+    val listOfMidiKeys: String, //list of integers corresponding to midi notes
     val name: String,
     val description: String,
     val endAfter: Int
@@ -140,13 +92,13 @@ interface LevelDao {
 
     private fun DatabaseLevel.toLevel(): Level {
         val listOfInts: List<Int> = listOfMidiKeys.split(DELIMITER).map {it.toInt()}
-        return Level(id, minPitch, maxPitch, listOfInts, name, description, endAfter)
+        return Level(id, minPitch, maxPitch, root, listOfInts, name, description, endAfter)
     }
     private fun Level.toDatabaseLevel(): DatabaseLevel {
         val stringList = keyList.joinToString(separator = DELIMITER)
-        return DatabaseLevel(id, minPitch, maxPitch, stringList, name, description, endAfter)
+        return DatabaseLevel(id, minPitch, maxPitch, root, stringList, name, description, endAfter)
     }
-    /*suspend fun insert(level: Level) {
+    suspend fun insert(level: Level) {
         insert(level.toDatabaseLevel())
     }
     suspend fun update(level: Level) {
@@ -157,6 +109,5 @@ interface LevelDao {
         return listOf()
         return levels.map{ level-> level.toLevel()}
     }
-    */
 
 }

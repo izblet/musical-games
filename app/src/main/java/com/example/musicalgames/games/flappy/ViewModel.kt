@@ -1,6 +1,9 @@
 package com.example.musicalgames.games.flappy
 
+import android.app.Activity
 import android.app.Application
+import android.content.Intent
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.HighScore
@@ -9,6 +12,8 @@ import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GameOption
+import com.example.musicalgames.games.flappy.level_list.Level
+import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
@@ -16,11 +21,43 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     var gameType: GameOption? = null //type of game - levels/custom/arcade - just for inserting into the database
     var score = 0
     var pitchRecogniser: PitchRecogniser? = null
-    var minRange: String = "G3"
-    var maxRange: String = "G4"
+    var minRange: Int = midi("C3")
+    var maxRange: Int = midi("C4")
+    var root: Int = midi("C4")
     var endAfter: Int = LEN_INF
     var gapPositions: List<Int> = listOf()
 
+    companion object {
+        const val TYPE_STR = "type"
+        const val MIN_STR = "min"
+        const val MAX_STR = "max"
+        const val ROOT_STR = "root"
+        const val END_STR = "end"
+        const val POSITIONS_STR = "positions"
+        fun getIntentWithExtra(activity: FragmentActivity, level: Level): Intent {
+
+            return Intent(activity, ActivityFlappy::class.java).apply {
+                if(level.endAfter == LEN_INF)
+                     putExtra(TYPE_STR, GameOption.ARCADE)
+                else putExtra(TYPE_STR, GameOption.LEVELS)
+                putExtra(MIN_STR, level.minPitch)
+                putExtra(MAX_STR, level.maxPitch)
+                putExtra(ROOT_STR, level.root)
+                putExtra(END_STR, level.endAfter)
+                val keyList = ArrayList(level.keyList)
+                putExtra(POSITIONS_STR, keyList)
+            }
+        }
+    }
+    fun setDataFromExtra(intent: Intent) {
+        gameType = intent.getSerializableExtra(TYPE_STR) as? GameOption
+        minRange = intent.getIntExtra(MIN_STR, minRange)
+        maxRange = intent.getIntExtra(MAX_STR, maxRange)
+        root = intent.getIntExtra(ROOT_STR, root)
+        endAfter = intent.getIntExtra(END_STR, endAfter)
+        val positions = intent.getIntegerArrayListExtra(POSITIONS_STR)
+        gapPositions = positions!!
+    }
 
     private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
 
