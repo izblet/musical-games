@@ -3,6 +3,7 @@ package com.example.musicalgames.games.flappy
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
 import com.example.musicalgames.games.GameDatabase
@@ -38,8 +39,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
             return Intent(activity, ActivityFlappy::class.java).apply {
                 if(level.endAfter == LEN_INF)
-                     putExtra(TYPE_STR, GameOption.ARCADE)
-                else putExtra(TYPE_STR, GameOption.LEVELS)
+                    putExtra(TYPE_STR, GameOption.ARCADE.name)
+                else
+                    putExtra(TYPE_STR, GameOption.LEVELS.name)
                 putExtra(MIN_STR, level.minPitch)
                 putExtra(MAX_STR, level.maxPitch)
                 putExtra(ROOT_STR, level.root)
@@ -50,7 +52,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
     fun setDataFromExtra(intent: Intent) {
-        gameType = intent.getSerializableExtra(TYPE_STR) as? GameOption
+        val type = intent.getStringExtra(TYPE_STR)
+        gameType = GameOption.valueOf(type ?: GameOption.ARCADE.name)
+
         minRange = intent.getIntExtra(MIN_STR, minRange)
         maxRange = intent.getIntExtra(MAX_STR, maxRange)
         root = intent.getIntExtra(ROOT_STR, root)

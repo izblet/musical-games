@@ -19,16 +19,11 @@ class ActivityFlappy : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val arcade = intent.getBooleanExtra(ARCADE_EXTRA, true)
+        //val arcade = intent.getBooleanExtra(ARCADE_EXTRA, true)
         val viewModel = ViewModelProvider(this)[ViewModel::class.java]
-        viewModel.gameType = if(arcade) GameOption.ARCADE else GameOption.LEVELS
 
-        if(arcade) {
-            navController.navigate(R.id.flappyGameFragment)
-        }
-        else {
-            navController.navigate(R.id.fragmentLevelList)
-        }
+        viewModel.setDataFromExtra(intent)
+        navController.navigate(R.id.flappyGameFragment)
     }
 
     override fun onBackPressed() {

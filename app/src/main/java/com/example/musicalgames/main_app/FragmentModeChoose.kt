@@ -81,10 +81,13 @@ class FragmentModeChoose : Fragment() {
         startActivity(intent)
     }
     private fun launchFlappyGame(isArcade: Boolean) {
-        val intent = Intent(activity, FlappyActivity::class.java).apply {
+        findNavController().navigate(R.id.action_SecondFragment_to_fragmentLevelList2)
+        /*val intent = Intent(activity, FlappyActivity::class.java).apply {
             putExtra(ARCADE_EXTRA, isArcade)
         }
         startActivity(intent)
+
+         */
     }
     private fun launchSightSingActivity() {
         val intent = Intent(activity, ActivitySightSing::class.java)

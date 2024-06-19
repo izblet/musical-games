@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_SecondFragment_to_fragmentHighScore"
             app:destination="@id/fragmentHighScore" />
+        <action
+            android:id="@+id/action_SecondFragment_to_fragmentLevelList2"
+            app:destination="@id/fragmentLevelList2" />
     </fragment>
     <fragment
         android:id="@+id/fragmentHighScore"
@@ -38,6 +41,14 @@
         android:label="FragmentHighScore" >
         <action
             android:id="@+id/action_fragmentHighScore_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentLevelList2"
+        android:name="com.example.musicalgames.main_app.FragmentLevelList"
+        android:label="FragmentLevelList" >
+        <action
+            android:id="@+id/action_fragmentLevelList2_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
 </navigation>

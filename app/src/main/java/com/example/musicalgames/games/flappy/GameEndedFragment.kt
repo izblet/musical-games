@@ -39,24 +39,12 @@ class GameEndedFragment : Fragment() {
         if(viewModel.gameType == GameOption.LEVELS) {
             textScore.text = "Your Score: ${viewModel.score}"
             textDescription.visibility = View.GONE
-            /*
-            if(viewModel.score == viewModel.endAfter) {
-                headMessage.text = "You have passed the level!"
-                textDescription.visibility=View.GONE
-                textScore.visibility=View.GONE
-            }
-            else {
-                textScore.text = "Your score: ${viewModel.score}"
-                textDescription.text = "Score needed: ${viewModel.endAfter}"
-            }
-
-             */
-
         }
         else {
             textScore.text = "Your Score: ${viewModel.score}"
+            textDescription.visibility = View.GONE
 
-            lifecycleScope.launch {
+            /*lifecycleScope.launch {
                 val isHighScore = viewModel.checkHighScore()
                 if (isHighScore) {
                     textDescription.text = "New High Score!"
@@ -64,6 +52,7 @@ class GameEndedFragment : Fragment() {
                     textDescription.visibility = View.GONE
                 }
             }
+            */
         }
 
         buttonExit.setOnClickListener {
