@@ -23,7 +23,8 @@ enum class GameOption {
 enum class Game {
     FLAPPY,
     CHASE,
-    SIGHT_SING
+    PLAY_BY_EAR,
+    CHORD_RECOGNISE,
 }
 
 @Parcelize
@@ -51,13 +52,20 @@ object GameMap {
                 R.drawable.default_game_icon,
                 listOf(GameOption.HIGH_SCORES, GameOption.ARCADE, GameOption.LEVELS)
             ),
-        Game.SIGHT_SING to
-            GameInfo(2,
-                "Sight sing",
-                "Sight singing exercise",
+        Game.PLAY_BY_EAR to
+            GameInfo(3,
+                "Play By Ear",
+                "Guessing melodies from sounds",
                 R.drawable.default_game_icon,
                 listOf(GameOption.LEVELS)
             ),
+        Game.CHORD_RECOGNISE to
+            GameInfo(4,
+                "Chord recognise",
+                "Recognise chords",
+                R.drawable.default_game_icon,
+                listOf(GameOption.LEVELS)
+            )
 
     )
 }

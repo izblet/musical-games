@@ -1,5 +1,6 @@
 package com.example.musicalgames.main_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,18 +9,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
-import com.example.musicalgames.games.GameInfo
+import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameIntentMaker
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.flappy.ViewModel
-import com.example.musicalgames.games.GameOption
+import com.example.musicalgames.games.flappy.ViewModel as FlappyViewModel
 import com.example.musicalgames.games.flappy.level_list.DefaultLevels
-import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import com.example.musicalgames.games.flappy.level_list.Level
 
 
@@ -31,7 +30,7 @@ class FragmentLevelList : Fragment() {
         private val binding get() = _binding!!
         private lateinit var viewModel: ViewModel
         private fun updateTitle() {
-                val title = "Flappy Bird - Levels"
+                val title = "${GameMap.gameInfos[viewModel.game!!]!!.name} - Levels"
                 (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(title)
         }
         override fun onResume() {
@@ -44,27 +43,26 @@ class FragmentLevelList : Fragment() {
         ): View {
                 _binding = FragmentFlappyLevelsBinding.inflate(inflater, container, false)
 
-                updateTitle()
                 val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
                 val layoutManager = LinearLayoutManager(context)
                 recyclerView.layoutManager = layoutManager
 
-                // chosen game will be saved in the viewModel
-                viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-                val levelList = DefaultLevels.baseLevels
+                // chosen game was saved in the viewModel
+                viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
+                updateTitle()
 
-                val adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener {
+                var levelList: List<Level>? = null
+                var intentMaker: GameIntentMaker? = null
+
+                if(viewModel.game == Game.FLAPPY) {
+                        levelList = DefaultLevels.baseLevels
+                        intentMaker = FlappyViewModel.Companion
+                }
+
+                val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {
                         override fun onItemClick(level: Level) {
-                                val intent = ViewModel.getIntentWithExtra(activity!!, level)
+                                val intent = intentMaker!!.getIntent(activity!!, level)
                                 startActivity(intent)
-                                /*viewModel.gameType = GameOption.LEVELS
-                                viewModel.minRange=level.minPitch
-                                viewModel.maxRange=level.maxPitch
-                                viewModel.gapPositions=level.keyList
-                                viewModel.endAfter=level.endAfter
-                                findNavController().navigate(R.id.action_fragmentLevelList_to_flappyGameFragment)
-                                 */
-
                         }
                 })
                 recyclerView.adapter = adapter
@@ -98,10 +96,7 @@ class FragmentLevelList : Fragment() {
                         private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
                         fun bind(level: Level) {
                                 nameTextView.text = level.name
-                                if(level.endAfter!= LEN_INF)
-                                        descriptionTextView.text = level.description
-                                else
-                                        descriptionTextView.text = "Arcade"
+                                descriptionTextView.text = level.description
                         }
                 }
                 interface OnItemClickListener {

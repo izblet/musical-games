@@ -36,9 +36,9 @@ class FragmentGameChoose : Fragment() {
         viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
         //this list shall be retrieved from a database
         val gameList = listOf(
-            Game.CHASE,
             Game.FLAPPY,
-            Game.SIGHT_SING
+            Game.PLAY_BY_EAR,
+            Game.CHORD_RECOGNISE
         )
 
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{

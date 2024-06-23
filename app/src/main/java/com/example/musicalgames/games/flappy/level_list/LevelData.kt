@@ -14,19 +14,19 @@ import com.example.musicalgames.utils.MusicUtil.noteName
 const val LEN_INF = -1
 const val DELIMITER = ","
 object DefaultLevels {
-    val baseLevels: List<Level> = generateMajorLevels()
-    private fun generateArcadeLevel(notes: List<Int>, root: Int, mode: String): Level {
+    val baseLevels: List<FlappyLevel> = generateMajorLevels()
+    private fun generateArcadeLevel(notes: List<Int>, root: Int, mode: String): FlappyLevel {
         val minPitch = notes[0]
         val maxPitch = notes[notes.size-1]
 
         val name = "${noteName(minPitch)} to ${noteName(maxPitch)}, root: ${noteLetter(root)} $mode"
         val description = "Arcade"
-        return Level(-1, minPitch, maxPitch, root, notes, name, description, LEN_INF)
+        return FlappyLevel(-1, minPitch, maxPitch, root, notes, name, description, LEN_INF)
 
     }
 
-    private fun generateMajorLevels():List<Level> {
-        val levels = mutableListOf<Level>()
+    private fun generateMajorLevels():List<FlappyLevel> {
+        val levels = mutableListOf<FlappyLevel>()
 
         val rootNote = midi("C4")
 
@@ -56,18 +56,23 @@ object DefaultLevels {
 data class Package(
     val name:String,
     val description: String,
-    val levelList: List<Level>,
+    val levelList: List<FlappyLevel>,
 )
-data class Level(
-    val id: Int,
+open class Level (
+    open val id: Int,
+    open val name: String,
+    open val description: String
+)
+data class FlappyLevel (
+    override val id: Int,
     val minPitch: Int,
     val maxPitch: Int,
     val root: Int,
     val keyList: List<Int>,
-    val name: String,
-    val description: String,
+    override val name: String,
+    override val description: String,
     val endAfter: Int
-)
+): Level(id, name, description)
 
 @Entity(tableName = "flappy_levels")
 data class DatabaseLevel(
@@ -90,21 +95,21 @@ interface LevelDao {
     @Query("SELECT * FROM flappy_levels ORDER BY id DESC")
     suspend fun getDatabaseLevels(): List<DatabaseLevel>?
 
-    private fun DatabaseLevel.toLevel(): Level {
+    private fun DatabaseLevel.toLevel(): FlappyLevel {
         val listOfInts: List<Int> = listOfMidiKeys.split(DELIMITER).map {it.toInt()}
-        return Level(id, minPitch, maxPitch, root, listOfInts, name, description, endAfter)
+        return FlappyLevel(id, minPitch, maxPitch, root, listOfInts, name, description, endAfter)
     }
-    private fun Level.toDatabaseLevel(): DatabaseLevel {
+    private fun FlappyLevel.toDatabaseLevel(): DatabaseLevel {
         val stringList = keyList.joinToString(separator = DELIMITER)
         return DatabaseLevel(id, minPitch, maxPitch, root, stringList, name, description, endAfter)
     }
-    suspend fun insert(level: Level) {
+    suspend fun insert(level: FlappyLevel) {
         insert(level.toDatabaseLevel())
     }
-    suspend fun update(level: Level) {
+    suspend fun update(level: FlappyLevel) {
         update(level.toDatabaseLevel())
     }
-    suspend fun getLevels() : List<Level>{
+    suspend fun getLevels() : List<FlappyLevel>{
         val levels = getDatabaseLevels() ?:
         return listOf()
         return levels.map{ level-> level.toLevel()}

@@ -5,7 +5,6 @@ import androidx.room.Database;
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.musicalgames.games.flappy.level_list.DatabaseLevel
-import com.example.musicalgames.games.flappy.level_list.Level
 import com.example.musicalgames.games.flappy.level_list.LevelDao
 
 @Database(entities = [DatabaseLevel::class, HighScore::class], version = 1, exportSchema = false)
