@@ -3,6 +3,8 @@ package com.example.musicalgames.games.flappy
 import android.os.Handler
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.example.musicalgames.games.GameController
+import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -10,24 +12,36 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GameController(private val gameView: FloppyGameView) {
+class FlappyGameController(private val gameView: FloppyGameView) : GameController {
     private var isGameRunning = false
     private val handler = Handler()
     private val frameRateMillis = 1000 / 60 // 60 frames per second
     private var birdUpdateJob: Job? = null
 
-    fun startGame(owner: LifecycleOwner) {
+    override fun startGame(owner: LifecycleOwner) {
         isGameRunning = true
         startGameLoop(owner)
     }
 
-    fun pauseGame() {
-        isGameRunning = false
+    override fun pauseGame() {
+        endGame()
     }
 
-    fun endGame() {
+    override fun endGame() {
         isGameRunning = false
         birdUpdateJob?.cancel()
+    }
+
+    override fun getScore(): Int {
+        return gameView.getScore()
+    }
+
+    override fun registerListener(listener: GameListener) {
+       gameView.setEndListener(listener)
+    }
+
+    override fun unregisterListener(listener: GameListener) {
+       //TODO: implement this
     }
 
     private fun startGameLoop(owner: LifecycleOwner) {

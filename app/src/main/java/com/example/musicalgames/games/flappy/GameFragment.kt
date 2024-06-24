@@ -14,13 +14,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
+import com.example.musicalgames.games.GameController
+import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
-import com.example.musicalgames.games.flappy.game_view.GameEndListener
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
-class GameFragment : Fragment(), GameEndListener {
-    private lateinit var gameView: FloppyGameView
+class GameFragment : Fragment(), GameListener {
     private lateinit var gameController: GameController
     private lateinit var pitchRecogniser: PitchRecogniser
     private val soundPlayer by lazy { DefaultSoundPlayerManager(requireContext()) }
@@ -31,19 +31,6 @@ class GameFragment : Fragment(), GameEndListener {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-        gameView = rootView.findViewById(R.id.gameView)
-        gameView.setEndListener(this)
-
-        val minListenedPitch = "C2"
-        val maxListenedPitch = "C6"
-
-        pitchRecogniser = PitchRecogniser(requireContext(),
-             minListenedPitch, maxListenedPitch)
-
-        viewModel.pitchRecogniser = pitchRecogniser
-        gameView.setViewModel(viewModel)
-
-        gameController = GameController(gameView)
 
         val startGameButton = rootView.findViewById<Button>(R.id.startGameButton)
         startGameButton.setOnClickListener {
@@ -71,10 +58,35 @@ class GameFragment : Fragment(), GameEndListener {
             }
         }
 
+
         if (!checkPermissions())
             requestMultiplePermissions.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
 
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        val gameView = FloppyGameView(requireContext())
+        val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
+        gameContainer.addView(gameView)
+        //gameView = rootView.findViewById(R.id.gameView)
+        gameView.setEndListener(this)
+
+        val minListenedPitch = "C2"
+        val maxListenedPitch = "C6"
+
+        pitchRecogniser = PitchRecogniser(requireContext(),
+            minListenedPitch, maxListenedPitch)
+
+        viewModel.pitchRecogniser = pitchRecogniser
+        gameView.setViewModel(viewModel)
+
+        gameController = FlappyGameController(gameView)
+
+
     }
 
     private fun checkPermissions(): Boolean {
@@ -91,9 +103,9 @@ class GameFragment : Fragment(), GameEndListener {
             // Handle permission request result if needed
         }
 
-    override fun onEndGame() {
+    override fun onGameEnded() {
         val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-        viewModel.score= gameView.getScore()
+        viewModel.score= gameController.getScore()
         pitchRecogniser.release()
         gameController.endGame()
         findNavController().navigate(R.id.gameEndedFragment)

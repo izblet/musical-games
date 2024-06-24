@@ -8,17 +8,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
+import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 import com.example.musicalgames.games.flappy.ViewModel
 import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import kotlin.random.Random
-interface GameEndListener {
-    fun onEndGame()
-}
 
-class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    private var endListener: GameEndListener? = null
+class FloppyGameView(context: Context) : View(context) {
+    private var endListener: GameListener? = null
     private var pitchRecogniser: PitchRecogniser? = null
     private val pipes = mutableListOf<Pipe>()
     private var bird: Bird? = null
@@ -41,7 +39,7 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
     private val backgroundColor = ContextCompat.getColor(context, R.color.blue)
     private val pipeColor = ContextCompat.getColor(context, R.color.blue)
 
-    fun setEndListener(listener: GameEndListener) {
+    fun setEndListener(listener: GameListener) {
         endListener = listener
     }
     fun setViewModel (viewModel: ViewModel) {
@@ -110,12 +108,12 @@ class FloppyGameView(context: Context, attrs: AttributeSet) : View(context, attr
             pipe.move()
 
             if (bird!!.intersects(pipe, height.toFloat(), width.toFloat()))
-                endListener?.onEndGame()
+                endListener?.onGameEnded()
 
             else if(bird!!.passing(pipe)) {
                 score++
                 if(viewModel!!.endAfter == score)
-                    endListener?.onEndGame()
+                    endListener?.onGameEnded()
             }
         }
 
