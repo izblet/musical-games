@@ -1,4 +1,4 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.game_activity
 
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity

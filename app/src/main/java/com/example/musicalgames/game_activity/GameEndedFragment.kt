@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.game_activity
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 import com.example.musicalgames.games.GameOption
+import com.example.musicalgames.games.flappy.FlappyViewModel
 
 class GameEndedFragment : Fragment() {
 

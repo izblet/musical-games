@@ -1,11 +1,11 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.game_activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
+import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyViewModel
 
 class GameActivity : AppCompatActivity() {

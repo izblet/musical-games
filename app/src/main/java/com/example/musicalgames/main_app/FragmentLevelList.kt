@@ -14,9 +14,9 @@ import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameIntentMaker
+import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.GameActivity
+import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
 import com.example.musicalgames.games.flappy.level_list.DefaultLevels
 import com.example.musicalgames.games.flappy.level_list.Level

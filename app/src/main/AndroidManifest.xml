@@ -51,7 +51,7 @@
 
         <activity
             android:parentActivityName=".MainActivity"
-            android:name=".games.GameActivity"
+            android:name=".game_activity.GameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
 

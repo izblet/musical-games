@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
-import com.example.musicalgames.games.GameListener
+import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.level_list.LEN_INF

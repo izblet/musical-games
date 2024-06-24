@@ -1,7 +1,6 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.game_activity
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 

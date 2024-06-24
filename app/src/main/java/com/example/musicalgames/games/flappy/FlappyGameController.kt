@@ -7,8 +7,8 @@ import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import com.example.musicalgames.games.GameController
-import com.example.musicalgames.games.GameListener
+import com.example.musicalgames.game_activity.GameController
+import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.SoundPlayerManager
