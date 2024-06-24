@@ -2,12 +2,15 @@ package com.example.musicalgames.games.flappy
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.games.GameController
 import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
+import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
+import com.example.musicalgames.wrappers.sound_playing.SoundPlayerManager
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 import com.example.musicalgames.games.flappy.ViewModel as FlappyViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,10 +25,25 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     private val frameRateMillis = 1000 / 60 // 60 frames per second
     private var birdUpdateJob: Job? = null
     private var viewModel: FlappyViewModel? = null
-
+    private var soundPlayer: SoundPlayerManager? =null
     override fun startGame(owner: LifecycleOwner) {
-        isGameRunning = true
-        startGameLoop(owner)
+        soundPlayer!!.play(viewModel!!.minRange)
+        val handler = Handler(Looper.getMainLooper())
+        //TODO: this is of course temporary - played sounds should be a part of the level class or sth
+        //  maybe a field called "resolution" that the boundaries resolve to
+        //  or just simply the root
+        handler.postDelayed(
+            {soundPlayer!!.play(viewModel!!.maxRange)},
+            1000
+        )
+        handler.postDelayed(
+            {soundPlayer!!.play("C4")},
+            2000
+        )
+        handler.postDelayed({
+            isGameRunning = true
+            startGameLoop(owner)
+        }, 3000)
     }
 
     override fun pauseGame() {
@@ -66,6 +84,8 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         this.viewModel!!.pitchRecogniser = pitchRecogniser
         pitchRecogniser.start()
         gameView.setViewModelData(viewModel!!)
+        soundPlayer = DefaultSoundPlayerManager(context)
+
     }
 
     private fun startGameLoop(owner: LifecycleOwner) {
