@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress NavigationFile -->
+<!--this is because of a bug in android studio -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/flappy_navigation"
     app:startDestination="@id/flappyGameFragment">
 
@@ -8,6 +11,9 @@
         android:id="@+id/flappyGameFragment"
         android:name="com.example.musicalgames.games.flappy.GameFragment"
         android:label="FlappyGameFragment" >
+        <argument
+            android:name="game_type"
+            app:argType="string"/>
 
         <action
             android:id="@+id/action_flappyGameFragment_to_gameEndedFragment"

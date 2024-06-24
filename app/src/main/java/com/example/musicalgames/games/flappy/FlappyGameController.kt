@@ -1,8 +1,10 @@
 package com.example.musicalgames.games.flappy
 
+import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.security.Permission
 
 class FlappyGameController(private val gameView: FloppyGameView) : GameController {
     private var isGameRunning = false
@@ -26,6 +29,9 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     private var birdUpdateJob: Job? = null
     private var viewModel: FlappyViewModel? = null
     private var soundPlayer: SoundPlayerManager? =null
+    companion object {
+        val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+    }
     override fun startGame(owner: LifecycleOwner) {
         soundPlayer!!.play(viewModel!!.minRange)
         val handler = Handler(Looper.getMainLooper())
@@ -74,7 +80,7 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         }
     }
 
-    override fun initGame(context: Context) {
+    override fun initGame(context: Context, listener: GameListener) {
         val minListenedPitch = "C2"
         val maxListenedPitch = "C6"
 
@@ -85,6 +91,7 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         pitchRecogniser.start()
         gameView.setViewModelData(viewModel!!)
         soundPlayer = DefaultSoundPlayerManager(context)
+        gameView.setEndListener(listener)
 
     }
 
