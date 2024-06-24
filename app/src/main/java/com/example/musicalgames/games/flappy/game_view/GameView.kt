@@ -3,21 +3,19 @@ package com.example.musicalgames.games.flappy.game_view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 import com.example.musicalgames.games.flappy.ViewModel
 import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import kotlin.random.Random
 
 class FloppyGameView(context: Context) : View(context) {
+
     private var endListener: GameListener? = null
-    private var pitchRecogniser: PitchRecogniser? = null
     private val pipes = mutableListOf<Pipe>()
     private var bird: Bird? = null
     private var score = 0
@@ -42,9 +40,8 @@ class FloppyGameView(context: Context) : View(context) {
     fun setEndListener(listener: GameListener) {
         endListener = listener
     }
-    fun setViewModel (viewModel: ViewModel) {
+    fun setViewModelData (viewModel: ViewModel) {
         this.viewModel=viewModel
-        this.pitchRecogniser = viewModel.pitchRecogniser
         this.minNote = viewModel.minRange
         this.maxNote = viewModel.maxRange
 
@@ -56,7 +53,7 @@ class FloppyGameView(context: Context) : View(context) {
         val displayedNotesNum = (maxNote!!-minNote!!+1)+2*notespace+1
         pitchSize = 1/displayedNotesNum.toFloat()
 
-        this.bird = Bird(pitchRecogniser!!, minVisible!!, maxVisible!!, pitchSize!!)
+        this.bird = Bird(viewModel.pitchRecogniser!!, minVisible!!, maxVisible!!, pitchSize!!)
     }
 
     private fun getRandomPipe(): Pipe {
