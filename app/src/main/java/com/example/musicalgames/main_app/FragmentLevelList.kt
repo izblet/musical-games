@@ -1,6 +1,5 @@
 package com.example.musicalgames.main_app
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,8 @@ import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameIntentMaker
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.flappy.ViewModel as FlappyViewModel
+import com.example.musicalgames.games.GameActivity
+import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
 import com.example.musicalgames.games.flappy.level_list.DefaultLevels
 import com.example.musicalgames.games.flappy.level_list.Level
 
@@ -62,6 +62,10 @@ class FragmentLevelList : Fragment() {
                 val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {
                         override fun onItemClick(level: Level) {
                                 val intent = intentMaker!!.getIntent(activity!!, level)
+                                if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
+                                        throw Exception("game type argument is already set in intent")
+                                }
+                                intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
                                 startActivity(intent)
                         }
                 })

@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import com.example.musicalgames.games.GameListener
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.games.flappy.ViewModel
+import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import kotlin.random.Random
 
@@ -27,7 +27,7 @@ class FloppyGameView(context: Context) : View(context) {
     private var minVisible: Double? = null
     private var maxVisible: Double? = null
 
-    private var viewModel: ViewModel? = null
+    private var viewModel: FlappyViewModel? = null
 
     private val scorePaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.white)
@@ -40,7 +40,7 @@ class FloppyGameView(context: Context) : View(context) {
     fun setEndListener(listener: GameListener) {
         endListener = listener
     }
-    fun setViewModelData (viewModel: ViewModel) {
+    fun setViewModelData (viewModel: FlappyViewModel) {
         this.viewModel=viewModel
         this.minNote = viewModel.minRange
         this.maxNote = viewModel.maxRange

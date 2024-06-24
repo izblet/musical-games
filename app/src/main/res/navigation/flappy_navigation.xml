@@ -3,13 +3,12 @@
 <!--this is because of a bug in android studio -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/flappy_navigation"
-    app:startDestination="@id/flappyGameFragment">
+    app:startDestination="@id/gameEndedFragment">
 
     <fragment
         android:id="@+id/flappyGameFragment"
-        android:name="com.example.musicalgames.games.flappy.GameFragment"
+        android:name="com.example.musicalgames.games.GameFragment"
         android:label="FlappyGameFragment" >
         <argument
             android:name="game_type"

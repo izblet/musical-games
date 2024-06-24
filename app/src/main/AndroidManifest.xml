@@ -51,7 +51,7 @@
 
         <activity
             android:parentActivityName=".MainActivity"
-            android:name=".games.flappy.ActivityFlappy"
+            android:name=".games.GameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
 

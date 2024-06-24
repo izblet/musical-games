@@ -1,5 +1,4 @@
-package com.example.musicalgames.games.flappy
-import android.Manifest
+package com.example.musicalgames.games
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,19 +7,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker.PermissionResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
-import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameController
-import com.example.musicalgames.games.GameListener
+import com.example.musicalgames.games.flappy.FlappyGameController
+import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 
 class GameFragment : Fragment(), GameListener {
     private lateinit var gameController: GameController
     private lateinit var permissionList: Array<String>
+    private lateinit var startButton: Button
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,21 +26,7 @@ class GameFragment : Fragment(), GameListener {
     ): View? {
 
         val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
-
-        permissionList = FlappyGameController.permissions
-
-        val startGameButton = rootView.findViewById<Button>(R.id.startGameButton)
-        startGameButton.setOnClickListener {
-            if (checkPermissions()) {
-                startGameButton.visibility = View.GONE
-                gameController.startGame(this)
-            } else {
-                requestMultiplePermissions.launch(permissionList)
-            }
-        }
-
-        if (!checkPermissions())
-            requestMultiplePermissions.launch(permissionList)
+        startButton = rootView.findViewById(R.id.startGameButton)
 
         return rootView
     }
@@ -54,7 +38,8 @@ class GameFragment : Fragment(), GameListener {
         val gameType = arguments?.getString("game_type")
 
         if(gameType == Game.FLAPPY.name) {
-            val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+            permissionList = FlappyGameController.permissions
+            val viewModel = ViewModelProvider(requireActivity())[FlappyViewModel::class.java]
             val gameView = FloppyGameView(requireContext())
             val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
             gameContainer.addView(gameView)
@@ -63,12 +48,28 @@ class GameFragment : Fragment(), GameListener {
             gameController.setViewModel(viewModel)
             gameController.initGame(requireContext(), this)
         }
+        else {
+            throw Exception("There is no view for a game with the specified type $gameType")
+        }
+
+
+        if (!checkPermissions())
+            requestMultiplePermissions.launch(permissionList)
+
+        startButton.setOnClickListener {
+            if (checkPermissions()) {
+                startButton.visibility = View.GONE
+                gameController.startGame(this)
+            } else {
+                requestMultiplePermissions.launch(permissionList)
+            }
+        }
     }
 
     private fun checkPermissions(): Boolean {
         for(permission in permissionList) {
             val permissionResult = ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.RECORD_AUDIO
+                requireContext(), permission
             )
             if(permissionResult != PackageManager.PERMISSION_GRANTED) {
                 return false
@@ -81,11 +82,11 @@ class GameFragment : Fragment(), GameListener {
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permission ->
-            // Handle permission request result if needed
+            // Handle permission request result
         }
 
     override fun onGameEnded() {
-        val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        val viewModel = ViewModelProvider(requireActivity()).get(FlappyViewModel::class.java)
         viewModel.score = gameController.getScore()
         gameController.endGame()
         findNavController().navigate(R.id.gameEndedFragment)

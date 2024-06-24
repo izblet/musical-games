@@ -9,6 +9,7 @@ import com.example.musicalgames.games.HighScore
 import com.example.musicalgames.games.HighScoreDao
 import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameActivity
 import com.example.musicalgames.games.GameIntentMaker
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GameOption
@@ -17,7 +18,7 @@ import com.example.musicalgames.games.flappy.level_list.Level
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
-class ViewModel(application: Application) : AndroidViewModel(application) {
+class FlappyViewModel(application: Application) : AndroidViewModel(application) {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
     var gameType: GameOption? = null //type of game - levels/custom/arcade - just for inserting into the database
     var score = 0
@@ -41,7 +42,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
             val flappyLevel = level as FlappyLevel
 
-            return Intent(activity, ActivityFlappy::class.java).apply {
+            return Intent(activity, GameActivity::class.java).apply {
                 if(flappyLevel.endAfter == LEN_INF)
                     putExtra(TYPE_STR, GameOption.ARCADE.name)
                 else

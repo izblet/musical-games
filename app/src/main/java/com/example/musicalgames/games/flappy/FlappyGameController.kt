@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -14,13 +13,12 @@ import com.example.musicalgames.games.flappy.game_view.FloppyGameView
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.SoundPlayerManager
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
-import com.example.musicalgames.games.flappy.ViewModel as FlappyViewModel
+import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.security.Permission
 
 class FlappyGameController(private val gameView: FloppyGameView) : GameController {
     private var isGameRunning = false

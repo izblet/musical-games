@@ -8,12 +8,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import com.example.musicalgames.R
 import com.example.musicalgames.games.GameOption
-import kotlinx.coroutines.launch
 
 class GameEndedFragment : Fragment() {
 
@@ -28,7 +25,7 @@ class GameEndedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        val viewModel = ViewModelProvider(requireActivity()).get(FlappyViewModel::class.java)
 
         val headMessage = view.findViewById<TextView>(R.id.text_game_ended)
         val textScore = view.findViewById<TextView>(R.id.text_score)
