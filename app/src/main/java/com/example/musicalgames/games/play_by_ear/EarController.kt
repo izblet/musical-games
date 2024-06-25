@@ -30,7 +30,7 @@ class EarController(private val view: EarView) : GameController {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             view.newProblem()
-        },1000)
+        },2000)
     }
 
     override fun pauseGame() {

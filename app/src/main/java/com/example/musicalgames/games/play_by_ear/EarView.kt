@@ -78,6 +78,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
 
         if(problem[index]!=key) {
             endListener?.onGameEnded()
+            return
         }
         index++
         if(index==problem.size) {
