@@ -57,7 +57,7 @@ class GameEndedFragment : Fragment() {
            requireActivity().finish()
         }
         buttonRetry.setOnClickListener {
-            findNavController().navigate(R.id.action_gameEndedFragment_to_flappyGameFragment)
+            //findNavController().navigate(R.id.action_gameEndedFragment_to_flappyGameFragment)
         }
     }
 
