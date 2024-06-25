@@ -45,13 +45,15 @@ class FragmentLevelList : Fragment() {
         ): View {
                 _binding = FragmentFlappyLevelsBinding.inflate(inflater, container, false)
 
-                val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
-                val layoutManager = LinearLayoutManager(context)
-                recyclerView.layoutManager = layoutManager
 
                 // chosen game was saved in the viewModel
                 viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
                 updateTitle()
+
+                val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
+                val layoutManager = LinearLayoutManager(context)
+                recyclerView.layoutManager = layoutManager
+
 
                 var levelList: List<Level>? = null
                 var intentMaker: GameIntentMaker? = null
