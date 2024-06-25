@@ -18,7 +18,7 @@ object EarPlayLevels {
         val notesNum = 3
         val interval = Int.MAX_VALUE
         val whitenotes = getWhiteKeysFrom(min, 8)
-        val notes = mutableListOf(min, min+1)
+        val notes = mutableListOf(min, min+2)
         var nextNote = 2
 
         while(nextNote!=whitenotes.size) {
@@ -32,7 +32,7 @@ object EarPlayLevels {
                     root,
                     notesNum,
                     interval,
-                    notes,
+                    notes.toList(),
                     "C major, ${notes.size} notes from C",
                     ""
                 )
