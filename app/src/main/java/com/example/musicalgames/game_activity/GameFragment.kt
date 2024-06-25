@@ -14,7 +14,10 @@ import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyViewModel
-import com.example.musicalgames.games.flappy.game_view.FloppyGameView
+import com.example.musicalgames.games.flappy.FloppyGameView
+import com.example.musicalgames.games.play_by_ear.EarController
+import com.example.musicalgames.games.play_by_ear.EarView
+import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameFragment : Fragment(), GameListener {
     private lateinit var gameController: GameController
@@ -46,6 +49,16 @@ class GameFragment : Fragment(), GameListener {
             gameContainer.addView(gameView)
 
             gameController = FlappyGameController(gameView)
+            gameController.setViewModel(viewModel)
+            gameController.initGame(requireContext(), this)
+        } else if(gameType == Game.PLAY_BY_EAR.name) {
+            permissionList = arrayOf<String>()
+            val viewModel = ViewModelProvider(requireActivity())[EarViewModel::class.java]
+            val gameView = EarView(requireContext(), null)
+            val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
+            gameContainer.addView(gameView)
+
+            gameController = EarController(gameView)
             gameController.setViewModel(viewModel)
             gameController.initGame(requireContext(), this)
         }

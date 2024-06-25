@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyViewModel
+import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -23,6 +24,9 @@ class GameActivity : AppCompatActivity() {
         if(gameType == Game.FLAPPY.name) {
             val viewModel = ViewModelProvider(this)[FlappyViewModel::class.java]
             viewModel.setDataFromExtra(intent)
+        } else if(gameType == Game.PLAY_BY_EAR.name) {
+            val viewModel = ViewModelProvider(this)[EarViewModel::class.java]
+            viewModel.setDataFromIntent(intent)
         }
         else {
             throw Exception("There is no game with the specified type $gameType")

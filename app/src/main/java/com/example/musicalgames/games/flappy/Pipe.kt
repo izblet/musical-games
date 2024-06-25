@@ -1,11 +1,10 @@
-package com.example.musicalgames.games.flappy.game_view
+package com.example.musicalgames.games.flappy
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import com.example.musicalgames.utils.MusicUtil
-import kotlinx.coroutines.withContext
 
 class Pipe(
     color: Int,

@@ -7,14 +7,12 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.HighScore
 import com.example.musicalgames.games.HighScoreDao
-import com.example.musicalgames.games.flappy.level_list.LEN_INF
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
+import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GameOption
-import com.example.musicalgames.games.flappy.level_list.FlappyLevel
-import com.example.musicalgames.games.flappy.level_list.Level
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 

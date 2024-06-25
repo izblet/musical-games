@@ -55,10 +55,9 @@ class FragmentModeChoose : Fragment() {
                 if(option == GameOption.HIGH_SCORES)
                     launchHighScores()
                 else if(viewModel.game == Game.FLAPPY) {
-                    if(option == GameOption.ARCADE)
-                        launchFlappyGame(true)
-                    else if(option == GameOption.LEVELS)
-                        launchFlappyGame(false)
+                    launchFlappyGame()
+                } else if(viewModel.game == Game.PLAY_BY_EAR) {
+                    launchFlappyGame()
                 }
         }
         binding.optionsRecyclerView.apply {
@@ -72,7 +71,7 @@ class FragmentModeChoose : Fragment() {
         }
         startActivity(intent)
     }
-    private fun launchFlappyGame(isArcade: Boolean) {
+    private fun launchFlappyGame() {
         findNavController().navigate(R.id.action_SecondFragment_to_fragmentLevelList2)
         /*val intent = Intent(activity, FlappyActivity::class.java).apply {
             putExtra(ARCADE_EXTRA, isArcade)

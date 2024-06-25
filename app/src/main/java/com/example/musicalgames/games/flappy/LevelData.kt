@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy.level_list
+package com.example.musicalgames.games.flappy
 
 import androidx.room.Dao
 import androidx.room.Entity
@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
+import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteLetter
@@ -13,7 +14,7 @@ import com.example.musicalgames.utils.MusicUtil.noteName
 
 const val LEN_INF = -1
 const val DELIMITER = ","
-object DefaultLevels {
+object FlappyLevels {
     val baseLevels: List<FlappyLevel> = generateMajorLevels()
     private fun generateArcadeLevel(notes: List<Int>, root: Int, mode: String): FlappyLevel {
         val minPitch = notes[0]
@@ -52,17 +53,14 @@ object DefaultLevels {
 
         return levels
     }
+
 }
 data class Package(
     val name:String,
     val description: String,
     val levelList: List<FlappyLevel>,
 )
-open class Level (
-    open val id: Int,
-    open val name: String,
-    open val description: String
-)
+
 data class FlappyLevel (
     override val id: Int,
     val minPitch: Int,
