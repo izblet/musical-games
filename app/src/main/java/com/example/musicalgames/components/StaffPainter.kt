@@ -22,10 +22,9 @@ class StaffPainter(private val clefBitmap: Bitmap) {
     private val noteRadius = 20f
     private val lineSpacing = 40f // Vertical distance between staff lines
 
-    // Function to convert cleffIndexC4 output to y-coordinate
     private fun getNoteYPosition(clefIndex: Int, top: Float): Float {
-        val middleCPosition = top + 5 * lineSpacing // Middle C is one line below the bottom line
-        return middleCPosition - clefIndex * (lineSpacing / 2) // Half of lineSpacing for spaces between lines
+        val middleCPosition = top + 5 * lineSpacing
+        return middleCPosition - clefIndex * (lineSpacing / 2)
     }
 
     fun drawStaff(canvas: Canvas, left: Float, top: Float, width: Float, height: Float, midiNotes: List<Int>) {

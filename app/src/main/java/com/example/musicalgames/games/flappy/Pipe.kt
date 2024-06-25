@@ -59,8 +59,8 @@ class Pipe(
         keys.add(
             getKeyRect(
                 note,
-                Color.argb(50, 250, 250, 250),
-                Color.argb(50, 0, 0, 0)
+                Color.rgb( 250, 250, 250),
+                Color.rgb( 0, 0, 0)
             )
         )
         return keys
