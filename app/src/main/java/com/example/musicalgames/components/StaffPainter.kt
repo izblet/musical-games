@@ -9,7 +9,7 @@ import com.example.musicalgames.utils.MusicUtil.cleffIndexC4
 import com.example.musicalgames.utils.Note
 
 
-class StaffPainter(private val clefBitmap: Bitmap) {
+class StaffPainter(private val clefBitmap: Bitmap, private val treble: Boolean) {
     private val staffLinePaint = Paint().apply {
         color = Color.BLACK
         strokeWidth = 5f
@@ -23,7 +23,9 @@ class StaffPainter(private val clefBitmap: Bitmap) {
     private val lineSpacing = 40f // Vertical distance between staff lines
 
     private fun getNoteYPosition(clefIndex: Int, top: Float): Float {
-        val middleCPosition = top + 5 * lineSpacing
+        val middleCPosition =
+            if(treble) top + 5 * lineSpacing
+            else top - lineSpacing
         return middleCPosition - clefIndex * (lineSpacing / 2)
     }
 
