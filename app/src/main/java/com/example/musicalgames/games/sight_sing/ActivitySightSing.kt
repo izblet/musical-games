@@ -2,9 +2,7 @@ package com.example.musicalgames.games.sight_sing
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.commit
-import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 
 class ActivitySightSing : AppCompatActivity() {

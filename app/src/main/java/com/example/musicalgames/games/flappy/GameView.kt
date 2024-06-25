@@ -1,14 +1,17 @@
 package com.example.musicalgames.games.flappy
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
+import com.example.musicalgames.components.StaffPainter
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.utils.MusicUtil.midi
 import kotlin.random.Random
 
 class FloppyGameView(context: Context) : View(context) {
@@ -26,6 +29,17 @@ class FloppyGameView(context: Context) : View(context) {
     private var maxVisible: Double? = null
 
     private var viewModel: FlappyViewModel? = null
+    private var treblePainter: StaffPainter
+    private var bassPainter: StaffPainter
+
+   init {
+       val trebleClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.treble_clef)
+       treblePainter = StaffPainter(trebleClefBitmap)
+
+       val bassClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.bass_clef)
+       bassPainter = StaffPainter(bassClefBitmap)
+
+   }
 
     private val scorePaint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.white)
@@ -55,14 +69,20 @@ class FloppyGameView(context: Context) : View(context) {
     }
 
     private fun getRandomPipe(): Pipe {
+        val note = getRandom(viewModel!!.gapPositions)
+        val staffPainter =
+            if(note<midi("C4")) bassPainter
+            else treblePainter
+
         createdPipes++
         return Pipe(
             pipeColor,
             1f,
-            getRandom(viewModel!!.gapPositions!!),
+            note,
             minVisible!!,
             maxVisible!!,
-            pitchSize!!
+            pitchSize!!,
+            staffPainter
         )
     }
     private fun getRandom(notes: List<Int>): Int {

@@ -10,7 +10,7 @@ import com.example.musicalgames.R
 import kotlin.random.Random
 
 class ViolinStaffFragment : Fragment() {
-    private var staff: StaffView? = null
+    //private var staff: StaffView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,8 +23,8 @@ class ViolinStaffFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val notePositions = generateRandomNotePositions()
-        staff = view.findViewById(R.id.staffView)
-        staff!!.setNotePositions(notePositions)
+        //staff = view.findViewById(R.id.staffView)
+       //staff!!.setNotePositions(notePositions)
     }
 
     private fun generateRandomNotePositions(): List<Float> {
