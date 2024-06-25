@@ -1,6 +1,8 @@
 package com.example.musicalgames.games.play_by_ear
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.GameController
@@ -24,7 +26,11 @@ class EarController(private val view: EarView) : GameController {
     }
 
     override fun startGame(owner: LifecycleOwner) {
-        view.newProblem()
+        view.playRoot()
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            view.newProblem()
+        },1000)
     }
 
     override fun pauseGame() {
@@ -36,7 +42,6 @@ class EarController(private val view: EarView) : GameController {
     }
 
     override fun getScore(): Int {
-        //TODO("Not yet implemented")
-        return 0
+        return view.getScore()
     }
 }

@@ -44,8 +44,6 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         keyboardDisabled = true
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
-            soundPlayer.play(viewModel!!.root)
-            delay(1500)
             soundPlayer.playSequence(problem, this@EarView)
         }
     }
@@ -67,6 +65,9 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         generateProblem()
         playProblem()
     }
+    fun getScore() : Int {
+        return score
+    }
 
     override fun onKeyClicked(key: Note) {
         if(keyboardDisabled)
@@ -80,11 +81,15 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         }
         index++
         if(index==problem.size) {
+            score++
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 newProblem()
             },1000)
         }
+    }
+    fun playRoot() {
+        soundPlayer.play(viewModel!!.root)
     }
     fun registerEndListener(listener: GameListener) {
         this.endListener = listener
