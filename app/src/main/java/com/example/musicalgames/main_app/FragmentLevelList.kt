@@ -30,7 +30,7 @@ class FragmentLevelList : Fragment() {
 
         // this property is only valid between onCreateView and onDestroyView.
         private val binding get() = _binding!!
-        private lateinit var viewModel: ViewModel
+        private lateinit var viewModel: MainViewModel
         private fun updateTitle() {
                 val title = "${GameMap.gameInfos[viewModel.game!!]!!.name} - Levels"
                 (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(title)
@@ -50,7 +50,7 @@ class FragmentLevelList : Fragment() {
                 recyclerView.layoutManager = layoutManager
 
                 // chosen game was saved in the viewModel
-                viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
+                viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
                 updateTitle()
 
                 var levelList: List<Level>? = null

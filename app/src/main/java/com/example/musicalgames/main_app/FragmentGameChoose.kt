@@ -20,7 +20,7 @@ class FragmentGameChoose : Fragment() {
 
     // this property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +33,7 @@ class FragmentGameChoose : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         // chosen game will be saved in the viewModel
-        viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         //this list shall be retrieved from a database
         val gameList = listOf(
             Game.FLAPPY,

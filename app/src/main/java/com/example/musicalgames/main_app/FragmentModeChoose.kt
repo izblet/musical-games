@@ -25,7 +25,7 @@ class FragmentModeChoose : Fragment() {
 
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,7 +44,7 @@ class FragmentModeChoose : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[ViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
 

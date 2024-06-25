@@ -24,7 +24,7 @@ class FragmentHighScore : Fragment() {
     private lateinit var adapter: HighScoreAdapter
     private var _binding: FragmentHighScoreBinding? = null
 
-    private lateinit var viewModel: ViewModel
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +38,7 @@ class FragmentHighScore : Fragment() {
         recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         val gameName = GameMap.gameInfos[viewModel.game!!]!!.name
         (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle("$gameName - high scores")
         val gameId = GameMap.gameInfos[viewModel.game!!]!!.id

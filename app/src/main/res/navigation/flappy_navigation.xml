@@ -4,7 +4,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flappy_navigation"
-    app:startDestination="@id/gameEndedFragment">
+    app:startDestination="@id/startGameFragment">
 
     <fragment
         android:id="@+id/flappyGameFragment"
@@ -25,6 +25,14 @@
         android:label="GameEndedFragment" >
         <action
             android:id="@+id/action_gameEndedFragment_to_flappyGameFragment"
+            app:destination="@id/flappyGameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startGameFragment"
+        android:name="com.example.musicalgames.game_activity.StartGameFragment"
+        android:label="StartGameFragment" >
+        <action
+            android:id="@+id/action_startGameFragment_to_flappyGameFragment"
             app:destination="@id/flappyGameFragment" />
     </fragment>
 </navigation>

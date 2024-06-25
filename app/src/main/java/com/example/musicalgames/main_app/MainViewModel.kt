@@ -8,7 +8,7 @@ import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.games.HighScore
 import com.example.musicalgames.games.HighScoreDao
 
-class ViewModel(application: Application): AndroidViewModel(application) {
+class MainViewModel(application: Application): AndroidViewModel(application) {
     var game: Game? = null
     var gameOptions: List<GameOption>? = null
     private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()

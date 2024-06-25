@@ -23,6 +23,8 @@ class GameFragment : Fragment(), GameListener {
     private lateinit var gameController: GameController
     private lateinit var permissionList: Array<String>
     private lateinit var startButton: Button
+    private var gameType: Game? = null
+    private var viewModel: AbstractViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,10 +42,12 @@ class GameFragment : Fragment(), GameListener {
 
         //TODO: the name should be somewhere else
         val gameType = arguments?.getString("game_type")
+        this.gameType = Game.valueOf(gameType!!)
 
         if(gameType == Game.FLAPPY.name) {
             permissionList = FlappyGameController.permissions
             val viewModel = ViewModelProvider(requireActivity())[FlappyViewModel::class.java]
+            this.viewModel = viewModel
             val gameView = FloppyGameView(requireContext())
             val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
             gameContainer.addView(gameView)
@@ -54,6 +58,7 @@ class GameFragment : Fragment(), GameListener {
         } else if(gameType == Game.PLAY_BY_EAR.name) {
             permissionList = arrayOf<String>()
             val viewModel = ViewModelProvider(requireActivity())[EarViewModel::class.java]
+            this.viewModel = viewModel
             val gameView = EarView(requireContext(), null)
             val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
             gameContainer.addView(gameView)
@@ -100,10 +105,12 @@ class GameFragment : Fragment(), GameListener {
         }
 
     override fun onGameEnded() {
-        val viewModel = ViewModelProvider(requireActivity()).get(FlappyViewModel::class.java)
-        viewModel.score = gameController.getScore()
+        viewModel!!.score = gameController.getScore()
         gameController.endGame()
-        findNavController().navigate(R.id.gameEndedFragment)
+
+        //TODO: should be fixed in the nav graph
+        val bundle = Bundle().apply { putString(GameEndedFragment.ARG_GAME, gameType!!.name) }
+        findNavController().navigate(R.id.gameEndedFragment, bundle)
     }
 
     override fun onDestroy() {

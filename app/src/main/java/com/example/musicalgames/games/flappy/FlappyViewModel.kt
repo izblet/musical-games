@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.AndroidViewModel
+import com.example.musicalgames.game_activity.AbstractViewModel
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.HighScore
 import com.example.musicalgames.games.HighScoreDao
@@ -16,10 +17,10 @@ import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
-class FlappyViewModel(application: Application) : AndroidViewModel(application) {
+class FlappyViewModel(application: Application) : AbstractViewModel(application) {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
     var gameType: GameOption? = null //type of game - levels/custom/arcade - just for inserting into the database
-    var score = 0
+    override var score = 0
     var pitchRecogniser: PitchRecogniser? = null
     var minRange: Int = midi("C3")
     var maxRange: Int = midi("C4")
