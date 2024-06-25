@@ -8,7 +8,7 @@ import com.example.musicalgames.game_activity.GameListener
 
 class EarController(private val view: EarView) : GameController {
     override fun registerListener(listener: GameListener) {
-        //TODO("Not yet implemented")
+        view.registerEndListener(listener)
     }
 
     override fun unregisterListener(listener: GameListener) {
@@ -16,16 +16,15 @@ class EarController(private val view: EarView) : GameController {
     }
 
     override fun setViewModel(viewModel: ViewModel) {
-        //TODO("Not yet implemented")
+        view.setViewModel(viewModel as EarViewModel)
     }
 
     override fun initGame(context: Context, listener: GameListener) {
-
-        //TODO("Not yet implemented")
+        view.registerEndListener(listener)
     }
 
     override fun startGame(owner: LifecycleOwner) {
-        //TODO("Not yet implemented")
+        view.newProblem()
     }
 
     override fun pauseGame() {

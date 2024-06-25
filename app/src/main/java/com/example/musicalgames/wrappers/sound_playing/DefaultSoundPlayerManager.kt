@@ -5,6 +5,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
 import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.utils.Note
+import kotlinx.coroutines.delay
 
 
 class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManager {
@@ -31,11 +33,18 @@ class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManag
     }
 
     override fun play(frequency: Double) {
-        // Not implemented for this class
+        TODO("Not implemented")
     }
 
     override fun play(note: String) {
         play(MusicUtil.midi(note))
+    }
+    override suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener) {
+        for(note in sequence) {
+            play(note.midiCode)
+            delay(700)
+        }
+        listener.onSoundFinished()
     }
 
     override fun play(midicode: Int) {

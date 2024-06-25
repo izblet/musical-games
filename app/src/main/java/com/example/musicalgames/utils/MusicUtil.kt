@@ -2,6 +2,7 @@ package com.example.musicalgames.utils
 
 import kotlin.math.log2
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 // MusicUtils.kt
 object MusicUtil {
@@ -33,7 +34,7 @@ object MusicUtil {
         return isWhite(note.name)
     }
     fun midi(frequency: Double): Int {
-        return (12 * (Math.log(frequency / 440.0) / Math.log(2.0)) + 69).toInt()
+        return (12 * (Math.log(frequency / 440.0) / Math.log(2.0)) + 69).roundToInt()
     }
     fun midi(note: String) : Int {
         return midi(frequency(note))
