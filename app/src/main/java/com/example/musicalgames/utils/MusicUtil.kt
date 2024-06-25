@@ -6,43 +6,7 @@ import kotlin.math.roundToInt
 
 // MusicUtils.kt
 object MusicUtil {
-    enum class ChromaticNote {
-        C, CxD, D, DxE, E, F, FxG, G, GxA, A, AxB, B;
 
-        override fun toString(): String {
-            return super.toString()
-
-        }
-        companion object {
-            private val values = values()
-            fun fromString(note: String) : ChromaticNote {
-                if(note.contains("#")) {
-                    val lowerNote = ChromaticNote.valueOf(noteLetter(note)).ordinal
-                    return values[(lowerNote+1)%values.size]
-
-                } else if(note.contains('b')) {
-                    val higherNote = ChromaticNote.valueOf(noteLetter(note)).ordinal
-                    return values[(higherNote-1+values.size)%values.size]
-                }
-                else return ChromaticNote.valueOf(noteLetter(note))
-            }
-        }
-    }
-    enum class DiatonicNote (val chromaticNote : ChromaticNote) {
-        C(ChromaticNote.C),
-        D(ChromaticNote.D),
-        E(ChromaticNote.E),
-        F(ChromaticNote.F),
-        G(ChromaticNote.G),
-        A(ChromaticNote.A),
-        B(ChromaticNote.B);
-
-        companion object {
-            fun fromChromatic(chromaticNote: ChromaticNote): DiatonicNote? {
-                return values().find { it.chromaticNote == chromaticNote }
-            }
-        }
-    }
     private val noteToFrequencyMap = mapOf(
         "C" to 261.63, "C#" to 277.18, "D" to 293.66, "D#" to 311.13,
         "E" to 329.63, "F" to 349.23, "F#" to 369.99, "G" to 392.00,
