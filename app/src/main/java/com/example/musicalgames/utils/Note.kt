@@ -1,10 +1,20 @@
 package com.example.musicalgames.utils
 import com.example.musicalgames.utils.MusicUtil.midi
+import com.example.musicalgames.utils.MusicUtil.noteLetter
 import com.example.musicalgames.utils.MusicUtil as MU
 data class Note (val name: String, val frequency: Double, val midiCode: Int, val noteDiatonic: ChromaticNote, val octave: Int) {
     companion object {
-        fun removeNumbers(noteString: String): String {
-            return noteString.replace(Regex("[0-9]"), "").replace("-","")
+        fun enumName(noteString: String): String {
+            val letter = noteString[0].toString()
+            if(noteString.contains("b")) {
+                val prevLetter = noteLetter(midi(noteString)-1)
+                return prevLetter+'x'+letter
+            }
+            else if(noteString.contains("#")) {
+                val nextLetter = noteLetter(midi(noteString)+1)
+                return letter+'x'+nextLetter
+            }
+            return letter
         }
 
     }
@@ -15,7 +25,7 @@ data class Note (val name: String, val frequency: Double, val midiCode: Int, val
             this(MU.noteName(midi),
                 MU.frequency(midi),
                 midi,
-                ChromaticNote.valueOf(removeNumbers(MU.noteName(midi))),
+                ChromaticNote.valueOf(enumName(MU.noteName(midi))),
                 MU.noteoctave(MU.noteName(midi))
                 )
     constructor(note: String) : this(midi(note))
