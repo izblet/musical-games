@@ -9,8 +9,6 @@ interface GameListener {
 }
 
 interface GameController {
-    fun registerListener(listener: GameListener)
-    fun unregisterListener(listener: GameListener)
     fun setViewModel(viewModel: ViewModel)
     fun initGame(context: Context, listener: GameListener)
     fun startGame(owner: LifecycleOwner)

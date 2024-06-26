@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import com.example.musicalgames.utils.MusicUtil.cleffIndexC4
 import com.example.musicalgames.utils.Note
 
@@ -23,9 +24,10 @@ class StaffPainter(private val clefBitmap: Bitmap, private val treble: Boolean) 
     private val lineSpacing = 40f // Vertical distance between staff lines
 
     private fun getNoteYPosition(clefIndex: Int, top: Float): Float {
-        val middleCPosition =
+        val middleCPosition : Float =
             if(treble) top + 5 * lineSpacing
-            else top - lineSpacing
+            else top - 3*lineSpacing/2
+
         return middleCPosition - clefIndex * (lineSpacing / 2)
     }
 

@@ -7,24 +7,21 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 
 class MentalController(private val view: MentalView) : GameController {
-    override fun registerListener(listener: GameListener) {
-        //TODO("Not yet implemented")
-    }
-
-    override fun unregisterListener(listener: GameListener) {
-        //TODO("Not yet implemented")
-    }
 
     override fun setViewModel(viewModel: ViewModel) {
+        if(viewModel !is MentalViewModel) {
+            throw Exception("Viewmodel is of wrong type")
+        }
+        view.setConstraint(viewModel.maxInterval)
         //TODO("Not yet implemented")
     }
 
     override fun initGame(context: Context, listener: GameListener) {
-        //TODO("Not yet implemented")
+        view.registerListener(listener)
     }
 
     override fun startGame(owner: LifecycleOwner) {
-       //TODO("Not yet implemented")
+        view.generateQuestion()
     }
 
     override fun pauseGame() {
@@ -36,7 +33,6 @@ class MentalController(private val view: MentalView) : GameController {
     }
 
     override fun getScore(): Int {
-        //TODO("Not yet implemented")
-        return 0
+        return view.score
     }
 }

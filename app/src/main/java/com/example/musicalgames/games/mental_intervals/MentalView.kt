@@ -8,6 +8,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
 class MentalView @JvmOverloads constructor(
@@ -27,21 +29,33 @@ class MentalView @JvmOverloads constructor(
         textAlign = Paint.Align.CENTER
     }
 
+    private var messageText = ""
     private var selectedNote: String? = null
     private var questionNote: String = ""
-    private var interval: Int = 0
+    private var interval: String = ""
     private var correctAnswer: String = ""
+    private var maxInterval: Int = 0
+    private var disabled = true
+    private var endListener : GameListener? = null
+    var score = 0
 
-    init {
-        generateQuestion()
+    fun registerListener(listener: GameListener) {
+        endListener = listener
     }
 
-    private fun generateQuestion() {
-        val startNoteIndex = Random.nextInt(notes.size)
-        interval = Random.nextInt(1, 13) // Interval between 1 and 12
-        questionNote = notes[startNoteIndex]
-        correctAnswer = notes[(startNoteIndex + interval) % notes.size]
+    fun setConstraint(max: Int) {
+        maxInterval = max
+    }
 
+    fun generateQuestion() {
+        disabled=false
+        val startNoteIndex = Random.nextInt(notes.size)
+        val semitoneInterval = Random.nextInt(1, maxInterval) // Interval between 1 and 12
+        interval =  Interval.fromSemitones(semitoneInterval).name
+        questionNote = notes[startNoteIndex]
+        correctAnswer = notes[(startNoteIndex + semitoneInterval) % notes.size]
+
+        messageText = "What is the note positioned at $interval from $questionNote?"
         invalidate() // Redraw to show the new question
     }
 
@@ -86,7 +100,7 @@ class MentalView @JvmOverloads constructor(
         paint.color = Color.WHITE
         paint.textSize = 80f
         canvas.drawText(
-            "What is the note positioned at $interval from $questionNote?",
+            messageText,
             width / 2f, 150f, paint
         )
 
@@ -160,10 +174,17 @@ class MentalView @JvmOverloads constructor(
     private fun checkAnswer(selected: String) {
         if (selected == correctAnswer) {
             // Correct answer, generate a new question
-            generateQuestion()
+            disabled=true
+            score++
+            messageText = "Good!"
+            handler.postDelayed({
+                generateQuestion()
+            }, 1000)
         } else {
-            // Incorrect answer, keep the question and allow another attempt
-            invalidate()
+            messageText = "The right answer is : $correctAnswer"
+            handler.postDelayed({
+                endListener?.onGameEnded()
+            }, 1000)
         }
     }
 }

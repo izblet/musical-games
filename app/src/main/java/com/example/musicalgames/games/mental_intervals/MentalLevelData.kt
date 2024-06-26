@@ -18,7 +18,7 @@ object MentalLevels {
                 MentalLevel(
                     0,
                     maxSemitones,
-                    "at most $maxSemitones semitones", ""
+                    "At most $maxSemitones semitones", ""
                 )
             )
 

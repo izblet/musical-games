@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -60,16 +61,10 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     }
 
     override fun getScore(): Int {
+        Log.e("score controller", "${gameView.getScore()}")
         return gameView.getScore()
     }
 
-    override fun registerListener(listener: GameListener) {
-       gameView.setEndListener(listener)
-    }
-
-    override fun unregisterListener(listener: GameListener) {
-       //TODO: implement this
-    }
 
     override fun setViewModel(viewModel: ViewModel) {
         if(viewModel is FlappyViewModel) {

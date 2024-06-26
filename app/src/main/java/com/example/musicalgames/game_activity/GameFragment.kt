@@ -1,6 +1,7 @@
 package com.example.musicalgames.game_activity
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -120,6 +121,7 @@ class GameFragment : Fragment(), GameListener {
 
     override fun onGameEnded() {
         viewModel!!.score = gameController.getScore()
+        Log.e("score", "${viewModel!!.score}")
         gameController.endGame()
 
         //TODO: should be fixed in the nav graph
