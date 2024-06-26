@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentModeChooseBinding
-import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.GameOption
-import com.example.musicalgames.games.sight_sing.ActivitySightSing
 import com.example.musicalgames.games.chase.ActivityChase as ChaseActivity
 
 class FragmentModeChoose : Fragment() {
@@ -52,13 +49,7 @@ class FragmentModeChoose : Fragment() {
 
         val optionsAdapter = AdapterGameOptions(gameInfo.options) {
             option->
-                if(option == GameOption.HIGH_SCORES)
-                    launchHighScores()
-                else if(viewModel.game == Game.FLAPPY) {
-                    launchFlappyGame()
-                } else if(viewModel.game == Game.PLAY_BY_EAR) {
-                    launchFlappyGame()
-                }
+                launchGame()
         }
         binding.optionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -71,7 +62,10 @@ class FragmentModeChoose : Fragment() {
         }
         startActivity(intent)
     }
-    private fun launchFlappyGame() {
+    private fun launchMentalIntervals() {
+
+    }
+    private fun launchGame() {
         findNavController().navigate(R.id.action_SecondFragment_to_fragmentLevelList2)
         /*val intent = Intent(activity, FlappyActivity::class.java).apply {
             putExtra(ARCADE_EXTRA, isArcade)
@@ -79,10 +73,6 @@ class FragmentModeChoose : Fragment() {
         startActivity(intent)
 
          */
-    }
-    private fun launchSightSingActivity() {
-        val intent = Intent(activity, ActivitySightSing::class.java)
-        startActivity(intent)
     }
 
     private fun launchHighScores() {

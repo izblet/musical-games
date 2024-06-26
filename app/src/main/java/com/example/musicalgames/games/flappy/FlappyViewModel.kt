@@ -3,7 +3,6 @@ package com.example.musicalgames.games.flappy
 import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.AndroidViewModel
 import com.example.musicalgames.game_activity.AbstractViewModel
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.HighScore
@@ -55,7 +54,7 @@ class FlappyViewModel(application: Application) : AbstractViewModel(application)
             }
         }
     }
-    fun setDataFromExtra(intent: Intent) {
+    override fun setDataFromIntent(intent: Intent) {
         val type = intent.getStringExtra(TYPE_STR)
         gameType = GameOption.valueOf(type ?: GameOption.ARCADE.name)
 

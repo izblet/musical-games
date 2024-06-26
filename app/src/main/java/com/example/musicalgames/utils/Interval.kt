@@ -16,5 +16,10 @@ enum class Interval {
     fun getSemitones(): Int {
         return this.ordinal
     }
+    companion object {
+        fun fromSemitones(semitones: Int) : Interval {
+            return values()[semitones%12]
+        }
+    }
 
 }

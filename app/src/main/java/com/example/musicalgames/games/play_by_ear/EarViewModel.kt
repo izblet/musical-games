@@ -2,15 +2,12 @@ package com.example.musicalgames.games.play_by_ear
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.AbstractViewModel
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.MusicUtil.midi
-import com.example.musicalgames.utils.MusicUtil.noteLetter
 import com.example.musicalgames.utils.Note
 
 class EarViewModel(application: Application) : AbstractViewModel(application) {
@@ -38,7 +35,7 @@ class EarViewModel(application: Application) : AbstractViewModel(application) {
         }
 
     }
-    fun setDataFromIntent(intent: Intent) {
+    override fun setDataFromIntent(intent: Intent) {
         val min = intent.getIntExtra(Extra.MIN_KEY.name, midi("C4"))
         minKey = Note(min)
         val max = intent.getIntExtra(Extra.MAX_KEY.name, midi("C4"))

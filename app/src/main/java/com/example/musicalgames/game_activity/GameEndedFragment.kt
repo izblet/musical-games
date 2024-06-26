@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.play_by_ear.EarViewModel
 

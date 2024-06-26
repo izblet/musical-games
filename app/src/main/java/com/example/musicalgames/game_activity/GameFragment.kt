@@ -15,6 +15,9 @@ import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.FloppyGameView
+import com.example.musicalgames.games.mental_intervals.MentalController
+import com.example.musicalgames.games.mental_intervals.MentalView
+import com.example.musicalgames.games.mental_intervals.MentalViewModel
 import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarView
 import com.example.musicalgames.games.play_by_ear.EarViewModel
@@ -64,6 +67,17 @@ class GameFragment : Fragment(), GameListener {
             gameContainer.addView(gameView)
 
             gameController = EarController(gameView)
+            gameController.setViewModel(viewModel)
+            gameController.initGame(requireContext(), this)
+        } else if(gameType == Game.MENTAL_INTERVALS.name) {
+            permissionList = arrayOf<String>()
+            val viewModel = ViewModelProvider(requireActivity())[MentalViewModel::class.java]
+            this.viewModel = viewModel
+            val gameView = MentalView(requireContext(), null)
+            val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
+            gameContainer.addView(gameView)
+
+            gameController = MentalController(gameView)
             gameController.setViewModel(viewModel)
             gameController.initGame(requireContext(), this)
         }

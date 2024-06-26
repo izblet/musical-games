@@ -20,6 +20,8 @@ import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.mental_intervals.MentalLevels
+import com.example.musicalgames.games.mental_intervals.MentalViewModel
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
 import com.example.musicalgames.games.play_by_ear.EarViewModel
 
@@ -64,6 +66,9 @@ class FragmentLevelList : Fragment() {
                 } else if(viewModel.game == Game.PLAY_BY_EAR) {
                         levelList = EarPlayLevels.baseLevels
                         intentMaker = EarViewModel.Companion
+                } else if(viewModel.game == Game.MENTAL_INTERVALS) {
+                        levelList = MentalLevels.baseLevels
+                        intentMaker = MentalViewModel.Companion
                 }
 
                 val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {

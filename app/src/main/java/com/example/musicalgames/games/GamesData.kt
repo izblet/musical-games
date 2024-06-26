@@ -24,7 +24,7 @@ enum class Game {
     FLAPPY,
     CHASE,
     PLAY_BY_EAR,
-    CHORD_RECOGNISE,
+    MENTAL_INTERVALS,
 }
 
 @Parcelize
@@ -59,10 +59,10 @@ object GameMap {
                 R.drawable.default_game_icon,
                 listOf(GameOption.LEVELS)
             ),
-        Game.CHORD_RECOGNISE to
+        Game.MENTAL_INTERVALS to
             GameInfo(4,
-                "Chord recognise",
-                "Recognise chords",
+                "Mental Intervals",
+                "Find intervals in your head",
                 R.drawable.default_game_icon,
                 listOf(GameOption.LEVELS)
             )

@@ -1,11 +1,7 @@
 package com.example.musicalgames.games.play_by_ear
 
-import android.util.Log
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.flappy.FlappyLevel
-import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.MusicUtil.frequency
 import com.example.musicalgames.utils.MusicUtil.getWhiteKeysFrom
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteLetter

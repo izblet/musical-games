@@ -38,7 +38,7 @@ class FragmentGameChoose : Fragment() {
         val gameList = listOf(
             Game.FLAPPY,
             Game.PLAY_BY_EAR,
-            Game.CHORD_RECOGNISE
+            Game.MENTAL_INTERVALS
         )
 
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
