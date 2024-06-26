@@ -49,21 +49,21 @@ object GameMap {
                 2,
                 "Flappy Bird",
                 "Flappy bird game controlled with voice",
-                R.drawable.default_game_icon,
-                listOf(GameOption.HIGH_SCORES, GameOption.ARCADE, GameOption.LEVELS)
+                R.drawable.microphone,
+                listOf(GameOption.LEVELS)
             ),
         Game.PLAY_BY_EAR to
             GameInfo(3,
                 "Play By Ear",
-                "Guessing melodies from sounds",
-                R.drawable.default_game_icon,
+                "Play back melodies on a piano",
+                R.drawable.ear,
                 listOf(GameOption.LEVELS)
             ),
         Game.MENTAL_INTERVALS to
             GameInfo(4,
                 "Mental Intervals",
                 "Find intervals in your head",
-                R.drawable.default_game_icon,
+                R.drawable.mental,
                 listOf(GameOption.LEVELS)
             )
 
