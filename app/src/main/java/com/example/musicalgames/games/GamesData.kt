@@ -8,6 +8,7 @@ enum class GameOption {
     HIGH_SCORES,
     ARCADE,
     LEVELS,
+    INVERTED,
     GAME_CREATE,
     GAME_JOIN;
     fun getString(): String {
@@ -16,6 +17,7 @@ enum class GameOption {
             GAME_CREATE -> "Create Game"
             HIGH_SCORES -> "High Scores"
             LEVELS -> "Levels"
+            INVERTED -> "Inverted"
             ARCADE -> "Arcade"
         }
     }
@@ -64,7 +66,7 @@ object GameMap {
                 "Mental Intervals",
                 "Find intervals in your head",
                 R.drawable.mental,
-                listOf(GameOption.LEVELS)
+                listOf(GameOption.LEVELS, GameOption.INVERTED)
             )
 
     )

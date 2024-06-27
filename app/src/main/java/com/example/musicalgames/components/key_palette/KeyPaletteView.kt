@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.example.musicalgames.components.Paints.blackFillPaint

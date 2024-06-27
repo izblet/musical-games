@@ -5,6 +5,7 @@ enum class Interval {
     m2,
     M2,
     m3,
+    M3,
     P4,
     TT,
     P5,
@@ -18,7 +19,7 @@ enum class Interval {
     }
     companion object {
         fun fromSemitones(semitones: Int) : Interval {
-            return values()[semitones%12]
+            return values()[semitones%13]
         }
     }
 

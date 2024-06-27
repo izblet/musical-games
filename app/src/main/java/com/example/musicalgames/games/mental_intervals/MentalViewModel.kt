@@ -35,15 +35,16 @@ class MentalViewModel(application: Application) : AbstractViewModel(application)
 
     }
 
-
     //TODO: cannot change this for now but it should be changed
     var _score: Int = 0
     override var score = 0
+    private var _intervalToName = true
+    val intervalToName get() = _intervalToName
 
     private var disabled = true
     private var questionNote: ChromaticNote? = null
-    private var interval: String = ""
-    private var correctAnswer: ChromaticNote? = null
+    private var interval: Interval? = null
+    private var note: ChromaticNote? = null
     private var maxInterval: Int = Int.MAX_VALUE
     private var _messageText = ""
 
@@ -59,12 +60,15 @@ class MentalViewModel(application: Application) : AbstractViewModel(application)
         disabled=false
         val startNoteIndex = Random.nextInt(ChromaticNote.valuesSize())
         val semitoneInterval = Random.nextInt(1, maxInterval+1)
-        interval =  Interval.fromSemitones(semitoneInterval).name
+        interval =  Interval.fromSemitones(semitoneInterval)
         questionNote = ChromaticNote.fromDegree(startNoteIndex)
-        val ansIndex = (startNoteIndex + semitoneInterval) % ChromaticNote.valuesSize()
-        correctAnswer = ChromaticNote.fromDegree(ansIndex)
+        val noteIndex = (startNoteIndex + semitoneInterval) % ChromaticNote.valuesSize()
+        note = ChromaticNote.fromDegree(noteIndex)
 
-        _messageText = "What is the note positioned at $interval from $questionNote?"
+        if(intervalToName)
+            _messageText = "What is the note positioned at $interval from $questionNote?"
+        else
+            _messageText = "What is the interval between $questionNote and $note"
 
         UI?.onDataChanged()
     }
@@ -72,7 +76,7 @@ class MentalViewModel(application: Application) : AbstractViewModel(application)
         if(disabled)
             return
 
-        if (note == correctAnswer) {
+        if (note == this.note) {
             disabled=true
             score++
             _messageText = "Good!"
@@ -80,7 +84,26 @@ class MentalViewModel(application: Application) : AbstractViewModel(application)
                 generateQuestion()
             }, 1000)
         } else {
-            _messageText = "The right answer is : $correctAnswer"
+            _messageText = "The right answer is : ${this.note}"
+            Handler(Looper.getMainLooper()).postDelayed({
+                endListener?.onGameEnded()
+            }, 1000)
+        }
+        UI?.onDataChanged()
+    }
+    fun select(interval: Interval) {
+        if(disabled)
+            return
+
+        if (interval == this.interval) {
+            disabled=true
+            score++
+            _messageText = "Good!"
+            Handler(Looper.getMainLooper()).postDelayed({
+                generateQuestion()
+            }, 1000)
+        } else {
+            _messageText = "The right answer is : ${this.interval!!.name}"
             Handler(Looper.getMainLooper()).postDelayed({
                 endListener?.onGameEnded()
             }, 1000)

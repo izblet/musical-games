@@ -1,10 +1,12 @@
 package com.example.musicalgames.games.mental_intervals
 
 import android.content.Context
-import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.musicalgames.components.interval_palette.IntervalPaletteListener
+import com.example.musicalgames.components.interval_palette.IntervalPaletteView
 import com.example.musicalgames.components.key_palette.KeyPaletteListener
 import com.example.musicalgames.components.key_palette.KeyPaletteView
 import com.example.musicalgames.game_activity.ViewModelListener
@@ -15,9 +17,11 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
     private var viewModel: MentalViewModel? = null
     private val notePaletteRatio :Float = 2f/3f
     private val keyPaletteView: KeyPaletteView
+    private val intervalPaletteView: IntervalPaletteView
     private val messageTextView: TextView
     init {
         keyPaletteView = KeyPaletteView(context)
+        intervalPaletteView = IntervalPaletteView(context)
         messageTextView = TextView(context).apply {
             textSize = 20f
             gravity = Gravity.CENTER_HORIZONTAL
@@ -26,6 +30,7 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
 
         addView(messageTextView)
         addView(keyPaletteView)
+        addView(intervalPaletteView)
     }
     fun setViewModel(viewModel: MentalViewModel) {
         this.viewModel =viewModel
@@ -33,9 +38,16 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
     fun setKeyboardListener(listener: KeyPaletteListener) {
         keyPaletteView.registerListener(listener)
     }
+    fun setIntervalListener(listener: IntervalPaletteListener) {
+        intervalPaletteView.registerListener(listener)
+    }
 
     override fun onDataChanged() { redraw() }
     private fun redraw() {
+        if(viewModel!!.intervalToName)
+            intervalPaletteView.visibility = View.GONE
+        else
+            keyPaletteView.visibility = View.GONE
         messageTextView.text = viewModel?.messageText
     }
 
@@ -57,6 +69,11 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(paletteHeight, MeasureSpec.EXACTLY)
         )
+
+        intervalPaletteView.measure(
+            MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(paletteHeight, MeasureSpec.EXACTLY)
+        )
         setMeasuredDimension(width, height)
     }
 
@@ -66,5 +83,6 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
 
         messageTextView.layout(0, 0, width, messageHeight)
         keyPaletteView.layout(0, height - keyPaletteHeight, width, height)
+        intervalPaletteView.layout(0, height - keyPaletteHeight, width, height)
     }
 }

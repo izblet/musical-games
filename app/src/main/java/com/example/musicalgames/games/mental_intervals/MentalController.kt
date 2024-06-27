@@ -3,12 +3,14 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import com.example.musicalgames.components.interval_palette.IntervalPaletteListener
 import com.example.musicalgames.components.key_palette.KeyPaletteListener
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.Interval
 
-class MentalController(private val view: MentalView) : GameController, KeyPaletteListener {
+class MentalController(private val view: MentalView) : GameController, KeyPaletteListener, IntervalPaletteListener {
 
     private var viewModel: MentalViewModel? = null
     //TODO: temporary, viewmodel should be in constructor, view should have viewmodel in constructor
@@ -19,6 +21,7 @@ class MentalController(private val view: MentalView) : GameController, KeyPalett
         this.viewModel = viewModel
         view.setViewModel(viewModel)
         view.setKeyboardListener(this)
+        view.setIntervalListener(this)
         viewModel.registerUI(view)
     }
 
@@ -34,5 +37,8 @@ class MentalController(private val view: MentalView) : GameController, KeyPalett
     override fun onClicked(note: ChromaticNote) {
         viewModel?.select(note)
 
+    }
+    override fun onClicked(interval: Interval) {
+       viewModel?.select(interval)
     }
 }
