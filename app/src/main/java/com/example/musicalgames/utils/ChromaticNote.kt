@@ -4,11 +4,14 @@ enum class ChromaticNote {
     C, CxD, D, DxE, E, F, FxG, G, GxA, A, AxB, B;
 
     override fun toString(): String {
-        if(this.name.contains("x")) {
-            return this.name[0]+"#"
+        if(this.isDiatonic()) {
+            return this.name
         }
-        return this.name
+        return this.name[0]+"#"
 
+    }
+    fun isDiatonic():Boolean {
+        return !this.name.contains('x')
     }
     companion object {
         private val values = values()
@@ -22,6 +25,14 @@ enum class ChromaticNote {
                 return values[(higherNote-1+values.size)%values.size]
             }
             else return ChromaticNote.valueOf(MusicUtil.noteLetter(note))
+        }
+        fun fromDegree(deg: Int) : ChromaticNote {
+            if(deg<0 || deg>=values.size)
+                throw Exception("ChromaticNote: degree value is impossible")
+            return values[deg]
+        }
+        fun valuesSize(): Int {
+            return values.size
         }
     }
 }

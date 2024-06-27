@@ -3,36 +3,36 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import com.example.musicalgames.components.key_palette.KeyPaletteListener
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.utils.ChromaticNote
 
-class MentalController(private val view: MentalView) : GameController {
+class MentalController(private val view: MentalView) : GameController, KeyPaletteListener {
 
+    private var viewModel: MentalViewModel? = null
+    //TODO: temporary, viewmodel should be in constructor, view should have viewmodel in constructor
     override fun setViewModel(viewModel: ViewModel) {
-        if(viewModel !is MentalViewModel) {
-            throw Exception("Viewmodel is of wrong type")
-        }
-        view.setConstraint(viewModel.maxInterval)
-        //TODO("Not yet implemented")
+        if(viewModel !is MentalViewModel)
+            throw Exception("viewmodel is of wrong type")
+
+        this.viewModel = viewModel
+        view.setViewModel(viewModel)
+        view.setKeyboardListener(this)
+        viewModel.registerUI(view)
     }
 
-    override fun initGame(context: Context, listener: GameListener) {
-        view.registerListener(listener)
-    }
+    override fun initGame(context: Context, listener: GameListener) { viewModel!!.registerEndListener(listener) }
 
-    override fun startGame(owner: LifecycleOwner) {
-        view.generateQuestion()
-    }
+    override fun startGame(owner: LifecycleOwner) { viewModel!!.startGame() }
 
-    override fun pauseGame() {
-        //TODO("Not yet implemented")
-    }
+    override fun pauseGame() { }
 
-    override fun endGame() {
-        //TODO("Not yet implemented")
-    }
+    override fun endGame() { }
 
-    override fun getScore(): Int {
-        return view.score
+    override fun getScore(): Int { return viewModel!!.score }
+    override fun onClicked(note: ChromaticNote) {
+        viewModel?.select(note)
+
     }
 }

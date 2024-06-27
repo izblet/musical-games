@@ -1,4 +1,4 @@
-package com.example.musicalgames.components
+package com.example.musicalgames.components.keyboard
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,7 +12,7 @@ import android.view.View
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.Note
 
-class PianoKeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
+class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
 
     //just temporary values, because i don't want to waste time with null checks

@@ -6,8 +6,8 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
-import com.example.musicalgames.components.KeyboardListener
-import com.example.musicalgames.components.PianoKeyboardView
+import com.example.musicalgames.components.keyboard.KeyboardListener
+import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
@@ -23,7 +23,7 @@ import com.example.musicalgames.utils.MusicUtil.noteName
 
 class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, SoundPlayerListener {
 
-    private var pianoKeyboardView: PianoKeyboardView
+    private var keyboardView: KeyboardView
     private val soundPlayer : DefaultSoundPlayerManager by lazy { DefaultSoundPlayerManager(context) }
     private var endListener: GameListener? = null
     private var keyboardDisabled = true
@@ -34,7 +34,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     private val messageTextView: TextView
 
     init {
-        pianoKeyboardView = PianoKeyboardView(context, null)
+        keyboardView = KeyboardView(context, null)
         messageTextView = TextView(context).apply {
             textSize = 20f
             gravity = Gravity.CENTER_HORIZONTAL
@@ -42,13 +42,13 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         }
 
         addView(messageTextView)
-        addView(pianoKeyboardView)
-        pianoKeyboardView.registerListener(this)
+        addView(keyboardView)
+        keyboardView.registerListener(this)
     }
 
     fun setViewModel(viewModel: EarViewModel) {
         this.viewModel = viewModel
-        pianoKeyboardView.setRange(viewModel.minKey!!, viewModel.maxKey!!)
+        keyboardView.setRange(viewModel.minKey!!, viewModel.maxKey!!)
     }
 
     private fun playProblem() {
@@ -128,7 +128,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(messageHeight, MeasureSpec.EXACTLY)
         )
-        pianoKeyboardView.measure(
+        keyboardView.measure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(pianoHeight, MeasureSpec.EXACTLY)
         )
@@ -141,7 +141,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         val pianoHeight = (height * 1) / 2
 
         messageTextView.layout(0, 0, width, messageHeight)
-        pianoKeyboardView.layout(0, height - pianoHeight, width, height)
+        keyboardView.layout(0, height - pianoHeight, width, height)
     }
 
     override fun onSoundFinished() {

@@ -74,7 +74,7 @@ class GameFragment : Fragment(), GameListener {
             permissionList = arrayOf<String>()
             val viewModel = ViewModelProvider(requireActivity())[MentalViewModel::class.java]
             this.viewModel = viewModel
-            val gameView = MentalView(requireContext(), null)
+            val gameView = MentalView(requireContext())
             val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
             gameContainer.addView(gameView)
 
