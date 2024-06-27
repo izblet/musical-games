@@ -123,15 +123,9 @@ object MusicUtil {
     }
     fun getScaleNotesFrom(scale: Scale, root: ChromaticNote, start: Note, num: Int) : List<Note> {
         val scaleNotes = getScaleNotes(scale, root)
-        val startOrdinal = start.noteChromatic.ordinal
-        var octave =
-            if(startOrdinal>=root.ordinal)
-                start.octave
-            else start.octave - 1
+        var octave = start.octave
 
-        var i = 0
-        while(i<startOrdinal)
-            i += 1
+        var i = scaleNotes.indexOf(start.noteChromatic)
 
         val result = mutableListOf<Note>()
         while(result.size < num) {
@@ -143,20 +137,30 @@ object MusicUtil {
 
         return result
     }
+    fun getScaleNotesTo(scale: Scale, root: ChromaticNote, end: Note, num: Int) : List<Note> {
+        val scaleNotes = getScaleNotes(scale, root)
+        var i = scaleNotes.indexOf(end.noteChromatic)
+        var octave = end.octave
+
+        val result = mutableListOf<Note>()
+
+        while(result.size < num) {
+            result.add(Note(scaleNotes[i].toString()+octave))
+            i=(i-1+scaleNotes.size)%scaleNotes.size
+            if(i==scaleNotes.size-1)
+                octave-=1
+        }
+
+        return result.reversed()
+    }
 
     fun getWhiteKeysFrom(firstPitch: Int, num: Int) : List<Int> {
         val result = getScaleNotesFrom(Scale.MAJOR, ChromaticNote.C, Note(firstPitch), num)
         return result.map { note->note.midiCode }
     }
     fun getWhiteKeysTo(lastPitch: Int, num: Int) : List<Int> {
-        val result: MutableList<Int> = mutableListOf()
-        var pitch = lastPitch
-        while(result.size<num) {
-            if(isWhite(pitch))
-                result.add(pitch)
-            pitch--
-        }
-        return result.reversed()
+        val result = getScaleNotesTo(Scale.MAJOR, ChromaticNote.C, Note(lastPitch), num)
+        return result.map{ note->note.midiCode}
     }
     fun getKeyIntervalFrom(pitch: String, num: Int): Int {
         return midi(pitch) +num
