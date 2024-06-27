@@ -34,6 +34,7 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
     }
     fun setViewModel(viewModel: MentalViewModel) {
         this.viewModel =viewModel
+        redraw()
     }
     fun setKeyboardListener(listener: KeyPaletteListener) {
         keyPaletteView.registerListener(listener)
@@ -44,7 +45,7 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
 
     override fun onDataChanged() { redraw() }
     private fun redraw() {
-        if(viewModel!!.intervalToName)
+        if(viewModel!!.type == Type.INTERVAL_NOTE)
             intervalPaletteView.visibility = View.GONE
         else
             keyPaletteView.visibility = View.GONE

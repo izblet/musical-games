@@ -3,7 +3,6 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.IntentSettable
@@ -20,7 +19,7 @@ class MentalViewModel : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
             MAX_INTERVAL,
-            INTERVAL_TO_NOTE
+            MODE
         }
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is MentalLevel)
@@ -28,21 +27,21 @@ class MentalViewModel : ViewModel(), IntentSettable {
 
             return Intent(activity, GameActivity::class.java).apply {
                 putExtra(Extra.MAX_INTERVAL.name,level.maxSemitoneInterval)
-                putExtra(Extra.INTERVAL_TO_NOTE.name, level.intervalToNote)
+                putExtra(Extra.MODE.name, level.mode.name)
             }
         }
 
     }
     override fun setDataFromIntent(intent: Intent) {
         maxInterval = intent.getIntExtra(Extra.MAX_INTERVAL.name, 5)
-        _intervalToName = intent.getBooleanExtra(Extra.INTERVAL_TO_NOTE.name, true)
+        _type = Type.valueOf(intent.getStringExtra(Extra.MODE.name)!!)
     }
 
     //TODO: cannot change this for now but it should be changed
     var _score: Int = 0
     var score = 0
-    private var _intervalToName = true
-    val intervalToName get() = _intervalToName
+    private var _type : Type = Type.INTERVAL_NOTE
+    val type get() = _type
 
     private var disabled = true
     private var questionNote: ChromaticNote? = null
@@ -68,7 +67,7 @@ class MentalViewModel : ViewModel(), IntentSettable {
         val noteIndex = (startNoteIndex + semitoneInterval) % ChromaticNote.valuesSize()
         note = ChromaticNote.fromDegree(noteIndex)
 
-        if(intervalToName)
+        if(type == Type.INTERVAL_NOTE)
             _messageText = "What is the note positioned at $interval from $questionNote?"
         else
             _messageText = "What is the interval between $questionNote and $note"

@@ -3,8 +3,6 @@ package com.example.musicalgames.components.keyboard
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -19,8 +17,6 @@ import com.example.musicalgames.utils.Note
 
 class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
-
-    //just temporary values, because i don't want to waste time with null checks
     private val whiteKeyPaint = getWhiteFillPaint(context)
     private val blackKeyPaint = getBlackFillPaint(context)
     private val blackKeyStroke = getBlackStrokePaint(context)

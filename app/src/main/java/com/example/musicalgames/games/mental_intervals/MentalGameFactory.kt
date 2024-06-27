@@ -21,8 +21,8 @@ class MentalGameFactory : GameFactory {
     }
 
     override fun getLevels(pack: GamePackage): List<Level> {
-        return if(pack.id == 0) MentalLevels.baseLevels
-        else MentalLevels.noteLevels
+        return if(pack.id == 0) MentalLevels.intervalNoteLevels
+        else MentalLevels.noteIntervalLevels
     }
 
     override fun getPermissions(): Array<String> {
