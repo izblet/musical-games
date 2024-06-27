@@ -37,8 +37,8 @@ object GameMap {
             ),
         Game.MENTAL_INTERVALS to
             GameInfo(4,
-                "Mental Intervals",
-                "Find intervals in your head",
+                "Mental Practice",
+                "Practice relationships between notes",
                 R.drawable.mental,
                 MentalGameFactory()
             )

@@ -13,6 +13,10 @@ enum class ChromaticNote {
     fun isDiatonic():Boolean {
         return !this.name.contains('x')
     }
+    fun transpose(interval: Interval) : ChromaticNote {
+        val semitones = this.ordinal + interval.getSemitones()
+        return ChromaticNote.fromDegree(semitones)
+    }
     companion object {
         private val values = values()
         fun fromString(note: String) : ChromaticNote {

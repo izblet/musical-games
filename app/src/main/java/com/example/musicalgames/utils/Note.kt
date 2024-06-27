@@ -2,7 +2,7 @@ package com.example.musicalgames.utils
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteLetter
 import com.example.musicalgames.utils.MusicUtil as MU
-data class Note (val name: String, val frequency: Double, val midiCode: Int, val noteDiatonic: ChromaticNote, val octave: Int) {
+data class Note (val name: String, val frequency: Double, val midiCode: Int, val noteChromatic: ChromaticNote, val octave: Int) {
     companion object {
         fun enumName(noteString: String): String {
             val letter = noteString[0].toString()

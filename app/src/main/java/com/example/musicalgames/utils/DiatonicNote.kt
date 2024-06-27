@@ -14,6 +14,7 @@ enum class DiatonicNote (val chromaticNote : ChromaticNote) {
 
         return ChromaticNote.fromDegree(nextIndex%ChromaticNote.valuesSize())
     }
+
     companion object {
         private val values = values()
         fun fromChromatic(chromaticNote: ChromaticNote): DiatonicNote? {

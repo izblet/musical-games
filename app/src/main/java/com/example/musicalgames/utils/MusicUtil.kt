@@ -112,6 +112,37 @@ object MusicUtil {
 
         return octaveNote + octave*8 - 4*8
     }
+    fun getScaleNotes(scale: Scale, root: ChromaticNote) : List<ChromaticNote> {
+        val result: MutableList<ChromaticNote> = mutableListOf()
+        val scaleDegrees = scale.getDegrees()
+
+        for(degree in scaleDegrees)
+            result.add(root.transpose(degree))
+
+        return result
+    }
+    fun getScaleNotesFrom(scale: Scale, root: ChromaticNote, start: Note, num: Int) : List<Note> {
+        val scaleNotes = getScaleNotes(scale, root)
+        val startOrdinal = start.noteChromatic.ordinal
+        var octave =
+            if(startOrdinal>root.ordinal)
+                start.octave
+            else start.octave - 1
+
+        var i = 0
+        while(i<startOrdinal)
+            i += 1
+
+        val result = mutableListOf<Note>()
+        while(result.size < num) {
+            result.add(Note(scaleNotes[i].toString()+octave))
+            i=(i+1)%scaleNotes.size
+            if(i==0)
+                octave+=1
+        }
+
+        return result
+    }
 
     fun getWhiteKeysFrom(firstPitch: Int, num: Int) : List<Int> {
         val result: MutableList<Int> = mutableListOf()
