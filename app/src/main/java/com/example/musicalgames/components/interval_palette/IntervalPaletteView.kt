@@ -6,12 +6,13 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
-import com.example.musicalgames.components.Paints.blackFillPaint
-import com.example.musicalgames.components.Paints.blackStrokePaint
-import com.example.musicalgames.components.Paints.blackTextPaint
-import com.example.musicalgames.components.Paints.whiteFillPaint
-import com.example.musicalgames.components.Paints.whiteStrokePaint
-import com.example.musicalgames.components.Paints.whiteTextPaint
+import com.example.musicalgames.components.Paints
+import com.example.musicalgames.components.Paints.getBlackFillPaint
+import com.example.musicalgames.components.Paints.getBlackStrokePaint
+import com.example.musicalgames.components.Paints.getBlackTextPaint
+import com.example.musicalgames.components.Paints.getWhiteFillPaint
+import com.example.musicalgames.components.Paints.getWhiteStrokePaint
+import com.example.musicalgames.components.Paints.getWhiteTextPaint
 import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.Interval
 import kotlin.math.floor
@@ -19,8 +20,14 @@ import kotlin.math.floor
 
 class IntervalPaletteView(context: Context) : View(context) {
     private var listener: IntervalPaletteListener? = null
-
+    private val whiteStrokePaint = getWhiteStrokePaint(context)
+    private val blackStrokePaint = getBlackStrokePaint(context)
+    private val blackFillPaint = getBlackFillPaint(context)
+    private val whiteFillPaint = getWhiteFillPaint(context)
+    private val whiteTextPaint = getWhiteTextPaint(context)
+    private val blackTextPaint = getBlackTextPaint(context)
     private val padding = whiteStrokePaint.strokeWidth
+
     private var keyWidth = 0
     private var keyHeight:Float = 0f
     private var bitmap: Bitmap? = null

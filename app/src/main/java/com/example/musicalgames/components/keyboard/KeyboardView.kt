@@ -7,9 +7,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.example.musicalgames.components.Paints.getBlackFillPaint
+import com.example.musicalgames.components.Paints.getBlackStrokePaint
+import com.example.musicalgames.components.Paints.getBlueFillPaint
+import com.example.musicalgames.components.Paints.getWhiteFillPaint
+import com.example.musicalgames.components.Paints.getWhiteStrokePaint
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.Note
 
@@ -17,10 +21,13 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
 
     //just temporary values, because i don't want to waste time with null checks
-    private val whiteKeyPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val blackKeyPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val blackKeyStroke = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val whiteKeyStroke = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val whiteKeyPaint = getWhiteFillPaint(context)
+    private val blackKeyPaint = getBlackFillPaint(context)
+    private val blackKeyStroke = getBlackStrokePaint(context)
+    private val whiteKeyStroke = getWhiteStrokePaint(context)
+    private val blueFillPaint = getBlueFillPaint(context)
+    private val padding = whiteKeyStroke.strokeWidth
+
     private var keysBitmap: Bitmap? = null
     private var canvas: Canvas? = null
 
@@ -28,24 +35,10 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
     private var keyHeight = 0
     private var min: Note = Note(0)
     private var max: Note = Note(0)
+    private var colouredNote: Note? = null
     private var keyNum: Int = 0
 
     private var listener: KeyboardListener? = null
-
-    init {
-        // Initialize paints for white and black keys
-        whiteKeyPaint.color = Color.WHITE
-        whiteKeyPaint.style = Paint.Style.FILL
-
-        blackKeyPaint.color = Color.BLACK
-        blackKeyPaint.style = Paint.Style.FILL
-
-        whiteKeyStroke.color = Color.BLACK
-        whiteKeyStroke.style = Paint.Style.STROKE
-
-        blackKeyStroke.color = Color.WHITE
-        blackKeyStroke.style = Paint.Style.STROKE
-    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -66,20 +59,22 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
    private fun drawKeys(canvas: Canvas) {
         // Draw white keys
         for (i in 0 until keyNum) {
-            val left = i * keyWidth
-            val top = 0
-            val right = left + keyWidth
-            val bottom = keyHeight
+            val left = i * keyWidth+padding
+            val top = 0 + padding
+            val right = left + keyWidth - padding
+            val bottom = keyHeight - padding
 
             val rect = RectF(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
             if(MusicUtil.isWhite(min.midiCode+i)) {
                 canvas.drawRect(rect, whiteKeyPaint)
-                canvas.drawRect(rect, whiteKeyStroke)
+                canvas.drawRect(rect, blackKeyStroke)
             }
             else {
                 canvas.drawRect(rect, blackKeyPaint)
-                canvas.drawRect(rect, blackKeyStroke)
+                canvas.drawRect(rect, whiteKeyStroke)
             }
+            if(colouredNote?.midiCode == min.midiCode+i)
+                canvas.drawRect(rect, blueFillPaint)
 
         }
     }
@@ -110,6 +105,9 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
         this.min=min
         keyNum=max.midiCode-min.midiCode+1
         requestLayout()
+    }
+    fun setColoured(key: Note) {
+        colouredNote = key
     }
 
 }

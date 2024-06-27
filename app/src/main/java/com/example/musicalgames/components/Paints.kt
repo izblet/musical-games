@@ -1,41 +1,71 @@
 package com.example.musicalgames.components
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import androidx.core.content.ContextCompat
+import com.example.musicalgames.R
 
 object Paints {
-    val whiteTextPaint = Paint().apply {
-        textSize = 70f
-        isAntiAlias = true
-        textAlign = Paint.Align.CENTER
-        color = Color.WHITE
+    fun getWhiteTextPaint(context: Context): Paint {
+        return Paint().apply {
+            textSize = 70f
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+            color = Color.WHITE
+        }
     }
-    val blackTextPaint = Paint().apply {
-        textSize = 70f
-        isAntiAlias = true
-        textAlign = Paint.Align.CENTER
-        color = Color.BLACK
+
+    fun getBlackTextPaint(context: Context): Paint {
+        return Paint().apply {
+            textSize = 70f
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+            color = Color.BLACK
+        }
     }
-    val whiteFillPaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.WHITE
-        style = Paint.Style.FILL
+    fun getWhiteFillPaint(context: Context): Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = Color.WHITE
+            style = Paint.Style.FILL
+        }
     }
-    val blackFillPaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.BLACK
-        style = Paint.Style.FILL
+    fun getBlackFillPaint(context: Context) : Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = Color.BLACK
+            style = Paint.Style.FILL
+        }
     }
-    val whiteStrokePaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.WHITE
-        strokeWidth = 5f
-        style = Paint.Style.STROKE
+    fun getRedFillPaint(context: Context) : Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = Color.RED
+            style = Paint.Style.FILL
+        }
     }
-    val blackStrokePaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.BLACK
-        strokeWidth = 5f
-        style = Paint.Style.STROKE
+    fun getBlueFillPaint(context: Context) : Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = ContextCompat.getColor(context,R.color.blue)
+            style = Paint.Style.FILL
+        }
+    }
+    fun getWhiteStrokePaint(context: Context) : Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = Color.WHITE
+            strokeWidth = 5f
+            style = Paint.Style.STROKE
+        }
+    }
+    fun getBlackStrokePaint(context: Context) : Paint {
+        return Paint().apply {
+            isAntiAlias = true
+            color = Color.BLACK
+            strokeWidth = 5f
+            style = Paint.Style.STROKE
+        }
     }
 }

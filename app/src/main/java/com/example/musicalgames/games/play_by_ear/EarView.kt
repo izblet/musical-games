@@ -49,6 +49,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     fun setViewModel(viewModel: EarViewModel) {
         this.viewModel = viewModel
         keyboardView.setRange(viewModel.minKey!!, viewModel.maxKey!!)
+        keyboardView.setColoured(Note(viewModel.root))
     }
 
     private fun playProblem() {
