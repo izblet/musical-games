@@ -1,5 +1,6 @@
 package com.example.musicalgames.utils
 
+import android.util.Log
 import kotlin.math.log2
 import kotlin.math.round
 import kotlin.math.roundToInt
@@ -124,6 +125,17 @@ object MusicUtil {
     fun getScaleNotesFrom(scale: Scale, root: ChromaticNote, start: Note, num: Int) : List<Note> {
         val scaleNotes = getScaleNotes(scale, root)
         var octave = start.octave
+        var newOctave = 0
+        //this can be broken in exactly one place - the place will be the new octave (looking from below)
+        if(scaleNotes[0]>scaleNotes[scaleNotes.size-1]) {
+            newOctave=1
+            while(true) {
+                if(scaleNotes[newOctave-1]>scaleNotes[newOctave])
+                    break
+                newOctave++
+            }
+
+        }
 
         var i = scaleNotes.indexOf(start.noteChromatic)
 
@@ -131,7 +143,7 @@ object MusicUtil {
         while(result.size < num) {
             result.add(Note(scaleNotes[i].toString()+octave))
             i=(i+1)%scaleNotes.size
-            if(i==0)
+            if(i==newOctave)
                 octave+=1
         }
 
@@ -142,12 +154,23 @@ object MusicUtil {
         var i = scaleNotes.indexOf(end.noteChromatic)
         var octave = end.octave
 
+        var newOctave = scaleNotes.size-1
+        if(scaleNotes[0]>scaleNotes[scaleNotes.size-1]) {
+            newOctave = scaleNotes.size-2
+            while(true) {
+                if(scaleNotes[newOctave]>scaleNotes[newOctave+1])
+                    break
+                newOctave--
+            }
+
+        }
+
         val result = mutableListOf<Note>()
 
         while(result.size < num) {
             result.add(Note(scaleNotes[i].toString()+octave))
             i=(i-1+scaleNotes.size)%scaleNotes.size
-            if(i==scaleNotes.size-1)
+            if(i==newOctave)
                 octave-=1
         }
 

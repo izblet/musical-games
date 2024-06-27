@@ -15,7 +15,7 @@ enum class ChromaticNote {
     }
     fun transpose(interval: Interval) : ChromaticNote {
         val semitones = this.ordinal + interval.getSemitones()
-        return ChromaticNote.fromDegree(semitones)
+        return ChromaticNote.fromDegree(semitones%values.size)
     }
     companion object {
         private val values = values()
