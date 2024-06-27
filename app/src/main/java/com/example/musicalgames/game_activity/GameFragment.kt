@@ -1,7 +1,6 @@
 package com.example.musicalgames.game_activity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,22 +8,14 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.flappy.FlappyGameController
-import com.example.musicalgames.games.flappy.FlappyViewModel
-import com.example.musicalgames.games.flappy.FloppyGameView
-import com.example.musicalgames.games.mental_intervals.MentalController
-import com.example.musicalgames.games.mental_intervals.MentalView
-import com.example.musicalgames.games.mental_intervals.MentalViewModel
-import com.example.musicalgames.games.play_by_ear.EarController
-import com.example.musicalgames.games.play_by_ear.EarView
-import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameFragment : Fragment(), GameListener {
+    private val args: GameFragmentArgs by navArgs()
     private lateinit var gameController: GameController
     private lateinit var permissionList: Array<String>
     private lateinit var startButton: Button
@@ -46,8 +37,8 @@ class GameFragment : Fragment(), GameListener {
         super.onViewCreated(view, savedInstanceState)
 
         //TODO: the name should be somewhere else
-        val gameType = arguments?.getString("game_type")
-        this.gameType = Game.valueOf(gameType!!)
+        val gameType = args.gameType
+        this.gameType = Game.valueOf(gameType)
 
         val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
         val gameFactory = GameMap.gameInfos[this.gameType]!!.gameFactory
@@ -93,8 +84,8 @@ class GameFragment : Fragment(), GameListener {
         gameController.endGame()
 
         //TODO: should be fixed in the nav graph
-        val bundle = Bundle().apply { putString(GameEndedFragment.ARG_GAME, gameType!!.name) }
-        findNavController().navigate(R.id.gameEndedFragment, bundle)
+        val action = GameFragmentDirections.actionFlappyGameFragmentToGameEndedFragment(gameType!!.name)
+        findNavController().navigate(action)
     }
 
     override fun onDestroy() {

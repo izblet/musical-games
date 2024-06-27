@@ -28,9 +28,11 @@ class GameActivity : AppCompatActivity() {
         val viewModel : IntentSettable = ViewModelProvider(this)[viewModelType] as IntentSettable
         viewModel.setDataFromIntent(intent)
 
+
         //TODO: the name should not be here
         val bundle = Bundle().apply { putString("game_type", gameType.name) }
         navController.navigate(R.id.flappyGameFragment, bundle)
+
     }
 
     override fun onBackPressed() {

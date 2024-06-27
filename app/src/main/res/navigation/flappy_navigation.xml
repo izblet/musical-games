@@ -13,26 +13,40 @@
         <argument
             android:name="game_type"
             app:argType="string"/>
-
         <action
             android:id="@+id/action_flappyGameFragment_to_gameEndedFragment"
             app:destination="@id/gameEndedFragment">
+            <argument
+                android:name="game_type"
+                app:argType="string"/>
         </action>
     </fragment>
     <fragment
         android:id="@+id/gameEndedFragment"
         android:name="com.example.musicalgames.game_activity.GameEndedFragment"
         android:label="GameEndedFragment" >
+        <argument
+            android:name="game_type"
+            app:argType="string"/>
         <action
             android:id="@+id/action_gameEndedFragment_to_flappyGameFragment"
-            app:destination="@id/flappyGameFragment" />
+            app:destination="@id/flappyGameFragment" >
+            <argument
+                android:name="game_type"
+                app:argType="string"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/startGameFragment"
         android:name="com.example.musicalgames.game_activity.StartGameFragment"
         android:label="StartGameFragment" >
+
         <action
             android:id="@+id/action_startGameFragment_to_flappyGameFragment"
-            app:destination="@id/flappyGameFragment" />
+            app:destination="@id/flappyGameFragment" >
+            <argument
+                android:name="game_type"
+                app:argType="string"/>
+        </action>
     </fragment>
 </navigation>

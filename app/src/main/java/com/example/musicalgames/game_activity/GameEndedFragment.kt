@@ -9,13 +9,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameEndedFragment : Fragment() {
-
+    private val args : GameEndedFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,15 +24,12 @@ class GameEndedFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_game_ended, container, false)
     }
-    companion object {
-        const val ARG_GAME = "game"
-    }
-    private var game: Game? = null
+    private var game: String? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        game = Game.valueOf(arguments?.getString(ARG_GAME)!!)
+        game = args.gameType
 
 
         val headMessage = view.findViewById<TextView>(R.id.text_game_ended)
@@ -66,8 +64,8 @@ class GameEndedFragment : Fragment() {
             requireActivity().finish()
         }
         buttonRetry.setOnClickListener {
-            val bundle = Bundle().apply { putString("game_type", game!!.name) }
-            findNavController().navigate(R.id.action_gameEndedFragment_to_flappyGameFragment, bundle)
+            val action =GameEndedFragmentDirections.actionGameEndedFragmentToFlappyGameFragment(game!!)
+            findNavController().navigate(action)
         }
     }
 
