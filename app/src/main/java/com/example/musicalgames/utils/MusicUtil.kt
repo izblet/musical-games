@@ -125,7 +125,7 @@ object MusicUtil {
         val scaleNotes = getScaleNotes(scale, root)
         val startOrdinal = start.noteChromatic.ordinal
         var octave =
-            if(startOrdinal>root.ordinal)
+            if(startOrdinal>=root.ordinal)
                 start.octave
             else start.octave - 1
 
@@ -145,14 +145,8 @@ object MusicUtil {
     }
 
     fun getWhiteKeysFrom(firstPitch: Int, num: Int) : List<Int> {
-        val result: MutableList<Int> = mutableListOf()
-        var pitch = firstPitch
-        while(result.size<num) {
-            if(isWhite(pitch))
-                result.add(pitch)
-            pitch++
-        }
-        return result
+        val result = getScaleNotesFrom(Scale.MAJOR, ChromaticNote.C, Note(firstPitch), num)
+        return result.map { note->note.midiCode }
     }
     fun getWhiteKeysTo(lastPitch: Int, num: Int) : List<Int> {
         val result: MutableList<Int> = mutableListOf()
