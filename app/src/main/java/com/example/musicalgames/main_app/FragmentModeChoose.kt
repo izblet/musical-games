@@ -1,6 +1,5 @@
 package com.example.musicalgames.main_app
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentModeChooseBinding
+import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.chase.ActivityChase as ChaseActivity
 
 class FragmentModeChoose : Fragment() {
 
@@ -44,10 +43,11 @@ class FragmentModeChoose : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
+        val gameFactory: GameFactory = gameInfo.gameFactory
 
         (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
 
-        val optionsAdapter = AdapterGameOptions(gameInfo.options) {
+        val optionsAdapter = AdapterGameOptions(gameFactory.getPackages()) {
             option->
                 launchGame()
         }
@@ -56,23 +56,9 @@ class FragmentModeChoose : Fragment() {
             adapter = optionsAdapter
         }
     }
-   private fun launchPianoChaseActivity(create: Boolean) {
-        val intent = Intent(activity, ChaseActivity::class.java).apply {
-            putExtra(ChaseActivity.SERVER_EXTRA, create)
-        }
-        startActivity(intent)
-    }
-    private fun launchMentalIntervals() {
-
-    }
     private fun launchGame() {
+        //TODO: here we should put the package id into a bundle
         findNavController().navigate(R.id.action_SecondFragment_to_fragmentLevelList2)
-        /*val intent = Intent(activity, FlappyActivity::class.java).apply {
-            putExtra(ARCADE_EXTRA, isArcade)
-        }
-        startActivity(intent)
-
-         */
     }
 
     private fun launchHighScores() {

@@ -55,11 +55,6 @@ object FlappyLevels {
     }
 
 }
-data class Package(
-    val name:String,
-    val description: String,
-    val levelList: List<FlappyLevel>,
-)
 
 data class FlappyLevel (
     override val id: Int,

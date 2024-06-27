@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.FloppyGameView
@@ -28,7 +29,7 @@ class GameFragment : Fragment(), GameListener {
     private lateinit var permissionList: Array<String>
     private lateinit var startButton: Button
     private var gameType: Game? = null
-    private var viewModel: AbstractViewModel? = null
+    //private var viewModel: AbstractViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,44 +49,11 @@ class GameFragment : Fragment(), GameListener {
         val gameType = arguments?.getString("game_type")
         this.gameType = Game.valueOf(gameType!!)
 
-        if(gameType == Game.FLAPPY.name) {
-            permissionList = FlappyGameController.permissions
-            val viewModel = ViewModelProvider(requireActivity())[FlappyViewModel::class.java]
-            this.viewModel = viewModel
-            val gameView = FloppyGameView(requireContext())
-            val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
-            gameContainer.addView(gameView)
+        val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
+        val gameFactory = GameMap.gameInfos[this.gameType]!!.gameFactory
 
-            gameController = FlappyGameController(gameView)
-            gameController.setViewModel(viewModel)
-            gameController.initGame(requireContext(), this)
-        } else if(gameType == Game.PLAY_BY_EAR.name) {
-            permissionList = arrayOf<String>()
-            val viewModel = ViewModelProvider(requireActivity())[EarViewModel::class.java]
-            this.viewModel = viewModel
-            val gameView = EarView(requireContext(), null)
-            val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
-            gameContainer.addView(gameView)
-
-            gameController = EarController(gameView)
-            gameController.setViewModel(viewModel)
-            gameController.initGame(requireContext(), this)
-        } else if(gameType == Game.MENTAL_INTERVALS.name) {
-            permissionList = arrayOf<String>()
-            val viewModel = ViewModelProvider(requireActivity())[MentalViewModel::class.java]
-            this.viewModel = viewModel
-            val gameView = MentalView(requireContext())
-            val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
-            gameContainer.addView(gameView)
-
-            gameController = MentalController(gameView)
-            gameController.setViewModel(viewModel)
-            gameController.initGame(requireContext(), this)
-        }
-        else {
-            throw Exception("There is no view for a game with the specified type $gameType")
-        }
-
+        permissionList = gameFactory.getPermissions()
+        gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, this)
 
         if (!checkPermissions())
             requestMultiplePermissions.launch(permissionList)
@@ -120,8 +88,8 @@ class GameFragment : Fragment(), GameListener {
         }
 
     override fun onGameEnded() {
-        viewModel!!.score = gameController.getScore()
-        Log.e("score", "${viewModel!!.score}")
+        //TODO: this should pass the score to game ended fragment
+        gameController.getScore()
         gameController.endGame()
 
         //TODO: should be fixed in the nav graph

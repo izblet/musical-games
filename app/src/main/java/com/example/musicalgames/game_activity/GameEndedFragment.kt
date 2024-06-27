@@ -40,7 +40,7 @@ class GameEndedFragment : Fragment() {
         val buttonExit = view.findViewById<Button>(R.id.button_exit)
         val buttonRetry = view.findViewById<Button>(R.id.button_retry)
 
-        val viewModelClass =
+        /*val viewModelClass =
             if(game == Game.FLAPPY)FlappyViewModel::class.java
             else EarViewModel::class.java
 
@@ -48,6 +48,8 @@ class GameEndedFragment : Fragment() {
 
         textScore.text = "Your Score: ${viewModel.score}"
         textScore.text = "Your Score: ${viewModel.score}"
+
+         */
         textDescription.visibility = View.GONE
 
             /*lifecycleScope.launch {

@@ -25,7 +25,7 @@ class FragmentGameChoose : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
         val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
@@ -44,7 +44,6 @@ class FragmentGameChoose : Fragment() {
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
             override fun onItemClick(game: Game) {
                 viewModel.game=game
-                viewModel.gameOptions = GameMap.gameInfos[game]!!.options
                 findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             }
         })

@@ -20,6 +20,7 @@ import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.GameMap.gameInfos
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.mental_intervals.MentalViewModel
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
@@ -34,7 +35,7 @@ class FragmentLevelList : Fragment() {
         private val binding get() = _binding!!
         private lateinit var viewModel: MainViewModel
         private fun updateTitle() {
-                val title = "${GameMap.gameInfos[viewModel.game!!]!!.name} - Levels"
+                val title = "${gameInfos[viewModel.game!!]!!.name} - Levels"
                 (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(title)
         }
         override fun onResume() {
@@ -56,20 +57,10 @@ class FragmentLevelList : Fragment() {
                 val layoutManager = LinearLayoutManager(context)
                 recyclerView.layoutManager = layoutManager
 
+                val gameFactory = gameInfos[viewModel.game]!!.gameFactory
 
-                var levelList: List<Level>? = null
-                var intentMaker: GameIntentMaker? = null
-
-                if(viewModel.game == Game.FLAPPY) {
-                        levelList = FlappyLevels.baseLevels
-                        intentMaker = FlappyViewModel.Companion
-                } else if(viewModel.game == Game.PLAY_BY_EAR) {
-                        levelList = EarPlayLevels.baseLevels
-                        intentMaker = EarViewModel.Companion
-                } else if(viewModel.game == Game.MENTAL_INTERVALS) {
-                        levelList = MentalLevels.baseLevels
-                        intentMaker = MentalViewModel.Companion
-                }
+                val levelList: List<Level> = gameFactory.getLevels(0)
+                val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
 
                 val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {
                         override fun onItemClick(level: Level) {

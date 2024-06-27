@@ -4,21 +4,16 @@ import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.example.musicalgames.game_activity.AbstractViewModel
-import com.example.musicalgames.games.GameDatabase
-import com.example.musicalgames.games.HighScore
-import com.example.musicalgames.games.HighScoreDao
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.GameOption
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class FlappyViewModel(application: Application) : AbstractViewModel(application) {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
-    var gameType: GameOption? = null //type of game - levels/custom/arcade - just for inserting into the database
     override var score = 0
     var pitchRecogniser: PitchRecogniser? = null
     var minRange: Int = midi("C3")
@@ -41,10 +36,6 @@ class FlappyViewModel(application: Application) : AbstractViewModel(application)
             val flappyLevel = level as FlappyLevel
 
             return Intent(activity, GameActivity::class.java).apply {
-                if(flappyLevel.endAfter == LEN_INF)
-                    putExtra(TYPE_STR, GameOption.ARCADE.name)
-                else
-                    putExtra(TYPE_STR, GameOption.LEVELS.name)
                 putExtra(MIN_STR, flappyLevel.minPitch)
                 putExtra(MAX_STR, flappyLevel.maxPitch)
                 putExtra(ROOT_STR, flappyLevel.root)
@@ -56,7 +47,6 @@ class FlappyViewModel(application: Application) : AbstractViewModel(application)
     }
     override fun setDataFromIntent(intent: Intent) {
         val type = intent.getStringExtra(TYPE_STR)
-        gameType = GameOption.valueOf(type ?: GameOption.ARCADE.name)
 
         minRange = intent.getIntExtra(MIN_STR, minRange)
         maxRange = intent.getIntExtra(MAX_STR, maxRange)
@@ -66,11 +56,11 @@ class FlappyViewModel(application: Application) : AbstractViewModel(application)
         gapPositions = positions!!
     }
 
-    private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
+    //private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
 
     suspend fun checkHighScore(): Boolean {
+        /*
         val highScores: List<HighScore> = highScoreDao.getHighScores(gameId,
-            gameType!!.toString()
         )
 
         highScoreDao.insertAndTrim(HighScore(gameId = gameId, modeId = gameType!!.toString(), score = score))
@@ -79,6 +69,8 @@ class FlappyViewModel(application: Application) : AbstractViewModel(application)
             score > highScores[0].score
 
         else true
+         */
+        return false
     }
 
 }
