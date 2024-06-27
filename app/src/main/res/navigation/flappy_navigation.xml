@@ -5,6 +5,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flappy_navigation"
     app:startDestination="@id/startGameFragment">
+    <fragment
+        android:id="@+id/startGameFragment"
+        android:name="com.example.musicalgames.game_activity.StartGameFragment"
+        android:label="StartGameFragment" >
+
+        <action
+            android:id="@+id/action_startGameFragment_to_flappyGameFragment"
+            app:destination="@id/flappyGameFragment" >
+
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/flappyGameFragment"
@@ -18,27 +29,28 @@
             app:destination="@id/gameEndedFragment">
         </action>
     </fragment>
+
     <fragment
         android:id="@+id/gameEndedFragment"
         android:name="com.example.musicalgames.game_activity.GameEndedFragment"
         android:label="GameEndedFragment" >
         <argument
-            android:name="game_type"
+            android:name="game"
+            app:argType="string"
+            />
+        <argument
+            android:name="head_message"
+            app:argType="string"/>
+        <argument
+            android:name="score_message"
+            app:argType="string"/>
+        <argument
+            android:name="description_message"
             app:argType="string"/>
         <action
             android:id="@+id/action_gameEndedFragment_to_flappyGameFragment"
             app:destination="@id/flappyGameFragment" >
         </action>
     </fragment>
-    <fragment
-        android:id="@+id/startGameFragment"
-        android:name="com.example.musicalgames.game_activity.StartGameFragment"
-        android:label="StartGameFragment" >
 
-        <action
-            android:id="@+id/action_startGameFragment_to_flappyGameFragment"
-            app:destination="@id/flappyGameFragment" >
-
-        </action>
-    </fragment>
 </navigation>

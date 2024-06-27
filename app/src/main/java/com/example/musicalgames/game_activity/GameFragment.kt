@@ -79,12 +79,14 @@ class GameFragment : Fragment(), GameListener {
         }
 
     override fun onGameEnded() {
-        //TODO: this should pass the score to game ended fragment
-        gameController.getScore()
         gameController.endGame()
 
-        //TODO: should be fixed in the nav graph
-        val action = GameFragmentDirections.actionFlappyGameFragmentToGameEndedFragment(gameType!!.name)
+        //TODO: for now it does the same thing for every game, score could be some other value
+        val action = GameFragmentDirections.actionFlappyGameFragmentToGameEndedFragment(
+            gameType!!.name,
+            "Game Ended",
+            "Your score: ${gameController.getScore()}",
+            "")
         findNavController().navigate(action)
     }
 

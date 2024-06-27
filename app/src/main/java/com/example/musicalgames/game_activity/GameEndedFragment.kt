@@ -29,40 +29,33 @@ class GameEndedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        game = args.gameType
+        game = args.game
+        val headMessageText = args.headMessage
+        val scoreText = args.scoreMessage
+        val descriptionText = args.descriptionMessage
 
 
         val headMessage = view.findViewById<TextView>(R.id.text_game_ended)
+        headMessage.text = headMessageText
         val textScore = view.findViewById<TextView>(R.id.text_score)
+        textScore.text=scoreText
         val textDescription = view.findViewById<TextView>(R.id.text_high_score)
+        textDescription.text = descriptionText
+
         val buttonExit = view.findViewById<Button>(R.id.button_exit)
         val buttonRetry = view.findViewById<Button>(R.id.button_retry)
 
-        /*val viewModelClass =
-            if(game == Game.FLAPPY)FlappyViewModel::class.java
-            else EarViewModel::class.java
-
-        val viewModel: AbstractViewModel = ViewModelProvider(requireActivity()).get(viewModelClass)
-
-        textScore.text = "Your Score: ${viewModel.score}"
-        textScore.text = "Your Score: ${viewModel.score}"
-
-         */
-        textDescription.visibility = View.GONE
-
-            /*lifecycleScope.launch {
-            val isHighScore = viewModel.checkHighScore()
-            if (isHighScore) {
-                textDescription.text = "New High Score!"
-            } else {
-                textDescription.visibility = View.GONE
-            }
-        }
-        */
+        if(headMessageText.isEmpty())
+            headMessage.visibility = View.GONE
+        if(scoreText.isEmpty())
+            textScore.visibility = View.GONE
+        if(descriptionText.isEmpty())
+            textDescription.visibility = View.GONE
 
         buttonExit.setOnClickListener {
             requireActivity().finish()
         }
+
         buttonRetry.setOnClickListener {
             val action =GameEndedFragmentDirections.actionGameEndedFragmentToFlappyGameFragment(game!!)
             findNavController().navigate(action)
