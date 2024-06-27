@@ -3,8 +3,9 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Context
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.musicalgames.game_activity.AbstractViewModel
+import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
@@ -28,7 +29,7 @@ class MentalGameFactory : GameFactory {
         return arrayOf()
     }
 
-    override fun getViewModelType(): Class<out AbstractViewModel> {
+    override fun getViewModelType(): Class<out ViewModel> {
         return MentalViewModel::class.java
     }
 

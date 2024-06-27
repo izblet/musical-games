@@ -3,14 +3,15 @@ package com.example.musicalgames.games.play_by_ear
 import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
-import com.example.musicalgames.game_activity.AbstractViewModel
+import androidx.lifecycle.ViewModel
+import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.Note
 
-class EarViewModel(application: Application) : AbstractViewModel(application) {
+class EarViewModel() : ViewModel(),IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
             MIN_KEY,
@@ -54,5 +55,5 @@ class EarViewModel(application: Application) : AbstractViewModel(application) {
     var maxInterval: Int = Int.MAX_VALUE
     var root: Int = midi("C4")
     var notesNum: Int = 0
-    override var score = 0
+    var score = 0
 }

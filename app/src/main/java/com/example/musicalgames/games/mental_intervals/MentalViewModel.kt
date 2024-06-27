@@ -5,7 +5,8 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.fragment.app.FragmentActivity
-import com.example.musicalgames.game_activity.AbstractViewModel
+import androidx.lifecycle.ViewModel
+import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
@@ -15,7 +16,7 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
-class MentalViewModel(application: Application) : AbstractViewModel(application) {
+class MentalViewModel() : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
             MAX_INTERVAL
@@ -37,7 +38,7 @@ class MentalViewModel(application: Application) : AbstractViewModel(application)
 
     //TODO: cannot change this for now but it should be changed
     var _score: Int = 0
-    override var score = 0
+    var score = 0
     private var _intervalToName = true
     val intervalToName get() = _intervalToName
 

@@ -2,11 +2,11 @@ package com.example.musicalgames.games.flappy
 
 import android.Manifest
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.musicalgames.game_activity.AbstractViewModel
+import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
@@ -27,7 +27,7 @@ class FlappyGameFactory : GameFactory {
         return arrayOf(Manifest.permission.RECORD_AUDIO)
     }
 
-    override fun getViewModelType(): Class<out AbstractViewModel> {
+    override fun getViewModelType(): Class<out ViewModel> {
         return FlappyViewModel::class.java
     }
 

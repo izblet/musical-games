@@ -3,7 +3,8 @@ package com.example.musicalgames.games.flappy
 import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
-import com.example.musicalgames.game_activity.AbstractViewModel
+import androidx.lifecycle.ViewModel
+import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
@@ -12,9 +13,9 @@ import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
-class FlappyViewModel(application: Application) : AbstractViewModel(application) {
+class FlappyViewModel() : ViewModel(), IntentSettable{
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
-    override var score = 0
+    var score = 0
     var pitchRecogniser: PitchRecogniser? = null
     var minRange: Int = midi("C3")
     var maxRange: Int = midi("C4")
