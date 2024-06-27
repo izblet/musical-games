@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
@@ -21,8 +20,9 @@ class MentalGameFactory : GameFactory {
         )
     }
 
-    override fun getLevels(pack: Int): List<Level> {
-        return MentalLevels.baseLevels
+    override fun getLevels(pack: GamePackage): List<Level> {
+        return if(pack.id == 0) MentalLevels.baseLevels
+        else MentalLevels.noteLevels
     }
 
     override fun getPermissions(): Array<String> {
@@ -45,6 +45,7 @@ class MentalGameFactory : GameFactory {
     ): GameController {
         val viewModel = ViewModelProvider(activity)[MentalViewModel::class.java]
         val gameView = MentalView(context)
+        gameView.setViewModel(viewModel)
         gameContainer.addView(gameView)
 
         val gameController = MentalController(gameView)

@@ -1,9 +1,9 @@
 package com.example.musicalgames.games.mental_intervals
 
-import android.app.Application
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.IntentSettable
@@ -16,10 +16,11 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
-class MentalViewModel() : ViewModel(), IntentSettable {
+class MentalViewModel : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
-            MAX_INTERVAL
+            MAX_INTERVAL,
+            INTERVAL_TO_NOTE
         }
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is MentalLevel)
@@ -27,13 +28,14 @@ class MentalViewModel() : ViewModel(), IntentSettable {
 
             return Intent(activity, GameActivity::class.java).apply {
                 putExtra(Extra.MAX_INTERVAL.name,level.maxSemitoneInterval)
+                putExtra(Extra.INTERVAL_TO_NOTE.name, level.intervalToNote)
             }
         }
 
     }
     override fun setDataFromIntent(intent: Intent) {
         maxInterval = intent.getIntExtra(Extra.MAX_INTERVAL.name, 5)
-
+        _intervalToName = intent.getBooleanExtra(Extra.INTERVAL_TO_NOTE.name, true)
     }
 
     //TODO: cannot change this for now but it should be changed

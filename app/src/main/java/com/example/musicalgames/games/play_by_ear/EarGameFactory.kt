@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
@@ -18,7 +17,7 @@ class EarGameFactory : GameFactory {
         return listOf( GamePackage("Levels", 0))
     }
 
-    override fun getLevels(pack: Int): List<Level> {
+    override fun getLevels(pack: GamePackage): List<Level> {
         return EarPlayLevels.baseLevels
     }
 

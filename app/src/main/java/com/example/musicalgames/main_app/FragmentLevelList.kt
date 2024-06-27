@@ -13,18 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentFlappyLevelsBinding
-import com.example.musicalgames.games.Game
 import com.example.musicalgames.game_activity.GameIntentMaker
-import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
-import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.GameMap.gameInfos
-import com.example.musicalgames.games.mental_intervals.MentalLevels
-import com.example.musicalgames.games.mental_intervals.MentalViewModel
-import com.example.musicalgames.games.play_by_ear.EarPlayLevels
-import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 
 class FragmentLevelList : Fragment() {
@@ -59,7 +51,7 @@ class FragmentLevelList : Fragment() {
 
                 val gameFactory = gameInfos[viewModel.game]!!.gameFactory
 
-                val levelList: List<Level> = gameFactory.getLevels(0)
+                val levelList: List<Level> = gameFactory.getLevels(viewModel.pack!!)
                 val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
 
                 val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {

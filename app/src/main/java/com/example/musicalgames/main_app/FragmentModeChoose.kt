@@ -49,6 +49,7 @@ class FragmentModeChoose : Fragment() {
 
         val optionsAdapter = AdapterGameOptions(gameFactory.getPackages()) {
             option->
+                viewModel.pack = option
                 launchGame()
         }
         binding.optionsRecyclerView.apply {
