@@ -15,11 +15,13 @@ import com.example.musicalgames.games.GamePackage
 
 class FlappyGameFactory : GameFactory {
     override fun getPackages(): List<GamePackage> {
-        return listOf(GamePackage("Levels", 0))
+        return listOf(GamePackage("C major", 0),
+            GamePackage("A minor", 1))
     }
 
     override fun getLevels(pack: GamePackage): List<Level> {
-        return FlappyLevels.baseLevels
+        if(pack.id==0) return FlappyLevels.baseLevels
+        else return FlappyLevels.minorLevels
     }
 
     override fun getPermissions(): Array<String> {

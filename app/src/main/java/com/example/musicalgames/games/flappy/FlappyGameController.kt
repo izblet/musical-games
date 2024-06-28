@@ -41,7 +41,7 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
             1000
         )
         handler.postDelayed(
-            {soundPlayer!!.play("C4")},
+            {soundPlayer!!.play(viewModel!!.root)},
             2000
         )
         handler.postDelayed({
