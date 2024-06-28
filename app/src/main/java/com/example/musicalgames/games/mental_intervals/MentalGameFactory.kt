@@ -16,13 +16,15 @@ class MentalGameFactory : GameFactory {
     override fun getPackages(): List<GamePackage> {
         return listOf(
             GamePackage("Interval to note", 0),
-            GamePackage("Note to interval", 1)
+            GamePackage("Note to interval", 1),
+            GamePackage("Scale degree to note", 2)
         )
     }
 
     override fun getLevels(pack: GamePackage): List<Level> {
         return if(pack.id == 0) MentalLevels.intervalNoteLevels
-        else MentalLevels.noteIntervalLevels
+        else if(pack.id ==1) MentalLevels.noteIntervalLevels
+        else MentalLevels.degreeNoteLevels
     }
 
     override fun getPermissions(): Array<String> {

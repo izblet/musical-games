@@ -3,6 +3,7 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.IntentSettable
@@ -13,13 +14,15 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game_activity.ViewModelListener
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.utils.Scale
 import kotlin.random.Random
 
 class MentalViewModel : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
             MAX_INTERVAL,
-            MODE
+            MODE,
+            SCALE
         }
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is MentalLevel)
@@ -28,6 +31,7 @@ class MentalViewModel : ViewModel(), IntentSettable {
             return Intent(activity, GameActivity::class.java).apply {
                 putExtra(Extra.MAX_INTERVAL.name,level.maxSemitoneInterval)
                 putExtra(Extra.MODE.name, level.mode.name)
+                putExtra(Extra.SCALE.name, level.scale.name)
             }
         }
 
@@ -35,6 +39,9 @@ class MentalViewModel : ViewModel(), IntentSettable {
     override fun setDataFromIntent(intent: Intent) {
         maxInterval = intent.getIntExtra(Extra.MAX_INTERVAL.name, 5)
         _type = Type.valueOf(intent.getStringExtra(Extra.MODE.name)!!)
+        scale = Scale.valueOf(intent.getStringExtra(Extra.SCALE.name)!!)
+        availableIntervals = scale!!.getDegrees().map { interval -> interval.getSemitones()  }
+        availableIntervals = availableIntervals!!.filter { it in 1..maxInterval }
     }
 
     //TODO: cannot change this for now but it should be changed
@@ -44,8 +51,11 @@ class MentalViewModel : ViewModel(), IntentSettable {
     val type get() = _type
 
     private var disabled = true
+    private var scale : Scale? = null
+    private var availableIntervals: List<Int>? = null
     private var questionNote: ChromaticNote? = null
     private var interval: Interval? = null
+    private var lastDegree: Int = 0
     private var note: ChromaticNote? = null
     private var maxInterval: Int = Int.MAX_VALUE
     private var _messageText = ""
@@ -58,10 +68,15 @@ class MentalViewModel : ViewModel(), IntentSettable {
     fun registerEndListener(listener: GameListener) { endListener=listener }
     fun registerUI(ui: ViewModelListener) { UI = ui }
     fun startGame() { generateQuestion() }
+    private fun getRandomSemitone():Int {
+        val i = Random.nextInt(availableIntervals!!.size)
+        lastDegree = i+2
+        return availableIntervals!![i]
+    }
     private fun generateQuestion() {
         disabled=false
         val startNoteIndex = Random.nextInt(ChromaticNote.valuesSize())
-        val semitoneInterval = Random.nextInt(1, maxInterval+1)
+        val semitoneInterval = getRandomSemitone()
         interval =  Interval.fromSemitones(semitoneInterval)
         questionNote = ChromaticNote.fromDegree(startNoteIndex)
         val noteIndex = (startNoteIndex + semitoneInterval) % ChromaticNote.valuesSize()
@@ -69,8 +84,10 @@ class MentalViewModel : ViewModel(), IntentSettable {
 
         if(type == Type.INTERVAL_NOTE)
             _messageText = "What is the note positioned at $interval from $questionNote?"
-        else
+        else if(type == Type.NOTE_INTERVAL)
             _messageText = "What is the interval between $questionNote and $note"
+        else
+            _messageText = "What is the degree $lastDegree in $questionNote $scale"
 
         UI?.onDataChanged()
     }

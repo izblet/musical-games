@@ -45,7 +45,7 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
 
     override fun onDataChanged() { redraw() }
     private fun redraw() {
-        if(viewModel!!.type == Type.INTERVAL_NOTE)
+        if(viewModel!!.type == Type.INTERVAL_NOTE || viewModel!!.type == Type.DEGREE_NOTE)
             intervalPaletteView.visibility = View.GONE
         else
             keyPaletteView.visibility = View.GONE
