@@ -122,7 +122,8 @@ class Pipe(
         val staffTop = (screenHeight - staffHeight) / 2
         val notePositions = listOf(gap)
 
-        staffPainter.drawStaff(canvas, staffLeft, staffTop, staffWidth, staffHeight, notePositions)
+        staffPainter.setConstraints(staffTop, staffTop+staffHeight)
+        staffPainter.drawStaff(canvas, staffLeft, staffWidth, notePositions)
 
         val topKeys = getTopKeys()
         val bottomKeys = getBottomKeys()

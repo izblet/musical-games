@@ -44,6 +44,15 @@ enum class Scale {
         //with 0, without P8
         return degreeMap[this]!!
     }
+    fun signaturePreferablyFlatFrom(note : DiatonicNote): Boolean {
+        return if(this == MAJOR) {
+            note!=DiatonicNote.F
+
+        } else if(this == MINOR) {
+            note == DiatonicNote.E || note == DiatonicNote.B
+
+        } else throw Exception("no key signature for $this")
+    }
 
     override fun toString(): String {
         return if (this == MELODIC_ASCENDING)
