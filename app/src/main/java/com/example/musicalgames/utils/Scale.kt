@@ -44,4 +44,10 @@ enum class Scale {
         //with 0, without P8
         return degreeMap[this]!!
     }
+
+    override fun toString(): String {
+        return if (this == MELODIC_ASCENDING)
+            "melodic ascending"
+        else (name).lowercase()
+    }
 }
