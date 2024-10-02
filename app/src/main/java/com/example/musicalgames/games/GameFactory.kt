@@ -1,6 +1,7 @@
 package com.example.musicalgames.games
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -16,5 +17,6 @@ interface GameFactory {
     fun getViewModelType() : Class<out ViewModel>
     //TODO: the following is only temporary - there will be no 'intent maker', we will pass level index as argument or sth
     fun getIntentMaker() : GameIntentMaker
+    fun getCustomCreator(context: Context, attrs: AttributeSet) : CustomGameCreator
     fun createGame( context: Context, activity: FragmentActivity, gameContainer: ViewGroup, gameListener: GameListener) : GameController
 }

@@ -1,6 +1,7 @@
 package com.example.musicalgames.games.play_by_ear
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
 
@@ -31,6 +33,10 @@ class EarGameFactory : GameFactory {
 
     override fun getIntentMaker(): GameIntentMaker {
        return EarViewModel.Companion
+    }
+
+    override fun getCustomCreator(context: Context, attrs: AttributeSet): CustomGameCreator {
+        TODO("Not yet implemented")
     }
 
     override fun createGame(

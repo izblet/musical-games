@@ -37,14 +37,17 @@ object EarPlayLevels {
             else
                 noteLetter(root)+(Note(notes[notes.size-1]).octave+1)
 
+        val belowDistance = notes[0] - Note(firstRootBelow).midiCode
+        val aboveDistance = Note(firstRootAbove).midiCode - notes[notes.size - 1]
+
 
         val min =
-            if(span<12)
+            if(span<12 && (belowDistance<aboveDistance || lastNote == rootNote))
                 Note(firstRootBelow).midiCode
             else notes[0]
 
         val max =
-            if(span<12)
+            if(span<12 && (belowDistance>=aboveDistance || firstNote == rootNote))
                 Note(firstRootAbove).midiCode
             else notes[notes.size-1]
 

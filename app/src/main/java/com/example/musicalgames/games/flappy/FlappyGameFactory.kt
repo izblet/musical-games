@@ -2,6 +2,9 @@ package com.example.musicalgames.games.flappy
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.ColorFilter
+import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -10,6 +13,7 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
 
@@ -35,6 +39,10 @@ class FlappyGameFactory : GameFactory {
     override fun getIntentMaker(): GameIntentMaker {
         return FlappyViewModel.Companion
 
+    }
+
+    override fun getCustomCreator(context: Context, attrs: AttributeSet): CustomGameCreator {
+        TODO("not implemented yet")
     }
 
     override fun createGame(

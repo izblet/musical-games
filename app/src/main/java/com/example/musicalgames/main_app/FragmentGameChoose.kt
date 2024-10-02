@@ -44,7 +44,7 @@ class FragmentGameChoose : Fragment() {
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
             override fun onItemClick(game: Game) {
                 viewModel.game=game
-                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                findNavController().navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
             }
         })
         recyclerView.adapter = adapter

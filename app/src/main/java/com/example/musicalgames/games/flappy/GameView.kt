@@ -34,10 +34,12 @@ class FloppyGameView(context: Context) : View(context) {
 
    init {
        val trebleClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.treble_clef)
-       treblePainter = StaffPainter(trebleClefBitmap,true)
+       val sharpBitmap = BitmapFactory.decodeResource(resources, R.drawable.sharp)
+       val flatBitmap = BitmapFactory.decodeResource(resources, R.drawable.flat)
+       treblePainter = StaffPainter(trebleClefBitmap,sharpBitmap, flatBitmap, true)
 
        val bassClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.bass_clef)
-       bassPainter = StaffPainter(bassClefBitmap,false)
+       bassPainter = StaffPainter(bassClefBitmap,sharpBitmap, flatBitmap, false)
 
    }
 

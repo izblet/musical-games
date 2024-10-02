@@ -5,13 +5,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import android.util.Log
-import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.MusicUtil.cleffIndexC4
 import com.example.musicalgames.utils.Note
 
 
-class StaffPainter(private val clefBitmap: Bitmap, private val treble: Boolean) {
+class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitmap, private val flatBitmap: Bitmap, private val treble: Boolean) {
     private val staffLinePaint = Paint().apply {
         color = Color.BLACK
         strokeWidth = 5f
@@ -25,6 +23,14 @@ class StaffPainter(private val clefBitmap: Bitmap, private val treble: Boolean) 
     private var noteRadius = 0f
     private var lineSpacing = 0f
     private var height = 0f
+    private var flats: List<Note>? = null
+    private var sharps: List<Note>? = null
+    fun setFlats(flats: List<Note>) {
+        this.flats=flats
+    }
+    fun setSharps(sharps: List<Note>) {
+        this.sharps=sharps
+    }
     fun setConstraints(top: Float, bottom: Float) {
         this.top=top
         this.bottom=bottom

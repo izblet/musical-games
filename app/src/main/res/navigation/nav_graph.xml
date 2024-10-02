@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_fragmentNewModeChoose"
+            app:destination="@id/fragmentNewModeChoose" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -47,5 +50,13 @@
         <action
             android:id="@+id/action_fragmentLevelList2_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentNewModeChoose"
+        android:name="com.example.musicalgames.main_app.FragmentNewModeChoose"
+        android:label="FragmentNewModeChoose" >
+        <action
+            android:id="@+id/action_fragmentNewModeChoose_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
