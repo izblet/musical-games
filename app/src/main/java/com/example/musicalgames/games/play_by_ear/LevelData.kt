@@ -134,5 +134,5 @@ data class PlayEarLevel (
     val maxSemitoneInterval: Int,
     val keyList: List<Int>,
     override val name: String,
-    override val description: String,
+    override val description: String
 ): Level(id, name, description)

@@ -11,7 +11,7 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 
 interface GameFactory {
-    fun getLevels(pack: GamePackage) : List<Level>
+    suspend fun getLevels(pack: GamePackage, context: Context) : List<Level>
     fun getPermissions() : Array<String>
     fun getViewModelType() : Class<out ViewModel>
     //TODO: the following is only temporary - there will be no 'intent maker', we will pass level index as argument or sth

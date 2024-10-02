@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app;
+package com.example.musicalgames.tmp_archive;
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +15,7 @@ import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentHighScoreBinding
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.HighScore
+import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 
 

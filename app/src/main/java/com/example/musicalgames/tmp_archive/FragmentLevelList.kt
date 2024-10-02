@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.tmp_archive
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +17,7 @@ import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.GameMap.gameInfos
+import com.example.musicalgames.main_app.MainViewModel
 
 
 class FragmentLevelList : Fragment() {
@@ -51,7 +52,7 @@ class FragmentLevelList : Fragment() {
 
                 val gameFactory = gameInfos[viewModel.game]!!.gameFactory
 
-                val levelList: List<Level> = gameFactory.getLevels(viewModel.pack!!)
+                val levelList: List<Level> = listOf()// gameFactory.getLevels(viewModel.pack!!)
                 val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
 
                 val adapter = AdapterLevelList(levelList!!, object : AdapterLevelList.OnItemClickListener {

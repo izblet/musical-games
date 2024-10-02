@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteLetter
@@ -106,7 +107,9 @@ data class DatabaseLevel(
     val listOfMidiKeys: String, //list of integers corresponding to midi notes
     val name: String,
     val description: String,
-    val endAfter: Int
+    val endAfter: Int,
+    val custom: Boolean,
+    val favourite: Boolean
 )
 
 @Dao
@@ -115,22 +118,46 @@ interface LevelDao {
     suspend fun insert(level: DatabaseLevel)
     @Update
     suspend fun update(level: DatabaseLevel)
+
     @Query("SELECT * FROM flappy_levels ORDER BY id DESC")
     suspend fun getDatabaseLevels(): List<DatabaseLevel>?
+
+    @Query("SELECT * FROM flappy_levels WHERE favourite = 1")
+    suspend fun getFavouriteDatabase(): List<DatabaseLevel>
+
+    suspend fun getFavouriteLevels(): List<Level> {
+        return getFavouriteDatabase().map { databaseLevel -> databaseLevel.toLevel() }
+    }
+
+    @Query("SELECT * FROM flappy_levels WHERE custom = 1")
+    suspend fun getCustomDatabase(): List<DatabaseLevel>
+
+    suspend fun getCustomLevels():List<Level> {
+        return getCustomDatabase().map { databaseLevel -> databaseLevel.toLevel() }
+    }
+
+    @Query("SELECT * FROM flappy_levels WHERE custom = 0")
+    suspend fun getBaseDatabase(): List<DatabaseLevel>
+
+    suspend fun getBaseLevels():List<Level> {
+        return getBaseDatabase().map { databaseLevel -> databaseLevel.toLevel() }
+    }
+
 
     private fun DatabaseLevel.toLevel(): FlappyLevel {
         val listOfInts: List<Int> = listOfMidiKeys.split(DELIMITER).map {it.toInt()}
         return FlappyLevel(id, minPitch, maxPitch, root, listOfInts, name, description, endAfter)
     }
-    private fun FlappyLevel.toDatabaseLevel(): DatabaseLevel {
+    private fun FlappyLevel.toDatabaseLevel(custom: Boolean, favourite: Boolean): DatabaseLevel {
         val stringList = keyList.joinToString(separator = DELIMITER)
-        return DatabaseLevel(id, minPitch, maxPitch, root, stringList, name, description, endAfter)
+        return DatabaseLevel(0, minPitch, maxPitch, root, stringList, name, description, endAfter, custom, favourite)
     }
-    suspend fun insert(level: FlappyLevel) {
-        insert(level.toDatabaseLevel())
+    suspend fun insert(level: FlappyLevel, custom: Boolean) {
+        insert(level.toDatabaseLevel(custom, false))
     }
-    suspend fun update(level: FlappyLevel) {
-        update(level.toDatabaseLevel())
+
+    suspend fun update(level: FlappyLevel, custom: Boolean, favourite: Boolean) {
+        update(level.toDatabaseLevel(custom, favourite))
     }
     suspend fun getLevels() : List<FlappyLevel>{
         val levels = getDatabaseLevels() ?:

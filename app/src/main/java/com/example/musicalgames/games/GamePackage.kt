@@ -1,3 +1,3 @@
 package com.example.musicalgames.games
 
-enum class GamePackage { PREDEFINED, CUSTOM, TEMPORARY, FAVOURITES }
+enum class GamePackage { PREDEFINED, CUSTOM, FAVOURITE }

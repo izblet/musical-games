@@ -16,7 +16,7 @@ import com.example.musicalgames.games.GamePackage
 
 class MentalGameFactory : GameFactory {
 
-    override fun getLevels(pack: GamePackage): List<Level> {
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
         //TODO: this is stupid, the game should be divided
         return if(pack == GamePackage.PREDEFINED) MentalLevels.intervalNoteLevels
         else if(pack == GamePackage.CUSTOM) MentalLevels.noteIntervalLevels

@@ -94,5 +94,5 @@ data class MentalLevel (
     val mode: Type,
     val scale: Scale,
     override val name: String,
-    override val description: String
+    override val description: String,
 ): Level(id, name, description)

@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.tmp_archive
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,6 +15,7 @@ import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GamePackage
+import com.example.musicalgames.main_app.MainViewModel
 
 class FragmentModeChoose : Fragment() {
 
@@ -50,7 +51,6 @@ class FragmentModeChoose : Fragment() {
 
         val optionsAdapter = AdapterGameOptions(GamePackage.entries) {
             option->
-                viewModel.pack = option
                 launchGame()
         }
         binding.optionsRecyclerView.apply {

@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.tmp_archive
 
 import android.view.LayoutInflater
 import android.view.View

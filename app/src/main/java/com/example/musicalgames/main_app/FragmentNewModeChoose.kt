@@ -8,9 +8,9 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +24,7 @@ import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.main_app.FragmentLevelList.AdapterLevelList
+import kotlinx.coroutines.launch
 
 class FragmentNewModeChoose : Fragment() {
 
@@ -35,6 +35,12 @@ class FragmentNewModeChoose : Fragment() {
         private lateinit var clickedButton: Button
         private lateinit var buttonList: List<Button>
         private lateinit var gameFactory: GameFactory
+        private lateinit var adapter: AdapterLevelList
+
+        private var customList: List<Level> = listOf()
+        private var baseList: List<Level> = listOf()
+        private var favouriteList: List<Level> = listOf()
+
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -65,22 +71,21 @@ class FragmentNewModeChoose : Fragment() {
 
             val content : FrameLayout = binding.contentFrame
 
-
-            val levelList: List<Level> = gameFactory.getLevels(GamePackage.PREDEFINED) //just for now
             val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
+            adapter = AdapterLevelList(favouriteList, object : AdapterLevelList.OnItemClickListener {
+                override fun onItemClick(level: Level) {
+                    val intent = intentMaker.getIntent(activity!!, level)
+                    if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
+                        throw Exception("game type argument is already set in intent")
+                    }
+                    intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
+                    startActivity(intent)
+                }
+            })
 
             val recyclerView: RecyclerView = RecyclerView(requireContext()).apply {
                 layoutManager = LinearLayoutManager(requireContext())
-                adapter = AdapterLevelList(levelList, object : AdapterLevelList.OnItemClickListener {
-                    override fun onItemClick(level: Level) {
-                        val intent = intentMaker.getIntent(activity!!, level)
-                        if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
-                            throw Exception("game type argument is already set in intent")
-                        }
-                        intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
-                        startActivity(intent)
-                    }
-                })
+                this.adapter = this@FragmentNewModeChoose.adapter
             }
             content.addView(recyclerView)
 
@@ -119,16 +124,31 @@ class FragmentNewModeChoose : Fragment() {
 
         private fun showFavourites() {
             binding.pageTitle.text = "Favourite"
-
-            //findNavController().navigate(R.id.action_SecondFragment_to_fragmentHighScore)
+            adapter.setData(favouriteList)
+            lifecycleScope.launch {
+                favouriteList = gameFactory.getLevels(GamePackage.FAVOURITE, requireContext())
+                if(clickedButton==binding.favouritesButton)
+                    adapter.setData(favouriteList)
+            }
         }
         private fun showLevels() {
             binding.pageTitle.text = "Predefined"
-
+            adapter.setData(baseList)
+            lifecycleScope.launch {
+                baseList = gameFactory.getLevels(GamePackage.PREDEFINED, requireContext())
+                if(clickedButton==binding.levelsButton)
+                    adapter.setData(baseList)
+            }
 
         }
         private fun showCustom() {
             binding.pageTitle.text = "Custom"
+            adapter.setData(customList)
+            lifecycleScope.launch {
+                customList = gameFactory.getLevels(GamePackage.CUSTOM, requireContext())
+                if(clickedButton==binding.customButton)
+                    adapter.setData(customList)
+            }
         }
         private fun showCreate() {
             binding.pageTitle.text = "Create"
@@ -138,7 +158,7 @@ class FragmentNewModeChoose : Fragment() {
             super.onDestroyView()
             _binding = null
         }
-    class AdapterLevelList(private val levelList: List<Level>, private val onItemClickListener: OnItemClickListener) :
+    class AdapterLevelList(private var levelList: List<Level>, private val onItemClickListener: OnItemClickListener) :
         RecyclerView.Adapter<AdapterLevelList.LevelViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LevelViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
@@ -151,6 +171,11 @@ class FragmentNewModeChoose : Fragment() {
             holder.itemView.setOnClickListener {
                 onItemClickListener.onItemClick(level)
             }
+        }
+
+        fun setData(newList: List<Level>) {
+            levelList = newList
+            notifyDataSetChanged()
         }
 
         override fun getItemCount(): Int {

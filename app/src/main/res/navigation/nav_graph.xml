@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.musicalgames.main_app.FragmentModeChoose"
+        android:name="com.example.musicalgames.tmp_archive.FragmentModeChoose"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_mode_choose">
 
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentHighScore"
-        android:name="com.example.musicalgames.main_app.FragmentHighScore"
+        android:name="com.example.musicalgames.tmp_archive.FragmentHighScore"
         android:label="FragmentHighScore" >
         <action
             android:id="@+id/action_fragmentHighScore_to_SecondFragment"
@@ -45,7 +45,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentLevelList2"
-        android:name="com.example.musicalgames.main_app.FragmentLevelList"
+        android:name="com.example.musicalgames.tmp_archive.FragmentLevelList"
         android:label="FragmentLevelList" >
         <action
             android:id="@+id/action_fragmentLevelList2_to_SecondFragment"

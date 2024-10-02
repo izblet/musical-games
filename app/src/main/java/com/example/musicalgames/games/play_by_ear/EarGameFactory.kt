@@ -16,7 +16,7 @@ import com.example.musicalgames.games.GamePackage
 
 class EarGameFactory : GameFactory {
 
-    override fun getLevels(pack: GamePackage): List<Level> {
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
         return if(pack == GamePackage.PREDEFINED) EarPlayLevels.baseLevels else EarPlayLevels.minorLevels
     }
 

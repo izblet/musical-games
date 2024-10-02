@@ -2,9 +2,8 @@ package com.example.musicalgames.games.flappy
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.ColorFilter
 import android.util.AttributeSet
+import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -14,15 +13,22 @@ import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
 
 class FlappyGameFactory : GameFactory {
 
-    override fun getLevels(pack: GamePackage): List<Level> {
-        if(pack==GamePackage.PREDEFINED) return FlappyLevels.baseLevels
-        //TODO:this is wrong, should be changed
-        else return FlappyLevels.minorLevels
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
+        val levelDao: LevelDao = GameDatabase.getDatabase(context).flappyLevelDao()
+        val baseLevels = levelDao.getBaseLevels()
+        baseLevels.forEach { level ->  Log.d("level", level.name)}
+        Log.d("level", baseLevels.size.toString())
+        return when (pack) {
+            GamePackage.PREDEFINED -> levelDao.getBaseLevels()
+            GamePackage.CUSTOM -> levelDao.getCustomLevels()
+            else -> levelDao.getFavouriteLevels()
+        }
     }
 
     override fun getPermissions(): Array<String> {
