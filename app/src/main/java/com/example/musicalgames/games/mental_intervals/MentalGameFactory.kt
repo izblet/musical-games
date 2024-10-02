@@ -15,17 +15,11 @@ import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
 
 class MentalGameFactory : GameFactory {
-    override fun getPackages(): List<GamePackage> {
-        return listOf(
-            GamePackage("Interval to note", 0),
-            GamePackage("Note to interval", 1),
-            GamePackage("Scale degree to note", 2)
-        )
-    }
 
     override fun getLevels(pack: GamePackage): List<Level> {
-        return if(pack.id == 0) MentalLevels.intervalNoteLevels
-        else if(pack.id ==1) MentalLevels.noteIntervalLevels
+        //TODO: this is stupid, the game should be divided
+        return if(pack == GamePackage.PREDEFINED) MentalLevels.intervalNoteLevels
+        else if(pack == GamePackage.CUSTOM) MentalLevels.noteIntervalLevels
         else MentalLevels.degreeNoteLevels
     }
 

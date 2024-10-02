@@ -1,3 +1,3 @@
 package com.example.musicalgames.games
 
-data class GamePackage(val name: String, val id: Int)
+enum class GamePackage { PREDEFINED, CUSTOM, TEMPORARY, FAVOURITES }

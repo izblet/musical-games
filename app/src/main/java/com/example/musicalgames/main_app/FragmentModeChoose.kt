@@ -14,6 +14,7 @@ import com.example.musicalgames.databinding.FragmentModeChooseBinding
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.games.GamePackage
 
 class FragmentModeChoose : Fragment() {
 
@@ -47,7 +48,7 @@ class FragmentModeChoose : Fragment() {
 
         (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
 
-        val optionsAdapter = AdapterGameOptions(gameFactory.getPackages()) {
+        val optionsAdapter = AdapterGameOptions(GamePackage.entries) {
             option->
                 viewModel.pack = option
                 launchGame()

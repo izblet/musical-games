@@ -11,7 +11,6 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 
 interface GameFactory {
-    fun getPackages() : List<GamePackage>
     fun getLevels(pack: GamePackage) : List<Level>
     fun getPermissions() : Array<String>
     fun getViewModelType() : Class<out ViewModel>

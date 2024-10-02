@@ -27,11 +27,13 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     private var birdUpdateJob: Job? = null
     private var viewModel: FlappyViewModel? = null
     private var soundPlayer: SoundPlayerManager? =null
+    private var pitchRecogniser: PitchRecogniser? = null
     companion object {
         val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     }
     override fun startGame(owner: LifecycleOwner) {
         soundPlayer!!.play(viewModel!!.minRange)
+        pitchRecogniser!!.start()
         val handler = Handler(Looper.getMainLooper())
         //TODO: this is of course temporary - played sounds should be a part of the level class or sth
         //  maybe a field called "resolution" that the boundaries resolve to
@@ -76,11 +78,11 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         val minListenedPitch = "C2"
         val maxListenedPitch = "C6"
 
-        val pitchRecogniser = PitchRecogniser(context,
+        pitchRecogniser = PitchRecogniser(context,
             minListenedPitch, maxListenedPitch)
 
         this.viewModel!!.pitchRecogniser = pitchRecogniser
-        pitchRecogniser.start()
+        //pitchRecogniser.start()
         gameView.setViewModelData(viewModel!!)
         soundPlayer = DefaultSoundPlayerManager(context)
         gameView.setEndListener(listener)

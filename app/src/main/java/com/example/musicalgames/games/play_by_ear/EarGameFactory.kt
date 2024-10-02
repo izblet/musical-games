@@ -15,12 +15,9 @@ import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
 
 class EarGameFactory : GameFactory {
-    override fun getPackages(): List<GamePackage> {
-        return listOf( GamePackage("C major", 0), GamePackage("A minor", 1))
-    }
 
     override fun getLevels(pack: GamePackage): List<Level> {
-        return if(pack.id==0)EarPlayLevels.baseLevels else EarPlayLevels.minorLevels
+        return if(pack == GamePackage.PREDEFINED) EarPlayLevels.baseLevels else EarPlayLevels.minorLevels
     }
 
     override fun getPermissions(): Array<String> {
