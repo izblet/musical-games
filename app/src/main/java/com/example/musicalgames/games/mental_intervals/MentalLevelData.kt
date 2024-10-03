@@ -18,7 +18,7 @@ object MentalLevels {
     private fun generateIntervalLevels() : List<MentalLevel> {
         val levels = mutableListOf<MentalLevel>()
         val intervals = mutableListOf<Interval>()
-        for(maxSemitones in listOf(2,3,4,5,6,7,8,9,10,11)) {
+        for(maxSemitones in listOf(1,2,3,4,5,6,7,8,9,10,11)) {
             intervals.add(Interval.fromSemitones(maxSemitones))
             levels.add(
                 MentalLevel(
