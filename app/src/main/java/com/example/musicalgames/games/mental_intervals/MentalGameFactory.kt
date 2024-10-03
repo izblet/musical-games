@@ -11,16 +11,21 @@ import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
+import com.example.musicalgames.games.flappy.FlappyLevelDao
 
 class MentalGameFactory : GameFactory {
 
     override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
-        //TODO: this is stupid, the game should be divided (on the gui level, not necessarily when it comes to the code)
-        return if(pack == GamePackage.PREDEFINED) MentalLevels.intervalNoteLevels
-        else if(pack == GamePackage.CUSTOM) MentalLevels.noteIntervalLevels
-        else MentalLevels.degreeNoteLevels
+        val mentalLevelDao: MentalLevelDao = GameDatabase.getDatabase(context).mentalLevelDao()
+
+        return when (pack) {
+            GamePackage.PREDEFINED -> mentalLevelDao.getBaseLevels()
+            GamePackage.CUSTOM -> mentalLevelDao.getCustomLevels()
+            else -> mentalLevelDao.getFavouriteLevels()
+        }
     }
 
     override fun getPermissions(): Array<String> {

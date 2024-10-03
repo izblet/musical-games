@@ -20,14 +20,12 @@ import com.example.musicalgames.games.GamePackage
 class FlappyGameFactory : GameFactory {
 
     override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
-        val levelDao: LevelDao = GameDatabase.getDatabase(context).flappyLevelDao()
-        val baseLevels = levelDao.getBaseLevels()
-        baseLevels.forEach { level ->  Log.d("level", level.name)}
-        Log.d("level", baseLevels.size.toString())
+        val flappyLevelDao: FlappyLevelDao = GameDatabase.getDatabase(context).flappyLevelDao()
+
         return when (pack) {
-            GamePackage.PREDEFINED -> levelDao.getBaseLevels()
-            GamePackage.CUSTOM -> levelDao.getCustomLevels()
-            else -> levelDao.getFavouriteLevels()
+            GamePackage.PREDEFINED -> flappyLevelDao.getBaseLevels()
+            GamePackage.CUSTOM -> flappyLevelDao.getCustomLevels()
+            else -> flappyLevelDao.getFavouriteLevels()
         }
     }
 

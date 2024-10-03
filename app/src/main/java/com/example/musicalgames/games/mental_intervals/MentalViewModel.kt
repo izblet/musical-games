@@ -20,28 +20,33 @@ import kotlin.random.Random
 class MentalViewModel : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
         enum class Extra {
-            MAX_INTERVAL,
+            INTERVALS,
+            NOTES,
             MODE,
-            SCALE
+            SCALE //i think it should come back but not used for now
         }
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is MentalLevel)
                 throw Exception("Level is of wrong type")
 
             return Intent(activity, GameActivity::class.java).apply {
-                putExtra(Extra.MAX_INTERVAL.name,level.maxSemitoneInterval)
+                val intervalArray =ArrayList(level.intervals.map{ it.getSemitones() })
+                putExtra(Extra.INTERVALS.name, intervalArray)
+                val noteArray = ArrayList(level.startingNotes.map { it.ordinal })
+                putExtra(Extra.NOTES.name, noteArray)
                 putExtra(Extra.MODE.name, level.mode.name)
-                putExtra(Extra.SCALE.name, level.scale.name)
+                //putExtra(Extra.SCALE.name, level.scale.name)
             }
         }
 
     }
     override fun setDataFromIntent(intent: Intent) {
-        maxInterval = intent.getIntExtra(Extra.MAX_INTERVAL.name, 5)
+        availableNotes = intent.getIntegerArrayListExtra(Extra.NOTES.name)!!
+            .map { ChromaticNote.fromDegree(it) }
+        availableIntervals = intent.getIntegerArrayListExtra(Extra.INTERVALS.name)!!
+            .map { Interval.fromSemitones(it)}
         _type = Type.valueOf(intent.getStringExtra(Extra.MODE.name)!!)
-        scale = Scale.valueOf(intent.getStringExtra(Extra.SCALE.name)!!)
-        availableIntervals = scale!!.getDegrees().map { interval -> interval.getSemitones()  }
-        availableIntervals = availableIntervals!!.filter { it in 1..maxInterval }
+        //scale = Scale.valueOf(intent.getStringExtra(Extra.SCALE.name)!!)
     }
 
     //TODO: cannot change this for now but it should be changed
@@ -51,13 +56,12 @@ class MentalViewModel : ViewModel(), IntentSettable {
     val type get() = _type
 
     private var disabled = true
-    private var scale : Scale? = null
-    private var availableIntervals: List<Int>? = null
+    private var availableIntervals: List<Interval>? = null
+    private var availableNotes: List<ChromaticNote>? = null
     private var questionNote: ChromaticNote? = null
     private var interval: Interval? = null
     private var lastDegree: Int = 0
     private var note: ChromaticNote? = null
-    private var maxInterval: Int = Int.MAX_VALUE
     private var _messageText = ""
 
     val messageText get() = _messageText
@@ -68,26 +72,29 @@ class MentalViewModel : ViewModel(), IntentSettable {
     fun registerEndListener(listener: GameListener) { endListener=listener }
     fun registerUI(ui: ViewModelListener) { UI = ui }
     fun startGame() { generateQuestion() }
-    private fun getRandomSemitone():Int {
+    private fun getRandomInterval():Interval {
         val i = Random.nextInt(availableIntervals!!.size)
         lastDegree = i+2
         return availableIntervals!![i]
     }
+    private fun getRandomNote():ChromaticNote {
+        val i = Random.nextInt(availableNotes!!.size)
+        return availableNotes!![i]
+    }
     private fun generateQuestion() {
         disabled=false
-        val startNoteIndex = Random.nextInt(ChromaticNote.valuesSize())
-        val semitoneInterval = getRandomSemitone()
-        interval =  Interval.fromSemitones(semitoneInterval)
-        questionNote = ChromaticNote.fromDegree(startNoteIndex)
-        val noteIndex = (startNoteIndex + semitoneInterval) % ChromaticNote.valuesSize()
+        val interval = getRandomInterval()
+        questionNote = getRandomNote()
+        val questionNoteIndex = questionNote!!.ordinal
+        val noteIndex = (questionNoteIndex + interval.getSemitones()) % ChromaticNote.valuesSize()
         note = ChromaticNote.fromDegree(noteIndex)
 
         if(type == Type.INTERVAL_NOTE)
             _messageText = "What is the note positioned at $interval from $questionNote?"
         else if(type == Type.NOTE_INTERVAL)
             _messageText = "What is the interval between $questionNote and $note"
-        else
-            _messageText = "What is the degree $lastDegree in $questionNote $scale"
+        //else
+        //    _messageText = "What is the degree $lastDegree in $questionNote $scale"
 
         UI?.onDataChanged()
     }

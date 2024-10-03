@@ -1,6 +1,5 @@
 package com.example.musicalgames.games.flappy
 
-import android.app.Application
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -34,14 +33,12 @@ class FlappyViewModel() : ViewModel(), IntentSettable{
             if(level !is FlappyLevel)
                 throw Exception("level is of wrong type")
 
-            val flappyLevel = level as FlappyLevel
-
             return Intent(activity, GameActivity::class.java).apply {
-                putExtra(MIN_STR, flappyLevel.minPitch)
-                putExtra(MAX_STR, flappyLevel.maxPitch)
-                putExtra(ROOT_STR, flappyLevel.root)
-                putExtra(END_STR, flappyLevel.endAfter)
-                val keyList = ArrayList(flappyLevel.keyList)
+                putExtra(MIN_STR, level.minPitch)
+                putExtra(MAX_STR, level.maxPitch)
+                putExtra(ROOT_STR, level.root)
+                putExtra(END_STR, level.endAfter)
+                val keyList = ArrayList(level.keyList)
                 putExtra(POSITIONS_STR, keyList)
             }
         }
