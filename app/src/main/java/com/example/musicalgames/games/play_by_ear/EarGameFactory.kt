@@ -32,8 +32,8 @@ class EarGameFactory : GameFactory {
        return EarViewModel.Companion
     }
 
-    override fun getCustomCreator(context: Context, attrs: AttributeSet): CustomGameCreator {
-        TODO("Not yet implemented")
+    override fun getCustomCreator(context: Context, attrs: AttributeSet?): CustomGameCreator {
+        return EarCustomCreator(context, attrs)
     }
 
     override fun createGame(

@@ -40,8 +40,8 @@ class MentalGameFactory : GameFactory {
        return MentalViewModel.Companion
     }
 
-    override fun getCustomCreator(context: Context, attrs: AttributeSet): CustomGameCreator {
-        TODO("Not yet implemented")
+    override fun getCustomCreator(context: Context, attrs: AttributeSet?): CustomGameCreator {
+        return MentalCustomCreator(context, attrs)
     }
 
     override fun createGame(

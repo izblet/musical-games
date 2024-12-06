@@ -20,6 +20,7 @@ import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
@@ -36,6 +37,9 @@ class FragmentNewModeChoose : Fragment() {
         private lateinit var buttonList: List<Button>
         private lateinit var gameFactory: GameFactory
         private lateinit var adapter: AdapterLevelList
+        private lateinit var recyclerView: RecyclerView
+        private lateinit var content: FrameLayout
+        private lateinit var createView: CustomGameCreator
 
         private var customList: List<Level> = listOf()
         private var baseList: List<Level> = listOf()
@@ -69,30 +73,35 @@ class FragmentNewModeChoose : Fragment() {
             buttonList = listOf(binding.createButton, binding.customButton, binding.favouritesButton, binding.levelsButton)
             clickedButton = binding.favouritesButton
 
-            val content : FrameLayout = binding.contentFrame
+            content = binding.contentFrame
 
-            val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
             adapter = AdapterLevelList(favouriteList, object : AdapterLevelList.OnItemClickListener {
                 override fun onItemClick(level: Level) {
-                    val intent = intentMaker.getIntent(activity!!, level)
-                    if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
-                        throw Exception("game type argument is already set in intent")
-                    }
-                    intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
-                    startActivity(intent)
+                   launchLevel(level)
                 }
             })
 
-            val recyclerView: RecyclerView = RecyclerView(requireContext()).apply {
+            recyclerView = RecyclerView(requireContext()).apply {
                 layoutManager = LinearLayoutManager(requireContext())
                 this.adapter = this@FragmentNewModeChoose.adapter
             }
             content.addView(recyclerView)
 
+            createView = gameFactory.getCustomCreator(requireContext(), null)
             binding.favouritesButton.isSelected = true
             showFavourites()
 
             return binding.root
+        }
+
+        private fun launchLevel(level: Level) {
+            val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
+            val intent = intentMaker.getIntent(requireActivity(), level)
+            if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
+                throw Exception("game type argument is already set in intent")
+            }
+            intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
+            startActivity(intent)
         }
 
         private fun updateButtons(newClicked : Button) {
@@ -110,11 +119,8 @@ class FragmentNewModeChoose : Fragment() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-
-
             val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
             (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
-
 
         }
         private fun launchGame() {
@@ -123,6 +129,8 @@ class FragmentNewModeChoose : Fragment() {
         }
 
         private fun showFavourites() {
+            content.removeAllViews()
+            content.addView(recyclerView)
             binding.pageTitle.text = "Favourite"
             adapter.setData(favouriteList)
             lifecycleScope.launch {
@@ -132,6 +140,8 @@ class FragmentNewModeChoose : Fragment() {
             }
         }
         private fun showLevels() {
+            content.removeAllViews()
+            content.addView(recyclerView)
             binding.pageTitle.text = "Predefined"
             adapter.setData(baseList)
             lifecycleScope.launch {
@@ -142,6 +152,8 @@ class FragmentNewModeChoose : Fragment() {
 
         }
         private fun showCustom() {
+            content.removeAllViews()
+            content.addView(recyclerView)
             binding.pageTitle.text = "Custom"
             adapter.setData(customList)
             lifecycleScope.launch {
@@ -151,6 +163,8 @@ class FragmentNewModeChoose : Fragment() {
             }
         }
         private fun showCreate() {
+            content.removeAllViews()
+            content.addView(createView)
             binding.pageTitle.text = "Create"
 
         }

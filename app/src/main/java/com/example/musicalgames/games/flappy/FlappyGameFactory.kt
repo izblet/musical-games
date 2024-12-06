@@ -42,8 +42,8 @@ class FlappyGameFactory : GameFactory {
 
     }
 
-    override fun getCustomCreator(context: Context, attrs: AttributeSet): CustomGameCreator {
-        TODO("not implemented yet")
+    override fun getCustomCreator(context: Context, attrs: AttributeSet?): CustomGameCreator {
+        return FlappyCustomCreator(context, attrs)
     }
 
     override fun createGame(
