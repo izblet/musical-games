@@ -36,4 +36,8 @@ class EarController(private val view: EarView) : GameController {
     override fun getScore(): Int {
         return view.getScore()
     }
+
+    override fun getEndDescription(): String {
+        return "The correct note was ${view.getCorrectNote()}"
+    }
 }

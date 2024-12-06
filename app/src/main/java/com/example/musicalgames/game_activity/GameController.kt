@@ -15,4 +15,5 @@ interface GameController {
     fun pauseGame()
     fun endGame()
     fun getScore(): Int
+    fun getEndDescription(): String
 }

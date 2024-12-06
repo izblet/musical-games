@@ -67,6 +67,10 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         return gameView.getScore()
     }
 
+    override fun getEndDescription(): String {
+        return ""
+    }
+
 
     override fun setViewModel(viewModel: ViewModel) {
         if(viewModel is FlappyViewModel) {

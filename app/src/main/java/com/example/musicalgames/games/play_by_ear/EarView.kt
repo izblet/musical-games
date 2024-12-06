@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.musicalgames.components.keyboard.KeyboardListener
 import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.GameListener
@@ -23,7 +24,7 @@ import com.example.musicalgames.utils.MusicUtil.noteName
 
 class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, SoundPlayerListener {
 
-    private var keyboardView: KeyboardView
+    private var keyboardView: KeyboardView = KeyboardView(context, null)
     private val soundPlayer : DefaultSoundPlayerManager by lazy { DefaultSoundPlayerManager(context) }
     private var endListener: GameListener? = null
     private var keyboardDisabled = true
@@ -32,17 +33,36 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     private var index : Int = 0
     private var viewModel: EarViewModel? = null
     private val messageTextView: TextView
+    private val rootButton: Button
+    private val nextButton: Button
 
     init {
-        keyboardView = KeyboardView(context, null)
         messageTextView = TextView(context).apply {
             textSize = 20f
             gravity = Gravity.CENTER_HORIZONTAL
             text = ""
         }
+        rootButton = Button(context).apply {
+            text = "Play Root"
+            setOnClickListener {
+                playRoot()
+            }
+        }
+        nextButton = Button(context).apply {
+            text = "Next Problem"
+            setOnClickListener{
+                if(index==problem.size) {
+                    newProblem()
+                }
+            }
+        }
+
 
         addView(messageTextView)
         addView(keyboardView)
+        addView(rootButton)
+        addView(nextButton)
+
         keyboardView.registerListener(this)
     }
 
@@ -51,6 +71,8 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         keyboardView.setRange(viewModel.minKey!!, viewModel.maxKey!!)
         keyboardView.setColoured(Note(viewModel.root))
     }
+
+
 
     private fun playProblem() {
         keyboardDisabled = true
@@ -101,10 +123,6 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         if (index == problem.size) {
             score++
             messageTextView.text="Good!"
-            val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({
-                newProblem()
-            }, 1000)
         }
     }
 
@@ -112,10 +130,16 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         messageTextView.text = "Root note: ${noteName(viewModel!!.root)}"
         soundPlayer.play(viewModel!!.root)
     }
+    fun getCorrectNote() : String {
+        if(index<problem.size)
+            return problem[index].name
+        return ""
+    }
 
     fun registerEndListener(listener: GameListener) {
         this.endListener = listener
     }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -125,9 +149,19 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
 
         val pianoHeight = (height * 1) / 2
         val messageHeight = (height * 1) / 10
+        val buttonHeight = (height * 1) / 10
+
         messageTextView.measure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(messageHeight, MeasureSpec.EXACTLY)
+        )
+        rootButton.measure(
+            MeasureSpec.makeMeasureSpec(width / 4, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(buttonHeight, MeasureSpec.EXACTLY)
+        )
+        nextButton.measure(
+            MeasureSpec.makeMeasureSpec(width / 4, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(buttonHeight, MeasureSpec.EXACTLY)
         )
         keyboardView.measure(
             MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
@@ -139,9 +173,12 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val messageHeight = (height * 1) / 10
+        val buttonHeight = (height * 1) / 10
         val pianoHeight = (height * 1) / 2
 
-        messageTextView.layout(0, 0, width, messageHeight)
+        rootButton.layout(0, 0, width / 4, buttonHeight)
+        nextButton.layout(3*width/4, 0, width, buttonHeight)
+        messageTextView.layout(0, buttonHeight, width, buttonHeight + messageHeight)
         keyboardView.layout(0, height - pianoHeight, width, height)
     }
 

@@ -86,7 +86,7 @@ class GameFragment : Fragment(), GameListener {
             gameType!!.name,
             "Game Ended",
             "Your score: ${gameController.getScore()}",
-            "")
+            gameController.getEndDescription())
         findNavController().navigate(action)
     }
 

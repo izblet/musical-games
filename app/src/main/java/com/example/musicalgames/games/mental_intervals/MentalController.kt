@@ -34,6 +34,10 @@ class MentalController(private val view: MentalView) : GameController, KeyPalett
     override fun endGame() { }
 
     override fun getScore(): Int { return viewModel!!.score }
+    override fun getEndDescription(): String {
+        return ""
+    }
+
     override fun onClicked(note: ChromaticNote) {
         viewModel?.select(note)
 

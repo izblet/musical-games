@@ -15,9 +15,8 @@ import com.example.musicalgames.utils.Scale
 object EarPlayLevels {
     val baseLevels: List<PlayEarLevel> = generateLevels()
     val minorLevels: List<PlayEarLevel> = generateMinorLevels()
-    private fun generateLevel(scale: Scale, rootNote: ChromaticNote, notes: List<Int>, notesNum: Int) : PlayEarLevel {
+    private fun generateLevel(scale: Scale, rootNote: ChromaticNote, notes: List<Int>, notesNum: Int, interval: Int) : PlayEarLevel {
         val id =0
-        val interval = Int.MAX_VALUE
         val root = midi(rootNote.toString()+"4")
         val span = notes[notes.size-1]-notes[0]
         //if the span is at least an octave, we just show the note
@@ -60,34 +59,35 @@ object EarPlayLevels {
             interval,
             notes.toList(),
             "$rootNote $scale, ${noteName(notes[0])} to ${noteName(notes[notes.size-1])}",
-            "$notesNum notes"
+            "$notesNum notes, max interval $interval semitones"
         )
     }
     private fun generateLevels(): List<PlayEarLevel> {
         val levels = mutableListOf<PlayEarLevel>()
         val rootNote = midi("C4")
+        for(maxInterval in listOf(4,5,6,7,8)) {
+            for (notesNum in listOf(3, 5, 7)) {
+                for (sizeList in listOf(listOf(3, 4), listOf(5, 6), listOf(7), listOf(8))) {
+                    //generate levels with notes above root
+                    for (size in sizeList) {
+                        val notes = getWhiteKeysFrom(rootNote, size)
+                        levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum, maxInterval))
+                    }
+                    //generate levels with notes below root
+                    for (size in sizeList) {
+                        val notes = MusicUtil.getWhiteKeysTo(rootNote, size)
+                        levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum, maxInterval))
+                    }
 
-        for(notesNum in listOf(3,5,7)) {
-            for (sizeList in listOf(listOf(3, 4), listOf(5, 6), listOf(7), listOf(8))) {
-                //generate levels with notes above root
-                for (size in sizeList) {
-                    val notes = getWhiteKeysFrom(rootNote, size)
-                    levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum))
-                }
-                //generate levels with notes below root
-                for (size in sizeList) {
-                    val notes = MusicUtil.getWhiteKeysTo(rootNote, size)
-                    levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum))
-                }
-
-                //generate levels that concat notes below and notes above
-                for (size in sizeList) {
-                    var notes = MusicUtil.getWhiteKeysTo(rootNote, size)
-                    notes = notes.slice(0..(notes.size - 2)) + getWhiteKeysFrom(
-                        rootNote,
-                        size
-                    )
-                    levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum))
+                    //generate levels that concat notes below and notes above
+                    for (size in sizeList) {
+                        var notes = MusicUtil.getWhiteKeysTo(rootNote, size)
+                        notes = notes.slice(0..(notes.size - 2)) + getWhiteKeysFrom(
+                            rootNote,
+                            size
+                        )
+                        levels.add(generateLevel(Scale.MAJOR, ChromaticNote.C, notes, notesNum, maxInterval))
+                    }
                 }
             }
         }
@@ -99,24 +99,58 @@ object EarPlayLevels {
         val levels = mutableListOf<PlayEarLevel>()
         val rootNote = Note("A4")
 
-        for(notesNum in listOf(3,5,7)) {
-            for (sizeList in listOf(listOf(3, 4), listOf(5, 6), listOf(7), listOf(8))) {
-                //generate levels with notes above root
-                for (size in sizeList) {
-                    val notes = getScaleNotesFrom(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
-                    levels.add(generateLevel(Scale.MINOR, rootNote.noteChromatic, notes.map { note->note.midiCode }, notesNum))
-                }
-                //generate levels with notes below root
-                for (size in sizeList) {
-                    val notes = getScaleNotesTo(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
-                    levels.add(generateLevel(Scale.MINOR, rootNote.noteChromatic, notes.map { note->note.midiCode }, notesNum))
-                }
+        for(maxInterval in listOf(4,5,6,7,8)) {
+            for (notesNum in listOf(3, 5, 7)) {
+                for (sizeList in listOf(listOf(3, 4), listOf(5, 6), listOf(7), listOf(8))) {
+                    //generate levels with notes above root
+                    for (size in sizeList) {
+                        val notes =
+                            getScaleNotesFrom(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
+                        levels.add(
+                            generateLevel(
+                                Scale.MINOR,
+                                rootNote.noteChromatic,
+                                notes.map { note -> note.midiCode },
+                                notesNum,
+                                maxInterval
+                            )
+                        )
+                    }
+                    //generate levels with notes below root
+                    for (size in sizeList) {
+                        val notes =
+                            getScaleNotesTo(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
+                        levels.add(
+                            generateLevel(
+                                Scale.MINOR,
+                                rootNote.noteChromatic,
+                                notes.map { note -> note.midiCode },
+                                notesNum,
+                                maxInterval
+                            )
+                        )
+                    }
 
-                //generate levels that concat notes below and notes above
-                for (size in sizeList) {
-                    var notes = getScaleNotesTo(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
-                    notes = notes.slice(0..(notes.size - 2)) + getScaleNotesFrom(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
-                    levels.add(generateLevel(Scale.MINOR, rootNote.noteChromatic, notes.map { note->note.midiCode }, notesNum))
+                    //generate levels that concat notes below and notes above
+                    for (size in sizeList) {
+                        var notes =
+                            getScaleNotesTo(Scale.MINOR, rootNote.noteChromatic, rootNote, size)
+                        notes = notes.slice(0..(notes.size - 2)) + getScaleNotesFrom(
+                            Scale.MINOR,
+                            rootNote.noteChromatic,
+                            rootNote,
+                            size
+                        )
+                        levels.add(
+                            generateLevel(
+                                Scale.MINOR,
+                                rootNote.noteChromatic,
+                                notes.map { note -> note.midiCode },
+                                notesNum,
+                                maxInterval
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -124,6 +158,9 @@ object EarPlayLevels {
         return levels
     }
 }
+
+
+
 
 data class PlayEarLevel (
     override val id: Int,
