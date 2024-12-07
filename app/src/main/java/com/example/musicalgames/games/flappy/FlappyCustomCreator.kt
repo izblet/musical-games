@@ -13,4 +13,8 @@ class FlappyCustomCreator(context : Context, attrSet: AttributeSet?) : CustomGam
     override fun saveLevel() {
 
     }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+
+    }
 }

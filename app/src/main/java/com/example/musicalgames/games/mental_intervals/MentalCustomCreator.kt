@@ -13,4 +13,8 @@ class MentalCustomCreator(context: Context, attrSet: AttributeSet?) : CustomGame
     override fun saveLevel() {
     }
 
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+
+    }
+
 }

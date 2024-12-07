@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -87,7 +88,13 @@ class FragmentNewModeChoose : Fragment() {
             }
             content.addView(recyclerView)
 
+            val layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+
             createView = gameFactory.getCustomCreator(requireContext(), null)
+            createView.layoutParams = layoutParams
             binding.favouritesButton.isSelected = true
             showFavourites()
 
