@@ -58,31 +58,12 @@ class EarViewModel() : ViewModel(),IntentSettable, SoundPlayerListener {
     fun registerListener(listener: EarViewmodelListener) {
         this.listener = listener
     }
-    fun isProblemSolved() : Boolean {
-        return index == problem.size
-    }
-
-    fun getRandomNote(): Note {
-        return available.random()
-    }
-
-    override fun onSoundFinished() {
-       listener!!.onPlaybackFinished()
-    }
 
     fun newProblem() {
         listener!!.onNewProblem()
         index = 0
         generateProblem()
         playProblem()
-    }
-
-    private fun playProblem() {
-        listener!!.onPlaybackStarted()
-        val scope = CoroutineScope(Dispatchers.Main)
-        scope.launch {
-            soundPlayer!!.playSequence(problem, this@EarViewModel)
-        }
     }
 
     private fun generateProblem() {
@@ -93,6 +74,14 @@ class EarViewModel() : ViewModel(),IntentSettable, SoundPlayerListener {
                 notes.add(newNote)
         }
         problem = notes
+    }
+
+    private fun playProblem() {
+        listener!!.onPlaybackStarted()
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            soundPlayer!!.playSequence(problem, this@EarViewModel)
+        }
     }
 
     fun selectNote(note: Note) {
@@ -109,6 +98,18 @@ class EarViewModel() : ViewModel(),IntentSettable, SoundPlayerListener {
             score++
             listener!!.onRightAnswer()
         }
+    }
+
+    fun isProblemSolved() : Boolean {
+        return index == problem.size
+    }
+
+    fun getRandomNote(): Note {
+        return available.random()
+    }
+
+    override fun onSoundFinished() {
+       listener!!.onPlaybackFinished()
     }
 
     fun playRoot() {
