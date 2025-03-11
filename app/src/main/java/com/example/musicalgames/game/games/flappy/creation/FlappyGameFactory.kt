@@ -1,9 +1,8 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.game.games.flappy.creation
 
 import android.Manifest
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -16,6 +15,10 @@ import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
+import com.example.musicalgames.games.flappy.FlappyGameController
+import com.example.musicalgames.games.flappy.FlappyLevelDao
+import com.example.musicalgames.games.flappy.FlappyViewModel
+import com.example.musicalgames.games.flappy.FloppyGameView
 
 class FlappyGameFactory : GameFactory {
 
@@ -38,7 +41,7 @@ class FlappyGameFactory : GameFactory {
     }
 
     override fun getIntentMaker(): GameIntentMaker {
-        return FlappyViewModel.Companion
+        return FlappyViewModel
 
     }
 

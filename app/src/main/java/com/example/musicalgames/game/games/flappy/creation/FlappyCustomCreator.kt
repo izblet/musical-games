@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.flappy
+package com.example.musicalgames.game.games.flappy.creation
 
 import android.content.Context
 import android.util.AttributeSet

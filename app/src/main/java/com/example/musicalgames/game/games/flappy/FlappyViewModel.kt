@@ -24,35 +24,24 @@ class FlappyViewModel() : ViewModel(), IntentSettable{
     var gapPositions: List<Int> = listOf()
 
     companion object : GameIntentMaker {
-        const val TYPE_STR = "type"
-        const val MIN_STR = "min"
-        const val MAX_STR = "max"
-        const val ROOT_STR = "root"
-        const val END_STR = "end"
-        const val POSITIONS_STR = "positions"
+
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is FlappyLevel)
                 throw Exception("level is of wrong type")
 
             return Intent(activity, GameActivity::class.java).apply {
-                putExtra(MIN_STR, level.minPitch)
-                putExtra(MAX_STR, level.maxPitch)
-                putExtra(ROOT_STR, level.root)
-                putExtra(END_STR, level.endAfter)
-                val keyList = ArrayList(level.keyList)
-                putExtra(POSITIONS_STR, keyList)
+                putExtra("level", level)
             }
         }
     }
     override fun setDataFromIntent(intent: Intent) {
-        val type = intent.getStringExtra(TYPE_STR)
+        val level = intent.getParcelableExtra<FlappyLevel>("level")
 
-        minRange = intent.getIntExtra(MIN_STR, minRange)
-        maxRange = intent.getIntExtra(MAX_STR, maxRange)
-        root = intent.getIntExtra(ROOT_STR, root)
-        endAfter = intent.getIntExtra(END_STR, endAfter)
-        val positions = intent.getIntegerArrayListExtra(POSITIONS_STR)
-        gapPositions = positions!!
+        minRange = level!!.minPitch
+        maxRange = level.maxPitch
+        root = level.root
+        endAfter = level.endAfter
+        gapPositions = level.keyList
     }
 
 }
