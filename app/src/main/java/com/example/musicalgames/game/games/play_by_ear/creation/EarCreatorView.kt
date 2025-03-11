@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.play_by_ear
+package com.example.musicalgames.game.games.play_by_ear.creation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -18,7 +18,7 @@ import com.example.musicalgames.utils.Note
 import com.example.musicalgames.utils.Scale
 
 
-class EarCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
+class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 
     private lateinit var scrollLayout: ScrollView
 

@@ -9,8 +9,10 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 
 class EarController(private val view: EarView) : GameController {
+    private var viewModel: EarViewModel? = null
     override fun setViewModel(viewModel: ViewModel) {
         view.setViewModel(viewModel as EarViewModel)
+        this.viewModel = viewModel
     }
 
     override fun initGame(context: Context, listener: GameListener) {
@@ -18,10 +20,10 @@ class EarController(private val view: EarView) : GameController {
     }
 
     override fun startGame(owner: LifecycleOwner) {
-        view.playRoot()
+        viewModel!!.playRoot()
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
-            view.newProblem()
+            viewModel!!.newProblem()
         },2000)
     }
 
@@ -38,6 +40,6 @@ class EarController(private val view: EarView) : GameController {
     }
 
     override fun getEndDescription(): String {
-        return "The correct note was ${view.getCorrectNote()}"
+        return "The correct note was ${viewModel!!.getCorrectNote()}"
     }
 }

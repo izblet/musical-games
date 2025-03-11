@@ -54,21 +54,5 @@ class FlappyViewModel() : ViewModel(), IntentSettable{
         val positions = intent.getIntegerArrayListExtra(POSITIONS_STR)
         gapPositions = positions!!
     }
-    //private val highScoreDao: HighScoreDao = GameDatabase.getDatabase(application).highScoreDao()
-
-    suspend fun checkHighScore(): Boolean {
-        /*
-        val highScores: List<HighScore> = highScoreDao.getHighScores(gameId,
-        )
-
-        highScoreDao.insertAndTrim(HighScore(gameId = gameId, modeId = gameType!!.toString(), score = score))
-
-        return if (highScores.isNotEmpty())
-            score > highScores[0].score
-
-        else true
-         */
-        return false
-    }
 
 }

@@ -3,7 +3,7 @@ package com.example.musicalgames.games
 import com.example.musicalgames.R
 import com.example.musicalgames.games.flappy.FlappyGameFactory
 import com.example.musicalgames.games.mental_intervals.MentalGameFactory
-import com.example.musicalgames.games.play_by_ear.EarGameFactory
+import com.example.musicalgames.game.games.play_by_ear.creation.EarGameFactory
 enum class Game {
     FLAPPY,
     PLAY_BY_EAR,

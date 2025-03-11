@@ -20,23 +20,23 @@ import kotlin.math.abs
 
 
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.noteName
 
-class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, SoundPlayerListener {
+class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, EarViewmodelListener {
 
     private var keyboardView: KeyboardView = KeyboardView(context, null)
     private val soundPlayer : DefaultSoundPlayerManager by lazy { DefaultSoundPlayerManager(context) }
     private var endListener: GameListener? = null
     private var keyboardDisabled = true
     private var score: Int = 0
-    private var problem : List<Note> = listOf()
-    private var index : Int = 0
     private var viewModel: EarViewModel? = null
     private var level: PlayEarLevel = PlayEarLevel(-1,-1,-1,ChromaticNote.C, 0, -1,listOf(), "","")
-    private var available: List<Note> = listOf()
     private val messageTextView: TextView
     private val rootButton: Button
     private val nextButton: Button
@@ -50,18 +50,17 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         rootButton = Button(context).apply {
             text = "Play Root"
             setOnClickListener {
-                playRoot()
+                viewModel!!.playRoot()
             }
         }
         nextButton = Button(context).apply {
             text = "Next Problem"
             setOnClickListener{
-                if(index==problem.size) {
-                    newProblem()
+                if(viewModel!!.isProblemSolved()) {
+                    viewModel!!.newProblem()
                 }
             }
         }
-
 
         addView(messageTextView)
         addView(keyboardView)
@@ -74,42 +73,11 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     fun setViewModel(viewModel: EarViewModel) {
         this.viewModel = viewModel
         level = viewModel.level!!
+        this.viewModel!!.setPlayer(soundPlayer)
+        this.viewModel!!.registerListener(this)
         keyboardView.setRange(Note(level.minPitchDisplayed), Note(level.maxPitchDisplayed))
-        available = level.keyList.map { Note(it) }
-        //keyboardView.setColoured(Note(viewModel.root))
     }
 
-
-
-    private fun playProblem() {
-        keyboardDisabled = true
-        messageTextView.text = "Listen to the melody..."
-        val scope = CoroutineScope(Dispatchers.Main)
-        scope.launch {
-            soundPlayer.playSequence(problem, this@EarView)
-        }
-    }
-
-    private fun getRandomNote(): Note {
-        return available.random()
-    }
-
-    private fun generateProblem() {
-        val notes = mutableListOf(getRandomNote())
-        while (notes.size < level.problemLen) {
-            val newNote = getRandomNote()
-            if (abs(notes[notes.size - 1].midiCode - newNote.midiCode) <= level.maxSemitoneInterval)
-                notes.add(newNote)
-        }
-        problem = notes
-    }
-
-    fun newProblem() {
-        messageTextView.text = "Play the melody"
-        index = 0
-        generateProblem()
-        playProblem()
-    }
 
     fun getScore(): Int {
         return score
@@ -118,36 +86,30 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     override fun onKeyClicked(key: Note) {
         if (keyboardDisabled)
             return
-        soundPlayer.play(key.midiCode)
-        if (index >= problem.size)
-            return
-
-        if (problem[index] != key) {
-            endListener?.onGameEnded()
-            return
-        }
-        index++
-        if (index == problem.size) {
-            score++
-            messageTextView.text="Good!"
-        }
-    }
-
-    fun playRoot() {
-        messageTextView.text = "Root note: ${level.root}"
-        //TODO: the following assumes that we have at least one note available, this should be checked somewhere
-        soundPlayer.play(MusicUtil.midi(level.root.name+available.get(0).octave))
-    }
-    fun getCorrectNote() : String {
-        if(index<problem.size)
-            return problem[index].name
-        return ""
+        viewModel!!.selectNote(key)
     }
 
     fun registerEndListener(listener: GameListener) {
         this.endListener = listener
     }
 
+    override fun onNewProblem() {
+        messageTextView.text = "Play the melody"
+    }
+    override fun onPlaybackStarted() {
+        messageTextView.text = "Listen to the melody..."
+        keyboardDisabled = true
+    }
+    override fun onPlaybackFinished() {
+        keyboardDisabled = false
+        messageTextView.text = "Play the melody"
+    }
+    override fun onRightAnswer() {
+        messageTextView.text="Good!"
+    }
+    override fun onWrongAnswer() {
+        endListener?.onGameEnded()
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -190,8 +152,4 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         keyboardView.layout(0, height - pianoHeight, width, height)
     }
 
-    override fun onSoundFinished() {
-        messageTextView.text = "Play the melody"
-        keyboardDisabled = false
-    }
 }

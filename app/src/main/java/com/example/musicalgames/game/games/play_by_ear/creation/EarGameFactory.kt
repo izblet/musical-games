@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.play_by_ear
+package com.example.musicalgames.game.games.play_by_ear.creation
 
 import android.content.Context
 import android.util.AttributeSet
@@ -13,6 +13,10 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
+import com.example.musicalgames.games.play_by_ear.EarController
+import com.example.musicalgames.games.play_by_ear.EarPlayLevels
+import com.example.musicalgames.games.play_by_ear.EarView
+import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class EarGameFactory : GameFactory {
 
@@ -29,11 +33,11 @@ class EarGameFactory : GameFactory {
     }
 
     override fun getIntentMaker(): GameIntentMaker {
-       return EarViewModel.Companion
+       return EarViewModel
     }
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
-        return EarCustomCreator(context, createLevelAction, attrs)
+        return EarCreatorView(context, createLevelAction, attrs)
     }
 
     override fun createGame(
