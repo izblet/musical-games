@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
+import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.midi
@@ -85,17 +86,6 @@ object FlappyLevels {
     }
 
 }
-
-data class FlappyLevel (
-    override val id: Int,
-    val minPitch: Int,
-    val maxPitch: Int,
-    val root: Int,
-    val keyList: List<Int>,
-    override val name: String,
-    override val description: String,
-    val endAfter: Int
-): Level(id, name, description)
 
 @Entity(tableName = "flappy_levels")
 data class FlappyDatabaseLevel(

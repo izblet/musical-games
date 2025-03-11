@@ -3,9 +3,9 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
+import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game_activity.IntentSettable
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.GameIntentMaker
@@ -14,7 +14,6 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game_activity.ViewModelListener
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.Scale
 import kotlin.random.Random
 
 class MentalViewModel : ViewModel(), IntentSettable {

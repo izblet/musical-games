@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Update
+import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.flappy.DELIMITER
 import com.example.musicalgames.utils.ChromaticNote
@@ -115,15 +116,6 @@ enum class Type {
     NOTE_INTERVAL,
     DEGREE_NOTE
 }
-data class MentalLevel (
-    override val id: Int,
-    val startingNotes: List<ChromaticNote>,
-    val intervals: List<Interval>,
-    val mode: Type,
-    override val name: String,
-    override val description: String,
-): Level(id, name, description)
-
 
 @Entity(tableName = "mental_levels")
 data class MentalDatabaseLevel(

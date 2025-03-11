@@ -6,11 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.musicalgames.games.flappy.FlappyDatabaseLevel
-import com.example.musicalgames.games.flappy.FlappyLevel
+import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.flappy.FlappyLevelDao
 import com.example.musicalgames.games.mental_intervals.MentalDatabaseLevel
-import com.example.musicalgames.games.mental_intervals.MentalLevel
+import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.games.mental_intervals.MentalLevelDao
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import kotlinx.coroutines.CoroutineScope
