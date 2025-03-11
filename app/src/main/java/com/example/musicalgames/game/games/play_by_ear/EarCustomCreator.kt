@@ -5,23 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Spinner
-import android.widget.Toast
 import com.example.musicalgames.R
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 
 
-class EarCustomCreator(context: Context, attrs: AttributeSet?) : CustomGameCreator(context, attrs) {
+class EarCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 
-    private lateinit var linearLayout: LinearLayout
+    private lateinit var scrollLayout: ScrollView
 
     init {
-        // Inflate the LinearLayout layout
         LayoutInflater.from(context).inflate(R.layout.view_ear_custom_creator, this, true)
 
-        // Get reference to the LinearLayout child
-        linearLayout = getChildAt(0) as LinearLayout
+        scrollLayout = getChildAt(0) as ScrollView
         val scaleSpinner: Spinner = findViewById(R.id.scaleSpinner)
         val scaleOptions = arrayOf("Major", "Minor")
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, scaleOptions)
@@ -29,25 +27,17 @@ class EarCustomCreator(context: Context, attrs: AttributeSet?) : CustomGameCreat
         scaleSpinner.adapter = adapter
 
 
-        // You can now interact with the LinearLayout and its children
-        // For example, setting up the submit button action
-        val submitButton = linearLayout.findViewById<View>(R.id.submitButton)
+        val submitButton = scrollLayout.findViewById<View>(R.id.submitButton)
         submitButton.setOnClickListener {
-            val rootNote = linearLayout.findViewById<View>(R.id.rootNoteInput).toString()
-            val scale = linearLayout.findViewById<View>(R.id.scaleSpinner).toString()
-            // Handle input
-            Toast.makeText(context, "Root Note: $rootNote, Scale: $scale", Toast.LENGTH_SHORT).show()
+
         }
     }
 
-    // Measure the LinearLayout
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        // Measure the LinearLayout child
-        measureChild(linearLayout, widthMeasureSpec, heightMeasureSpec)
+        measureChild(scrollLayout, widthMeasureSpec, heightMeasureSpec)
 
-        // Set the measured dimensions of the ViewGroup based on the child
         val width = resolveSize(suggestedMinimumWidth, widthMeasureSpec)
         val height = resolveSize(suggestedMinimumHeight, heightMeasureSpec)
         setMeasuredDimension(width, height)
@@ -61,12 +51,10 @@ class EarCustomCreator(context: Context, attrs: AttributeSet?) : CustomGameCreat
         TODO("Not yet implemented")
     }
 
-    // Layout the LinearLayout child
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val paddingStart = paddingLeft
         val paddingTop = paddingTop
 
-        // Layout the LinearLayout within the ViewGroup
-        linearLayout.layout(paddingStart, paddingTop, paddingStart + linearLayout.measuredWidth, paddingTop + linearLayout.measuredHeight)
+        scrollLayout.layout(paddingStart, paddingTop, paddingStart + scrollLayout.measuredWidth, paddingTop + scrollLayout.measuredHeight)
     }
 }

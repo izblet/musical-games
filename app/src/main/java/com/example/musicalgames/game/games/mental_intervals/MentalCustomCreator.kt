@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 
-class MentalCustomCreator(context: Context, attrSet: AttributeSet?) : CustomGameCreator(context,attrSet) {
+class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : CustomGameCreator(context, createLevelAction,attrSet) {
     override fun getLevel(): Level? {
         return null
     }

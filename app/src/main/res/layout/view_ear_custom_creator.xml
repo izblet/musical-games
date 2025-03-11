@@ -1,162 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
-
-    <!-- Root Note Group -->
-    <LinearLayout
-        android:orientation="vertical"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/rootNoteLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Root Note"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/rootNoteInput"
+        <!-- Name Note Group -->
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter root note (e.g., C, D#, Bb), default: C"
-            android:inputType="text" />
-    </LinearLayout>
+            android:layout_marginBottom="8dp">
 
-    <!-- Divider between Root Note and Scale -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/dividerHorizontal" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:layout_marginBottom="8dp" />
 
-    <!-- Scale Selection Group -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <TextView
-            android:id="@+id/scaleLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Scale"
-            android:layout_marginBottom="8dp" />
-
-        <Spinner
-            android:id="@+id/scaleSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <!-- Divider between Scale and Max Interval -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/dividerHorizontal" />
-
-    <!-- Max Interval Group -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <TextView
-            android:id="@+id/maxIntervalLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Max Interval"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/maxIntervalInput"
+            <EditText
+                android:id="@+id/nameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter level name"
+                android:inputType="text" />
+        </LinearLayout>
+        <!-- Description Note Group -->
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter max number of semitones, -1 for infinity"
-            android:inputType="number" />
-    </LinearLayout>
+            android:layout_marginBottom="8dp">
 
-    <!-- Divider between Max Interval and Min Sound -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/dividerHorizontal" />
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_marginBottom="8dp" />
 
-    <!-- Min Sound (C3 to C4) Group -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <TextView
-            android:id="@+id/minSoundLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Min Sound (C3 to C4)"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/minSoundInput"
+            <EditText
+                android:id="@+id/descriptionInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter description"
+                android:inputType="text" />
+        </LinearLayout>
+        <!-- Root Note Group -->
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter min sound (e.g., C4, D#2)"
-            android:inputType="text" />
-    </LinearLayout>
+            android:layout_marginBottom="8dp">
 
-    <!-- Divider between Min Sound and Max Sound -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/dividerHorizontal" />
+            <TextView
+                android:id="@+id/rootNoteLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Root Note"
+                android:layout_marginBottom="8dp" />
 
-    <!-- Max Sound (C4 to C5) Group -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
+            <EditText
+                android:id="@+id/rootNoteInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter root note (e.g., C, D#, Bb), default: C"
+                android:inputType="text" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/maxSoundLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Max Sound (C4 to C5)"
-            android:layout_marginBottom="8dp" />
+        <!-- Divider between Root Note and Scale -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/dividerHorizontal" />
 
-        <EditText
-            android:id="@+id/maxSoundInput"
+        <!-- Scale Selection Group -->
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter max sound (e.g., D#4, Bb5)"
-            android:inputType="text" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/scaleLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scale"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/scaleSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Divider between Scale and Max Interval -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <!-- Max Interval Group -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/maxIntervalLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max Interval"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/maxIntervalInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter max number of semitones, -1 for infinity"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- Divider between Max Interval and Min Sound -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <!-- Min Sound (C3 to C4) Group -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/minSoundLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Min Sound (C3 to C4)"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/minSoundInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter min sound (e.g., C4, D#2)"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <!-- Divider between Min Sound and Max Sound -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <!-- Max Sound (C4 to C5) Group -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/maxSoundLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max Sound (C4 to C5)"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/maxSoundInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter max sound (e.g., D#4, Bb5)"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <!-- Divider between Max Sound and Submit Button -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="?android:attr/dividerHorizontal" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create" />
+
     </LinearLayout>
-
-    <!-- Divider between Max Sound and Submit Button -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"
-        android:background="?android:attr/dividerHorizontal" />
-
-    <!-- Submit Button -->
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create" />
-
-</LinearLayout>
+</ScrollView>

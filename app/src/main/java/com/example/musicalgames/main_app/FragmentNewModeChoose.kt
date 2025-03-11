@@ -93,7 +93,7 @@ class FragmentNewModeChoose : Fragment() {
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
 
-            createView = gameFactory.getCustomCreator(requireContext(), null)
+            createView = gameFactory.getCustomCreator(requireContext(), ::launchLevel, null)
             createView.layoutParams = layoutParams
             binding.favouritesButton.isSelected = true
             showFavourites()

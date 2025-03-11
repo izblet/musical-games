@@ -42,8 +42,8 @@ class FlappyGameFactory : GameFactory {
 
     }
 
-    override fun getCustomCreator(context: Context, attrs: AttributeSet?): CustomGameCreator {
-        return FlappyCustomCreator(context, attrs)
+    override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
+        return FlappyCustomCreator(context, createLevelAction, attrs)
     }
 
     override fun createGame(

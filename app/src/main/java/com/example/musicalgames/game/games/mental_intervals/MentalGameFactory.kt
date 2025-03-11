@@ -40,8 +40,8 @@ class MentalGameFactory : GameFactory {
        return MentalViewModel.Companion
     }
 
-    override fun getCustomCreator(context: Context, attrs: AttributeSet?): CustomGameCreator {
-        return MentalCustomCreator(context, attrs)
+    override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
+        return MentalCustomCreator(context, createLevelAction, attrs)
     }
 
     override fun createGame(

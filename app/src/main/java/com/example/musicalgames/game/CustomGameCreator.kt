@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.musicalgames.game_activity.Level
 
-abstract class CustomGameCreator(context :Context, attrSet: AttributeSet?) : ViewGroup(context, attrSet) {
+abstract class CustomGameCreator(context :Context, createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : ViewGroup(context, attrSet) {
     abstract fun getLevel(): Level?
     abstract fun saveLevel()
 }

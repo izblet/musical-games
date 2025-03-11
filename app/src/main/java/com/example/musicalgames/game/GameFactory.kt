@@ -16,6 +16,6 @@ interface GameFactory {
     fun getViewModelType() : Class<out ViewModel>
     //TODO: the following is only temporary - there will be no 'intent maker', we will pass level index as argument or sth
     fun getIntentMaker() : GameIntentMaker
-    fun getCustomCreator(context: Context, attrs: AttributeSet?) : CustomGameCreator
+    fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator
     fun createGame( context: Context, activity: FragmentActivity, gameContainer: ViewGroup, gameListener: GameListener) : GameController
 }
