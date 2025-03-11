@@ -18,36 +18,25 @@ import kotlin.random.Random
 
 class MentalViewModel : ViewModel(), IntentSettable {
     companion object : GameIntentMaker {
-        enum class Extra {
-            INTERVALS,
-            NOTES,
-            MODE,
-            SCALE //i think it should come back but not used for now
-        }
+
         override fun getIntent(activity: FragmentActivity, level: Level): Intent {
             if(level !is MentalLevel)
                 throw Exception("Level is of wrong type")
 
             return Intent(activity, GameActivity::class.java).apply {
-                val intervalArray =ArrayList(level.intervals.map{ it.getSemitones() })
-                putExtra(Extra.INTERVALS.name, intervalArray)
-                val noteArray = ArrayList(level.startingNotes.map { it.ordinal })
-                putExtra(Extra.NOTES.name, noteArray)
-                putExtra(Extra.MODE.name, level.mode.name)
-                //putExtra(Extra.SCALE.name, level.scale.name)
+                putExtra("level", level)
             }
         }
 
     }
     override fun setDataFromIntent(intent: Intent) {
-        availableNotes = intent.getIntegerArrayListExtra(Extra.NOTES.name)!!
-            .map { ChromaticNote.fromDegree(it) }
-        availableIntervals = intent.getIntegerArrayListExtra(Extra.INTERVALS.name)!!
-            .map { Interval.fromSemitones(it)}
-        _type = Type.valueOf(intent.getStringExtra(Extra.MODE.name)!!)
-        //scale = Scale.valueOf(intent.getStringExtra(Extra.SCALE.name)!!)
+        level = intent.getParcelableExtra<MentalLevel>("level")
+        availableNotes = level!!.startingNotes
+        availableIntervals = level!!.intervals
+        _type = level!!.mode
     }
 
+    var level: MentalLevel? = null
     var score = 0
     private var _type : Type = Type.INTERVAL_NOTE
     val type get() = _type
@@ -88,8 +77,6 @@ class MentalViewModel : ViewModel(), IntentSettable {
             UI.onNewProblem(interval, questionNote!!)
         else if(type == Type.NOTE_INTERVAL)
             UI.onNewProblem(questionNote!!, note!!)
-        //else
-        //    _messageText = "What is the degree $lastDegree in $questionNote $scale"
 
     }
     fun select(note: ChromaticNote) {
