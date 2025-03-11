@@ -20,6 +20,9 @@ import kotlin.math.abs
 
 
 import android.widget.TextView
+import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
+import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.noteName
 
 class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, SoundPlayerListener {
@@ -32,6 +35,8 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     private var problem : List<Note> = listOf()
     private var index : Int = 0
     private var viewModel: EarViewModel? = null
+    private var level: PlayEarLevel = PlayEarLevel(-1,-1,-1,ChromaticNote.C, 0, -1,listOf(), "","")
+    private var available: List<Note> = listOf()
     private val messageTextView: TextView
     private val rootButton: Button
     private val nextButton: Button
@@ -68,8 +73,10 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
 
     fun setViewModel(viewModel: EarViewModel) {
         this.viewModel = viewModel
-        keyboardView.setRange(viewModel.minKey!!, viewModel.maxKey!!)
-        keyboardView.setColoured(Note(viewModel.root))
+        level = viewModel.level!!
+        keyboardView.setRange(Note(level.minPitchDisplayed), Note(level.maxPitchDisplayed))
+        available = level.keyList.map { Note(it) }
+        //keyboardView.setColoured(Note(viewModel.root))
     }
 
 
@@ -84,14 +91,14 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     }
 
     private fun getRandomNote(): Note {
-        return viewModel!!.available.random()
+        return available.random()
     }
 
     private fun generateProblem() {
         val notes = mutableListOf(getRandomNote())
-        while (notes.size < viewModel!!.notesNum) {
+        while (notes.size < level.problemLen) {
             val newNote = getRandomNote()
-            if (abs(notes[notes.size - 1].midiCode - newNote.midiCode) <= viewModel!!.maxInterval)
+            if (abs(notes[notes.size - 1].midiCode - newNote.midiCode) <= level.maxSemitoneInterval)
                 notes.add(newNote)
         }
         problem = notes
@@ -127,8 +134,9 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     }
 
     fun playRoot() {
-        messageTextView.text = "Root note: ${noteName(viewModel!!.root)}"
-        soundPlayer.play(viewModel!!.root)
+        messageTextView.text = "Root note: ${level.root}"
+        //TODO: the following assumes that we have at least one note available, this should be checked somewhere
+        soundPlayer.play(MusicUtil.midi(level.root.name+available.get(0).octave))
     }
     fun getCorrectNote() : String {
         if(index<problem.size)

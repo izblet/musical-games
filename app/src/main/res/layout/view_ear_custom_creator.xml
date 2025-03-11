@@ -30,6 +30,7 @@
                 android:hint="Enter level name"
                 android:inputType="text" />
         </LinearLayout>
+
         <!-- Description Note Group -->
         <LinearLayout
             android:orientation="vertical"
@@ -51,6 +52,29 @@
                 android:hint="Enter description"
                 android:inputType="text" />
         </LinearLayout>
+
+        <!-- Length Group -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/len"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Problem length"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/lenInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter number of notes in a problem"
+                android:inputType="text" />
+        </LinearLayout>
+
         <!-- Root Note Group -->
         <LinearLayout
             android:orientation="vertical"

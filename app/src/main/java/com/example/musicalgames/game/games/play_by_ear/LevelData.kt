@@ -54,7 +54,7 @@ object EarPlayLevels {
             id,
             min,
             max,
-            root,
+            ChromaticNote.fromString(noteName(root)),
             notesNum,
             interval,
             notes.toList(),
