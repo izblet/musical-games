@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.mental_intervals
+package com.example.musicalgames.game.games.mental_intervals.creation
 
 import android.content.Context
 import android.util.AttributeSet

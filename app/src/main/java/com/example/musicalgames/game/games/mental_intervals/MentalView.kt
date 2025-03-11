@@ -1,6 +1,8 @@
 package com.example.musicalgames.games.mental_intervals
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +11,12 @@ import com.example.musicalgames.components.interval_palette.IntervalPaletteListe
 import com.example.musicalgames.components.interval_palette.IntervalPaletteView
 import com.example.musicalgames.components.key_palette.KeyPaletteListener
 import com.example.musicalgames.components.key_palette.KeyPaletteView
-import com.example.musicalgames.game_activity.ViewModelListener
+import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
+import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.Interval
 import kotlin.math.roundToInt
 
-class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
+class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener {
 
     private var viewModel: MentalViewModel? = null
     private val notePaletteRatio :Float = 2f/3f
@@ -43,13 +47,11 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
         intervalPaletteView.registerListener(listener)
     }
 
-    override fun onDataChanged() { redraw() }
     private fun redraw() {
         if(viewModel!!.type == Type.INTERVAL_NOTE || viewModel!!.type == Type.DEGREE_NOTE)
             intervalPaletteView.visibility = View.GONE
         else
             keyPaletteView.visibility = View.GONE
-        messageTextView.text = viewModel?.messageText
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -85,5 +87,25 @@ class MentalView(context: Context) : ViewGroup(context), ViewModelListener {
         messageTextView.layout(0, 0, width, messageHeight)
         keyPaletteView.layout(0, height - keyPaletteHeight, width, height)
         intervalPaletteView.layout(0, height - keyPaletteHeight, width, height)
+    }
+
+    override fun onNewProblem(interval: Interval, questionNote: ChromaticNote) {
+        messageTextView.text = "What is the note positioned at $interval from $questionNote?"
+    }
+
+    override fun onNewProblem(questionNote: ChromaticNote, note: ChromaticNote) {
+       messageTextView.text = "What is the interval between $questionNote and $note"
+    }
+
+    override fun onRightAnswer() {
+        messageTextView.text = "Good!"
+    }
+
+    override fun onWrongAnswer(correctAns: Interval) {
+        messageTextView.text = "The right answer is : ${correctAns.name}"
+    }
+
+    override fun onWrongAnswer(correctAns: ChromaticNote) {
+        messageTextView.text = "The right answer is : $correctAns"
     }
 }

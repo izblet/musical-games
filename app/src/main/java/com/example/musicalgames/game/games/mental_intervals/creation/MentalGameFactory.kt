@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.mental_intervals
+package com.example.musicalgames.game.games.mental_intervals.creation
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,7 +14,10 @@ import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.games.GameFactory
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.games.flappy.FlappyLevelDao
+import com.example.musicalgames.games.mental_intervals.MentalController
+import com.example.musicalgames.games.mental_intervals.MentalLevelDao
+import com.example.musicalgames.games.mental_intervals.MentalView
+import com.example.musicalgames.games.mental_intervals.MentalViewModel
 
 class MentalGameFactory : GameFactory {
 
@@ -37,7 +40,7 @@ class MentalGameFactory : GameFactory {
     }
 
     override fun getIntentMaker(): GameIntentMaker {
-       return MentalViewModel.Companion
+       return MentalViewModel
     }
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
