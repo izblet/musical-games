@@ -3,32 +3,17 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.IntentSettable
-import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
 class MentalViewModel : ViewModel(), IntentSettable {
-    companion object : GameIntentMaker {
 
-        override fun getIntent(activity: FragmentActivity, level: Level): Intent {
-            if(level !is MentalLevel)
-                throw Exception("Level is of wrong type")
-
-            return Intent(activity, GameActivity::class.java).apply {
-                putExtra("level", level)
-            }
-        }
-
-    }
     override fun setDataFromIntent(intent: Intent) {
         level = intent.getParcelableExtra<MentalLevel>("level")
         availableNotes = level!!.startingNotes

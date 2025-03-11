@@ -1,19 +1,11 @@
 package com.example.musicalgames.games.play_by_ear
 
 import android.content.Intent
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game_activity.IntentSettable
-import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.game_activity.GameIntentMaker
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.SoundPlayerListener
@@ -24,17 +16,6 @@ import kotlin.math.abs
 
 class EarViewModel() : ViewModel(),IntentSettable, SoundPlayerListener {
     //TODO: the following should be moved to GameFactory (only after all games have levels as argumets)
-    companion object : GameIntentMaker {
-        override fun getIntent(activity: FragmentActivity, level: Level): Intent {
-            if(level !is PlayEarLevel)
-                throw Exception("Level is of wrong type")
-
-            return Intent(activity, GameActivity::class.java).apply {
-                putExtra("level", level)
-            }
-        }
-
-    }
 
     override fun setDataFromIntent(intent: Intent) {
         level = intent.getParcelableExtra("level")

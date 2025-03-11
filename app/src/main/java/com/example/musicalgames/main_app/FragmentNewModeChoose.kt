@@ -1,5 +1,6 @@
 package com.example.musicalgames.main_app
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,6 @@ import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameFactory
@@ -102,8 +102,9 @@ class FragmentNewModeChoose : Fragment() {
         }
 
         private fun launchLevel(level: Level) {
-            val intentMaker: GameIntentMaker = gameFactory.getIntentMaker()
-            val intent = intentMaker.getIntent(requireActivity(), level)
+            val intent = Intent(requireActivity(), GameActivity::class.java).apply {
+                putExtra("level", level)
+            }
             if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
                 throw Exception("game type argument is already set in intent")
             }

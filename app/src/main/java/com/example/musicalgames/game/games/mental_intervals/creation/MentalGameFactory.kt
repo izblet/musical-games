@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.musicalgames.game_activity.GameController
-import com.example.musicalgames.game_activity.GameIntentMaker
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
@@ -39,9 +38,6 @@ class MentalGameFactory : GameFactory {
         return MentalViewModel::class.java
     }
 
-    override fun getIntentMaker(): GameIntentMaker {
-       return MentalViewModel
-    }
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
         return MentalCustomCreator(context, createLevelAction, attrs)
