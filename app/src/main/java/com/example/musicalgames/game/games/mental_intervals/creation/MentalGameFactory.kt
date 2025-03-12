@@ -10,24 +10,17 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.mental_intervals.MentalController
-import com.example.musicalgames.games.mental_intervals.MentalLevelDao
+import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.mental_intervals.MentalView
 import com.example.musicalgames.games.mental_intervals.MentalViewModel
 
 class MentalGameFactory : GameFactory {
 
     override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
-        val mentalLevelDao: MentalLevelDao = GameDatabase.getDatabase(context).mentalLevelDao()
-
-        return when (pack) {
-            GamePackage.PREDEFINED -> mentalLevelDao.getBaseLevels()
-            GamePackage.CUSTOM -> mentalLevelDao.getCustomLevels()
-            else -> mentalLevelDao.getFavouriteLevels()
-        }
+        return MentalLevels.intervalNoteLevels
     }
 
     override fun getPermissions(): Array<String> {

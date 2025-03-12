@@ -11,24 +11,17 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.games.GameDatabase
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyGameController
-import com.example.musicalgames.games.flappy.FlappyLevelDao
+import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.FloppyGameView
 
 class FlappyGameFactory : GameFactory {
 
     override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
-        val flappyLevelDao: FlappyLevelDao = GameDatabase.getDatabase(context).flappyLevelDao()
-
-        return when (pack) {
-            GamePackage.PREDEFINED -> flappyLevelDao.getBaseLevels()
-            GamePackage.CUSTOM -> flappyLevelDao.getCustomLevels()
-            else -> flappyLevelDao.getFavouriteLevels()
-        }
+        return FlappyLevels.baseLevels
     }
 
     override fun getPermissions(): Array<String> {
