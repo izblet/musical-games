@@ -1,28 +1,32 @@
 package com.example.musicalgames.games.mental_intervals
 
-import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
-import com.example.musicalgames.game_activity.IntentSettable
+import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
-class MentalViewModel : ViewModel(), IntentSettable {
+class MentalViewModel : ViewModel(), GameViewModel {
 
-    override fun setDataFromIntent(intent: Intent) {
-        level = intent.getParcelableExtra<MentalLevel>("level")
-        availableNotes = level!!.startingNotes
-        availableIntervals = level!!.intervals
-        _type = level!!.mode
+    override fun setLevel(level: Level) {
+
+        this._level = level as MentalLevel
+        availableNotes = this.level.startingNotes
+        availableIntervals = this.level.intervals
+        _type = this.level.mode
     }
 
-    var level: MentalLevel? = null
+    private var _level: MentalLevel? = null
+    val level get() = _level!!
+
     var score = 0
+
     private var _type : Type = Type.INTERVAL_NOTE
     val type get() = _type
 

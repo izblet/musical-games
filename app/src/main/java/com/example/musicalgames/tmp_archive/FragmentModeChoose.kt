@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentModeChooseBinding
-import com.example.musicalgames.games.GameFactory
+import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GamePackage

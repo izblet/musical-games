@@ -1,10 +1,10 @@
 package com.example.musicalgames.games.play_by_ear
 
-import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
-import com.example.musicalgames.game_activity.IntentSettable
+import com.example.musicalgames.game_activity.GameViewModel
+import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
@@ -14,14 +14,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class EarViewModel() : ViewModel(),IntentSettable, SoundPlayerListener {
-    //TODO: the following should be moved to GameFactory (only after all games have levels as argumets)
+class EarViewModel() : ViewModel(),GameViewModel, SoundPlayerListener {
 
-    override fun setDataFromIntent(intent: Intent) {
-        level = intent.getParcelableExtra("level")
-        available = level!!.keyList.map { Note(it) }
+    override fun setLevel(level: Level) {
+        this.level = level as PlayEarLevel
+        available = this.level!!.keyList.map { Note(it) }
     }
-    //########
 
     //TODO: level will be passed in constructor prbbly, otherwise change this
     var level: PlayEarLevel? = null

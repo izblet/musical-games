@@ -1,4 +1,4 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.game.game_core
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.games.GamePackage
 
 interface GameFactory {
     suspend fun getLevels(pack: GamePackage, context: Context) : List<Level>

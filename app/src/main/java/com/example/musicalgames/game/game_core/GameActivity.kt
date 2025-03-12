@@ -7,13 +7,11 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap.gameInfos
-import com.example.musicalgames.games.flappy.FlappyViewModel
-import com.example.musicalgames.games.mental_intervals.MentalViewModel
-import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameActivity : AppCompatActivity() {
     companion object {
         const val ARG_GAME_TYPE = "game_type"
+        const val ARG_LEVEL = "level"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +23,9 @@ class GameActivity : AppCompatActivity() {
         val gameFactory = gameInfos[gameType]!!.gameFactory
         val viewModelType = gameFactory.getViewModelType()
 
-        val viewModel : IntentSettable = ViewModelProvider(this)[viewModelType] as IntentSettable
-        viewModel.setDataFromIntent(intent)
+        val viewModel : GameViewModel = ViewModelProvider(this)[viewModelType] as GameViewModel
+        val level = intent.getParcelableExtra<Level>(ARG_LEVEL)
+        viewModel.setLevel(level!!)
 
 
         val action = StartGameFragmentDirections.actionStartGameFragmentToFlappyGameFragment(gameType.name)

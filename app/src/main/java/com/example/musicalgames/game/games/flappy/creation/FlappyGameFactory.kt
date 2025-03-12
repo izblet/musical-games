@@ -12,7 +12,7 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GameDatabase
-import com.example.musicalgames.games.GameFactory
+import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyLevelDao

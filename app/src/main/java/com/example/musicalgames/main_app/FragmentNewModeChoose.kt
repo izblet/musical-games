@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.IToolbarTitleUpdater
@@ -22,7 +20,7 @@ import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.games.GameFactory
+import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GamePackage
@@ -103,12 +101,9 @@ class FragmentNewModeChoose : Fragment() {
 
         private fun launchLevel(level: Level) {
             val intent = Intent(requireActivity(), GameActivity::class.java).apply {
-                putExtra("level", level)
+                putExtra(GameActivity.ARG_LEVEL, level)
+                putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
             }
-            if(intent.getStringExtra(GameActivity.ARG_GAME_TYPE) != null) {
-                throw Exception("game type argument is already set in intent")
-            }
-            intent.putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
             startActivity(intent)
         }
 
@@ -130,10 +125,6 @@ class FragmentNewModeChoose : Fragment() {
             val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
             (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
 
-        }
-        private fun launchGame() {
-            //TODO: here we should put the package id into a bundle
-            findNavController().navigate(R.id.action_SecondFragment_to_fragmentLevelList2)
         }
 
         private fun showFavourites() {

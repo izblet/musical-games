@@ -1,6 +1,7 @@
 package com.example.musicalgames.games
 
 import com.example.musicalgames.R
+import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.games.flappy.creation.FlappyGameFactory
 import com.example.musicalgames.game.games.mental_intervals.creation.MentalGameFactory
 import com.example.musicalgames.game.games.play_by_ear.creation.EarGameFactory
