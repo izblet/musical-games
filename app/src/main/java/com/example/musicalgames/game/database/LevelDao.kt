@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
-import com.squareup.moshi.Moshi
+import com.example.musicalgames.main_app.TaggedLevel
 
 @Dao
 interface LevelDao {
@@ -25,16 +25,24 @@ interface LevelDao {
         entities.forEach{level -> insert(level)}
     }
 
-    suspend fun getLevels(game: Game, isCustom: Boolean) : List<Level> {
+    private fun entityToTagged(game: Game, level: LevelEntity) : TaggedLevel {
+      return TaggedLevel(
+          game,
+          level.id,
+          MoshiUtil.adapters[game]!!.fromJson(level.levelJSON) as Level,
+          isCustom = level.isCustom,
+          isFavourite = level.isFavourite
+      )
+    }
+    suspend fun getLevels(game: Game, isCustom: Boolean) : List<TaggedLevel> {
         return getLevelEntities(game.ordinal, isCustom).map{
-            MoshiUtil.adapters[game]!!.fromJson(it.levelJSON) as Level
+            entityToTagged(game, it)
         }
     }
-    suspend fun getFavourites(game: Game) : List<Level> {
+    suspend fun getFavourites(game: Game) : List<TaggedLevel> {
         return getFavouriteLevelEntities(game.ordinal).map{
-            MoshiUtil.adapters[game]!!.fromJson(it.levelJSON) as Level
+            entityToTagged(game, it)
         }
-
     }
 
     suspend fun addLevel(level: Level, game: Game, isCustom: Boolean) {

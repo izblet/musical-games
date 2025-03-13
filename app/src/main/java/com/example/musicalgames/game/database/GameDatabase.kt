@@ -38,7 +38,7 @@ abstract class GameDatabase : RoomDatabase() {
             }
         }
 
-        private val populateCallback = object : RoomDatabase.Callback() {
+        private val populateCallback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 

@@ -2,6 +2,7 @@ package com.example.musicalgames.game.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.musicalgames.main_app.TaggedLevel
 
 @Entity(tableName = "levels")
 data class LevelEntity(

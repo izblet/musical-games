@@ -47,9 +47,9 @@ class FragmentNewModeChoose : Fragment() {
     private lateinit var content: FrameLayout
     private lateinit var createView: CustomGameCreator
 
-    private var customList: List<Level> = listOf()
-    private var baseList: List<Level> = listOf()
-    private var favouriteList: List<Level> = listOf()
+    private var customList: List<TaggedLevel> = listOf()
+    private var baseList: List<TaggedLevel> = listOf()
+    private var favouriteList: List<TaggedLevel> = listOf()
     private lateinit var levelDao: LevelDao
 
     override fun onAttach(context: Context) {
@@ -98,8 +98,8 @@ class FragmentNewModeChoose : Fragment() {
         content = binding.contentFrame
 
         adapter = AdapterLevelList(favouriteList, object : AdapterLevelList.OnItemClickListener {
-            override fun onItemClick(level: Level) {
-               launchLevel(level)
+            override fun onItemClick(level: TaggedLevel) {
+               launchLevel(level.level)
             }
         })
 
@@ -196,7 +196,7 @@ class FragmentNewModeChoose : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    class AdapterLevelList(private var levelList: List<Level>, private val onItemClickListener: OnItemClickListener) :
+    class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onItemClickListener: OnItemClickListener) :
         RecyclerView.Adapter<AdapterLevelList.LevelViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LevelViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
@@ -211,7 +211,7 @@ class FragmentNewModeChoose : Fragment() {
             }
         }
 
-        fun setData(newList: List<Level>) {
+        fun setData(newList: List<TaggedLevel>) {
             levelList = newList
             notifyDataSetChanged()
         }
@@ -224,13 +224,13 @@ class FragmentNewModeChoose : Fragment() {
             private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
             private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
             private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
-            fun bind(level: Level) {
-                nameTextView.text = level.name
-                descriptionTextView.text = level.description
+            fun bind(level: TaggedLevel) {
+                nameTextView.text = level.level.name
+                descriptionTextView.text = level.level.description
             }
         }
         interface OnItemClickListener {
-            fun onItemClick(level: Level)
+            fun onItemClick(level: TaggedLevel)
         }
     }
 }
