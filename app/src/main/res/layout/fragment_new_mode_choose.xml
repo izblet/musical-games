@@ -8,50 +8,63 @@
     <LinearLayout
         android:id="@+id/iconContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="25pt"
         android:gravity="center"
         android:orientation="horizontal">
 
         <!--android:background="@drawable/button_shape"-->
         <!-- Bookmark Buttons -->
-        <Button
+        <ImageButton
             android:id="@+id/favouritesButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:backgroundTint="@null"
             android:background="@drawable/button_background"
-            android:textColor="@drawable/button_text_colour"
-            android:text="3" />
+            app:tint="@color/white"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="6pt"
+            app:backgroundTint="@null"
+            android:src="@drawable/heart_large" />
 
-        <Button
+        <ImageButton
             android:id="@+id/levelsButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:backgroundTint="@null"
             android:background="@drawable/button_background"
-            android:text=".:|" />
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="6pt"
+            app:tint="@color/white"
+            app:backgroundTint="@null"
+            android:src="@drawable/levels_icon" />
 
-        <Button
+        <ImageButton
             android:id="@+id/customButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:backgroundTint="@null"
             android:background="@drawable/button_background"
-            android:textColor="@drawable/button_text_colour"
-            android:text="#" />
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            app:tint="@color/white"
+            android:padding="6pt"
+            app:backgroundTint="@null"
+            android:src="@drawable/custom_icon" />
 
-        <Button
+        <ImageButton
             android:id="@+id/createButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:backgroundTint="@null"
             android:background="@drawable/button_background"
-            android:textColor="@drawable/button_text_colour"
-            android:text="+" />
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="6pt"
+            app:tint="@color/white"
+            app:backgroundTint="@null"
+            android:src="@drawable/plus_icon" />
     </LinearLayout>
 
 
@@ -61,7 +74,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="?attr/colorPrimary"
-        android:padding="16dp">
+        >
 
 
         <TextView
@@ -71,8 +84,13 @@
             android:text="Title"
             android:textSize="24sp"
             android:layout_gravity="center_horizontal"
-            android:paddingBottom="16dp" />
-
+            android:padding="16dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="?attr/colorOnPrimary"
+            android:layout_marginTop="4dp"
+            />
 
         <FrameLayout
             android:id="@+id/contentFrame"

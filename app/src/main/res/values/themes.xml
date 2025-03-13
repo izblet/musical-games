@@ -3,13 +3,13 @@
     <style name="Base.Theme.MusicalGames" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/darkblue</item>
+        <item name="colorPrimaryDark">@color/dark_gray</item>
         <!--<item name="android:buttonTint">@color/blue</item> -->
         <!--<item name="android:colorButtonNormal">@color/blue</item>-->
-        <item name="android:navigationBarColor">@color/blue</item>
-        <item name="android:windowBackground">@color/blue</item>
+        <item name="android:navigationBarColor">@color/dark_gray</item>
+        <item name="android:windowBackground">@color/dark_gray</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 

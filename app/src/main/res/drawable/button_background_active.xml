@@ -12,7 +12,7 @@
                 />
             <stroke
                 android:width="3dp"
-                android:color="@color/black" />
+                android:color="?attr/colorOnPrimary" />
         </shape>
     </item>
     <item android:bottom="0dp" android:gravity="bottom" android:height="3dp">
