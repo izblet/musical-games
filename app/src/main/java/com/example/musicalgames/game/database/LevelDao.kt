@@ -21,6 +21,9 @@ interface LevelDao {
     @Query("SELECT * FROM levels WHERE gameID = :gameId AND isFavourite = 1")
     suspend fun getFavouriteLevelEntities(gameId: Int) : List<LevelEntity>
 
+    @Query("UPDATE levels SET isFavourite = :newVal WHERE id = :id")
+    suspend fun changeFavourite(newVal: Boolean, id: Int)
+
     suspend fun addAllLevelEntities(entities: List<LevelEntity>) {
         entities.forEach{level -> insert(level)}
     }

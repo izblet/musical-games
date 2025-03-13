@@ -56,16 +56,6 @@ class FragmentNewModeChoose : Fragment() {
         super.onAttach(context)
         val db = GameDatabase.getInstance(requireContext())
         levelDao = db.levelDao()
-        lifecycleScope.launch(Dispatchers.IO) {
-            val count = levelDao.getLevelCount()
-            withContext(Dispatchers.Main) {
-                if(count ==0L) {
-                    Log.d("Database", "empty")
-                } else {
-                    Log.d("Database", "not empty")
-                }
-            }
-        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,6 +91,13 @@ class FragmentNewModeChoose : Fragment() {
             override fun onItemClick(level: TaggedLevel) {
                launchLevel(level.level)
             }
+
+            override fun onFavouriteClick(level: TaggedLevel) {
+                lifecycleScope.launch {
+                    levelDao.changeFavourite(!level.isFavourite, level.levelId)
+                    refresh()
+                }
+            }
         })
 
         recyclerView = RecyclerView(requireContext()).apply {
@@ -120,6 +117,15 @@ class FragmentNewModeChoose : Fragment() {
         showFavourites()
 
         return binding.root
+    }
+    private fun refresh() {
+        if(clickedButton == binding.favouritesButton) {
+            showFavourites()
+        } else if(clickedButton == binding.customButton){
+            showCustom()
+        } else if(clickedButton == binding.levelsButton) {
+           showLevels()
+        }
     }
 
     private fun launchLevel(level: Level) {
@@ -225,12 +231,24 @@ class FragmentNewModeChoose : Fragment() {
             private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
             private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
             fun bind(level: TaggedLevel) {
+                iconImageView.setImageResource(
+                    if(level.isFavourite) {
+                        R.drawable.favourite_filled
+                    }
+                    else {
+                        R.drawable.favourite_countour
+                    }
+                )
+                iconImageView.setOnClickListener {
+                    onItemClickListener.onFavouriteClick(level)
+                }
                 nameTextView.text = level.level.name
                 descriptionTextView.text = level.level.description
             }
         }
         interface OnItemClickListener {
             fun onItemClick(level: TaggedLevel)
+            fun onFavouriteClick(level: TaggedLevel)
         }
     }
 }
