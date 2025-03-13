@@ -8,13 +8,11 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [LevelEntity::class], version = 1, exportSchema = false)
