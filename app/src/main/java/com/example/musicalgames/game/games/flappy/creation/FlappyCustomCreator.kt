@@ -10,9 +10,9 @@ class FlappyCustomCreator(context : Context, createLevelAction: (Level)->Unit, a
         return null
     }
 
-    override fun saveLevel() {
-
+    override fun highlightMissing() {
     }
+
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 

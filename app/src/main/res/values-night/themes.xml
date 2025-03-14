@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/light_gray</item>
         <item name="colorOnPrimary">@color/dark_white</item>
         <item name="colorPrimaryDark">@color/dark_gray</item>
-
+        <item name="textFillColor">@color/white</item>
         <item name="android:textColor">@color/white</item>
 
     </style>

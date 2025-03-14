@@ -10,7 +10,8 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
         return null
     }
 
-    override fun saveLevel() {
+    override fun highlightMissing() {
+
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
