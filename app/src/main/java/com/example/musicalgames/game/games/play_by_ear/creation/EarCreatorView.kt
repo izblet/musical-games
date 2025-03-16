@@ -2,19 +2,23 @@ package com.example.musicalgames.game.games.play_by_ear.creation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.Spinner
+import android.widget.TableRow
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.R
 import com.example.musicalgames.components.keyboard.KeyboardSelectSheet
+import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import kotlin.reflect.jvm.internal.impl.renderer.ClassifierNamePolicy.SHORT
+import com.example.musicalgames.utils.Note
 
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
@@ -32,20 +36,43 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, scaleOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         scaleSpinner.adapter = adapter
-        val buttonLayout = mainLayout.findViewById<LinearLayout>(R.id.buttonContainer)
-        val saveButton = buttonLayout.findViewById<Button>(R.id.saveButton)
+        val saveButton = findViewById<Button>(R.id.saveButton)
+        val isSelectionToggle = findViewById<ToggleButton>(R.id.isSelectionToggle)
+
+        val noteRow = findViewById<TableRow>(R.id.custom_notes_row)
+        val scaleRow = findViewById<TableRow>(R.id.scale_row)
+        val noteSelectorContainer = findViewById<FrameLayout>(R.id.keyboard_container)
+        val noteSelector = findViewById<KeyboardView>(R.id.keyboard_preview)
+        noteSelector.setRange(
+            Note("C4"),Note("B4")) //TODO: should definitely not be hardcoded
+        noteSelector.setGrayedOut()
+        noteSelector.setOutlined(false)
+        noteSelector.setDisabled(true)
 
 
-        saveButton.setOnClickListener {
-            val bottomSheet = KeyboardSelectSheet(context) { option ->
-                Toast.makeText(
-                    context,
-                    option,
-                    Toast.LENGTH_SHORT
-                ).show()
+        val setSelectionMethod: ()->Unit = {
+            if(isSelectionToggle.isChecked) {
+                noteRow.visibility = View.VISIBLE
+                scaleRow.visibility = View.GONE
+            } else {
+                noteRow.visibility = View.GONE
+                scaleRow.visibility = View.VISIBLE
             }
+        }
+        setSelectionMethod()
+
+        isSelectionToggle.setOnClickListener{
+            setSelectionMethod()
+        }
+
+
+        noteSelectorContainer.setOnClickListener {
+            val onSelectAction: (Set<Int>)->Unit = {
+                grayedOut: Set<Int> ->
+                noteSelector.setGrayedOutSet(grayedOut)
+            }
+            val bottomSheet = KeyboardSelectSheet(context, onSelectAction, noteSelector.getGrayedOut())
             bottomSheet.show()
-            Toast.makeText(context, "works sorta", Toast.LENGTH_SHORT).show()
         }
 
         //val submitButton = mainLayout.findViewById<View>(R.id.submitButton)

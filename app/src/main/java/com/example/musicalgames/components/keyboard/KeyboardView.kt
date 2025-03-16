@@ -7,6 +7,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
 import com.example.musicalgames.components.ComponentPaints.getBlackStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getBlueFillPaint
@@ -21,6 +22,7 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
     constructor(context: Context, grayedOut: Set<Int>, attrs: AttributeSet?) : this(context, attrs) {
         grayedOutSet.addAll(grayedOut)
     }
+    //TODO: this should be divided into more classes using inheritance (too much functionality that is not used)
 
     private val whiteKeyPaint = getWhiteFillPaint(context)
     private val blackKeyPaint = getBlackFillPaint(context)
@@ -41,6 +43,8 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
     private var colouredNote: Note? = null
     private val grayedOutSet : MutableSet<Int> = mutableSetOf()
     private var keyNum: Int = 0
+    private var outlined = true
+    private var clickDisabled = false
 
     private var listener: KeyboardListener? = null
 
@@ -50,6 +54,9 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
         // Calculate dimensions for keys
         keyWidth = measuredWidth / (max.midiCode - min.midiCode + 1)
         keyHeight = measuredHeight
+
+        if(keyHeight<=0)
+            return
 
         setMeasuredDimension(measuredWidth, keyHeight)
         if (keysBitmap == null || keysBitmap?.width != measuredWidth || keysBitmap?.height != measuredHeight) {
@@ -73,7 +80,8 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
             } else {
                 canvas.drawRect(rect, whiteKeyPaint)
             }
-            canvas.drawRect(rect, blackKeyStroke)
+            if(outlined)
+                canvas.drawRect(rect, blackKeyStroke)
         }
         else {
             if(currentKeyMidi in grayedOutSet) {
@@ -81,7 +89,8 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
             } else {
                 canvas.drawRect(rect, blackKeyPaint)
             }
-            canvas.drawRect(rect, whiteKeyStroke)
+            if(outlined)
+                canvas.drawRect(rect, whiteKeyStroke)
         }
         if(colouredNote?.midiCode == min.midiCode+index)
             canvas.drawRect(rect, blueFillPaint)
@@ -91,6 +100,24 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
    private fun drawKeys(canvas: Canvas) {
         for (i in 0 until keyNum) {
             redrawKey(i, canvas)
+        }
+    }
+    fun setOutlined(value: Boolean) {
+        outlined = value
+        if(canvas!=null) {
+            drawKeys(canvas!!)
+        }
+    }
+    fun setGrayedOut() {
+        for (i in 0 until keyNum) {
+            grayedOutSet.add(min.midiCode+i)
+        }
+    }
+    fun setGrayedOutSet(set: Set<Int>) {
+        grayedOutSet.clear()
+        grayedOutSet.addAll(set)
+        if(canvas!=null) {
+            drawKeys(canvas!!)
         }
     }
 
@@ -106,8 +133,14 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
             redrawKey(keyMidi-min.midiCode, canvas!!)
         }
     }
+    fun setDisabled(value: Boolean) {
+        clickDisabled = value
+    }
     fun isGrayedOut(keyMidi: Int) : Boolean {
         return (keyMidi in grayedOutSet)
+    }
+    fun getGrayedOut() : Set<Int> {
+        return grayedOutSet
     }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -121,6 +154,9 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if(clickDisabled)
+            return false
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 val touchedKeyId = min.midiCode + (event.x / keyWidth).toInt()
