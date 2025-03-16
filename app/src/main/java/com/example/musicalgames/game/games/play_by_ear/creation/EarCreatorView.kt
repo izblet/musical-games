@@ -2,8 +2,8 @@ package com.example.musicalgames.game.games.play_by_ear.creation
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -11,13 +11,10 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
+import com.example.musicalgames.components.keyboard.KeyboardSelectSheet
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.Scale
+import kotlin.reflect.jvm.internal.impl.renderer.ClassifierNamePolicy.SHORT
 
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
@@ -35,7 +32,21 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, scaleOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         scaleSpinner.adapter = adapter
+        val buttonLayout = mainLayout.findViewById<LinearLayout>(R.id.buttonContainer)
+        val saveButton = buttonLayout.findViewById<Button>(R.id.saveButton)
 
+
+        saveButton.setOnClickListener {
+            val bottomSheet = KeyboardSelectSheet(context) { option ->
+                Toast.makeText(
+                    context,
+                    option,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            bottomSheet.show()
+            Toast.makeText(context, "works sorta", Toast.LENGTH_SHORT).show()
+        }
 
         //val submitButton = mainLayout.findViewById<View>(R.id.submitButton)
 
@@ -49,14 +60,15 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         */
     }
 
-    private fun getFieldVal(id: Int) : String {
+    private fun getFieldVal(id: Int): String {
         return scrollLayout.findViewById<EditText>(id).text.toString()
     }
-    private fun getSpinnerVal(id: Int) : String {
+
+    private fun getSpinnerVal(id: Int): String {
         return scrollLayout.findViewById<Spinner>(id).selectedItem.toString()
     }
 
-    private fun tryMakeLevel() : Level? {
+    private fun tryMakeLevel(): Level? {
         /*
         val name = getFieldVal(R.id.nameInput)
         val description = getFieldVal(R.id.descriptionInput)
@@ -102,11 +114,11 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     }
 
     override fun getLevel(): Level? {
-        try{
+        try {
             val level = tryMakeLevel()
             return level
         } catch (e: Exception) {
-           return null
+            return null
         }
     }
 
@@ -118,7 +130,13 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         val paddingStart = paddingLeft
         val paddingTop = paddingTop
 
-        mainLayout.layout(paddingStart, paddingTop, paddingStart + mainLayout.measuredWidth, paddingTop + mainLayout.measuredHeight)
+        mainLayout.layout(
+            paddingStart,
+            paddingTop,
+            paddingStart + mainLayout.measuredWidth,
+            paddingTop + mainLayout.measuredHeight
+        )
 
     }
+
 }
