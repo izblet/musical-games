@@ -14,7 +14,7 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.components.keyboard.KeyboardSelectSheet
+import com.example.musicalgames.components.keyboard.KeyboardSelector
 import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
@@ -41,14 +41,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
         val noteRow = findViewById<TableRow>(R.id.custom_notes_row)
         val scaleRow = findViewById<TableRow>(R.id.scale_row)
-        val noteSelectorContainer = findViewById<FrameLayout>(R.id.keyboard_container)
-        val noteSelector = findViewById<KeyboardView>(R.id.keyboard_preview)
-        noteSelector.setRange(
-            Note("C4"),Note("B4")) //TODO: should definitely not be hardcoded
-        noteSelector.setGrayedOut()
-        noteSelector.setOutlined(false)
-        noteSelector.setDisabled(true)
-
 
         val setSelectionMethod: ()->Unit = {
             if(isSelectionToggle.isChecked) {
@@ -63,16 +55,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
         isSelectionToggle.setOnClickListener{
             setSelectionMethod()
-        }
-
-
-        noteSelectorContainer.setOnClickListener {
-            val onSelectAction: (Set<Int>)->Unit = {
-                grayedOut: Set<Int> ->
-                noteSelector.setGrayedOutSet(grayedOut)
-            }
-            val bottomSheet = KeyboardSelectSheet(context, onSelectAction, noteSelector.getGrayedOut())
-            bottomSheet.show()
         }
 
         //val submitButton = mainLayout.findViewById<View>(R.id.submitButton)

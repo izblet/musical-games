@@ -146,21 +146,10 @@
                     <TextView
                         style="@style/customLabelStyle"
                         android:text="Selection:"/>
-                    <FrameLayout
-                        android:padding="2dp"
-                        android:id="@+id/keyboard_container"
-                        android:clickable="true"
-                        android:focusable="true"
-                        style="@style/customInputElementStyle">
-                        <com.example.musicalgames.components.keyboard.KeyboardView
-                            android:clickable="false"
-                            android:focusable="false"
-                            android:enabled="false"
-                            android:layout_height="match_parent"
-                            android:layout_width="match_parent"
-                            android:id="@+id/keyboard_preview"
-                        />
-                    </FrameLayout>
+                   <com.example.musicalgames.components.keyboard.KeyboardSelector
+                       android:id="@+id/keyboard_selector"
+                       style="@style/customInputElementStyle"
+                       />
                 </TableRow>
 
                 <TableRow
