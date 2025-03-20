@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.Spinner
+import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -24,7 +25,6 @@ import com.example.musicalgames.utils.Scale
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 
-    private var mainLayout: ConstraintLayout
     private var scaleSpinnerValue: EnumSpinner.SpinnerEnumValue<Scale>
     private var rootSpinnerValue: EnumSpinner.SpinnerEnumValue<ChromaticNote>
     private var maxIntervalSpinner: EnumSpinner.SpinnerEnumValue<Interval>
@@ -35,7 +35,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_ear_custom_creator, this, true)
-        mainLayout = findViewById(R.id.main_layout)
 
         rootSpinnerValue = setEnumSpinner(R.id.root_spinner)
         scaleSpinnerValue = setEnumSpinner(R.id.scaleSpinner)
@@ -126,16 +125,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         return null
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        measureChild(mainLayout, widthMeasureSpec, heightMeasureSpec)
-
-        val width = resolveSize(suggestedMinimumWidth, widthMeasureSpec)
-        val height = resolveSize(suggestedMinimumHeight, heightMeasureSpec)
-        setMeasuredDimension(width, height)
-    }
-
     override fun getLevel(): Level? {
         try {
             val level = tryMakeLevel()
@@ -147,19 +136,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
     override fun highlightMissing() {
         Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val paddingStart = paddingLeft
-        val paddingTop = paddingTop
-
-        mainLayout.layout(
-            paddingStart,
-            paddingTop,
-            paddingStart + mainLayout.measuredWidth,
-            paddingTop + mainLayout.measuredHeight
-        )
-
     }
 
 }

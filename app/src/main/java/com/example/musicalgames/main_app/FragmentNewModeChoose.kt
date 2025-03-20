@@ -3,7 +3,6 @@ package com.example.musicalgames.main_app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +23,6 @@ import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
@@ -41,7 +40,7 @@ class FragmentNewModeChoose : Fragment() {
     private lateinit var adapter: AdapterLevelList
     private lateinit var recyclerView: RecyclerView
     private lateinit var content: FrameLayout
-    private lateinit var createView: CustomGameCreator
+    private lateinit var viewCreate: ConstraintLayout
 
     private var customList: List<TaggedLevel> = listOf()
     private var baseList: List<TaggedLevel> = listOf()
@@ -107,8 +106,11 @@ class FragmentNewModeChoose : Fragment() {
             FrameLayout.LayoutParams.MATCH_PARENT
         )
 
-        createView = gameFactory.getCustomCreator(requireContext(), ::launchLevel, null)
-        createView.layoutParams = layoutParams
+        viewCreate = LayoutInflater.from(requireContext()).inflate(R.layout.view_create_game,content, false) as ConstraintLayout
+        val tableCreate = gameFactory.getCustomCreator(requireContext(), ::launchLevel, null)
+        tableCreate.layoutParams = layoutParams //I don't remember what it does, but okay
+        viewCreate.findViewById<FrameLayout>(R.id.level_creator_container).addView(tableCreate)
+
         binding.favouritesButton.isSelected = true
         showFavourites()
 
@@ -190,7 +192,7 @@ class FragmentNewModeChoose : Fragment() {
     }
     private fun showCreate() {
         content.removeAllViews()
-        content.addView(createView)
+        content.addView(viewCreate)
         binding.pageTitle.text = "Create"
 
     }
