@@ -8,10 +8,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MentalLevel (
-    override val id: Int,
     val startingNotes: List<ChromaticNote>,
     val intervals: List<Interval>,
     val mode: Type,
-    override val name: String,
-    override val description: String,
-): Level(id, name, description)
+): Level()

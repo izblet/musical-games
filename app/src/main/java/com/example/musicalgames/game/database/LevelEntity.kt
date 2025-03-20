@@ -8,6 +8,8 @@ import com.example.musicalgames.main_app.TaggedLevel
 data class LevelEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val gameId: Int,
+    val name: String,
+    val description: String,
     val levelJSON: String,
     val isFavourite: Boolean,
     val isCustom: Boolean

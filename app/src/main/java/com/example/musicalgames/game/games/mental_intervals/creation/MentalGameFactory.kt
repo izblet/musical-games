@@ -16,10 +16,11 @@ import com.example.musicalgames.games.mental_intervals.MentalController
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.mental_intervals.MentalView
 import com.example.musicalgames.games.mental_intervals.MentalViewModel
+import com.example.musicalgames.main_app.TaggedLevel
 
 class MentalGameFactory : GameFactory {
 
-    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
         return MentalLevels.intervalNoteLevels
     }
 

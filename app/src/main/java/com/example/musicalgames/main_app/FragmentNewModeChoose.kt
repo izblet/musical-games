@@ -238,8 +238,8 @@ class FragmentNewModeChoose : Fragment() {
                 iconImageView.setOnClickListener {
                     onItemClickListener.onFavouriteClick(level)
                 }
-                nameTextView.text = level.level.name
-                descriptionTextView.text = level.level.description
+                nameTextView.text = level.name
+                descriptionTextView.text = level.description
             }
         }
         interface OnItemClickListener {

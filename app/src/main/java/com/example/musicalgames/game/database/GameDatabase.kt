@@ -11,6 +11,7 @@ import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
+import com.example.musicalgames.main_app.TaggedLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,9 +54,9 @@ abstract class GameDatabase : RoomDatabase() {
         }
 
         private fun prepopulateLevels(): List<LevelEntity> {
-            val flappyLevels = mapToEntities(FlappyLevels.baseLevels, Game.FLAPPY)
-            val mentalLevels = mapToEntities(MentalLevels.intervalNoteLevels, Game.MENTAL_INTERVALS)
-            val earLevels = mapToEntities(EarPlayLevels.baseLevels, Game.PLAY_BY_EAR)
+            val flappyLevels = mapToEntities(FlappyLevels.baseLevels)
+            val mentalLevels = mapToEntities(MentalLevels.intervalNoteLevels)
+            val earLevels = mapToEntities(EarPlayLevels.baseLevels)
 
             Log.d(
                 "Database",
@@ -65,15 +66,17 @@ abstract class GameDatabase : RoomDatabase() {
             return flappyLevels + mentalLevels + earLevels
         }
 
-        private fun mapToEntities(levels: List<Level>, game: Game): List<LevelEntity> {
+        private fun mapToEntities(levels: List<TaggedLevel>): List<LevelEntity> {
 
             return levels.map {
                 LevelEntity(
-                    id = 0,
-                    gameId = game.ordinal,
-                    levelJSON = MoshiUtil.adapters[game]!!.toJson(it),
-                    isFavourite = false,
-                    isCustom = false
+                    id = it.levelId,
+                    gameId = it.game.ordinal,
+                    name = it.name,
+                    description = it.description,
+                    levelJSON = MoshiUtil.adapters[it.game]!!.toJson(it.level),
+                    isFavourite = it.isFavourite,
+                    isCustom = it.isCustom
                 )
             }
         }

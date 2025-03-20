@@ -36,7 +36,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     private var keyboardDisabled = true
     private var score: Int = 0
     private var viewModel: EarViewModel? = null
-    private var level: PlayEarLevel = PlayEarLevel(-1,-1,-1,ChromaticNote.C, 0, -1,listOf(), "","")
+    private var level: PlayEarLevel = PlayEarLevel(-1,-1,ChromaticNote.C, 0, -1,listOf())
     private val messageTextView: TextView
     private val rootButton: Button
     private val nextButton: Button

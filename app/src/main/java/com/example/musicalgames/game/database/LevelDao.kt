@@ -32,6 +32,8 @@ interface LevelDao {
       return TaggedLevel(
           game,
           level.id,
+          level.name,
+          level.description,
           MoshiUtil.adapters[game]!!.fromJson(level.levelJSON) as Level,
           isCustom = level.isCustom,
           isFavourite = level.isFavourite
@@ -48,8 +50,14 @@ interface LevelDao {
         }
     }
 
-    suspend fun addLevel(level: Level, game: Game, isCustom: Boolean) {
-        val levelEntity = LevelEntity(0,game.ordinal, MoshiUtil.adapters[game]!!.toJson(level), false, isCustom)
+    suspend fun addLevel(level: TaggedLevel, game: Game, isCustom: Boolean) {
+        val levelEntity = LevelEntity(0,
+            game.ordinal,
+            level.name,
+            level.description,
+            MoshiUtil.adapters[game]!!.toJson(level.level),
+            level.isFavourite,
+            level.isCustom)
         insert(levelEntity)
     }
 

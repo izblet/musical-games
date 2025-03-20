@@ -17,10 +17,11 @@ import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.FloppyGameView
+import com.example.musicalgames.main_app.TaggedLevel
 
 class FlappyGameFactory : GameFactory {
 
-    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
         return FlappyLevels.baseLevels
     }
 

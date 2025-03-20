@@ -16,11 +16,12 @@ import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
 import com.example.musicalgames.games.play_by_ear.EarView
 import com.example.musicalgames.games.play_by_ear.EarViewModel
+import com.example.musicalgames.main_app.TaggedLevel
 
 class EarGameFactory : GameFactory {
 
-    override suspend fun getLevels(pack: GamePackage, context: Context): List<Level> {
-        return if(pack == GamePackage.PREDEFINED) EarPlayLevels.baseLevels else EarPlayLevels.minorLevels
+    override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
+        return EarPlayLevels.baseLevels
     }
 
     override fun getPermissions(): Array<String> {
