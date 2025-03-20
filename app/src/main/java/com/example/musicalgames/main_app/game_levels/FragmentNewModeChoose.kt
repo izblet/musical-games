@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.main_app.game_levels
 
 import android.content.Context
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -26,6 +27,7 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 
 class FragmentNewModeChoose : Fragment() {
@@ -107,9 +109,16 @@ class FragmentNewModeChoose : Fragment() {
         )
 
         viewCreate = LayoutInflater.from(requireContext()).inflate(R.layout.view_create_game,content, false) as ConstraintLayout
+
         val tableCreate = gameFactory.getCustomCreator(requireContext(), ::launchLevel, null)
         tableCreate.layoutParams = layoutParams //I don't remember what it does, but okay
         viewCreate.findViewById<FrameLayout>(R.id.level_creator_container).addView(tableCreate)
+        viewCreate.findViewById<Button>(R.id.playButton).setOnClickListener {
+            val level = tableCreate.getLevel()
+            if (level != null) {
+                launchLevel(level)
+            }
+        }
 
         binding.favouritesButton.isSelected = true
         showFavourites()

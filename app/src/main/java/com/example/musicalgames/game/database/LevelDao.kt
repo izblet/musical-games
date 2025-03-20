@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 @Dao
 interface LevelDao {

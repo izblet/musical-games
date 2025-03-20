@@ -16,7 +16,7 @@ import com.example.musicalgames.games.mental_intervals.MentalController
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.mental_intervals.MentalView
 import com.example.musicalgames.games.mental_intervals.MentalViewModel
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 class MentalGameFactory : GameFactory {
 

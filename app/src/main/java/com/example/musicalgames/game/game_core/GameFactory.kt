@@ -10,7 +10,7 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 interface GameFactory {
     suspend fun getLevels(pack: GamePackage, context: Context) : List<TaggedLevel>

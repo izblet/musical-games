@@ -2,13 +2,11 @@ package com.example.musicalgames.games.flappy
 
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.midi
 import com.example.musicalgames.utils.MusicUtil.noteLetter
 import com.example.musicalgames.utils.MusicUtil.noteName
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.Scale
 
 const val LEN_INF = -1
 const val DELIMITER = ","

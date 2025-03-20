@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentNewModeChoose"
-        android:name="com.example.musicalgames.main_app.FragmentNewModeChoose"
+        android:name="com.example.musicalgames.main_app.game_levels.FragmentNewModeChoose"
         android:label="FragmentNewModeChoose" >
         <action
             android:id="@+id/action_fragmentNewModeChoose_to_FirstFragment"

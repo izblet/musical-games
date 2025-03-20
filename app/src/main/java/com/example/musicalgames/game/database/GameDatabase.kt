@@ -6,12 +6,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

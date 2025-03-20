@@ -17,7 +17,7 @@ import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.flappy.FlappyViewModel
 import com.example.musicalgames.games.flappy.FloppyGameView
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 class FlappyGameFactory : GameFactory {
 

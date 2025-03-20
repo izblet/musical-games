@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import com.example.musicalgames.R
 import com.example.musicalgames.components.keyboard.KeyboardListener
 import com.example.musicalgames.components.keyboard.KeyboardView
+import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Note
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -31,6 +32,15 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
         setOnClickListener {
             inputDialog.show(notePreview.getGrayedOut())
         }
+    }
+    fun getSelected() : Set<ChromaticNote> {
+        val chromaticSelected : MutableSet<ChromaticNote> = ChromaticNote.entries.toMutableSet()
+        val grayedOutMidi = notePreview.getGrayedOut()
+        for (note in grayedOutMidi) {
+            chromaticSelected.remove(Note(note).noteChromatic)
+        }
+
+        return chromaticSelected
     }
 
     inner class KeyboardDialog(context: Context) : BottomSheetDialog(context), KeyboardListener {

@@ -1,17 +1,8 @@
 package com.example.musicalgames.games.mental_intervals
 
-import androidx.room.Dao
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.PrimaryKey
-import androidx.room.Query
-import androidx.room.Update
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
-import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.flappy.DELIMITER
-import com.example.musicalgames.main_app.TaggedLevel
-import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.Interval
 

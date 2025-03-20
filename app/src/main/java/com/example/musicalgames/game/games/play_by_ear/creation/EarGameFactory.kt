@@ -16,7 +16,7 @@ import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
 import com.example.musicalgames.games.play_by_ear.EarView
 import com.example.musicalgames.games.play_by_ear.EarViewModel
-import com.example.musicalgames.main_app.TaggedLevel
+import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 class EarGameFactory : GameFactory {
 
