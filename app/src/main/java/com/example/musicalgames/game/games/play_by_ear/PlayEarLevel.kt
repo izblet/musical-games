@@ -14,4 +14,18 @@ data class PlayEarLevel (
     val maxSemitoneInterval: Int,
     val keyList: List<Int>,
 
-): Level()
+): Level() {
+    init{
+        require(minPitchDisplayed<maxPitchDisplayed) { "minimal pitch has to be smaller than maximal pitch: $minPitchDisplayed >= $maxPitchDisplayed"}
+        require(isIntervalPossible()) { "some notes cannot be reached from others with the provided interval"}
+        require(keyList.isNotEmpty()) { "The key list is empty" }
+    }
+    private fun isIntervalPossible() : Boolean {
+        //you have to be able to reach the note above and the note below, doesn't make sense otherwise
+        val isPossible = keyList.zipWithNext()
+            .all {
+            (a,b) -> a + maxSemitoneInterval >= b
+        }
+       return isPossible
+    }
+}

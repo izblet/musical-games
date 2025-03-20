@@ -36,7 +36,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
     private var keyboardDisabled = true
     private var score: Int = 0
     private var viewModel: EarViewModel? = null
-    private var level: PlayEarLevel = PlayEarLevel(-1,-1,ChromaticNote.C, 0, -1,listOf())
+    private var level: PlayEarLevel? = null
     private val messageTextView: TextView
     private val rootButton: Button
     private val nextButton: Button
@@ -75,7 +75,7 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         level = viewModel.level!!
         this.viewModel!!.setPlayer(soundPlayer)
         this.viewModel!!.registerListener(this)
-        keyboardView.setRange(Note(level.minPitchDisplayed), Note(level.maxPitchDisplayed))
+        keyboardView.setRange(Note(level!!.minPitchDisplayed), Note(level!!.maxPitchDisplayed))
     }
 
 
