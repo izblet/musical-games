@@ -19,14 +19,18 @@ class EnumSpinner  @JvmOverloads constructor(
     // specify the type in order to retrieve the value
     // why? idk, i just don't wanna
     inline fun <reified T: Enum<T>> setEnum() : SpinnerEnumValue<T> {
+       return setEnum(enumValues<T>()[0])
+    }
+    inline fun <reified T: Enum<T>> setEnum(defaultVal : T) : SpinnerEnumValue<T> {
         setCompleteOrThrow()
         val values = enumValues<T>()
         val adapter = ArrayAdapter(context,
             android.R.layout.simple_spinner_dropdown_item,
             values.map{it.toString()}
-            ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
         this.adapter=adapter
+        setSelection(defaultVal.ordinal)
         return SpinnerEnumValue(values)
     }
     fun setCompleteOrThrow() {

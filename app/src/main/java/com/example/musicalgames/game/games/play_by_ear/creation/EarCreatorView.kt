@@ -35,13 +35,13 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     init {
         _binding = ViewEarCustomCreatorBinding.inflate(LayoutInflater.from(context), this, true)
 
-        rootSpinnerValue = binding.rootSpinner.setEnum()
-        scaleSpinnerValue = binding.scaleSpinner.setEnum()
-        maxIntervalSpinner = binding.maxIntervalSpinner.setEnum()
-        minSoundNoteSpinner = binding.minNoteSpinner.setEnum()
-        maxSoundNoteSpinner = binding.maxNoteSpinner.setEnum()
-        minSoundOctaveSpinner = binding.minNoteOctave.setEnum()
-        maxSoundOctaveSpinner = binding.maxOctaveSpinner.setEnum()
+        rootSpinnerValue = binding.rootSpinner.setEnum(ChromaticNote.C)
+        scaleSpinnerValue = binding.scaleSpinner.setEnum(Scale.MAJOR)
+        maxIntervalSpinner = binding.maxIntervalSpinner.setEnum(Interval.P8)
+        minSoundNoteSpinner = binding.minNoteSpinner.setEnum(ChromaticNote.C)
+        maxSoundNoteSpinner = binding.maxNoteSpinner.setEnum(ChromaticNote.C)
+        minSoundOctaveSpinner = binding.minNoteOctave.setEnum(Octave.o4)
+        maxSoundOctaveSpinner = binding.maxOctaveSpinner.setEnum(Octave.o5)
 
 
         val setSelectionMethod: ()->Unit = {
