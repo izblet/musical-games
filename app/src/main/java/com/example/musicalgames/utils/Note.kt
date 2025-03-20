@@ -18,8 +18,10 @@ data class Note (val name: String, val frequency: Double, val midiCode: Int, val
         }
 
     }
-    constructor(note: DiatonicNote, octave: Int) :
-            this(note.toString()+octave)
+
+    constructor(note:ChromaticNote, octave: Octave): this(note, octave.toInt())
+    constructor(note: DiatonicNote, octave: Int) : this(note.toString()+octave)
+    constructor(note: ChromaticNote, octave: Int) : this(note.toString()+octave)
     constructor(frequency: Double) : this(midi(frequency))
     constructor(midi: Int) :
             this(MU.noteName(midi),

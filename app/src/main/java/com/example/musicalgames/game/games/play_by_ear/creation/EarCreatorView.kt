@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TableRow
@@ -14,28 +13,39 @@ import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.components.keyboard.KeyboardSelector
-import com.example.musicalgames.components.keyboard.KeyboardView
+import com.example.musicalgames.components.ui_components.EnumSpinner
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.utils.Octave
+import com.example.musicalgames.utils.Scale
 
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 
-    private var scrollLayout: ScrollView
     private var mainLayout: ConstraintLayout
+    private var scaleSpinnerValue: EnumSpinner.SpinnerEnumValue<Scale>
+    private var rootSpinnerValue: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private var maxIntervalSpinner: EnumSpinner.SpinnerEnumValue<Interval>
+    private var minSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private var maxSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private var minSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
+    private var maxSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_ear_custom_creator, this, true)
+        mainLayout = findViewById(R.id.main_layout)
 
-        mainLayout = getChildAt(0) as ConstraintLayout
-        scrollLayout = mainLayout.getChildAt(0) as ScrollView
-        val scaleSpinner: Spinner = findViewById(R.id.scaleSpinner)
-        val scaleOptions = arrayOf("Major", "Minor")
-        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, scaleOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        scaleSpinner.adapter = adapter
+        rootSpinnerValue = setEnumSpinner(R.id.root_spinner)
+        scaleSpinnerValue = setEnumSpinner(R.id.scaleSpinner)
+        maxIntervalSpinner = setEnumSpinner(R.id.max_interval_spinner)
+        minSoundNoteSpinner = setEnumSpinner(R.id.min_note_spinner)
+        maxSoundNoteSpinner = setEnumSpinner(R.id.max_note_spinner)
+        minSoundOctaveSpinner = setEnumSpinner(R.id.min_note_octave)
+        maxSoundOctaveSpinner =setEnumSpinner(R.id.max_octave_spinner)
+
+
         val saveButton = findViewById<Button>(R.id.saveButton)
         val isSelectionToggle = findViewById<ToggleButton>(R.id.isSelectionToggle)
 
@@ -69,12 +79,16 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         */
     }
 
+    private inline fun <reified T: Enum<T>> setEnumSpinner(spinerId: Int) : EnumSpinner.SpinnerEnumValue<T> {
+        return findViewById<EnumSpinner>(spinerId).setEnum<T>()
+    }
+
     private fun getFieldVal(id: Int): String {
-        return scrollLayout.findViewById<EditText>(id).text.toString()
+        return findViewById<EditText>(id).text.toString()
     }
 
     private fun getSpinnerVal(id: Int): String {
-        return scrollLayout.findViewById<Spinner>(id).selectedItem.toString()
+        return findViewById<Spinner>(id).selectedItem.toString()
     }
 
     private fun tryMakeLevel(): Level? {

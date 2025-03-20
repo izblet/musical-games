@@ -1,21 +1,22 @@
-package com.example.musicalgames.components.keyboard
+package com.example.musicalgames.components.ui_components
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import com.example.musicalgames.R
+import com.example.musicalgames.components.keyboard.KeyboardListener
+import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.utils.Note
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attributeSet, defStyle){
     private val minNote = Note("C4")
     private val maxNote = Note("B4")
-    private var notePreview :KeyboardView
+    private var notePreview : KeyboardView
     private var mainLayout : FrameLayout
-    private var inputDialog:KeyboardDialog
+    private var inputDialog: KeyboardDialog
 
     init {
         LayoutInflater.from(context).inflate(R.layout.keyboard_input, this, true)
