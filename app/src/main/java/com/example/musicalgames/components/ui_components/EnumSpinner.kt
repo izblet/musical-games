@@ -21,28 +21,37 @@ class EnumSpinner  @JvmOverloads constructor(
     inline fun <reified T: Enum<T>> setEnum() : SpinnerEnumValue<T> {
        return setEnum(enumValues<T>()[0])
     }
+
     inline fun <reified T: Enum<T>> setEnum(defaultVal : T) : SpinnerEnumValue<T> {
-        setCompleteOrThrow()
         val values = enumValues<T>()
+        return setEnum(values, defaultVal)
+
+    }
+
+    inline fun <reified T: Enum<T>> setEnum(values: Array<T>, defaultVal: T) :SpinnerEnumValue<T> {
+        setCompleteOrThrow()
         val adapter = ArrayAdapter(context,
             android.R.layout.simple_spinner_dropdown_item,
             values.map{it.toString()}
         ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-
         this.adapter=adapter
-        setSelection(defaultVal.ordinal)
+
+        val index = values.indexOf(defaultVal)
+        if(index == -1) {
+            throw IllegalArgumentException("default element is not it the set of options")
+        }
+
+        setSelection(index)
+
         return SpinnerEnumValue(values)
+
     }
+
     fun setCompleteOrThrow() {
         if(enumSet) {
             throw IllegalStateException("the values are already set")
         }
         enumSet = true
-    }
-
-    override fun onClick(dialog: DialogInterface?, which: Int) {
-        Log.d("spinner", "spinner clicked")
-        super.onClick(dialog, which)
     }
 
     inner class SpinnerEnumValue<T: Enum<T>>(private val values: Array<T>) {
