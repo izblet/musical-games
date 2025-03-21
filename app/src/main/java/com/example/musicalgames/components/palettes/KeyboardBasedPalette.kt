@@ -7,20 +7,18 @@ import android.graphics.RectF
 import android.view.MotionEvent
 import android.view.View
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
-import com.example.musicalgames.components.ComponentPaints.getBlackStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getBlackTextPaint
 import com.example.musicalgames.components.ComponentPaints.getDarkgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getLightgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteFillPaint
-import com.example.musicalgames.components.ComponentPaints.getWhiteStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteTextPaint
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.DiatonicNote
 import kotlin.math.floor
 
 abstract class KeyboardBasedPalette (context: Context) : View(context) {
-    private val whiteStrokePaint = getWhiteStrokePaint(context)
-    private val blackStrokePaint = getBlackStrokePaint(context)
+    //private val whiteStrokePaint = getWhiteStrokePaint(context)
+    //private val blackStrokePaint = getBlackStrokePaint(context)
     private val blackFillPaint = getBlackFillPaint(context)
     private val whiteFillPaint = getWhiteFillPaint(context)
     private val whiteTextPaint = getWhiteTextPaint(context)
@@ -30,7 +28,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
 
     private val grayedOutSet : MutableSet<ChromaticNote> = mutableSetOf()
 
-    private val padding = whiteStrokePaint.strokeWidth
+    private val margins = 4f
     private var keyWidth = 0
     private var keyHeight:Float = 0f
     private var bitmap: Bitmap? = null
@@ -62,7 +60,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
             val rect = getWhiteKeyRect(i)
             canvas.drawRect(rect, whiteFillPaint)
             canvas.drawText(keyLabel(note.chromaticNote), rect.centerX(), rect.bottom - keyHeight / 4, blackTextPaint)
-            canvas.drawRect(rect, blackStrokePaint)
+            //canvas.drawRect(rect, blackStrokePaint)
         }
 
         //Then we draw all chromatic notes
@@ -82,7 +80,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
                 rect.bottom - keyHeight / 4,
                 whiteTextPaint
             )
-            canvas.drawRect(rect, whiteStrokePaint)
+            //canvas.drawRect(rect, whiteStrokePaint)
         }
     }
 
@@ -95,10 +93,10 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     }
     private fun getWhiteKeyRect(index: Int): RectF {
         return RectF(
-            index * keyWidth + padding,
-            height - keyHeight*2 + padding,
-            (index + 1) * keyWidth - padding,
-            height.toFloat() - padding
+            index * keyWidth + margins,
+            height - keyHeight*2 + margins,
+            (index + 1) * keyWidth - margins,
+            height.toFloat() - margins
         )
     }
 
@@ -107,10 +105,10 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
         val xOffset = i + 0.5f
 
         return RectF(
-            xOffset * keyWidth + padding,
-            height - keyHeight * 2 + padding,
-            (xOffset + 1f) * keyWidth - padding,
-            height - keyHeight - padding
+            xOffset * keyWidth + margins,
+            height - keyHeight * 2 + margins,
+            (xOffset + 1f) * keyWidth - margins,
+            height - keyHeight - margins
         )
     }
 
