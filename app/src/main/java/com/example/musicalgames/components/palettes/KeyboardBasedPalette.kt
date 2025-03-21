@@ -59,7 +59,6 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
     abstract fun keyLabel(note: ChromaticNote) : String
 
     private fun drawKeys(canvas: Canvas) {
-        Log.d("keyboard", "redraw")
 
         //First we draw all diatonic notes
         for (i in 0..<DiatonicNote.valuesSize()) {
@@ -68,7 +67,6 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
             if(grayedOutSet.contains(note.chromaticNote)) {
                 canvas.drawRect(rect, lightgrayPaint)
             } else {
-                Log.d("keyboard","white note")
                 canvas.drawRect(rect, whiteFillPaint)
             }
             canvas.drawText(keyLabel(note.chromaticNote), rect.centerX(), rect.bottom - keyHeight / 4, blackTextPaint)
@@ -151,10 +149,8 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
         }
     }
     fun unsetGrayedOut(note: ChromaticNote) {
-        Log.d("keyboard", "unset gray")
         grayedOutSet.remove(note)
         if(canvas!=null) {
-            Log.d("keyboard","canvas is not null")
             drawKeys(canvas!!)
         }
     }

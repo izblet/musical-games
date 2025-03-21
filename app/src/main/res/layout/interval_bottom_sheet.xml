@@ -5,13 +5,11 @@
     android:background="?attr/colorPrimaryDark"
     android:paddingVertical="8dp"
     >
-    <!--
-    <com.example.musicalgames.components.interval_palette.IntervalPaletteView
+    <com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
         android:id="@+id/keyboard_view"
         android:layout_width="match_parent"
         android:layout_marginVertical="8dp"
         android:layout_height="150dp"/>
-        -->
     <Button
         style="@style/basicListButtonStyle"
         android:id="@+id/confirm_button"

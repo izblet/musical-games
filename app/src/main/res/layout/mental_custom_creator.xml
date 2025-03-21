@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TableRow
+        android:id="@+id/mode_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mode_label"
+            style="@style/customLabelStyle"
+            android:text="Mode:" />
+
+
+        <com.example.musicalgames.components.ui_components.EnumSpinner
+            style="@style/customInputElementStyle"
+            android:popupBackground="@drawable/item_bordered"
+            android:id="@+id/mode_spinner"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/starting_notes_row"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            style="@style/customLabelStyle"
+            android:text="Starting notes:"/>
+        <com.example.musicalgames.components.ui_components.KeyboardSelector
+            android:id="@+id/starting_notes_selector"
+            android:popupBackground="@drawable/item_bordered"
+            style="@style/customInputElementStyle"
+            />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/intervals_row"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            style="@style/customLabelStyle"
+            android:text="Intervals:" />
+
+        <com.example.musicalgames.components.ui_components.IntervalSelector
+            android:id="@+id/interval_selector"
+            style="@style/customInputElementStyle"
+            android:popupBackground="@drawable/item_bordered" />
+    </TableRow>
+
+</TableLayout>

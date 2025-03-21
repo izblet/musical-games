@@ -29,5 +29,12 @@ object MentalLevels {
 
 enum class Type {
     INTERVAL_NOTE,
-    NOTE_INTERVAL
+    NOTE_INTERVAL;
+    override fun toString() : String {
+        return if(this == INTERVAL_NOTE) {
+            "Interval to note"
+        } else {
+            "Note to interval"
+        }
+    }
 }
