@@ -1,4 +1,4 @@
-package com.example.musicalgames.components
+package com.example.musicalgames.components.palettes
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,6 +9,8 @@ import android.view.View
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
 import com.example.musicalgames.components.ComponentPaints.getBlackStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getBlackTextPaint
+import com.example.musicalgames.components.ComponentPaints.getDarkgrayFillPaint
+import com.example.musicalgames.components.ComponentPaints.getLightgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteTextPaint
@@ -23,6 +25,10 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     private val whiteFillPaint = getWhiteFillPaint(context)
     private val whiteTextPaint = getWhiteTextPaint(context)
     private val blackTextPaint = getBlackTextPaint(context)
+    private val darkgrayPaint = getDarkgrayFillPaint(context)
+    private val lightgrayPaint = getLightgrayFillPaint(context)
+
+    private val grayedOutSet : MutableSet<ChromaticNote> = mutableSetOf()
 
     private val padding = whiteStrokePaint.strokeWidth
     private var keyWidth = 0
@@ -50,6 +56,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     abstract fun keyLabel(note: ChromaticNote) : String
 
     private fun drawKeys(canvas: Canvas) {
+        //First we draw all diatonic notes
         for (i in 0..<DiatonicNote.valuesSize()) {
             val note = DiatonicNote.fromDegree(i)
             val rect = getWhiteKeyRect(i)
@@ -58,6 +65,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
             canvas.drawRect(rect, blackStrokePaint)
         }
 
+        //Then we draw all chromatic notes
         for (i in 0..<DiatonicNote.valuesSize()-1) {
             //we will check if we want to draw a note on the right of i
             //we do not check B
@@ -88,7 +96,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     private fun getWhiteKeyRect(index: Int): RectF {
         return RectF(
             index * keyWidth + padding,
-            height - keyHeight + padding,
+            height - keyHeight*2 + padding,
             (index + 1) * keyWidth - padding,
             height.toFloat() - padding
         )

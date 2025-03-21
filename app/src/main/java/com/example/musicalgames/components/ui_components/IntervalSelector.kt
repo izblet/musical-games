@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.FrameLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.components.interval_palette.IntervalPaletteView
+import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
 import com.example.musicalgames.components.keyboard.KeyboardListener
 import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.utils.ChromaticNote

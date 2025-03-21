@@ -1,4 +1,4 @@
-package com.example.musicalgames.components.interval_palette
+package com.example.musicalgames.components.palettes.interval_palette
 
 import com.example.musicalgames.utils.Interval
 

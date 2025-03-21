@@ -1,16 +1,14 @@
 package com.example.musicalgames.games.mental_intervals
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.musicalgames.components.interval_palette.IntervalPaletteListener
-import com.example.musicalgames.components.interval_palette.IntervalPaletteView
-import com.example.musicalgames.components.key_palette.KeyPaletteListener
-import com.example.musicalgames.components.key_palette.KeyPaletteView
+import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteListener
+import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
+import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
@@ -20,18 +18,15 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
 
     private var viewModel: MentalViewModel? = null
     private val notePaletteRatio :Float = 2f/3f
-    private val keyPaletteView: KeyPaletteView
-    private val intervalPaletteView: IntervalPaletteView
-    private val messageTextView: TextView
-    init {
-        keyPaletteView = KeyPaletteView(context)
-        intervalPaletteView = IntervalPaletteView(context)
-        messageTextView = TextView(context).apply {
-            textSize = 20f
-            gravity = Gravity.CENTER_HORIZONTAL
-            text = ""
-        }
+    private val keyPaletteView: KeyPaletteView = KeyPaletteView(context)
+    private val intervalPaletteView: IntervalPaletteView = IntervalPaletteView(context)
+    private val messageTextView: TextView = TextView(context).apply {
+        textSize = 20f
+        gravity = Gravity.CENTER_HORIZONTAL
+        text = ""
+    }
 
+    init {
         addView(messageTextView)
         addView(keyPaletteView)
         addView(intervalPaletteView)

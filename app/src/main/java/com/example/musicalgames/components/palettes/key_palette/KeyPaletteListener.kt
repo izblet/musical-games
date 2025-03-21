@@ -1,4 +1,4 @@
-package com.example.musicalgames.components.key_palette
+package com.example.musicalgames.components.palettes.key_palette
 
 import com.example.musicalgames.utils.ChromaticNote
 
