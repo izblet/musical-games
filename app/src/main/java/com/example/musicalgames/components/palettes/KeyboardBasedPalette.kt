@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
@@ -16,7 +18,7 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.DiatonicNote
 import kotlin.math.floor
 
-abstract class KeyboardBasedPalette (context: Context) : View(context) {
+abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {
     //private val whiteStrokePaint = getWhiteStrokePaint(context)
     //private val blackStrokePaint = getBlackStrokePaint(context)
     private val blackFillPaint = getBlackFillPaint(context)
@@ -29,7 +31,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     private val grayedOutSet : MutableSet<ChromaticNote> = mutableSetOf()
 
     private val margins = 4f
-    private var keyWidth = 0
+    private var keyWidth = 0f
     private var keyHeight:Float = 0f
     private var bitmap: Bitmap? = null
     private var canvas: Canvas? = null
@@ -39,12 +41,15 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        keyWidth = measuredWidth / DiatonicNote.valuesSize()
+        keyWidth = measuredWidth / (DiatonicNote.valuesSize().toFloat())
         keyHeight = (measuredHeight/2f)
         height = measuredHeight
-
-
         setMeasuredDimension(measuredWidth, measuredHeight)
+
+        if(keyHeight ==0f || keyWidth == 0f) {
+            return
+        }
+
         if (bitmap == null || bitmap?.width != measuredWidth || bitmap?.height != measuredHeight) {
             bitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
             canvas = Canvas(bitmap!!)
@@ -54,11 +59,18 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
     abstract fun keyLabel(note: ChromaticNote) : String
 
     private fun drawKeys(canvas: Canvas) {
+        Log.d("keyboard", "redraw")
+
         //First we draw all diatonic notes
         for (i in 0..<DiatonicNote.valuesSize()) {
             val note = DiatonicNote.fromDegree(i)
             val rect = getWhiteKeyRect(i)
-            canvas.drawRect(rect, whiteFillPaint)
+            if(grayedOutSet.contains(note.chromaticNote)) {
+                canvas.drawRect(rect, lightgrayPaint)
+            } else {
+                Log.d("keyboard","white note")
+                canvas.drawRect(rect, whiteFillPaint)
+            }
             canvas.drawText(keyLabel(note.chromaticNote), rect.centerX(), rect.bottom - keyHeight / 4, blackTextPaint)
             //canvas.drawRect(rect, blackStrokePaint)
         }
@@ -73,7 +85,12 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
                 continue
 
             val rect = getBlackKeyAboveRect(DiatonicNote.fromDegree(i))
-            canvas.drawRect(rect, blackFillPaint)
+            if(note in grayedOutSet) {
+                canvas.drawRect(rect, darkgrayPaint)
+            } else {
+                canvas.drawRect(rect, blackFillPaint)
+            }
+
             canvas.drawText(
                 keyLabel(note),
                 rect.centerX(),
@@ -82,6 +99,7 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
             )
             //canvas.drawRect(rect, whiteStrokePaint)
         }
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -111,8 +129,44 @@ abstract class KeyboardBasedPalette (context: Context) : View(context) {
             height - keyHeight - margins
         )
     }
+    fun setGrayedOut() {
+        for (note in ChromaticNote.entries) {
+            grayedOutSet.add(note)
+        }
+        if(canvas!=null) {
+            drawKeys(canvas!!)
+        }
+    }
+    fun setGrayedOutSet(set: Set<ChromaticNote>) {
+        grayedOutSet.clear()
+        grayedOutSet.addAll(set)
+        if(canvas!=null) {
+            drawKeys(canvas!!)
+        }
+    }
+    fun setGrayedOut(note: ChromaticNote) {
+        grayedOutSet.add(note)
+        if(canvas!=null) {
+            drawKeys(canvas!!)
+        }
+    }
+    fun unsetGrayedOut(note: ChromaticNote) {
+        Log.d("keyboard", "unset gray")
+        grayedOutSet.remove(note)
+        if(canvas!=null) {
+            Log.d("keyboard","canvas is not null")
+            drawKeys(canvas!!)
+        }
+    }
+    fun getGrayedOut() : Set<ChromaticNote> {
+        return grayedOutSet
+    }
+    fun isGrayedOut(note : ChromaticNote) : Boolean {
+        return (grayedOutSet.contains(note))
+    }
 
     abstract fun onClickAction(note : ChromaticNote)
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {

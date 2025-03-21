@@ -4,7 +4,7 @@
     android:padding="2dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<com.example.musicalgames.components.keyboard.KeyboardView
+<com.example.musicalgames.components.palettes.PreviewPalette
     android:id="@+id/preview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>

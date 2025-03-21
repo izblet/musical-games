@@ -6,53 +6,45 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.FrameLayout
 import com.example.musicalgames.R
-import com.example.musicalgames.components.keyboard.KeyboardListener
-import com.example.musicalgames.components.keyboard.KeyboardView
+import com.example.musicalgames.components.palettes.PreviewPalette
+import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Note
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attributeSet, defStyle){
-    private val minNote = Note("C4")
-    private val maxNote = Note("B4")
-    private var notePreview : KeyboardView
+    private var notePreview : PreviewPalette
     private var mainLayout : FrameLayout
     private var inputDialog: KeyboardDialog
 
     init {
         LayoutInflater.from(context).inflate(R.layout.keyboard_input, this, true)
         mainLayout = findViewById(R.id.main_layout)
-        notePreview = findViewById(R.id.preview)
-        notePreview.setRange(minNote, maxNote)
+        notePreview = mainLayout.findViewById(R.id.preview)
         notePreview.setGrayedOut()
-        notePreview.setOutlined(false)
-        notePreview.setDisabled(true)
 
         inputDialog = KeyboardDialog(context)
-        setOnClickListener {
-            inputDialog.show(notePreview.getGrayedOut())
+        notePreview.setOnClickAction {
+            _ -> inputDialog.show(notePreview.getGrayedOut())
         }
     }
     fun getSelected() : Set<ChromaticNote> {
         val chromaticSelected : MutableSet<ChromaticNote> = ChromaticNote.entries.toMutableSet()
-        val grayedOutMidi = notePreview.getGrayedOut()
-        for (note in grayedOutMidi) {
-            chromaticSelected.remove(Note(note).noteChromatic)
+        val grayedOut = notePreview.getGrayedOut()
+        for (note in grayedOut) {
+            chromaticSelected.remove(note)
         }
 
         return chromaticSelected
     }
 
-    inner class KeyboardDialog(context: Context) : BottomSheetDialog(context), KeyboardListener {
-        private var keyboardView: KeyboardView
-        private val minNote = Note("C4")
-        private val maxNote = Note("B4")
+    inner class KeyboardDialog(context: Context) : BottomSheetDialog(context), KeyPaletteListener {
+        private var keyboardView: KeyPaletteView
 
         init {
             setContentView(R.layout.keyboard_bottom_sheet)
             keyboardView = findViewById(R.id.keyboard_view)
                 ?: throw NullPointerException("keyboardView can't be found")
-            keyboardView.setRange(minNote, maxNote)
             keyboardView.setGrayedOut()
             keyboardView.registerListener(this)
             val confirmButton = findViewById<Button>(R.id.confirm_button)
@@ -61,28 +53,28 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
                 onConfirm()
             }
         }
-        fun show(grayedOutSet: Set<Int>) {
+        fun show(grayedOutSet: Set<ChromaticNote>) {
             keyboardView.setGrayedOutSet(grayedOutSet)
             show()
         }
 
-        override fun onKeyClicked(key: Note) {
-            if (keyboardView.isGrayedOut(key.midiCode)) {
-                keyboardView.unsetGrayedOut(key.midiCode)
-            } else {
-                keyboardView.setGrayedOut(key.midiCode)
-            }
-        }
-
         fun onConfirm() {
-            val notes: MutableSet<Int> = mutableSetOf()
-            for (i in minNote.midiCode until maxNote.midiCode + 1) {
+            val notes: MutableSet<ChromaticNote> = mutableSetOf()
+            for (i in ChromaticNote.entries) {
                 if (keyboardView.isGrayedOut(i)) {
                     notes.add(i)
                 }
             }
             notePreview.setGrayedOutSet(notes)
             dismiss()
+        }
+
+        override fun onClicked(note: ChromaticNote) {
+            if(keyboardView.isGrayedOut(note)) {
+                keyboardView.unsetGrayedOut(note)
+            } else {
+                keyboardView.setGrayedOut(note)
+            }
         }
     }
 }

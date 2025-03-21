@@ -1,10 +1,11 @@
 package com.example.musicalgames.components.palettes.key_palette
 
 import android.content.Context
+import android.util.AttributeSet
 import com.example.musicalgames.components.palettes.KeyboardBasedPalette
 import com.example.musicalgames.utils.ChromaticNote
 
-class KeyPaletteView(context: Context) : KeyboardBasedPalette(context) {
+class KeyPaletteView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : KeyboardBasedPalette(context, attributeSet, defStyle) {
     private var listener: KeyPaletteListener? = null
 
 

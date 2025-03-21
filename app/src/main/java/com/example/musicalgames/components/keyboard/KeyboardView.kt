@@ -7,7 +7,6 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
 import com.example.musicalgames.components.ComponentPaints.getBlackStrokePaint
 import com.example.musicalgames.components.ComponentPaints.getBlueFillPaint
