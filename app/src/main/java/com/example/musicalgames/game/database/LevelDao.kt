@@ -24,6 +24,9 @@ interface LevelDao {
     @Query("UPDATE levels SET isFavourite = :newVal WHERE id = :id")
     suspend fun changeFavourite(newVal: Boolean, id: Int)
 
+    @Query("DELETE FROM levels WHERE id = :id")
+    suspend fun deleteLevel(id: Int)
+
     suspend fun addAllLevelEntities(entities: List<LevelEntity>) {
         entities.forEach{level -> insert(level)}
     }
@@ -50,14 +53,17 @@ interface LevelDao {
         }
     }
 
-    suspend fun addLevel(level: TaggedLevel, game: Game, isCustom: Boolean) {
+    suspend fun addLevel(
+        level: TaggedLevel,
+        game: Game
+    ) {
         val levelEntity = LevelEntity(0,
             game.ordinal,
             level.name,
             level.description,
             MoshiUtil.adapters[game]!!.toJson(level.level),
-            level.isFavourite,
-            level.isCustom)
+            isCustom = level.isCustom,
+            isFavourite = level.isFavourite)
         insert(levelEntity)
     }
 

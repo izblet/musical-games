@@ -7,10 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +29,7 @@ import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 
-class FragmentNewModeChoose : Fragment() {
+class FragmentModeChoose : Fragment() {
 
     private var _binding: FragmentNewModeChooseBinding? = null
     private val binding get() = _binding!!
@@ -89,6 +88,13 @@ class FragmentNewModeChoose : Fragment() {
                launchLevel(level.level)
             }
 
+            override fun onBinClick(level: TaggedLevel) {
+               lifecycleScope.launch {
+                   levelDao.deleteLevel(level.levelId)
+                   refresh()
+               }
+            }
+
             override fun onFavouriteClick(level: TaggedLevel) {
                 lifecycleScope.launch {
                     levelDao.changeFavourite(!level.isFavourite, level.levelId)
@@ -99,7 +105,7 @@ class FragmentNewModeChoose : Fragment() {
 
         recyclerView = RecyclerView(requireContext()).apply {
             layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = this@FragmentNewModeChoose.adapter
+            this.adapter = this@FragmentModeChoose.adapter
         }
         content.addView(recyclerView)
 
@@ -117,6 +123,18 @@ class FragmentNewModeChoose : Fragment() {
             val level = tableCreate.getLevel()
             if (level != null) {
                 launchLevel(level)
+            }
+        }
+
+        viewCreate.findViewById<Button>(R.id.saveButton).setOnClickListener {
+            val level = tableCreate.getLevel()
+            if(level != null) {
+                val name = viewCreate.findViewById<EditText>(R.id.nameInput).text.toString()
+                val description = viewCreate.findViewById<EditText>(R.id.descriptionInput).text.toString()
+                val taggedLevel = TaggedLevel(viewModel.game!!, 0, name, description, level, isFavourite = false, isCustom = true)
+                lifecycleScope.launch {
+                    levelDao.addLevel(taggedLevel, viewModel.game!!)
+                }
             }
         }
 
@@ -208,54 +226,5 @@ class FragmentNewModeChoose : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onItemClickListener: OnItemClickListener) :
-        RecyclerView.Adapter<AdapterLevelList.LevelViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LevelViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
-            return LevelViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: LevelViewHolder, position: Int) {
-            val level = levelList[position]
-            holder.bind(level)
-            holder.itemView.setOnClickListener {
-                onItemClickListener.onItemClick(level)
-            }
-        }
-
-        fun setData(newList: List<TaggedLevel>) {
-            levelList = newList
-            notifyDataSetChanged()
-        }
-
-        override fun getItemCount(): Int {
-            return levelList.size
-        }
-
-        inner class LevelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
-            private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
-            private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
-            fun bind(level: TaggedLevel) {
-                iconImageView.setImageResource(
-                    if(level.isFavourite) {
-                        R.drawable.favourite_filled
-                    }
-                    else {
-                        R.drawable.favourite_countour
-                    }
-                )
-                iconImageView.setOnClickListener {
-                    onItemClickListener.onFavouriteClick(level)
-                }
-                nameTextView.text = level.name
-                descriptionTextView.text = level.description
-            }
-        }
-        interface OnItemClickListener {
-            fun onItemClick(level: TaggedLevel)
-            fun onFavouriteClick(level: TaggedLevel)
-        }
     }
 }
