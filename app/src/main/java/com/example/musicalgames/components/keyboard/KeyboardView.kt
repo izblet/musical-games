@@ -23,6 +23,7 @@ class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs
         grayedOutSet.addAll(grayedOut)
     }
     //TODO: this should be divided into more classes using inheritance (too much functionality that is not used)
+    //Breaking news: I have discovered that the classes are already there : keypalette and intervalpalette
 
     private val whiteKeyPaint = getWhiteFillPaint(context)
     private val blackKeyPaint = getBlackFillPaint(context)

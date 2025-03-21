@@ -19,7 +19,7 @@ enum class Interval {
     }
     companion object {
         fun fromSemitones(semitones: Int) : Interval {
-            return values()[semitones%13]
+            return entries[semitones%13]
         }
     }
 

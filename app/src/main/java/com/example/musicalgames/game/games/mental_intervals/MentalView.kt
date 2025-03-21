@@ -48,7 +48,7 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     }
 
     private fun redraw() {
-        if(viewModel!!.type == Type.INTERVAL_NOTE || viewModel!!.type == Type.DEGREE_NOTE)
+        if(viewModel!!.type == Type.INTERVAL_NOTE)
             intervalPaletteView.visibility = View.GONE
         else
             keyPaletteView.visibility = View.GONE
