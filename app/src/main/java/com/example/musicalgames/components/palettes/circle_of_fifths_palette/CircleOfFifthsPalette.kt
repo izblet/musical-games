@@ -18,6 +18,17 @@ class CircleOfFifthsPalette(context: Context, attrs: AttributeSet) : View(contex
         style = Paint.Style.FILL
         isAntiAlias = true
     }
+    private val axisPaintMinor = Paint().apply {
+        color = Color.LTGRAY
+        style = Paint.Style.FILL
+        isAntiAlias = true
+    }
+    private val axisPaintMajor = Paint().apply {
+        color = Color.LTGRAY
+        style = Paint.Style.FILL
+        isAntiAlias = true
+
+    }
 
     private val totalSegments = 12
     private val gapAngle = 3f  // gap between wedges (in degrees) - to be removed when drawing is fixed
@@ -48,25 +59,26 @@ class CircleOfFifthsPalette(context: Context, attrs: AttributeSet) : View(contex
         val gapAngleMinorInner = separationLengthToAngleLength(minorInnerRadius)
 
         val pieceAngleLength = 360f/totalSegments
-        val rotationOffset = pieceAngleLength/2f //so that C is on the top
+        val rotationOffset = -pieceAngleLength/2f //so that C is on the top
 
-        val segmentAngleLength = pieceAngleLength - gapAngle
 
         for (i in 0 until totalSegments) {
 
             val pieceOffset = rotationOffset + i*pieceAngleLength
+            var paint = if (i%3==0) axisPaintMajor else paintMajor
 
             drawSegment(canvas, centerX, centerY,
                 majorInnerRadius, outerRadius,
                 startAngleInner = pieceOffset + gapAngleMajorInner, startAngleOuter = pieceOffset + gapAngleOuter,
                 sweepAngleInner = pieceAngleLength - gapAngleMajorInner, sweepAngleOuter = pieceAngleLength - gapAngleOuter,
-                paintMajor)
+                paint)
 
+            paint = if (i%3==0) axisPaintMinor else paintMinor
             drawSegment(canvas, centerX, centerY,
                 minorInnerRadius, minorOuterRadius,
                 startAngleInner = pieceOffset + gapAngleMinorInner, startAngleOuter = pieceOffset + gapAngleMinorOuter,
                 sweepAngleInner = pieceAngleLength - gapAngleMinorInner, sweepAngleOuter = pieceAngleLength - gapAngleMinorOuter,
-                paintMinor)
+                paint)
         }
     }
 
