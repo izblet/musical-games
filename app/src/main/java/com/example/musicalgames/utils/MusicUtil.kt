@@ -188,4 +188,10 @@ object MusicUtil {
     fun getKeyIntervalFrom(pitch: String, num: Int): Int {
         return midi(pitch) +num
     }
+    fun addInterval(note: Note, interval: Interval) : Note {
+        return Note(note.midiCode + interval.getSemitones())
+    }
+    fun addInterval(note: ChromaticNote, interval: Interval) : ChromaticNote {
+        return addInterval(Note(note, Octave.o1), interval).noteChromatic
+    }
 }

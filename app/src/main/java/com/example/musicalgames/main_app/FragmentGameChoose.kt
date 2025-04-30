@@ -5,16 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
+import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CirclePaletteListener
 import com.example.musicalgames.databinding.FragmentFirstBinding
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.utils.ChromaticNote
 
-class FragmentGameChoose : Fragment() {
+class FragmentGameChoose : Fragment(), CirclePaletteListener {
+    //TODO: temporary this
+    override fun onKeyClicked(root: ChromaticNote, major: Boolean) {
+        Toast.makeText(requireContext(), root.toString(), Toast.LENGTH_SHORT).show()
+    }
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -27,6 +34,9 @@ class FragmentGameChoose : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        //TODO: this is temporary
+        binding.circleView.registerListener(this)
+
 
         val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(context)
