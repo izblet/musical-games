@@ -76,17 +76,13 @@ class MentalViewModel : ViewModel(), GameViewModel {
             disabled=true
             score++
             UI.onRightAnswer()
-            Handler(Looper.getMainLooper()).postDelayed({
-                generateQuestion()
-            }, 1000)
-
+            nextQuestion()
         } else {
             UI.onWrongAnswer(this.note!!)
-            Handler(Looper.getMainLooper()).postDelayed({
-                endListener?.onGameEnded()
-            }, 1000)
+            nextQuestion()
         }
     }
+
     fun select(interval: Interval) {
         if(disabled)
             return
@@ -95,14 +91,20 @@ class MentalViewModel : ViewModel(), GameViewModel {
             disabled=true
             score++
             UI.onRightAnswer()
-            Handler(Looper.getMainLooper()).postDelayed({
-                generateQuestion()
-            }, 1000)
+            nextQuestion()
         } else {
             UI.onWrongAnswer(this.interval!!)
-            Handler(Looper.getMainLooper()).postDelayed({
-                endListener?.onGameEnded()
-            }, 1000)
+            nextQuestion()
         }
+    }
+    private fun nextQuestion() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            generateQuestion()
+        }, 1000)
+    }
+    private fun endGame() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            endListener?.onGameEnded()
+        }, 1000)
     }
 }
