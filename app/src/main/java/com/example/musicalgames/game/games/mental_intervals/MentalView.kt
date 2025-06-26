@@ -5,6 +5,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteListener
 import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
@@ -24,6 +26,21 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
         textSize = 20f
         gravity = Gravity.CENTER_HORIZONTAL
         text = ""
+    }
+    private fun Interval.findColour(): Int = when(this) {
+       Interval.P1 -> 0xffffffff.toInt()
+        Interval.m2 -> 0xff00f5f8.toInt()
+        Interval.M2 -> 0xff04acff.toInt()
+        Interval.m3 -> 0xffe68400.toInt()
+        Interval.M3 -> 0xffffef00.toInt()
+        Interval.P4 -> 0xff76bbe7.toInt()
+        Interval.TT -> 0xffdcfb00.toInt()
+        Interval.P5 -> 0xff5ac400.toInt()
+        Interval.m6 -> 0xffd00051.toInt()
+        Interval.M6 -> 0xffb50c00.toInt()
+        Interval.m7 -> 0xffbd007f.toInt()
+        Interval.M7 -> 0xfffc00c2.toInt()
+        Interval.P8 -> 0xffffffff.toInt()
     }
 
     init {
@@ -85,7 +102,15 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     }
 
     override fun onNewProblem(interval: Interval, questionNote: ChromaticNote) {
-        messageTextView.text = "What is the note positioned at $interval from ${questionNote.tmpToString()}?"
+
+        messageTextView.text = buildSpannedString {
+            append("What is the note positioned at ")
+            color(interval.findColour()) {
+                append("$interval")
+            }
+            append(" from ${questionNote.tmpToString()}?")
+
+        }//"What is the note positioned at $interval from ${questionNote.tmpToString()}?"
     }
 
     override fun onNewProblem(questionNote: ChromaticNote, note: ChromaticNote) {
