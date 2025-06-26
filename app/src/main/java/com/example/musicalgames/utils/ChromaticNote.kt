@@ -3,6 +3,22 @@ package com.example.musicalgames.utils
 enum class ChromaticNote {
     C, CxD, D, DxE, E, F, FxG, G, GxA, A, AxB, B;
 
+    //the creation and handling of the note classes is abhorrent
+    //this is a temporary fix because I don't have time and I need it right now
+    //ideally this should be the behaviour of the default toString function, but we should also provide "toFlatString" and "toSharpString"
+    //consider adding something like "scalenote" that takes into account whether a note is flat or sharp
+    //in musicutil remove all functions that use strings and don't have to
+    //consider operating only on midicodes if you want to be fast (providing only conversions from everything to midicode and from midicode to everything)
+    fun isFlat() : Boolean {
+        return this in flatNotes
+    }
+    fun tmpToString(): String {
+        if (isFlat()) {
+           return this.name[2]+"b"
+        }
+        else return toString()
+    }
+
     override fun toString(): String {
         if(this.isDiatonic()) {
             return this.name
@@ -18,6 +34,7 @@ enum class ChromaticNote {
         return ChromaticNote.fromDegree(semitones%values.size)
     }
     companion object {
+        private val flatNotes = setOf(DxE,AxB,GxA)
         private val values = values()
         fun fromString(note: String) : ChromaticNote {
             if(note.contains("#")) {
