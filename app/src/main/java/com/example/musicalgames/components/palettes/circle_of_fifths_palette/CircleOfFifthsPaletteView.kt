@@ -2,11 +2,14 @@ package com.example.musicalgames.components.palettes.circle_of_fifths_palette
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import com.example.musicalgames.components.ComponentPaints
 import java.lang.Math.toDegrees
 import kotlin.math.*
-open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : View(context, attrs) {
+open class CircleOfFifthsPaletteView(
+    context: Context,
+    attrs: AttributeSet
+) : View(context, attrs) {
 
     private val paintMajor = Paint().apply {
         color = Color.WHITE
@@ -18,22 +21,22 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
         style = Paint.Style.FILL
         isAntiAlias = true
     }
-    private val axisPaintMinor = Paint().apply {
-        color = Color.LTGRAY
-        style = Paint.Style.FILL
-        isAntiAlias = true
-    }
-    private val axisPaintMajor = Paint().apply {
-        color = Color.LTGRAY
-        style = Paint.Style.FILL
-        isAntiAlias = true
+    private var _axisPaintMinor :Paint? = null
+    private val axisPaintMinor get() = _axisPaintMinor!!
+    private var _axisPaintMajor :Paint? = null
+    private val axisPaintMajor get() = _axisPaintMajor!!
 
+    init {
+        _axisPaintMinor = ComponentPaints.getBlueFillPaint(context)
+        _axisPaintMajor = ComponentPaints.getBlueFillPaint(context)
     }
+
+    private var hasMinor = false
 
     private val totalSegments = 12
     private val separation = 6f  // gap between major and minor rings
     private val middleHoleRadiusProportion = 0.2f
-    private val minorRadiusProportion = 0.65f
+    private var minorRadiusProportion = 0.5f
 
     private var radius = 0f
     private var centerX = 0f
@@ -47,6 +50,19 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
 
     private val pieceAngleLength = 360f/totalSegments
     private val rotationOffset = -pieceAngleLength/2f //so that C is on the top
+
+    fun hasMinor():Boolean {
+        return hasMinor
+    }
+    fun showMinor(show: Boolean) {
+        minorRadiusProportion = if(show) {
+            0.5f
+        } else {
+            0.65f
+        }
+        hasMinor=show
+        invalidate()
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -84,12 +100,21 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
                 sweepAngleInner = pieceAngleLength - gapAngleMajorInner, sweepAngleOuter = pieceAngleLength - gapAngleOuter,
                 paint)
 
-            paint = if (i%3==0) axisPaintMinor else paintMinor
-            drawSegment(canvas, centerX, centerY,
-                minorInnerRadius, minorOuterRadius,
-                startAngleInner = pieceOffset + gapAngleMinorInner, startAngleOuter = pieceOffset + gapAngleMinorOuter,
-                sweepAngleInner = pieceAngleLength - gapAngleMinorInner, sweepAngleOuter = pieceAngleLength - gapAngleMinorOuter,
-                paint)
+            if(hasMinor) {
+                paint = if (i % 3 == 0) axisPaintMinor else paintMinor
+                drawSegment(
+                    canvas,
+                    centerX,
+                    centerY,
+                    minorInnerRadius,
+                    minorOuterRadius,
+                    startAngleInner = pieceOffset + gapAngleMinorInner,
+                    startAngleOuter = pieceOffset + gapAngleMinorOuter,
+                    sweepAngleInner = pieceAngleLength - gapAngleMinorInner,
+                    sweepAngleOuter = pieceAngleLength - gapAngleMinorOuter,
+                    paint
+                )
+            }
         }
     }
 
@@ -131,7 +156,6 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
         val distY = y - centerY
         val lenSquared = distY*distY+distX*distX
         val radiusSquared = circleRadius*circleRadius
-        Log.d("circle", "distX: $distX, distY: $distY, pitagoras: $lenSquared, radius: $circleRadius, radiusSquared: $radiusSquared")
         return lenSquared <= radiusSquared
     }
 
@@ -155,7 +179,6 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
         //this returns the degree from the horizontal line to the vector (arctan (y/x)), values from -pi to pi
         //zero radians is at (1, 0), pi/2 is at (0,-1) (increases clockwise)
         val degreeFromVerticalRadians = atan2(vectorY,vectorX)
-        Log.d("circle", "radians is: $degreeFromVerticalRadians")
 
         //we need to make it so that the angle varies from 0 to 360
         var angle = toDegrees(degreeFromVerticalRadians.toDouble())
@@ -163,7 +186,6 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
             angle += 360
         }
 
-        Log.d("circle", "degrees before rotation: $angle")
         //we have to rotate to account for the fact that zero is at rotationOffset
         //i have checked, the modulo is supposed to work as expected
         angle = (360 + angle - rotationOffset) % 360
@@ -171,12 +193,10 @@ open class CircleOfFifthsPaletteView(context: Context, attrs: AttributeSet) : Vi
         //we have to rotate everything 90 degrees to the left, because we want the distance from the vertical line
         angle = (360 + angle + 90) % 360
 
-        Log.d("circle", "degrees after rotation: $angle")
 
         val segmentSize = 360/12
 
         val index = floor(angle/segmentSize).toInt()
-        Log.d("circle", "index: $index")
 
         return index
     }

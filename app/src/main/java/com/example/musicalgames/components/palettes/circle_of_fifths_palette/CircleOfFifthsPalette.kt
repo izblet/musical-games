@@ -8,7 +8,10 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.MusicUtil
 
-class CircleOfFifthsPalette(context: Context, attr: AttributeSet) : CircleOfFifthsPaletteView(context, attr) {
+class CircleOfFifthsPalette(context: Context, attr: AttributeSet) : CircleOfFifthsPaletteView(
+    context,
+    attr
+) {
     private var listener : CirclePaletteListener? = null
     companion object {
         val majorList = generateCircle(ChromaticNote.C)
@@ -37,7 +40,7 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet) : CircleOfFift
             val index = getClickRadialIndex(event.x, event.y)
             listener?.onKeyClicked(majorList[index], major= true)
 
-        } else if(isClickMinor(event.x, event.y)) {
+        } else if(isClickMinor(event.x, event.y)&&hasMinor()) {
             val index = getClickRadialIndex(event.x, event.y)
             listener?.onKeyClicked(minorList[index], major= false)
         } else {
