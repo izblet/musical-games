@@ -32,22 +32,28 @@ class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManag
         }
     }
 
-    override fun play(frequency: Double) {
+    override fun playNote(frequency: Double, listener: SoundPlayerListener?) {
         TODO("Not implemented")
     }
 
-    override fun play(note: String) {
+    override fun playNote(note: String, listener: SoundPlayerListener?) {
         play(MusicUtil.midi(note))
+        listener?.onPlaybackFinished()
     }
     override suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener) {
         for(note in sequence) {
             play(note.midiCode)
             delay(700)
         }
-        listener.onSoundFinished()
+        listener.onPlaybackFinished()
     }
 
-    override fun play(midicode: Int) {
+    override fun playNote(midicode: Int, listener: SoundPlayerListener?) {
+        play(midicode)
+        listener?.onPlaybackFinished()
+    }
+
+    private fun play(midicode: Int) {
         val resId = soundMap[midicode]
         if (resId != null) {
             try {

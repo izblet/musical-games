@@ -40,7 +40,7 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
         buffer = ShortArray(bufferSizeInShorts)
     }
 
-    override fun play(frequency: Double) {
+    override fun playNote(frequency: Double, listener: SoundPlayerListener?) {
         stopSound()
 
         audioTrack = AudioTrack(
@@ -71,12 +71,12 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
         return factor
     }
 
-    override fun play(note: String) {
-        play(MusicUtil.frequency(note))
+    override fun playNote(note: String, listener: SoundPlayerListener?) {
+        playNote(MusicUtil.frequency(note), null)
     }
 
-    override fun play(midiCode: Int) {
-        play(MusicUtil.frequency(midiCode))
+    override fun playNote(midiCode: Int, listener: SoundPlayerListener?) {
+        playNote(MusicUtil.frequency(midiCode), null)
     }
 
     fun stopSound() {

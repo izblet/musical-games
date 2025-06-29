@@ -19,6 +19,7 @@ data class PlayEarLevel (
         require(minPitchDisplayed<maxPitchDisplayed) { "minimal pitch has to be smaller than maximal pitch: $minPitchDisplayed >= $maxPitchDisplayed"}
         require(isIntervalPossible()) { "some notes cannot be reached from others with the provided interval"}
         require(keyList.isNotEmpty()) { "The key list is empty" }
+        require(isRootDisplayed()) { "The root is not visible on the screen"}
     }
     private fun isIntervalPossible() : Boolean {
         //you have to be able to reach the note above and the note below, doesn't make sense otherwise
@@ -27,5 +28,20 @@ data class PlayEarLevel (
             (a,b) -> a + maxSemitoneInterval >= b
         }
        return isPossible
+    }
+    private fun isRootDisplayed(): Boolean {
+        for(note in minPitchDisplayed..maxPitchDisplayed) {
+            if(Note(note).noteChromatic == root)
+                return true
+        }
+        return false
+    }
+
+    fun getDisplayedRoot():Note? {
+        for(note in minPitchDisplayed..maxPitchDisplayed) {
+            if(Note(note).noteChromatic == root)
+                return Note(note)
+        }
+        return null
     }
 }

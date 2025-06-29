@@ -1,8 +1,6 @@
 package com.example.musicalgames.games.play_by_ear
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
@@ -12,21 +10,11 @@ import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
-import com.example.musicalgames.wrappers.sound_playing.SoundPlayerListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.MusicUtil.noteName
 
 class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, EarViewmodelListener {
 
@@ -53,10 +41,11 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
                 viewModel!!.playRoot()
             }
         }
+        //TODO: think about what to do with this button, disabled for now
         nextButton = Button(context).apply {
             text = "Next Problem"
             setOnClickListener{
-                if(viewModel!!.isProblemSolved()) {
+                if(viewModel!!.problemFinished()) {
                     viewModel!!.newProblem()
                 }
             }
@@ -76,6 +65,8 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         this.viewModel!!.setPlayer(soundPlayer)
         this.viewModel!!.registerListener(this)
         keyboardView.setRange(Note(level!!.minPitchDisplayed), Note(level!!.maxPitchDisplayed))
+        if(level!!.getDisplayedRoot()!=null)
+            keyboardView.setColoured(level!!.getDisplayedRoot()!!)
     }
 
 
@@ -108,7 +99,8 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         messageTextView.text="Good!"
     }
     override fun onWrongAnswer() {
-        endListener?.onGameEnded()
+        messageTextView.text="Wrong! The correct note was ${viewModel!!.getCorrectNote()}."
+        //endListener?.onGameEnded()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

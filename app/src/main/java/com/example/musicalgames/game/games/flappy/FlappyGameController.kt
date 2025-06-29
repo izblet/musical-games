@@ -32,18 +32,18 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     }
     override fun startGame(owner: LifecycleOwner) {
-        soundPlayer!!.play(viewModel!!.minRange)
+        soundPlayer!!.playNote(viewModel!!.minRange, null)
         pitchRecogniser!!.start()
         val handler = Handler(Looper.getMainLooper())
         //TODO: this is of course temporary - played sounds should be a part of the level class or sth
         //  maybe a field called "resolution" that the boundaries resolve to
         //  or just simply the root
         handler.postDelayed(
-            {soundPlayer!!.play(viewModel!!.maxRange)},
+            {soundPlayer!!.playNote(viewModel!!.maxRange, null)},
             1000
         )
         handler.postDelayed(
-            {soundPlayer!!.play(viewModel!!.root)},
+            {soundPlayer!!.playNote(viewModel!!.root, null)},
             2000
         )
         handler.postDelayed({
