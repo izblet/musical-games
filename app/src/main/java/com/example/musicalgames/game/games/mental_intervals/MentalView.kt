@@ -38,7 +38,7 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
         Interval.P5 -> 0xff5ac400.toInt()
         Interval.m6 -> 0xffd00051.toInt()
         Interval.M6 -> 0xffb50c00.toInt()
-        Interval.m7 -> 0xffbd007f.toInt()
+        Interval.m7 -> 0xff814eae.toInt()
         Interval.M7 -> 0xfffc00c2.toInt()
         Interval.P8 -> 0xffffffff.toInt()
     }
