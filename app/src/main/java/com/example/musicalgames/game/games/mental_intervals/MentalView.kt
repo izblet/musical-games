@@ -104,17 +104,16 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     override fun onNewProblem(interval: Interval, questionNote: ChromaticNote) {
 
         messageTextView.text = buildSpannedString {
-            append("What is the note positioned at ")
+            append("${questionNote.tmpToString()} + ")
             color(interval.findColour()) {
                 append("$interval")
             }
-            append(" from ${questionNote.tmpToString()}?")
 
         }//"What is the note positioned at $interval from ${questionNote.tmpToString()}?"
     }
 
     override fun onNewProblem(questionNote: ChromaticNote, note: ChromaticNote) {
-       messageTextView.text = "What is the interval between ${questionNote.tmpToString()} and ${note.tmpToString()}"
+       messageTextView.text = "${questionNote.tmpToString()} + ? = ${note.tmpToString()}"
     }
 
     override fun onRightAnswer() {
