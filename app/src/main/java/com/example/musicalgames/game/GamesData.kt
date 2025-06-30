@@ -40,7 +40,7 @@ object GameMap {
             ),
         Game.MENTAL_INTERVALS to
             GameInfo(4,
-                "Mental Practice",
+                "Note Arithmetic",
                 "Practice relationships between notes",
                 R.drawable.mental,
                 MentalGameFactory()
@@ -48,8 +48,8 @@ object GameMap {
         Game.CIRCLE to
         GameInfo(5,
             "Circle of Fifths",
-            "",
-            R.drawable.mental,
+            "Learn the positions of scales on the circle of fifths",
+            R.drawable.clock_icon,
             CircleGameFactory()
         )
     )

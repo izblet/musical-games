@@ -17,11 +17,7 @@ import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.utils.ChromaticNote
 
-class FragmentGameChoose : Fragment(), CirclePaletteListener {
-    //TODO: temporary this
-    override fun onKeyClicked(root: ChromaticNote, major: Boolean) {
-        Toast.makeText(requireContext(), root.toString(), Toast.LENGTH_SHORT).show()
-    }
+class FragmentGameChoose : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -34,8 +30,6 @@ class FragmentGameChoose : Fragment(), CirclePaletteListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
-        //TODO: this is temporary
-        binding.circleView.registerListener(this)
 
 
         val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)

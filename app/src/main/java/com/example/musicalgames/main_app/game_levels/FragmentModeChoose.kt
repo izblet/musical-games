@@ -205,6 +205,7 @@ class FragmentModeChoose : Fragment() {
         lifecycleScope.launch {
             baseList = levelDao.getLevels(viewModel.game!!, false)
             //TODO: this is of course temporary, but maybe consider putting the level retrieval back into this function
+            //nvm, just realised that all levels have to be in the database for <3 to work
             if(viewModel.game!! ==Game.CIRCLE) {
                 baseList = CircleGameFactory().getLevels(GamePackage.PREDEFINED, requireContext())
             }
