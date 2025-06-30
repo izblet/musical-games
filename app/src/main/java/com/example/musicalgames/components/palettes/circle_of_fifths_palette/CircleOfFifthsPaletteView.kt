@@ -8,7 +8,7 @@ import java.lang.Math.toDegrees
 import kotlin.math.*
 open class CircleOfFifthsPaletteView(
     context: Context,
-    attrs: AttributeSet
+    attrs: AttributeSet?
 ) : View(context, attrs) {
 
     private val paintMajor = Paint().apply {

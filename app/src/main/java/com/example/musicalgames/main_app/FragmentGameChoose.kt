@@ -48,7 +48,8 @@ class FragmentGameChoose : Fragment(), CirclePaletteListener {
         val gameList = listOf(
             Game.FLAPPY,
             Game.PLAY_BY_EAR,
-            Game.MENTAL_INTERVALS
+            Game.MENTAL_INTERVALS,
+            Game.CIRCLE
         )
 
         val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{

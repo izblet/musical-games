@@ -8,7 +8,7 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.MusicUtil
 
-class CircleOfFifthsPalette(context: Context, attr: AttributeSet) : CircleOfFifthsPaletteView(
+class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFifthsPaletteView(
     context,
     attr
 ) {

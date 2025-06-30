@@ -2,6 +2,7 @@ package com.example.musicalgames.games
 
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.games.circle_of_fifths.creation.CircleGameFactory
 import com.example.musicalgames.game.games.flappy.creation.FlappyGameFactory
 import com.example.musicalgames.game.games.mental_intervals.creation.MentalGameFactory
 import com.example.musicalgames.game.games.play_by_ear.creation.EarGameFactory
@@ -9,6 +10,7 @@ enum class Game {
     FLAPPY,
     PLAY_BY_EAR,
     MENTAL_INTERVALS,
+    CIRCLE
 }
 
 data class GameInfo (
@@ -42,7 +44,14 @@ object GameMap {
                 "Practice relationships between notes",
                 R.drawable.mental,
                 MentalGameFactory()
-            )
+            ),
+        Game.CIRCLE to
+        GameInfo(5,
+            "Circle of Fifths",
+            "",
+            R.drawable.mental,
+            CircleGameFactory()
+        )
     )
 }
 

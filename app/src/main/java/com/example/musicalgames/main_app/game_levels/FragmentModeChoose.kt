@@ -24,8 +24,11 @@ import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.games.circle_of_fifths.creation.CircleGameFactory
+import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 
@@ -201,6 +204,10 @@ class FragmentModeChoose : Fragment() {
         adapter.setData(baseList)
         lifecycleScope.launch {
             baseList = levelDao.getLevels(viewModel.game!!, false)
+            //TODO: this is of course temporary, but maybe consider putting the level retrieval back into this function
+            if(viewModel.game!! ==Game.CIRCLE) {
+                baseList = CircleGameFactory().getLevels(GamePackage.PREDEFINED, requireContext())
+            }
             if(clickedButton==binding.levelsButton)
                 adapter.setData(baseList)
         }
