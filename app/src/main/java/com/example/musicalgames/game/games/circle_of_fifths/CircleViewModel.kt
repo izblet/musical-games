@@ -95,7 +95,7 @@ class CircleViewModel(): ViewModel(), GameViewModel, GameController {
 
     private fun delayAndNext() {
         viewModelScope.launch {
-            delay(3000)
+            delay(1000)
             update()
         }
     }

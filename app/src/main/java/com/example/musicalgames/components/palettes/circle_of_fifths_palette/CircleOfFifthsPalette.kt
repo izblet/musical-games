@@ -57,6 +57,13 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
         }
     }
 
+    fun setMajorHighlighted(list: List<ChromaticNote>) {
+        val indices: MutableList<Int> = mutableListOf()
+        for(note in list) {
+            indices.add(majorList.indexOf(note))
+        }
+        setMajorHighlightedIndices(indices)
+    }
     fun registerListener(listener: CirclePaletteListener) {
         this.listener = listener
     }

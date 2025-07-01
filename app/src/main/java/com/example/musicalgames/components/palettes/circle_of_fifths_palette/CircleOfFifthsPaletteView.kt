@@ -21,15 +21,12 @@ open class CircleOfFifthsPaletteView(
         style = Paint.Style.FILL
         isAntiAlias = true
     }
-    private var _axisPaintMinor :Paint? = null
-    private val axisPaintMinor get() = _axisPaintMinor!!
-    private var _axisPaintMajor :Paint? = null
-    private val axisPaintMajor get() = _axisPaintMajor!!
+    private val axisPaintMinor :Paint = ComponentPaints.getLightgrayFillPaint(context)
+    private val axisPaintMajor : Paint = ComponentPaints.getLightgrayFillPaint(context)
+    private val highlightPaint =ComponentPaints.getBlueFillPaint(context)
 
-    init {
-        _axisPaintMinor = ComponentPaints.getBlueFillPaint(context)
-        _axisPaintMajor = ComponentPaints.getBlueFillPaint(context)
-    }
+    private var highlightedIndicesMajor:List<Int> = listOf()
+    private var highlightedIndicesMinor: List<Int> = listOf()
 
     private var hasMinor = false
 
@@ -49,7 +46,11 @@ open class CircleOfFifthsPaletteView(
 
 
     private val pieceAngleLength = 360f/totalSegments
-    private val rotationOffset = -pieceAngleLength/2f //so that C is on the top
+    private val rotationOffset = -90f-pieceAngleLength/2f //so that C is on the top
+
+    fun setMajorHighlightedIndices(list:List<Int>) {
+       highlightedIndicesMajor = list
+    }
 
     fun hasMinor():Boolean {
         return hasMinor
@@ -92,7 +93,7 @@ open class CircleOfFifthsPaletteView(
         for (i in 0 until totalSegments) {
 
             val pieceOffset = rotationOffset + i*pieceAngleLength
-            var paint = if (i%3==0) axisPaintMajor else paintMajor
+            var paint = if (i in highlightedIndicesMajor) highlightPaint else if (i%3==0) axisPaintMajor else paintMajor
 
             drawSegment(canvas, centerX, centerY,
                 majorInnerRadius, majorOuterRadius,
@@ -101,7 +102,7 @@ open class CircleOfFifthsPaletteView(
                 paint)
 
             if(hasMinor) {
-                paint = if (i % 3 == 0) axisPaintMinor else paintMinor
+                paint = if (i in highlightedIndicesMinor)highlightPaint else if (i % 3 == 0) axisPaintMinor else paintMinor
                 drawSegment(
                     canvas,
                     centerX,
@@ -189,10 +190,6 @@ open class CircleOfFifthsPaletteView(
         //we have to rotate to account for the fact that zero is at rotationOffset
         //i have checked, the modulo is supposed to work as expected
         angle = (360 + angle - rotationOffset) % 360
-
-        //we have to rotate everything 90 degrees to the left, because we want the distance from the vertical line
-        angle = (360 + angle + 90) % 360
-
 
         val segmentSize = 360/12
 

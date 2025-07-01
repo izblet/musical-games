@@ -32,7 +32,9 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
             addView(textView)
 
         if(state.highlightedNote==null) {
-
+            circle.setMajorHighlighted(listOf())
+        } else {
+            circle.setMajorHighlighted(listOf(state.highlightedNote))
         }
 
         if(state.screenCommandMessage!= null) {
