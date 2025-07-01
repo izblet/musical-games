@@ -63,7 +63,7 @@ class FragmentModeChoose : Fragment() {
         _binding = FragmentNewModeChooseBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
-        gameFactory = gameInfo.gameFactory
+        gameFactory = gameInfo.gameFactoryProvider()
 
         binding.favouritesButton.setOnClickListener{
             updateButtons(binding.favouritesButton)

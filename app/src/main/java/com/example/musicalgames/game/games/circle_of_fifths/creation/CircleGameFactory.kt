@@ -4,23 +4,24 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game.game_core.GameFactory
-import com.example.musicalgames.game.games.circle_of_fifths.CircleGameController
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game.games.circle_of_fifths.CircleView
 import com.example.musicalgames.game.games.circle_of_fifths.CircleViewModel
+import com.example.musicalgames.game.games.circle_of_fifths.GameLogicCircle
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.games.mental_intervals.MentalViewModel
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 class CircleGameFactory : GameFactory {
+
     override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
         val level1 = CircleLevel(positionToName = true, minor=false, major=true)
         val tagged1 = TaggedLevel(Game.CIRCLE,1,"Major - position to name", "", level1, isFavourite = false, isCustom = false)
@@ -33,8 +34,14 @@ class CircleGameFactory : GameFactory {
         return arrayOf()
     }
 
-    override fun getViewModelType(): Class<out ViewModel> {
-        return CircleViewModel::class.java
+    override fun makeViewModel(level: Level, owner: ViewModelStoreOwner) : GameViewModel {
+        if(level !is CircleLevel) {
+            throw IllegalArgumentException("level is not of type CircleLevel")
+        }
+        val gameLogic = GameLogicCircle(level)
+        val viewModel = ViewModelProvider(owner)[CircleViewModel::class.java]
+        viewModel.setLogic(gameLogic)
+        return viewModel
     }
 
     override fun getCustomCreator(
@@ -52,12 +59,9 @@ class CircleGameFactory : GameFactory {
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[CircleViewModel::class.java]
-        val gameView = CircleView(context)
-        gameView.setViewModel(viewModel)
+        val gameView = CircleView(context, viewModel)
         gameContainer.addView(gameView)
 
-        val gameController = CircleGameController()
-        gameController.setViewModel(viewModel)
-        return gameController
+        return viewModel
     }
 }

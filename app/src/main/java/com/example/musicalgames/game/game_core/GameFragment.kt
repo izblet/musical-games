@@ -41,7 +41,7 @@ class GameFragment : Fragment(), GameListener {
         this.gameType = Game.valueOf(gameType)
 
         val gameContainer: ViewGroup = requireView().findViewById(R.id.game_container)
-        val gameFactory = GameMap.gameInfos[this.gameType]!!.gameFactory
+        val gameFactory = GameMap.gameInfos[this.gameType]!!.gameFactoryProvider()
 
         permissionList = gameFactory.getPermissions()
         gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, this)

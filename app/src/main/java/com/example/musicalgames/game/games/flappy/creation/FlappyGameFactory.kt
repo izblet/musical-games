@@ -5,13 +5,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyLevels
@@ -29,8 +30,10 @@ class FlappyGameFactory : GameFactory {
         return arrayOf(Manifest.permission.RECORD_AUDIO)
     }
 
-    override fun getViewModelType(): Class<out ViewModel> {
-        return FlappyViewModel::class.java
+    override fun makeViewModel(level: Level, owner: ViewModelStoreOwner): GameViewModel {
+        val viewModel = ViewModelProvider(owner)[FlappyViewModel::class.java]
+        viewModel.setLevel(level)
+        return viewModel
     }
 
 

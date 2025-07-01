@@ -4,13 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
@@ -28,8 +29,10 @@ class EarGameFactory : GameFactory {
         return arrayOf()
     }
 
-    override fun getViewModelType(): Class<out ViewModel> {
-        return EarViewModel::class.java
+    override fun makeViewModel(level: Level, owner: ViewModelStoreOwner): GameViewModel {
+        val viewModel = ViewModelProvider(owner)[EarViewModel::class.java]
+        viewModel.setLevel(level)
+        return viewModel
     }
 
 

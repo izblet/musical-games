@@ -9,7 +9,7 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
-
+//oh noo, why does it hold a reference to the viewwwww
 class MentalController(private val view: MentalView) : GameController, KeyPaletteListener,
     IntervalPaletteListener {
 
