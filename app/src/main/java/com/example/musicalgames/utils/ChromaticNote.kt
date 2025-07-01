@@ -12,11 +12,26 @@ enum class ChromaticNote {
     fun isFlat() : Boolean {
         return this in flatNotes
     }
+    fun sharpPreferenceName() : String {
+        if(isDiatonic()) {
+            return this.name
+        } else {
+            return this.name[0] + "#"
+        }
+    }
+    fun flatPreferenceName() : String {
+        if(isDiatonic()) {
+            return this.name
+        } else {
+            return this.name[2] + "b"
+        }
+    }
+
     fun tmpToString(): String {
         if (isFlat()) {
-           return this.name[2]+"b"
+           return flatPreferenceName()
         }
-        else return toString()
+        else return sharpPreferenceName()
     }
 
     override fun toString(): String {

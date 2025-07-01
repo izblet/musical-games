@@ -7,11 +7,13 @@ import android.view.MotionEvent
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.MusicUtil
+import java.util.Locale
 
 class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFifthsPaletteView(
     context,
     attr
 ) {
+    //you should actually make a circle of fifths class in the same way that you have notes, intervals, etc
     private var listener : CirclePaletteListener? = null
     companion object {
         val majorList = generateCircle(ChromaticNote.C)
@@ -25,6 +27,33 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
                 note = MusicUtil.addInterval(note, Interval.P5)
             }
             return list
+        }
+        fun noteName(chromaticNote: ChromaticNote, major: Boolean) : String {
+            if(major) {
+                val index = majorList.indexOf(chromaticNote)
+                return if(chromaticNote.isDiatonic())
+                    chromaticNote.toString()
+                else if (index>=8) {
+                    chromaticNote.flatPreferenceName()
+                } else {
+                    "${chromaticNote.flatPreferenceName()}/${chromaticNote.sharpPreferenceName()}"
+                }
+            }
+
+
+            val index = minorList.indexOf(chromaticNote)
+            val noteName: String
+           if(chromaticNote.isDiatonic()) {
+               noteName = chromaticNote.toString()
+           } else if( index<=5){
+               noteName = chromaticNote.sharpPreferenceName()
+           } else if(index == 6) {
+               noteName = "${chromaticNote.flatPreferenceName()}/${chromaticNote.sharpPreferenceName()}"
+           } else {
+               noteName = chromaticNote.flatPreferenceName()
+           }
+
+           return noteName.lowercase(Locale.getDefault())
         }
     }
 

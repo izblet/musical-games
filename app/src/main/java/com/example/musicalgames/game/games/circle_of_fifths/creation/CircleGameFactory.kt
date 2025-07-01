@@ -59,7 +59,7 @@ class CircleGameFactory : GameFactory {
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[CircleViewModel::class.java]
-        val gameView = CircleView(context, viewModel)
+        val gameView = CircleView(context, viewModel, activity)
         gameContainer.addView(gameView)
 
         return viewModel
