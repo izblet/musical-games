@@ -12,6 +12,7 @@ class GameActivity : AppCompatActivity() {
     companion object {
         const val ARG_GAME_TYPE = "game_type"
         const val ARG_LEVEL = "level"
+        const val ARG_GAMEPlAY_INFO = "gameplay_info"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

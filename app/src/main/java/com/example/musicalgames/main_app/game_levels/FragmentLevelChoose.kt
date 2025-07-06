@@ -3,6 +3,7 @@ package com.example.musicalgames.main_app.game_levels
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +32,9 @@ import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
+import java.io.Console
 
-class FragmentModeChoose : Fragment() {
+class FragmentLevelChoose : Fragment() {
 
     private var _binding: FragmentNewModeChooseBinding? = null
     private val binding get() = _binding!!
@@ -108,7 +110,7 @@ class FragmentModeChoose : Fragment() {
 
         recyclerView = RecyclerView(requireContext()).apply {
             layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = this@FragmentModeChoose.adapter
+            this.adapter = this@FragmentLevelChoose.adapter
         }
         content.addView(recyclerView)
 
@@ -157,11 +159,9 @@ class FragmentModeChoose : Fragment() {
     }
 
     private fun launchLevel(level: Level) {
-        val intent = Intent(requireActivity(), GameActivity::class.java).apply {
-            putExtra(GameActivity.ARG_LEVEL, level)
-            putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
-        }
-        startActivity(intent)
+        Log.d("level choose", "launchlevel")
+        viewModel.chooseLevel(level)
+
     }
 
     private fun updateButtons(newClicked : ImageButton) {

@@ -1,6 +1,8 @@
 package com.example.musicalgames.main_app
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
+import com.example.musicalgames.game_activity.GameActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
@@ -40,14 +43,42 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navigateToLevels.collect {
-                    _-> if(viewModel.game!= null) {
+                viewModel.navigateToLevels.collect { _ ->
+                    if (viewModel.game != null) {
                         navController.navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
-                    } else{
-                            throw IllegalStateException("The game is null, cannot navigate to levels")
+                    } else {
+                        throw IllegalStateException("The game is null, cannot navigate to levels")
                     }
                 }
             }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Log.d("level choose", "in the activity")
+                viewModel.navigateToGamePlay.collect { _ ->
+                    if (viewModel.level != null) {
+                        navController.navigate(R.id.action_fragmentNewModeChoose_to_fragmentLevelOptions)
+                    } else {
+                        throw IllegalStateException("The level is null, cannot navigate to start game")
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch{
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.startGame.collect { _ ->
+
+                    if (viewModel.gameplay != null) {
+                        val intent = Intent(this@MainActivity, GameActivity::class.java).apply {
+                            putExtra(GameActivity.ARG_LEVEL, viewModel.level)
+                            putExtra(GameActivity.ARG_GAMEPlAY_INFO, viewModel.gameplay)
+                            putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+
         }
 
         appBarConfiguration = AppBarConfiguration(navController.graph)

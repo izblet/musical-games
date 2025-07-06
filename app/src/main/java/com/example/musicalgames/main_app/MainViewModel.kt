@@ -3,7 +3,7 @@ package com.example.musicalgames.main_app
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicalgames.game.game_core.GameplayOptions
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +16,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     @Volatile
     var level: Level? = null
     @Volatile
-    var gameplay: GameplayOptions? = null
+    var gameplay: GamePlayInstance? = null
 
     val navigateToLevels = MutableSharedFlow<Unit>()
     val navigateToGamePlay = MutableSharedFlow<Unit>()
@@ -32,7 +32,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch { navigateToGamePlay.emit(Unit) }
     }
 
-    fun playLevel(gameplay: GameplayOptions) {
+    fun playLevel(gameplay: GamePlayInstance) {
         this.gameplay = gameplay
         viewModelScope.launch {  startGame.emit(Unit) }
     }

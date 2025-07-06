@@ -53,10 +53,21 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentNewModeChoose"
-        android:name="com.example.musicalgames.main_app.game_levels.FragmentModeChoose"
+        android:name="com.example.musicalgames.main_app.game_levels.FragmentLevelChoose"
         android:label="FragmentNewModeChoose" >
         <action
             android:id="@+id/action_fragmentNewModeChoose_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_fragmentNewModeChoose_to_fragmentLevelOptions"
+            app:destination="@id/fragmentLevelOptions" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentLevelOptions"
+        android:name="com.example.musicalgames.main_app.FragmentLevelOptions"
+        android:label="FragmentLevelOptions" >
+        <action
+            android:id="@+id/action_fragmentLevelOptions_to_fragmentNewModeChoose"
+            app:destination="@id/fragmentNewModeChoose" />
     </fragment>
 </navigation>
