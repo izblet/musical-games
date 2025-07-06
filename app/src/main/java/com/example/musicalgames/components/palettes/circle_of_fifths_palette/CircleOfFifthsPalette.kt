@@ -14,6 +14,7 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
     attr
 ) {
     //you should actually make a circle of fifths class in the same way that you have notes, intervals, etc
+    //either way this "i
     private var listener : CirclePaletteListener? = null
     companion object {
         val majorList = generateCircle(ChromaticNote.C)

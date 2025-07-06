@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.musicalgames.MainActivity">
+    tools:context="com.example.musicalgames.main_app.MainActivity">
     <!-- some day this will be used
     <item
         android:id="@+id/action_settings"

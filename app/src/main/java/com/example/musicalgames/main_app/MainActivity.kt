@@ -1,7 +1,6 @@
-package com.example.musicalgames
+package com.example.musicalgames.main_app
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -9,7 +8,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.musicalgames.IToolbarTitleUpdater
+import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
 
@@ -27,8 +34,22 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigateToLevels.collect {
+                    _-> if(viewModel.game!= null) {
+                        navController.navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
+                    } else{
+                            throw IllegalStateException("The game is null, cannot navigate to levels")
+                    }
+                }
+            }
+        }
+
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 

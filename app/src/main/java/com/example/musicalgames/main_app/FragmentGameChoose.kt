@@ -5,17 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.musicalgames.R
-import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CirclePaletteListener
 import com.example.musicalgames.databinding.FragmentFirstBinding
 import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.utils.ChromaticNote
 
 class FragmentGameChoose : Fragment() {
 
@@ -31,25 +31,19 @@ class FragmentGameChoose : Fragment() {
     ): View {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
+        val recyclerView: RecyclerView = binding.recyclerView
 
-        val recyclerView: RecyclerView = binding.root.findViewById(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
 
-        // chosen game will be saved in the viewModel
-        viewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        //this list shall be retrieved from a database
-        val gameList = listOf(
-            Game.FLAPPY,
-            Game.PLAY_BY_EAR,
-            Game.MENTAL_INTERVALS,
-            Game.CIRCLE
-        )
+        // chosen game will be saved in the main viewModel
+        viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
-        val adapter = AdapterGameList(gameList, object : AdapterGameList.OnItemClickListener{
+        val gameInfosList = GameMap.gameInfos.entries.toList()
+
+        val adapter = AdapterGameList(gameInfosList, object : AdapterGameList.OnItemClickListener{
             override fun onItemClick(game: Game) {
-                viewModel.game=game
-                findNavController().navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
+                viewModel.chooseGame(game)
             }
         })
         recyclerView.adapter = adapter
@@ -59,5 +53,41 @@ class FragmentGameChoose : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+}
+
+class AdapterGameList(private val gameInfoList: List<Map.Entry<Game, GameInfo>>, private val onItemClickListener: OnItemClickListener) :
+    RecyclerView.Adapter<AdapterGameList.GameViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_game, parent, false)
+        return GameViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
+        val entry = gameInfoList[position]
+        val gameInfo = entry.value
+        holder.bind(gameInfo)
+        holder.itemView.setOnClickListener {
+            onItemClickListener.onItemClick(entry.key)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return gameInfoList.size
+    }
+
+    inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
+        private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+        private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
+
+        fun bind(gameInfo: GameInfo) {
+            iconImageView.setImageResource(gameInfo.iconResourceId)
+            nameTextView.text = gameInfo.name
+            descriptionTextView.text = gameInfo.description
+        }
+    }
+    interface OnItemClickListener {
+        fun onItemClick(game: Game)
     }
 }
