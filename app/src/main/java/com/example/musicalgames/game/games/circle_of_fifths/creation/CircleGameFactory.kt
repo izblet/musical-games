@@ -7,13 +7,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game.games.circle_of_fifths.CircleView
 import com.example.musicalgames.game.games.circle_of_fifths.CircleViewModel
 import com.example.musicalgames.game.games.circle_of_fifths.GameLogicCircle
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.Game
@@ -34,14 +34,15 @@ class CircleGameFactory : GameFactory {
         return arrayOf()
     }
 
-    override fun makeViewModel(level: Level, owner: ViewModelStoreOwner) : GameViewModel {
+    override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         if(level !is CircleLevel) {
             throw IllegalArgumentException("level is not of type CircleLevel")
         }
         val gameLogic = GameLogicCircle(level)
         val viewModel = ViewModelProvider(owner)[CircleViewModel::class.java]
         viewModel.setLogic(gameLogic)
-        return viewModel
+        viewModel.setBpm(gameplay.bpm.toLong())
+        return
     }
 
     override fun getCustomCreator(

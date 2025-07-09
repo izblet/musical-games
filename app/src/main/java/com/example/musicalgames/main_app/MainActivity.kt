@@ -19,6 +19,7 @@ import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
 import com.example.musicalgames.game_activity.GameActivity
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
@@ -29,6 +30,14 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
     //used when fragments change to update the title of the toolbar
     override fun updateToolbarTitle(title: String) {
        supportActionBar?.title = title
+    }
+
+    private fun setCollectFor(sharedFlow: MutableSharedFlow<Unit>, function: (Unit)->Unit) {
+       lifecycleScope.launch {
+           repeatOnLifecycle(Lifecycle.State.STARTED) {
+               sharedFlow.collect { value -> function(value) }
+           }
+       }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,45 +50,36 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navigateToLevels.collect { _ ->
-                    if (viewModel.game != null) {
-                        navController.navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
-                    } else {
-                        throw IllegalStateException("The game is null, cannot navigate to levels")
-                    }
-                }
-            }
+       val toLevelsFunction: (Unit)->Unit = {
+           if (viewModel.game != null) {
+               navController.navigate(R.id.action_FirstFragment_to_fragmentNewModeChoose)
+           } else {
+               throw IllegalStateException("The game is null, cannot navigate to levels")
+           }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                Log.d("level choose", "in the activity")
-                viewModel.navigateToGamePlay.collect { _ ->
-                    if (viewModel.level != null) {
-                        navController.navigate(R.id.action_fragmentNewModeChoose_to_fragmentLevelOptions)
-                    } else {
-                        throw IllegalStateException("The level is null, cannot navigate to start game")
-                    }
-                }
-            }
-        }
-        lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.startGame.collect { _ ->
+        setCollectFor(viewModel.navigateToLevels, toLevelsFunction)
 
-                    if (viewModel.gameplay != null) {
-                        val intent = Intent(this@MainActivity, GameActivity::class.java).apply {
-                            putExtra(GameActivity.ARG_LEVEL, viewModel.level)
-                            putExtra(GameActivity.ARG_GAMEPlAY_INFO, viewModel.gameplay)
-                            putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
-                        }
-                        startActivity(intent)
-                    }
-                }
+        val toGamePlayFunction: (Unit)->Unit = {
+            if (viewModel.level != null) {
+                navController.navigate(R.id.action_fragmentNewModeChoose_to_fragmentLevelOptions)
+            } else {
+                throw IllegalStateException("The level is null, cannot navigate to start game")
             }
-
         }
+        setCollectFor(viewModel.navigateToGamePlay, toGamePlayFunction)
+
+        val startGameFunction: (Unit)->Unit = {
+            if (viewModel.gameplay != null) {
+                val intent = Intent(this@MainActivity, GameActivity::class.java).apply {
+                    putExtra(GameActivity.ARG_LEVEL, viewModel.level)
+                    putExtra(GameActivity.ARG_GAMEPlAY_INFO, viewModel.gameplay)
+                    putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
+                }
+                startActivity(intent)
+            }
+        }
+        setCollectFor(viewModel.startGame, startGameFunction)
+
 
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -11,7 +11,7 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
-import com.example.musicalgames.game_activity.GameViewModel
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.mental_intervals.MentalController
 import com.example.musicalgames.games.mental_intervals.MentalLevels
@@ -29,10 +29,10 @@ class MentalGameFactory : GameFactory {
         return arrayOf()
     }
 
-    override fun makeViewModel(level: Level, owner: ViewModelStoreOwner) : GameViewModel {
+    override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         val viewModel: MentalViewModel = ViewModelProvider(owner)[MentalViewModel::class.java]
         viewModel.setLevel(level)
-        return viewModel
+        return
     }
 
 

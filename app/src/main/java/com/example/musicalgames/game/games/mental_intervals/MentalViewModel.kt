@@ -5,16 +5,15 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
-import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import kotlin.random.Random
 
-class MentalViewModel : ViewModel(), GameViewModel {
+class MentalViewModel : ViewModel() {
 
-    override fun setLevel(level: Level) {
+    fun setLevel(level: Level) {
 
         this._level = level as MentalLevel
         availableNotes = this.level.startingNotes

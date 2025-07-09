@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
-import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap.gameInfos
 
@@ -28,7 +28,10 @@ class GameActivity : AppCompatActivity() {
         val level = intent.getParcelableExtra<Level>(ARG_LEVEL)
             ?: throw IllegalStateException("Level is null in GameActivity::onCreate")
 
-        gameFactory.makeViewModel(level, this)
+        val gamePlay = intent.getParcelableExtra(ARG_GAMEPlAY_INFO) ?: GamePlayInstance()
+
+
+        gameFactory.prepareViewModel(level, gamePlay, this)
 
         val action = StartGameFragmentDirections.actionStartGameFragmentToFlappyGameFragment(gameType.name)
         navController.navigate(action)

@@ -25,7 +25,16 @@ data class GamePlayInstance(
     val establishKeyWith: keyEstablishOption = keyEstablishOption.ROOT
 ) : Parcelable {
     init{
-        require(bpm in 100..300)
+        require(bpm in getMinBpmValue()..getMaxBpmValue())
+    }
+    companion object {
+        fun getMaxBpmValue(): Int {
+            return 300
+        }
+
+        fun getMinBpmValue(): Int {
+            return 100
+        }
     }
 
 }

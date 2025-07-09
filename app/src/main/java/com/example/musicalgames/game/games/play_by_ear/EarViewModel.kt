@@ -5,7 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
-import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
@@ -15,9 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class EarViewModel() : ViewModel(),GameViewModel, SoundPlayerListener {
+class EarViewModel() : ViewModel(), SoundPlayerListener {
 
-    override fun setLevel(level: Level) {
+    fun setLevel(level: Level) {
         this.level = level as PlayEarLevel
         rootNote = level.getDisplayedRoot()
         available = this.level!!.keyList.map { Note(it) }

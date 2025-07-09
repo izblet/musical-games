@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.GameViewModel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import kotlinx.coroutines.delay
@@ -23,29 +22,25 @@ data class CircleViewState(
     val screenCommandMessage: String? = null
 )
 
-class CircleViewModel(): ViewModel(), GameViewModel, GameController {
+class CircleViewModel(): ViewModel(), GameController {
     private val _viewState = MutableStateFlow(CircleViewState())
     val viewState: StateFlow<CircleViewState> = _viewState.asStateFlow()
-
-    private var _level: CircleLevel? = null
-    private val level get() = _level!!
 
     private var _gameLogic: GameLogicCircle? = null
     private val gameLogic get() = _gameLogic!!
 
     private var gameListener: GameListener? = null
 
-    override fun setLevel(level: Level) {
-        if(level is CircleLevel) {
-            _level = level
-        } else {
-            throw IllegalArgumentException("CircleViewModel: level is of wrong type")
-        }
-    }
+    private var waitLen:Long =1000
+
     fun setLogic(logic: GameLogicCircle) {
         _gameLogic = logic
     }
 
+    fun setBpm(bpm: Long) {
+        val beatLen = 60*1000/bpm
+        waitLen = 2*beatLen
+    }
 
     override fun initGame(context: Context, listener: GameListener) {
         gameListener = listener
@@ -95,7 +90,7 @@ class CircleViewModel(): ViewModel(), GameViewModel, GameController {
 
     private fun delayAndNext() {
         viewModelScope.launch {
-            delay(1000)
+            delay(waitLen)
             update()
         }
     }
