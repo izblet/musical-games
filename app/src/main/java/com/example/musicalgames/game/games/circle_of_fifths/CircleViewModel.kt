@@ -22,12 +22,12 @@ data class CircleViewState(
     val screenCommandMessage: String? = null
 )
 
-class CircleViewModel(): ViewModel(), GameController {
+class CircleViewModel: ViewModel(), GameController {
     private val _viewState = MutableStateFlow(CircleViewState())
     val viewState: StateFlow<CircleViewState> = _viewState.asStateFlow()
 
     private var _gameLogic: GameLogicCircle? = null
-    private val gameLogic get() = _gameLogic!!
+    private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
     private var gameListener: GameListener? = null
 

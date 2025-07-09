@@ -3,6 +3,7 @@ package com.example.musicalgames.games
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.game_core.GameplayOptions
+import com.example.musicalgames.game.games.chords.GameFactoryChords
 import com.example.musicalgames.game.games.circle_of_fifths.creation.CircleGameFactory
 import com.example.musicalgames.game.games.flappy.creation.FlappyGameFactory
 import com.example.musicalgames.game.games.mental_intervals.creation.MentalGameFactory
@@ -20,7 +21,8 @@ enum class Game {
     FLAPPY,
     PLAY_BY_EAR,
     MENTAL_INTERVALS,
-    CIRCLE
+    CIRCLE,
+    CHORDS
 }
 
 object GameMap {
@@ -30,6 +32,7 @@ object GameMap {
             Game.PLAY_BY_EAR -> EarGameFactory()
             Game.MENTAL_INTERVALS -> MentalGameFactory()
             Game.CIRCLE -> CircleGameFactory()
+            Game.CHORDS -> GameFactoryChords()
         }
 
     }
@@ -37,8 +40,9 @@ object GameMap {
         when(game) {
             Game.FLAPPY -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
             Game.PLAY_BY_EAR -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
-            Game.MENTAL_INTERVALS -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
-            Game.CIRCLE -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
+            Game.MENTAL_INTERVALS -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
+            Game.CIRCLE -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
+            Game.CHORDS -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
         }
     }
     val gameInfos : Map<Game, GameInfo> = Game.entries.associateWith { game ->
@@ -73,6 +77,13 @@ object GameMap {
                         "Learn the positions of scales on the circle of fifths",
                         R.drawable.clock_icon
                     ) { CircleGameFactory() }
+            Game.CHORDS ->
+                GameInfo(
+                    6,
+                    "Chords",
+                    "Learn the notes for chords",
+                    R.drawable.default_game_icon
+                ){ GameFactoryChords() }
         }
     }
 }

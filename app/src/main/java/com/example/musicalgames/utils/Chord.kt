@@ -11,7 +11,7 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
     init {
         require(qualityMatchesExtension(quality, extension))
     }
-    
+
     companion object {
         enum class Quality {
             MAJOR, MINOR, DIMINISHED, AUGMENTED, HALF_DIMINISHED, DOMINANT
@@ -36,7 +36,7 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
         val minSymb ="-"
         val augSymb="+"
         val dimSymb="o"
-        val halfDimSymb="྇"
+        val halfDimSymb="ø"
         val majSymb="∆"
 
         fun getSymbol(quality: Quality) : String {
