@@ -3,6 +3,7 @@ package com.example.musicalgames.games.mental_intervals
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.GameListener
@@ -13,8 +14,8 @@ import kotlin.random.Random
 
 class MentalViewModel : ViewModel() {
 
-    fun setLevel(level: Level) {
-
+    fun setLevel(level: Level, gameplay: GamePlayInstance) {
+        waitTime = (2*60*1000/gameplay.bpm).toLong()
         this._level = level as MentalLevel
         availableNotes = this.level.startingNotes
         availableIntervals = this.level.intervals
@@ -23,7 +24,7 @@ class MentalViewModel : ViewModel() {
 
     private var _level: MentalLevel? = null
     val level get() = _level!!
-
+    private var waitTime: Long =1000
     var score = 0
 
     private var _type : Type = Type.INTERVAL_NOTE
@@ -99,11 +100,11 @@ class MentalViewModel : ViewModel() {
     private fun nextQuestion() {
         Handler(Looper.getMainLooper()).postDelayed({
             generateQuestion()
-        }, 1000)
+        }, waitTime)
     }
     private fun endGame() {
         Handler(Looper.getMainLooper()).postDelayed({
             endListener?.onGameEnded()
-        }, 1000)
+        }, waitTime)
     }
 }

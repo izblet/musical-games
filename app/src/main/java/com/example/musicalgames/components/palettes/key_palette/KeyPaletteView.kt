@@ -16,7 +16,7 @@ class KeyPaletteView @JvmOverloads constructor(context: Context, attributeSet: A
     override fun keyLabel(note: ChromaticNote): String {
         if(note.isDiatonic())
             return note.toString()
-        else return note.flatPreferenceName()+"/"+note.sharpPreferenceName()
+        else return note.flatPreferenceName()+"\n"+note.sharpPreferenceName()
     }
 
     override fun onClickAction(note: ChromaticNote) {

@@ -31,7 +31,7 @@ class MentalGameFactory : GameFactory {
 
     override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         val viewModel: MentalViewModel = ViewModelProvider(owner)[MentalViewModel::class.java]
-        viewModel.setLevel(level)
+        viewModel.setLevel(level, gameplay)
         return
     }
 

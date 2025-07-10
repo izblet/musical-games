@@ -3,6 +3,7 @@ package com.example.musicalgames.components.palettes
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.Log
@@ -58,6 +59,15 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
     }
     abstract fun keyLabel(note: ChromaticNote) : String
 
+    private fun Canvas.drawMultilineText(text: String, x: Float, y: Float, paint: Paint) {
+        val lines = text.split("\n")
+        var currentY = y
+        for (line in lines) {
+            drawText(line, x, currentY, paint)
+            currentY += paint.fontSpacing
+        }
+    }
+
     private fun drawKeys(canvas: Canvas) {
 
         //First we draw all diatonic notes
@@ -89,10 +99,11 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
                 canvas.drawRect(rect, blackFillPaint)
             }
 
-            canvas.drawText(
+            val keyCenter = rect.bottom - keyHeight/2
+            canvas.drawMultilineText(
                 keyLabel(note),
                 rect.centerX(),
-                rect.bottom - keyHeight / 4,
+                keyCenter,
                 whiteTextPaint
             )
             //canvas.drawRect(rect, whiteStrokePaint)
