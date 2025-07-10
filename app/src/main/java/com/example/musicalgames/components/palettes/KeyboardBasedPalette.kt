@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.example.musicalgames.components.ComponentPaints.getBlackFillPaint
@@ -22,12 +21,15 @@ import kotlin.math.floor
 abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {
     //private val whiteStrokePaint = getWhiteStrokePaint(context)
     //private val blackStrokePaint = getBlackStrokePaint(context)
-    private val blackFillPaint = getBlackFillPaint(context)
-    private val whiteFillPaint = getWhiteFillPaint(context)
-    private val whiteTextPaint = getWhiteTextPaint(context)
-    private val blackTextPaint = getBlackTextPaint(context)
-    private val darkgrayPaint = getDarkgrayFillPaint(context)
-    private val lightgrayPaint = getLightgrayFillPaint(context)
+    private val fillBlackActive = getBlackFillPaint(context)
+    private val fillWhiteActive = getWhiteFillPaint(context)
+    private val textWhiteActive = getWhiteTextPaint(context)
+    private val textBlackActive = getBlackTextPaint(context)
+
+    private val fillBlackInactive = getDarkgrayFillPaint(context)
+    private val fillWhiteInactive = getLightgrayFillPaint(context)
+    private val textWhiteInactive = getWhiteTextPaint(context)
+    private val textBlackInactive = getBlackTextPaint(context)
 
     private val grayedOutSet : MutableSet<ChromaticNote> = mutableSetOf()
 
@@ -75,11 +77,11 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
             val note = DiatonicNote.fromDegree(i)
             val rect = getWhiteKeyRect(i)
             if(grayedOutSet.contains(note.chromaticNote)) {
-                canvas.drawRect(rect, lightgrayPaint)
+                canvas.drawRect(rect, fillWhiteInactive)
             } else {
-                canvas.drawRect(rect, whiteFillPaint)
+                canvas.drawRect(rect, fillWhiteActive)
             }
-            canvas.drawText(keyLabel(note.chromaticNote), rect.centerX(), rect.bottom - keyHeight / 4, blackTextPaint)
+            canvas.drawText(keyLabel(note.chromaticNote), rect.centerX(), rect.bottom - keyHeight / 4, textBlackActive)
             //canvas.drawRect(rect, blackStrokePaint)
         }
 
@@ -94,9 +96,9 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
 
             val rect = getBlackKeyAboveRect(DiatonicNote.fromDegree(i))
             if(note in grayedOutSet) {
-                canvas.drawRect(rect, darkgrayPaint)
+                canvas.drawRect(rect, fillBlackInactive)
             } else {
-                canvas.drawRect(rect, blackFillPaint)
+                canvas.drawRect(rect, fillBlackActive)
             }
 
             val keyCenter = rect.bottom - keyHeight/2
@@ -104,7 +106,7 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
                 keyLabel(note),
                 rect.centerX(),
                 keyCenter,
-                whiteTextPaint
+                textWhiteActive
             )
             //canvas.drawRect(rect, whiteStrokePaint)
         }

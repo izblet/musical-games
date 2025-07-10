@@ -3,6 +3,7 @@ package com.example.musicalgames.components
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 
@@ -16,6 +17,13 @@ object ComponentPaints {
             color = paintColor
             style = Paint.Style.FILL
         }
+    }
+
+    fun Context.getColour(context: Context, attributeId: Int) : Int {
+        val typedValue = TypedValue()
+        val theme = context.theme
+        theme.resolveAttribute(attributeId, typedValue, true)
+        return typedValue.data
     }
 
     private fun getTextPaint(paintColor: Int) : Paint {
