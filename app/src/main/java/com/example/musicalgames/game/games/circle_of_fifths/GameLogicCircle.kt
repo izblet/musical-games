@@ -1,6 +1,8 @@
 package com.example.musicalgames.game.games.circle_of_fifths
 
 import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.DiatonicNote
+import com.example.musicalgames.utils.Interval
 
 data class AnswerResult (
     val correct: Boolean,
@@ -20,6 +22,14 @@ class GameLogicCircle (private val level: CircleLevel) {
     val questionNote get() = _questionNote
     val rightAnsNum get() = _rightAnsNum
     val wrongAnsNum get() = _wrongAnsNum
+
+
+    //TODO: this is very very temporary - breaks semantics down the line
+    fun getNoteTransposed(resultNote: ChromaticNote) : ChromaticNote {
+        val interval = Interval.fromChromaticNotes(level.modeRootInCMajor.chromaticNote, ChromaticNote.C)
+        return resultNote.transpose(interval)
+    }
+
 
     fun isCircleToNote(): Boolean {
         return level.positionToName
@@ -43,16 +53,16 @@ class GameLogicCircle (private val level: CircleLevel) {
         if(!awaitingAnswer()) {
             return AnswerResult(correct = false, rightAns = null)
         }
-        if(answerNote == questionNote) {
+        if(answerNote== getNoteTransposed(questionNote)) {
             _rightAnsNum++
-            val receipt = AnswerResult(correct = true, rightAns = questionNote)
+            val receipt = AnswerResult(correct = true, rightAns = getNoteTransposed(questionNote))
             nextQuestion()
             return receipt
         }
         else {
             //only in infinite mode
             _wrongAnsNum++
-            val receipt = AnswerResult(correct = false, rightAns = questionNote)
+            val receipt = AnswerResult(correct = false, rightAns = getNoteTransposed(questionNote))
             nextQuestion()
             return receipt
         }

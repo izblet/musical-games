@@ -21,6 +21,10 @@ enum class Interval {
         fun fromSemitones(semitones: Int) : Interval {
             return entries[semitones%13]
         }
+        fun fromChromaticNotes(firstNote: ChromaticNote, secondNote: ChromaticNote) : Interval {
+            val semitones = (12+secondNote.ordinal-firstNote.ordinal)%12
+            return fromSemitones(semitones)
+        }
     }
 
 }

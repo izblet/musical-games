@@ -19,15 +19,20 @@ import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.utils.DiatonicNote
 
 class CircleGameFactory : GameFactory {
 
     override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
-        val level1 = CircleLevel(positionToName = true, minor=false, major=true)
-        val tagged1 = TaggedLevel(Game.CIRCLE,1,"Major - position to name", "", level1, isFavourite = false, isCustom = false)
-        val level2 = CircleLevel(positionToName = false, minor=false, major=true)
-        val tagged2 = TaggedLevel(Game.CIRCLE,2,"Major - name to position", "", level2, isFavourite = false, isCustom = false)
-        return listOf(tagged1, tagged2)
+        val levelMajor = CircleLevel(positionToName = false, DiatonicNote.C)
+        val levelMinor = CircleLevel(positionToName = false, DiatonicNote.A)
+        val levelDorian = CircleLevel(positionToName = false, DiatonicNote.D)
+        val levelMixolydian = CircleLevel(positionToName = false, DiatonicNote.G)
+        val taggedMajor = TaggedLevel(Game.CIRCLE,2,"Major - name to position", "", levelMajor, isFavourite = false, isCustom = false)
+        val taggedMinor = TaggedLevel(Game.CIRCLE,3,"Minor - name to position", "", levelMinor, isFavourite = false, isCustom = false)
+        val taggedDorian = TaggedLevel(Game.CIRCLE,4,"Dorian - name to position", "", levelDorian, isFavourite = false, isCustom = false)
+        val taggedMixolydian = TaggedLevel(Game.CIRCLE,5,"Mixolydian - name to position", "", levelMixolydian, isFavourite = false, isCustom = false)
+        return listOf(taggedMajor, taggedMinor, taggedDorian, taggedMixolydian)
     }
 
     override fun getPermissions(): Array<String> {
