@@ -28,10 +28,12 @@ class CircleGameFactory : GameFactory {
         val levelMinor = CircleLevel(positionToName = false, DiatonicNote.A)
         val levelDorian = CircleLevel(positionToName = false, DiatonicNote.D)
         val levelMixolydian = CircleLevel(positionToName = false, DiatonicNote.G)
+        val levelLydian = CircleLevel(positionToName = false, DiatonicNote.F)
         val taggedMajor = TaggedLevel(Game.CIRCLE,2,"Major - name to position", "", levelMajor, isFavourite = false, isCustom = false)
         val taggedMinor = TaggedLevel(Game.CIRCLE,3,"Minor - name to position", "", levelMinor, isFavourite = false, isCustom = false)
         val taggedDorian = TaggedLevel(Game.CIRCLE,4,"Dorian - name to position", "", levelDorian, isFavourite = false, isCustom = false)
         val taggedMixolydian = TaggedLevel(Game.CIRCLE,5,"Mixolydian - name to position", "", levelMixolydian, isFavourite = false, isCustom = false)
+        val taggedLydian = TaggedLevel(Game.CIRCLE, 6, "Lydian - name to position", "", levelLydian, isFavourite = false, isCustom = false)
         return listOf(taggedMajor, taggedMinor, taggedDorian, taggedMixolydian)
     }
 

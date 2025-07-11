@@ -8,4 +8,4 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class LevelChords(val startingNotes: Set<ChromaticNote>,
                        val qualities: Set<Chord.Companion.Quality>,
-                       val extensions: Set<Chord.Companion.Extension>) : Level()
+                       val extensions: Set<Chord.Companion.Extension?>) : Level()

@@ -26,8 +26,15 @@ class GameFactoryChords: GameFactory {
 
         val diatonicNotes = DiatonicNote.entries.toList().map{ diatonicNote -> diatonicNote.chromaticNote }
         val levelDiatonic = LevelChords(diatonicNotes.toSet(), Chord.Companion.Quality.entries.toSet(), Chord.Companion.Extension.entries.toSet())
+
+        val levelMajor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MAJOR), setOf(null))
+        val levelMinor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MINOR), setOf(null))
+        val levelMinorMajor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MINOR, Chord.Companion.Quality.MAJOR), setOf(null))
         val taggedLevelDiatonic = TaggedLevel(Game.CHORDS, 2, "diatonic roots", "", levelDiatonic, isFavourite = false, isCustom = false)
-       return listOf(taggedLevelDiatonic, taggedLevelAll)
+        val taggedMajor = TaggedLevel(Game.CHORDS, 3, "major chords", "", levelMajor, isFavourite = false, isCustom = false)
+        val taggedMinor = TaggedLevel(Game.CHORDS, 4, "minor chords", "", levelMinor, isFavourite = false, isCustom = false)
+        val taggedMinorMajor = TaggedLevel(Game.CHORDS, 4, "minor and major chords", "", levelMinorMajor, isFavourite = false, isCustom = false)
+       return listOf(taggedLevelDiatonic, taggedLevelAll, taggedMajor, taggedMinor, taggedMinorMajor)
     }
 
     override fun getPermissions(): Array<String> {
