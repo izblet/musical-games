@@ -43,6 +43,9 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    aaptOptions {
+        noCompress("tflite")
+    }
 }
 
 dependencies {
@@ -58,8 +61,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi-adapters:1.15.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("org.tensorflow:tensorflow-lite:0.0.0-nightly-SNAPSHOT")
-    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly-SNAPSHOT")
+    implementation("org.tensorflow:tensorflow-lite:2.16.1")
+    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
