@@ -2,6 +2,7 @@ package com.example.musicalgames.components.ui_components
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.FrameLayout
@@ -24,9 +25,10 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
         notePreview.setGrayedOut()
 
         inputDialog = KeyboardDialog(context)
-        notePreview.setOnClickAction {
-            _ -> inputDialog.show(notePreview.getGrayedOut())
+        notePreview.setOnClickAction { _ ->
+            inputDialog.show(notePreview.getGrayedOut())
         }
+
     }
     fun getSelected() : Set<ChromaticNote> {
         val chromaticSelected : MutableSet<ChromaticNote> = ChromaticNote.entries.toMutableSet()
@@ -42,6 +44,7 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
         private var keyboardView: KeyPaletteView
 
         init {
+
             setContentView(R.layout.keyboard_bottom_sheet)
             keyboardView = findViewById(R.id.keyboard_view)
                 ?: throw NullPointerException("keyboardView can't be found")

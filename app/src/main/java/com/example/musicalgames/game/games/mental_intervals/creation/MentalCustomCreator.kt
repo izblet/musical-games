@@ -3,12 +3,18 @@ package com.example.musicalgames.game.games.mental_intervals.creation
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TableLayout
+import android.widget.TableRow
 import android.widget.Toast
+import com.example.musicalgames.R
 import com.example.musicalgames.components.ui_components.EnumSpinner
+import com.example.musicalgames.components.ui_components.IntervalSelector
+import com.example.musicalgames.components.ui_components.KeyboardSelector
 import com.example.musicalgames.databinding.MentalCustomCreatorBinding
 import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
@@ -24,29 +30,23 @@ import com.example.musicalgames.utils.Octave
 import com.example.musicalgames.utils.Scale
 
 class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
-    private var _binding: MentalCustomCreatorBinding? = null
-    private val binding get() = _binding!!
 
-    private var modeSpinnerValue: EnumSpinner.SpinnerEnumValue<Type>
+    //TODO: the themeWrapper is temporary and the spinner should set its own style from a stub
+    private val inputThemedContext = ContextThemeWrapper(context, R.style.customInputElementStyle)
+    private val modeSpinner = EnumSpinner(inputThemedContext)
+    private val modeSpinnerValue = modeSpinner.setEnum(Type.INTERVAL_NOTE)
+    private val notesSelector = KeyboardSelector(context)
+    private val intervalSelector = IntervalSelector(context)
 
     init {
-        _binding = MentalCustomCreatorBinding.inflate(LayoutInflater.from(context), this, true)
-
-        modeSpinnerValue = binding.modeSpinner.setEnum(Type.INTERVAL_NOTE)
-
-    }
-
-
-    private fun getFieldVal(id: Int): String {
-        return findViewById<EditText>(id).text.toString()
-    }
-
-    private fun getSpinnerVal(id: Int): String {
-        return findViewById<Spinner>(id).selectedItem.toString()
+        addNewRow("Mode", modeSpinner)
+        addNewRow("Starting Notes", notesSelector)
+        addNewRow("Intervals", intervalSelector)
     }
 
     private fun getNotesFromSelection(): List<ChromaticNote> {
-        val selectedChromatic = binding.startingNotesSelector.getSelected()
+        //TODO: there is probably a simpler way
+        val selectedChromatic = notesSelector.getSelected()
         val noteList: MutableList<ChromaticNote> = mutableListOf()
         for (note in ChromaticNote.entries) {
             if (note in selectedChromatic) {
@@ -56,7 +56,8 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
         return noteList
     }
     private fun getIntervalsFromSelection() : List<Interval> {
-        val selectedIntervals = binding.intervalSelector.getSelected()
+        //TODO: there is probably a simpler way
+        val selectedIntervals = intervalSelector.getSelected()
         val intervalList: MutableList<Interval> = mutableListOf()
         for (interval in Interval.entries) {
             if (interval in selectedIntervals) {

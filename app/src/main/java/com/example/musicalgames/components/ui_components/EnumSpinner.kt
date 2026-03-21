@@ -7,11 +7,12 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
+import com.example.musicalgames.R
 
 class EnumSpinner  @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : AppCompatSpinner(context, attributeSet, defStyleAttr, MODE_DROPDOWN){
     private var enumSet = false
 
