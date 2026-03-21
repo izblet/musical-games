@@ -13,6 +13,7 @@ import com.example.musicalgames.game_activity.Level
 abstract class CustomGameCreator(context :Context, private val createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : TableLayout(context, attrSet) {
     abstract fun getLevel(): Level?
     abstract fun highlightMissing()
+    abstract fun clearSelection()
 
     init {
         layoutParams = LayoutParams(

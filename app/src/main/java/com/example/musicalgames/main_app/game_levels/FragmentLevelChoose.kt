@@ -141,6 +141,9 @@ class FragmentLevelChoose : Fragment() {
                 lifecycleScope.launch {
                     levelDao.addLevel(taggedLevel, viewModel.game!!)
                 }
+                tableCreate.clearSelection()
+                viewCreate.findViewById<EditText>(R.id.nameInput).setText("")
+                viewCreate.findViewById<EditText>(R.id.descriptionInput).setText("")
             }
         }
 

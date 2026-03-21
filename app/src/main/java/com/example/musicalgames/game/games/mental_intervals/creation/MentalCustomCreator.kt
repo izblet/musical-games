@@ -85,6 +85,11 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
             return null
         }
     }
+    override fun clearSelection() {
+        modeSpinner.setSelection(0)
+        notesSelector.clearSelection()
+        intervalSelector.clearSelection()
+    }
 
     override fun highlightMissing() {
         Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()

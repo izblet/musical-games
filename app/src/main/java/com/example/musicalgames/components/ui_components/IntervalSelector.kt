@@ -43,6 +43,9 @@ class IntervalSelector @JvmOverloads constructor (context: Context, attributeSet
 
         return chromaticSelected.mapTo(mutableSetOf()){Interval.fromSemitones(it.ordinal)}
     }
+    fun clearSelection() {
+        notePreview.setGrayedOut()
+    }
 
     inner class IntervalDialog(context: Context) : BottomSheetDialog(context), IntervalPaletteListener {
         private var keyboardView: IntervalPaletteView

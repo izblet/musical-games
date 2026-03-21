@@ -17,4 +17,8 @@ class CustomCreatorChords(
     override fun highlightMissing() {
         TODO("Not yet implemented")
     }
+
+    override fun clearSelection() {
+        TODO("Not yet implemented")
+    }
 }

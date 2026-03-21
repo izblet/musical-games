@@ -40,6 +40,10 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
         return chromaticSelected
     }
 
+    fun clearSelection() {
+        notePreview.setGrayedOut()
+    }
+
     inner class KeyboardDialog(context: Context) : BottomSheetDialog(context), KeyPaletteListener {
         private var keyboardView: KeyPaletteView
 

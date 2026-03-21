@@ -23,18 +23,15 @@ import com.example.musicalgames.utils.Scale
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
     private var _binding: ViewEarCustomCreatorBinding? = null
     private val binding get() = _binding!!
-    private var scaleSpinnerValue: EnumSpinner.SpinnerEnumValue<Scale>
-    private var rootSpinnerValue: EnumSpinner.SpinnerEnumValue<ChromaticNote>
-    private var maxIntervalSpinner: EnumSpinner.SpinnerEnumValue<Interval>
-    private var minSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
-    private var maxSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
-    private var minSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
-    private var maxSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
+    private lateinit var scaleSpinnerValue: EnumSpinner.SpinnerEnumValue<Scale>
+    private lateinit var rootSpinnerValue: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private lateinit var maxIntervalSpinner: EnumSpinner.SpinnerEnumValue<Interval>
+    private lateinit var minSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private lateinit var maxSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
+    private lateinit var minSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
+    private lateinit var maxSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
 
-
-    init {
-        _binding = ViewEarCustomCreatorBinding.inflate(LayoutInflater.from(context), this, true)
-
+    private fun setDefaultValues() {
         rootSpinnerValue = binding.rootSpinner.setEnum(ChromaticNote.C)
         scaleSpinnerValue = binding.scaleSpinner.setEnum(Scale.MAJOR)
         maxIntervalSpinner = binding.maxIntervalSpinner.setEnum(Interval.P8)
@@ -43,6 +40,12 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         minSoundOctaveSpinner = binding.minNoteOctave.setEnum(Octave.o4)
         maxSoundOctaveSpinner = binding.maxOctaveSpinner.setEnum(Octave.o5)
 
+    }
+
+    init {
+        _binding = ViewEarCustomCreatorBinding.inflate(LayoutInflater.from(context), this, true)
+
+       setDefaultValues()
 
         val setSelectionMethod: ()->Unit = {
             if(binding.isSelectionToggle.isChecked) {
@@ -118,6 +121,10 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
     override fun highlightMissing() {
         Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun clearSelection() {
+        TODO("Not yet implemented")
     }
 
 }

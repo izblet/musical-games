@@ -14,4 +14,8 @@ class CircleCustomCreator(context:Context, createLevelAction: (Level)->Unit, att
         TODO("Not yet implemented")
     }
 
+    override fun clearSelection() {
+        TODO("Not yet implemented")
+    }
+
 }

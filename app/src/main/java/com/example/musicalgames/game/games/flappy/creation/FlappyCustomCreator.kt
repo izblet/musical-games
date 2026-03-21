@@ -13,6 +13,10 @@ class FlappyCustomCreator(context : Context, createLevelAction: (Level)->Unit, a
     override fun highlightMissing() {
     }
 
+    override fun clearSelection() {
+        TODO("Not yet implemented")
+    }
+
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
