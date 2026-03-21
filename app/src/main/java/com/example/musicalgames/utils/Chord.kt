@@ -13,6 +13,7 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
     }
 
     companion object {
+        //qualities and extensions should correspond to the "logical" layer, not the notational one
         enum class Quality {
             MAJOR, MINOR, DIMINISHED, AUGMENTED, HALF_DIMINISHED, DOMINANT
         }
@@ -50,12 +51,13 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
             }
         }
         val validExtensions: Map<Quality, List<Extension?>> = Quality.entries.associateWith { quality ->
+            //not all qualities added, you should think about it
                when(quality) {
-                   Quality.MAJOR -> listOf(null, Extension.MAJ7, Extension.MAJ6)
+                   Quality.MAJOR -> listOf(null, Extension.MIN7, Extension.MAJ7, Extension.MAJ6)
                    Quality.MINOR -> listOf(null, Extension.MIN7, Extension.MAJ7, Extension.MAJ6)
                    Quality.DOMINANT -> listOf(Extension.MIN7)
-                   Quality.DIMINISHED -> listOf(null, Extension.DIM7)
-                   Quality.AUGMENTED -> listOf(null, Extension.MAJ7)
+                   Quality.DIMINISHED -> listOf(null, Extension.MAJ7, Extension.DIM7)
+                   Quality.AUGMENTED -> listOf(null, Extension.MIN7, Extension.MAJ7)
                    Quality.HALF_DIMINISHED -> listOf(Extension.MIN7)
                }
         }
@@ -92,12 +94,15 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
 
     fun getName(sharpPreference: Boolean = true): String {
         val name = if(sharpPreference) StringBuilder(root.sharpPreferenceName()) else StringBuilder(root.flatPreferenceName())
+
         name.append(getSymbol(quality))
+
         if(extension==null)
             return name.toString()
 
-        if(extension==Extension.MAJ7)
-            return name.append(majSymb+"7").toString()
+        if(extension==Extension.MAJ7) {
+            return name.append(majSymb + "7").toString()
+        }
 
         if(extension==Extension.MAJ6)
             return name.append("6").toString()
