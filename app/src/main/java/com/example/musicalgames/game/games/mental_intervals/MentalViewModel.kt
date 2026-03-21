@@ -34,9 +34,11 @@ class MentalViewModel : ViewModel() {
     private var availableIntervals: List<Interval>? = null
     private var availableNotes: List<ChromaticNote>? = null
     private var questionNote: ChromaticNote? = null
-    private var interval: Interval? = null
+    private var _interval: Interval? = null
     private var lastDegree: Int = 0
     private var note: ChromaticNote? = null
+
+    val interval get() = _interval!!
 
 
     private var _UI : MentalViewmodelListener? = null
@@ -44,7 +46,9 @@ class MentalViewModel : ViewModel() {
     fun registerEndListener(listener: GameListener) { endListener=listener }
     fun registerUI(ui: MentalViewmodelListener) { _UI = ui }
     private val UI get() = _UI!!
+
     fun startGame() { generateQuestion() }
+
     private fun getRandomInterval():Interval {
         val i = Random.nextInt(availableIntervals!!.size)
         lastDegree = i+2
@@ -56,7 +60,7 @@ class MentalViewModel : ViewModel() {
     }
     private fun generateQuestion() {
         disabled=false
-        val interval = getRandomInterval()
+        _interval = getRandomInterval()
         questionNote = getRandomNote()
         val questionNoteIndex = questionNote!!.ordinal
         val noteIndex = (questionNoteIndex + interval.getSemitones()) % ChromaticNote.valuesSize()
@@ -93,7 +97,7 @@ class MentalViewModel : ViewModel() {
             UI.onRightAnswer()
             nextQuestion()
         } else {
-            UI.onWrongAnswer(this.interval!!)
+            UI.onWrongAnswer(this.interval)
             nextQuestion()
         }
     }
