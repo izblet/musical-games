@@ -23,7 +23,6 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
         val screenWidth = displayMetrics.widthPixels
         val dynamicSize = screenWidth * 0.04f
 
-        // Since we calculated this based on pixels, we use COMPLEX_UNIT_PX
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, dynamicSize)
 
         circle.registerListener(this)
@@ -48,9 +47,9 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
         }
 
         if(state.highlightedNote==null) {
-            circle.setMajorHighlighted(listOf())
+            circle.setHighlightedIndices(listOf())
         } else {
-            circle.setMajorHighlighted(listOf(state.highlightedNote))
+            circle.setHighlightedIndices(listOf(state.highlightedNote))
         }
 
         if(state.screenCommandMessage!= null) {
@@ -62,8 +61,8 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
 
     }
 
-    override fun onKeyClicked(root: ChromaticNote, major: Boolean) {
-        viewModel.clickCircle(root)
+    override fun onKeyClicked(index : Int) {
+        viewModel.clickCircle(index)
     }
 
 }
