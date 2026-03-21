@@ -106,7 +106,7 @@ class CircleViewModel: ViewModel(), GameController {
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {
-                "Wrong, this is the right answer:"
+                "Wrong"
             }
 
             val highlightedNote = if(answerResult.correct) {
