@@ -5,7 +5,9 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.utils.Mode
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.NoteSpelling
 import com.example.musicalgames.utils.SpellingPreference
@@ -15,12 +17,11 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
     context,
     attr
 ) {
-    //you should actually make a circle of fifths class in the same way that you have notes, intervals, etc
-    //either way this "i
+    //TODO: wrong direction of dependency, you should actually make a circle of fifths class in the same way that you have notes, intervals, etc and the view should just use that class
+
     private var listener : CirclePaletteListener? = null
     companion object {
-        val majorList = generateCircle(ChromaticNote.C)
-        val minorList = generateCircle(ChromaticNote.A)
+        private val circlesMap = generateCircles()
 
         private fun generateCircle(firstNote: ChromaticNote) : List<ChromaticNote> {
             val list : MutableList<ChromaticNote> = mutableListOf()
@@ -31,42 +32,41 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
             }
             return list
         }
-        fun noteName(chromaticNote: ChromaticNote, major: Boolean) : String {
-            if(major) {
-                val index = majorList.indexOf(chromaticNote)
-                return if(chromaticNote.isDiatonic())
-                    NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
-                else if (index>=8) {
-                    NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)
-                } else {
-                    "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
-                }
+        private fun generateCircles() : HashMap<Mode, List<ChromaticNote>> {
+            val map = HashMap<Mode, List<ChromaticNote>>()
+            for(note in DiatonicNote.entries) {
+                map[Mode.fromDiatonicNote(note)]= generateCircle(note.chromaticNote)
             }
+            return map
+        }
 
+        fun noteName(chromaticNote: ChromaticNote, mode: Mode) : String {
+            //TODO: for now this function does basically nothing
+            val index : Int
+            try {
+                index = circlesMap[mode]!!.indexOf(chromaticNote)
+            } catch(e : Exception) {
+                Log.e("Circle of fifths", "note not found in the circle")
+                return ""
+            }
+            val nameString = if(chromaticNote.isDiatonic()) NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
+                else "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
 
-            val index = minorList.indexOf(chromaticNote)
-            val noteName: String
-           if(chromaticNote.isDiatonic()) {
-               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
-           } else if( index<=5){
-               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
-           } else if(index == 6) {
-               noteName = "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
-           } else {
-               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)
-           }
+            return when (mode) {
+                Mode.AEOLIAN -> nameString.lowercase(Locale.getDefault())
+                Mode.IONIAN -> nameString
+                else -> "$nameString $mode"
+            }
+        }
 
-           return noteName.lowercase(Locale.getDefault())
+        fun noteAtIndex(index :Int, mode : Mode) : ChromaticNote {
+            return circlesMap[mode]!![index]
+        }
+        fun noteIndex(note : ChromaticNote, mode: Mode) : Int {
+            return circlesMap[mode]!!.indexOf(note)
         }
     }
 
-    fun setMajorHighlighted(list: List<ChromaticNote>) {
-        val indices: MutableList<Int> = mutableListOf()
-        for(note in list) {
-            indices.add(majorList.indexOf(note))
-        }
-        setMajorHighlightedIndices(indices)
-    }
     fun registerListener(listener: CirclePaletteListener) {
         this.listener = listener
     }
@@ -75,13 +75,11 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
         if(event == null)
             return false
 
-        if(isClickMajor(event.x, event.y)) {
+        //TODO: this should be removed as well
+        if(isClickCircle(event.x, event.y)) {
             val index = getClickRadialIndex(event.x, event.y)
-            listener?.onKeyClicked(majorList[index], major= true)
+            listener?.onKeyClicked(index)
 
-        } else if(isClickMinor(event.x, event.y)&&hasMinor()) {
-            val index = getClickRadialIndex(event.x, event.y)
-            listener?.onKeyClicked(minorList[index], major= false)
         } else {
             Log.d("circle", "point not in the circle")
             return false

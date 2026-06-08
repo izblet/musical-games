@@ -10,6 +10,7 @@ import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.DiatonicNote
+import com.example.musicalgames.utils.Mode
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 data class CircleViewState(
     val showKeyboard: Boolean = false,
     val question: String? = null,
-    val highlightedNote: ChromaticNote? = null,
+    val highlightedNote: Int? = null,
     val screenCommandMessage: String? = null
 )
 
@@ -60,16 +61,17 @@ class CircleViewModel: ViewModel(), GameController {
         val newState = _viewState.value.copy(
             showKeyboard = true,
             question = null,
-            highlightedNote = gameLogic.questionNote,
+            highlightedNote = gameLogic.questionNoteIndex,
             screenCommandMessage = null
         )
         _viewState.value = newState
     }
 
     private fun newQuestionNoteToCircle() {
+        val questionString =CircleOfFifthsPalette.noteName(gameLogic.questionNote, gameLogic.questionMode).replace(" ", "\n")
         val newState = _viewState.value.copy(
             showKeyboard = false,
-            question = CircleOfFifthsPalette.noteName(gameLogic.questionNote,major=true),
+            question = questionString,
             highlightedNote = null,
             screenCommandMessage = null
         )
@@ -96,7 +98,9 @@ class CircleViewModel: ViewModel(), GameController {
         }
     }
 
-    fun clickCircle(note: ChromaticNote) {
+    fun clickCircle(index: Int) {
+        val note = CircleOfFifthsPalette.noteAtIndex(index, gameLogic.questionMode)
+
         if(!gameLogic.awaitingAnswer())
             return
 
@@ -106,13 +110,13 @@ class CircleViewModel: ViewModel(), GameController {
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {
-                "Wrong, this is the right answer:"
+                "Wrong"
             }
 
             val highlightedNote = if(answerResult.correct) {
                 null
             } else {
-                answerResult.rightAns
+                answerResult.rightAnsIndex
             }
 
             val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote)
@@ -132,7 +136,7 @@ class CircleViewModel: ViewModel(), GameController {
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {
-                "Wrong, the right answer was ${answerResult.rightAns}"
+                "Wrong, the right answer was ${answerResult.rightAnsNote}"
             }
 
             val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage)

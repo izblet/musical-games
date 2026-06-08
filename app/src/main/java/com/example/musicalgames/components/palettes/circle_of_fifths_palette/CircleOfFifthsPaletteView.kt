@@ -16,24 +16,16 @@ open class CircleOfFifthsPaletteView(
         style = Paint.Style.FILL
         isAntiAlias = true
     }
-    private val paintMinor = Paint().apply {
-        color = Color.WHITE
-        style = Paint.Style.FILL
-        isAntiAlias = true
-    }
-    private val axisPaintMinor :Paint = ComponentPaints.getLightgrayFillPaint(context)
+
     private val axisPaintMajor : Paint = ComponentPaints.getLightgrayFillPaint(context)
     private val highlightPaint =ComponentPaints.getBlueFillPaint(context)
 
-    private var highlightedIndicesMajor:List<Int> = listOf()
-    private var highlightedIndicesMinor: List<Int> = listOf()
-
-    private var hasMinor = false
+    private var highlightedIndices:List<Int> = listOf()
 
     private val totalSegments = 12
-    private val separation = 6f  // gap between major and minor rings
-    private val middleHoleRadiusProportion = 0.2f
-    private var minorRadiusProportion = 0.5f
+    private val separation = 6f  // gap between note segments
+    //private val middleHoleRadiusProportion = 0.2f
+    private var middleHoleProportion = 0.5f
 
     private var radius = 0f
     private var centerX = 0f
@@ -41,28 +33,13 @@ open class CircleOfFifthsPaletteView(
 
     private var majorOuterRadius = 0f
     private var majorInnerRadius = 0f
-    private var minorOuterRadius = 0f
-    private var minorInnerRadius = 0f
 
 
     private val pieceAngleLength = 360f/totalSegments
     private val rotationOffset = -90f-pieceAngleLength/2f //so that C is on the top
 
-    fun setMajorHighlightedIndices(list:List<Int>) {
-       highlightedIndicesMajor = list
-    }
-
-    fun hasMinor():Boolean {
-        return hasMinor
-    }
-    fun showMinor(show: Boolean) {
-        minorRadiusProportion = if(show) {
-            0.5f
-        } else {
-            0.65f
-        }
-        hasMinor=show
-        invalidate()
+    fun setHighlightedIndices(list:List<Int>) {
+       highlightedIndices = list
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -73,9 +50,7 @@ open class CircleOfFifthsPaletteView(
         radius = min(width,height)/2f
 
         majorOuterRadius = radius
-        majorInnerRadius = majorOuterRadius * minorRadiusProportion + separation
-        minorOuterRadius = majorOuterRadius * minorRadiusProportion
-        minorInnerRadius = majorOuterRadius * middleHoleRadiusProportion
+        majorInnerRadius = majorOuterRadius * middleHoleProportion
 
         val separationLengthToAngleLength : (Float) -> Float = {
             radius: Float ->
@@ -85,37 +60,19 @@ open class CircleOfFifthsPaletteView(
 
         val gapAngleOuter = separationLengthToAngleLength(majorOuterRadius)
         val gapAngleMajorInner = separationLengthToAngleLength(majorInnerRadius)
-        val gapAngleMinorOuter = separationLengthToAngleLength(minorOuterRadius)
-        val gapAngleMinorInner = separationLengthToAngleLength(minorInnerRadius)
 
 
 
         for (i in 0 until totalSegments) {
 
             val pieceOffset = rotationOffset + i*pieceAngleLength
-            var paint = if (i in highlightedIndicesMajor) highlightPaint else if (i%3==0) axisPaintMajor else paintMajor
+            var paint = if (i in highlightedIndices) highlightPaint else if (i%3==0) axisPaintMajor else paintMajor
 
             drawSegment(canvas, centerX, centerY,
                 majorInnerRadius, majorOuterRadius,
                 startAngleInner = pieceOffset + gapAngleMajorInner, startAngleOuter = pieceOffset + gapAngleOuter,
                 sweepAngleInner = pieceAngleLength - gapAngleMajorInner, sweepAngleOuter = pieceAngleLength - gapAngleOuter,
                 paint)
-
-            if(hasMinor) {
-                paint = if (i in highlightedIndicesMinor)highlightPaint else if (i % 3 == 0) axisPaintMinor else paintMinor
-                drawSegment(
-                    canvas,
-                    centerX,
-                    centerY,
-                    minorInnerRadius,
-                    minorOuterRadius,
-                    startAngleInner = pieceOffset + gapAngleMinorInner,
-                    startAngleOuter = pieceOffset + gapAngleMinorOuter,
-                    sweepAngleInner = pieceAngleLength - gapAngleMinorInner,
-                    sweepAngleOuter = pieceAngleLength - gapAngleMinorOuter,
-                    paint
-                )
-            }
         }
     }
 
@@ -160,15 +117,8 @@ open class CircleOfFifthsPaletteView(
         return lenSquared <= radiusSquared
     }
 
-    fun isClickMinor(x: Float, y: Float) : Boolean {
-        if(pointInCircle(x,y,minorInnerRadius))
-            return false
-
-        return pointInCircle(x,y, minorOuterRadius)
-    }
-
-    fun isClickMajor(x: Float, y:Float) : Boolean {
-        if(pointInCircle(x,y,minorOuterRadius))
+    fun isClickCircle(x: Float, y:Float) : Boolean {
+        if(pointInCircle(x,y,majorInnerRadius))
             return false
         return pointInCircle(x,y,majorOuterRadius)
     }
