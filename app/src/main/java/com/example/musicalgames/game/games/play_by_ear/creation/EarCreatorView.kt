@@ -30,6 +30,10 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     private lateinit var maxSoundNoteSpinner: EnumSpinner.SpinnerEnumValue<ChromaticNote>
     private lateinit var minSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
     private lateinit var maxSoundOctaveSpinner: EnumSpinner.SpinnerEnumValue<Octave>
+    private fun setValues() {
+        rootSpinnerValue=binding.rootSpinner.setEnum()
+        scaleSpinnerValue = binding.scaleSpinner.setEnum()
+    }
 
     private fun setDefaultValues() {
         rootSpinnerValue = binding.rootSpinner.setEnum(ChromaticNote.C)
@@ -124,7 +128,15 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     }
 
     override fun clearSelection() {
-        TODO("Not yet implemented")
+        rootSpinnerValue.resetToDefault()
+        scaleSpinnerValue.resetToDefault()
+        maxIntervalSpinner.resetToDefault()
+        minSoundNoteSpinner.resetToDefault()
+        maxSoundNoteSpinner.resetToDefault()
+        minSoundOctaveSpinner.resetToDefault()
+        maxSoundOctaveSpinner.resetToDefault()
+        binding.editLen.setText("")
+        binding.keyboardSelector.clearSelection()
     }
 
 }

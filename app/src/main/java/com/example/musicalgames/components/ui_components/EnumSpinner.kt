@@ -44,7 +44,7 @@ class EnumSpinner  @JvmOverloads constructor(
 
         setSelection(index)
 
-        return SpinnerEnumValue(values)
+        return SpinnerEnumValue(values, index)
 
     }
 
@@ -55,12 +55,16 @@ class EnumSpinner  @JvmOverloads constructor(
         enumSet = true
     }
 
-    inner class SpinnerEnumValue<T: Enum<T>>(private val values: Array<T>) {
+    inner class SpinnerEnumValue<T: Enum<T>>(private val values: Array<T>, private val defaultIndex: Int) {
         fun getSelectedValue() : T {
             val selectedIndex = selectedItemPosition
             val selectedValue = values.getOrNull(selectedIndex) ?: throw IllegalStateException("no field in enum for the selection")
 
             return selectedValue
+        }
+
+        fun resetToDefault() {
+            setSelection(defaultIndex)
         }
     }
 }
