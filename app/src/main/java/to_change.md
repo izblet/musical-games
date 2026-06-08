@@ -12,3 +12,6 @@ minor and major scales
 Play root sound
 Play a chord
 indicate which chord it is
+
+# General changes
++ in order to create custom levels you need to create EnumMCQ - the same as EnumSpinner but multiple choice
