@@ -8,33 +8,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.games.chords.level_data.ChordsLevels
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
-import com.example.musicalgames.utils.Chord
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.DiatonicNote
 
 class GameFactoryChords: GameFactory {
     override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
-        val levelAll = LevelChords(ChromaticNote.entries.toSet(), Chord.Companion.Quality.entries.toSet(), Chord.Companion.Extension.entries.toSet())
-        val taggedLevelAll = TaggedLevel(Game.CHORDS, 1, "all possible", "", levelAll, isFavourite = false, isCustom = false)
-
-        val diatonicNotes = DiatonicNote.entries.toList().map{ diatonicNote -> diatonicNote.chromaticNote }
-        val levelDiatonic = LevelChords(diatonicNotes.toSet(), Chord.Companion.Quality.entries.toSet(), Chord.Companion.Extension.entries.toSet())
-
-        val levelMajor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MAJOR), setOf(null))
-        val levelMinor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MINOR), setOf(null))
-        val levelMinorMajor = LevelChords(ChromaticNote.entries.toSet(), setOf(Chord.Companion.Quality.MINOR, Chord.Companion.Quality.MAJOR), setOf(null))
-        val taggedLevelDiatonic = TaggedLevel(Game.CHORDS, 2, "diatonic roots", "", levelDiatonic, isFavourite = false, isCustom = false)
-        val taggedMajor = TaggedLevel(Game.CHORDS, 3, "major chords", "", levelMajor, isFavourite = false, isCustom = false)
-        val taggedMinor = TaggedLevel(Game.CHORDS, 4, "minor chords", "", levelMinor, isFavourite = false, isCustom = false)
-        val taggedMinorMajor = TaggedLevel(Game.CHORDS, 4, "minor and major chords", "", levelMinorMajor, isFavourite = false, isCustom = false)
-       return listOf(taggedLevelDiatonic, taggedLevelAll, taggedMajor, taggedMinor, taggedMinorMajor)
+        return ChordsLevels.baseLevels
     }
 
     override fun getPermissions(): Array<String> {

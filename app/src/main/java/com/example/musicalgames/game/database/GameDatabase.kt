@@ -6,6 +6,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.musicalgames.game.games.chords.level_data.ChordsLevels
+import com.example.musicalgames.game.games.circle_of_fifths.level_data.CircleLevels
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
@@ -55,13 +57,13 @@ abstract class GameDatabase : RoomDatabase() {
             val flappyLevels = mapToEntities(FlappyLevels.baseLevels)
             val mentalLevels = mapToEntities(MentalLevels.intervalNoteLevels)
             val earLevels = mapToEntities(EarPlayLevels.baseLevels)
+            val circleLevels = mapToEntities(CircleLevels.baseLevels)
+            val chordsLevels = mapToEntities(ChordsLevels.baseLevels)
 
-            Log.d(
-                "Database",
-                "Generated prepopulateLevels: ${flappyLevels.size + mentalLevels.size + earLevels.size}"
-            )
+            val allLevels = flappyLevels + mentalLevels + earLevels + circleLevels + chordsLevels
+            Log.d("Database", "Generated prepopulateLevels: ${allLevels.size}")
 
-            return flappyLevels + mentalLevels + earLevels
+            return allLevels
         }
 
         private fun mapToEntities(levels: List<TaggedLevel>): List<LevelEntity> {

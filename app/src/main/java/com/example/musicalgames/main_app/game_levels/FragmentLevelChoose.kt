@@ -26,12 +26,8 @@ import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game.game_core.GameFactory
-import com.example.musicalgames.game.games.chords.GameFactoryChords
-import com.example.musicalgames.game.games.circle_of_fifths.creation.CircleGameFactory
-import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 import java.io.Console
@@ -209,14 +205,6 @@ class FragmentLevelChoose : Fragment() {
         adapter.setData(baseList)
         lifecycleScope.launch {
             baseList = levelDao.getLevels(viewModel.game!!, false)
-
-            //TODO: this is of course temporary, but maybe consider putting the level retrieval back into this function
-            //nvm, just realised that all levels have to be in the database for <3 to work
-            if(viewModel.game!! ==Game.CIRCLE) {
-                baseList = CircleGameFactory().getLevels(GamePackage.PREDEFINED, requireContext())
-            } else if(viewModel.game!! == Game.CHORDS) {
-                baseList = GameFactoryChords().getLevels(GamePackage.PREDEFINED, requireContext())
-            }
             if(clickedButton==binding.levelsButton)
                 adapter.setData(baseList)
         }
