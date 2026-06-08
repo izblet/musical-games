@@ -66,8 +66,7 @@ class FragmentLevelChoose : Fragment() {
     ): View {
         _binding = FragmentNewModeChooseBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-        val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
-        gameFactory = gameInfo.gameFactoryProvider()
+        gameFactory = GameMap.createFactory(viewModel.game!!)
 
         binding.favouritesButton.setOnClickListener{
             updateButtons(binding.favouritesButton)

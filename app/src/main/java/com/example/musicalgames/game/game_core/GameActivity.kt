@@ -6,7 +6,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameMap.gameInfos
+import com.example.musicalgames.games.GameMap
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -23,7 +23,7 @@ class GameActivity : AppCompatActivity() {
         val gameType = Game.valueOf(intent.getStringExtra(ARG_GAME_TYPE)!!)
 
 
-        val gameFactory = gameInfos[gameType]!!.gameFactoryProvider()
+        val gameFactory = GameMap.createFactory(gameType)
 
         val level = intent.getParcelableExtra<Level>(ARG_LEVEL)
             ?: throw IllegalStateException("Level is null in GameActivity::onCreate")
