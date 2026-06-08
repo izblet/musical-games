@@ -6,17 +6,15 @@ import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.MusicUtil.getWhiteKeysFrom
-import com.example.musicalgames.utils.MusicUtil.midi
-import com.example.musicalgames.utils.MusicUtil.noteLetter
-import com.example.musicalgames.utils.MusicUtil.noteName
 import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.NoteSpelling
 import com.example.musicalgames.utils.Scale
+import com.example.musicalgames.utils.SpellingPreference
 
 object EarPlayLevels {
     val baseLevels: List<TaggedLevel> = generateLevels()
     private fun generateLevel(scale: Scale, rootNote: ChromaticNote, notes: List<Int>, notesNum: Int, interval: Int) : TaggedLevel {
         val id =0
-        val root = midi(rootNote.toString()+"4")
         val span = notes[notes.size-1]-notes[0]
         //if the span is at least an octave, we just show the note
         //if the notes end on the root, we show the octave below
@@ -25,35 +23,35 @@ object EarPlayLevels {
         val lastNote = Note(notes[notes.size-1]).noteChromatic
         val firstRootBelow =
             if(firstNote.ordinal >=rootNote.ordinal)
-                noteLetter(root)+Note(notes[0]).octave
+                Note(rootNote, Note(notes[0]).octave).midiCode
             else
-                noteLetter(root)+(Note(notes[0]).octave-1)
+                Note(rootNote, Note(notes[0]).octave-1).midiCode
 
         val firstRootAbove =
             if(lastNote.ordinal <= rootNote.ordinal)
-                noteLetter(root)+Note(notes[notes.size-1]).octave
+                Note(rootNote, Note(notes[notes.size-1]).octave).midiCode
             else
-                noteLetter(root)+(Note(notes[notes.size-1]).octave+1)
+                Note(rootNote, Note(notes[notes.size-1]).octave+1).midiCode
 
-        val belowDistance = notes[0] - Note(firstRootBelow).midiCode
-        val aboveDistance = Note(firstRootAbove).midiCode - notes[notes.size - 1]
+        val belowDistance = notes[0] - firstRootBelow
+        val aboveDistance = firstRootAbove - notes[notes.size - 1]
 
 
         val min =
             if(span<12 && (belowDistance<aboveDistance || lastNote == rootNote))
-                Note(firstRootBelow).midiCode
+                firstRootBelow
             else notes[0]
 
         val max =
             if(span<12 && (belowDistance>=aboveDistance || firstNote == rootNote))
-                Note(firstRootAbove).midiCode
+                firstRootAbove
             else notes[notes.size-1]
-        val name = "$rootNote $scale, ${noteName(notes[0])} to ${noteName(notes[notes.size-1])}"
+        val name = "$rootNote $scale, ${NoteSpelling.spell(Note(notes[0]), SpellingPreference.SHARPS)} to ${NoteSpelling.spell(Note(notes[notes.size-1]), SpellingPreference.SHARPS)}"
         val description = "$notesNum notes, max interval $interval semitones"
         val level = PlayEarLevel(
             min,
             max,
-            ChromaticNote.fromString(noteName(root)),
+            rootNote,
             notesNum,
             interval,
             notes.toList(),
@@ -62,7 +60,7 @@ object EarPlayLevels {
     }
     private fun generateLevels(): List<TaggedLevel> {
         val levels = mutableListOf<TaggedLevel>()
-        val rootNote = midi("C4")
+        val rootNote = Note(ChromaticNote.C, 4).midiCode
         for(maxInterval in listOf(4,5,6,7,8)) {
             for (notesNum in listOf(3, 5, 7)) {
                 for (sizeList in listOf(listOf(3, 4), listOf(5, 6), listOf(7), listOf(8))) {

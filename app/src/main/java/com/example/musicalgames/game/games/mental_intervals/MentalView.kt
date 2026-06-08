@@ -14,6 +14,8 @@ import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.utils.NoteSpelling
+import com.example.musicalgames.utils.SpellingPreference
 import kotlin.math.roundToInt
 
 class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener {
@@ -104,16 +106,16 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     override fun onNewProblem(interval: Interval, questionNote: ChromaticNote) {
 
         messageTextView.text = buildSpannedString {
-            append("${questionNote.tmpToString()} + ")
+            append("${NoteSpelling.spell(questionNote, SpellingPreference.MIXED)} + ")
             color(interval.findColour()) {
                 append("$interval")
             }
 
-        }//"What is the note positioned at $interval from ${questionNote.tmpToString()}?"
+        }
     }
 
     override fun onNewProblem(questionNote: ChromaticNote, note: ChromaticNote) {
-       messageTextView.text = "${questionNote.tmpToString()} + ? = ${note.tmpToString()}"
+       messageTextView.text = "${NoteSpelling.spell(questionNote, SpellingPreference.MIXED)} + ? = ${NoteSpelling.spell(note, SpellingPreference.MIXED)}"
     }
 
     override fun onRightAnswer() {
@@ -125,6 +127,6 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     }
 
     override fun onWrongAnswer(correctAns: ChromaticNote) {
-        messageTextView.text = "The right answer is : ${correctAns.tmpToString()}"
+        messageTextView.text = "The right answer is : ${NoteSpelling.spell(correctAns, SpellingPreference.MIXED)}"
     }
 }

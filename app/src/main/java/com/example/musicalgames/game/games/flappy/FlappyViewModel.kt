@@ -6,16 +6,17 @@ import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
-import com.example.musicalgames.utils.MusicUtil.midi
+import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class FlappyViewModel() : ViewModel() {
     private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
     var score = 0
     var pitchRecogniser: PitchRecogniser? = null
-    var minRange: Int = midi("C3")
-    var maxRange: Int = midi("C4")
-    var root: Int = midi("C4")
+    var minRange: Int = Note(ChromaticNote.C, 3).midiCode
+    var maxRange: Int = Note(ChromaticNote.C, 4).midiCode
+    var root: Int = Note(ChromaticNote.C, 4).midiCode
     var endAfter: Int = LEN_INF
     var gapPositions: List<Int> = listOf()
 

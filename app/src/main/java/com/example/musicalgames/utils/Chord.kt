@@ -93,7 +93,8 @@ data class Chord (val root: ChromaticNote, val quality: Quality, val extension: 
     }
 
     fun getName(sharpPreference: Boolean = true): String {
-        val name = if(sharpPreference) StringBuilder(root.sharpPreferenceName()) else StringBuilder(root.flatPreferenceName())
+        val preference = if(sharpPreference) SpellingPreference.SHARPS else SpellingPreference.FLATS
+        val name = StringBuilder(NoteSpelling.spell(root, preference))
 
         name.append(getSymbol(quality))
 

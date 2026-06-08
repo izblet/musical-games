@@ -7,6 +7,8 @@ import android.view.MotionEvent
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.utils.NoteSpelling
+import com.example.musicalgames.utils.SpellingPreference
 import java.util.Locale
 
 class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFifthsPaletteView(
@@ -33,11 +35,11 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
             if(major) {
                 val index = majorList.indexOf(chromaticNote)
                 return if(chromaticNote.isDiatonic())
-                    chromaticNote.toString()
+                    NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
                 else if (index>=8) {
-                    chromaticNote.flatPreferenceName()
+                    NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)
                 } else {
-                    "${chromaticNote.flatPreferenceName()}/${chromaticNote.sharpPreferenceName()}"
+                    "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
                 }
             }
 
@@ -45,13 +47,13 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
             val index = minorList.indexOf(chromaticNote)
             val noteName: String
            if(chromaticNote.isDiatonic()) {
-               noteName = chromaticNote.toString()
+               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
            } else if( index<=5){
-               noteName = chromaticNote.sharpPreferenceName()
+               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
            } else if(index == 6) {
-               noteName = "${chromaticNote.flatPreferenceName()}/${chromaticNote.sharpPreferenceName()}"
+               noteName = "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
            } else {
-               noteName = chromaticNote.flatPreferenceName()
+               noteName = NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)
            }
 
            return noteName.lowercase(Locale.getDefault())

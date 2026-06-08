@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import com.example.musicalgames.components.palettes.KeyboardBasedPalette
 import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.utils.NoteSpelling
+import com.example.musicalgames.utils.SpellingPreference
 
 class KeyPaletteView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : KeyboardBasedPalette(context, attributeSet, defStyle) {
     private var listener: KeyPaletteListener? = null
@@ -15,8 +17,8 @@ class KeyPaletteView @JvmOverloads constructor(context: Context, attributeSet: A
 
     override fun keyLabel(note: ChromaticNote): String {
         if(note.isDiatonic())
-            return note.toString()
-        else return note.flatPreferenceName()+"\n"+note.sharpPreferenceName()
+            return NoteSpelling.spell(note, SpellingPreference.SHARPS)
+        return "${NoteSpelling.spell(note, SpellingPreference.FLATS)}\n${NoteSpelling.spell(note, SpellingPreference.SHARPS)}"
     }
 
     override fun onClickAction(note: ChromaticNote) {

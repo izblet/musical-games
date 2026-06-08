@@ -5,7 +5,7 @@ import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
-import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Note
 import kotlin.math.PI
 import kotlin.math.log2
@@ -67,16 +67,17 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
     }
 
     private fun getAmplitudeFactor(frequency: Double): Double {
-        val factor = (log2(MusicUtil.frequency("C3"))/log2(frequency)).pow(3)
+        val factor = (log2(Note(ChromaticNote.C, 3).frequency)/log2(frequency)).pow(3)
         return factor
     }
 
     override fun playNote(note: String, listener: SoundPlayerListener?) {
-        playNote(MusicUtil.frequency(note), null)
+        val parsed = Note.parse(note) ?: throw IllegalArgumentException("Invalid note format $note")
+        playNote(parsed.frequency, null)
     }
 
     override fun playNote(midiCode: Int, listener: SoundPlayerListener?) {
-        playNote(MusicUtil.frequency(midiCode), null)
+        playNote(Note(midiCode).frequency, null)
     }
 
     fun stopSound() {

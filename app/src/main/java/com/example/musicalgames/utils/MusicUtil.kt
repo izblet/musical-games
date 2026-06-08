@@ -1,55 +1,16 @@
 package com.example.musicalgames.utils
 
-import android.util.Log
-import kotlin.math.log2
-import kotlin.math.round
-import kotlin.math.roundToInt
-
 // MusicUtils.kt
 object MusicUtil {
 
-    private val noteToFrequencyMap = mapOf(
-        "C" to 261.63, "C#" to 277.18, "D" to 293.66, "D#" to 311.13,
-        "E" to 329.63, "F" to 349.23, "F#" to 369.99, "G" to 392.00,
-        "G#" to 415.30, "A" to 440.00, "A#" to 466.16, "B" to 493.88
-    )
+    private fun parseOrThrow(note: String): Note =
+        Note.parse(note) ?: throw IllegalArgumentException("Invalid note format $note")
 
-    @Throws
-    fun frequency(note: String): Double {
-        val exception = java.lang.IllegalArgumentException("Invalid note format $note")
-        val noteRegex = """([A-Ga-g]#?)(\d+)""".toRegex()
-        val matchResult = noteRegex.matchEntire(note) ?: throw exception
-        val (noteName, octave) = matchResult.destructured
-        val baseFrequency = noteToFrequencyMap[noteName.toUpperCase()] ?: throw exception
-        val frequency = baseFrequency * Math.pow(2.0, (octave.toInt() - 4).toDouble())
-        return frequency
-    }
-
-    @Throws(IllegalArgumentException::class)
-    fun noteLetter(frequency: Double): String {
-        // Calculate the octave of the given frequency
-        val noteNum = round(12*log2(frequency/440.0)+49)
-        val note = (noteNum+8).toInt()%12
-        return noteToFrequencyMap.keys.elementAt(note)
-       }
-    fun isWhite(note: Note): Boolean {
-        return isWhite(note.name)
-    }
-    fun midi(frequency: Double): Int {
-        return (12 * (Math.log(frequency / 440.0) / Math.log(2.0)) + 69).roundToInt()
-    }
-    fun midi(note: String) : Int {
-        return midi(frequency(note))
-    }
-
-    fun frequency(midiCode: Int): Double {
-        return 440.0 * Math.pow(2.0, (midiCode - 69) / 12.0)
-    }
     fun spice(note: String): Double {
-        return spice(frequency(note))
+        return spice(parseOrThrow(note).frequency)
     }
     fun spice(midiNote: Int): Double {
-        return spice(frequency(midiNote))
+        return spice(Note(midiNote).frequency)
     }
     fun spiceNoteTopEnd(note:Int): Double {
         return (spice(note) + spice(note+1)) / 2
@@ -58,41 +19,18 @@ object MusicUtil {
     fun spiceNoteBottomEnd(note:Int): Double {
         return (spice(note) + spice(note-1)) / 2
     }
-    fun normalize(note: String, min:Double, max:Double) : Double {
-        return normalize(spice(note), min, max)
-    }
     fun normalize(midicode: Int, min: Double, max:Double): Double {
         return normalize(spice(midicode), min, max)
     }
     fun normalize(spiceNote: Double, min: Double, max: Double):Double {
         return (spiceNote-min)/(max-min)
     }
-    fun noteLetter(midicode: Int):String {
-        return noteLetter(frequency(midicode))
-    }
-    fun noteLetter(note: String):String {
-        return note.slice(0..0)
-    }
-    fun noteoctave(midicode: Int): Int {
-        return midicode/12 -1
-    }
-    fun noteoctave(note: String): Int {
-        val regex = Regex("\\d+")
-        val matchResult = regex.find(note)
-        return matchResult?.value?.toInt()!!
-    }
-    fun noteName(midicode: Int): String {
-        return noteLetter(midicode) + noteoctave(midicode)
-    }
-    fun noteName(frequency: Double) : String {
-        return noteName(midi(frequency))
-    }
 
-    fun isWhite(note: String) :Boolean {
-        return !note.contains('#')
+    fun isWhite(note: Note): Boolean {
+        return note.noteChromatic.isDiatonic()
     }
     fun isWhite(midiNote: Int): Boolean {
-        return isWhite(noteLetter(midiNote))
+        return isWhite(Note(midiNote))
     }
 
     fun spice(hz: Double): Double {
@@ -107,11 +45,16 @@ object MusicUtil {
     }
     fun cleffIndexC4(note: Note): Int {
         //returns the number of white notes from/to C4
-        val letter = note.name.slice(0..0)
-        val octaveNote = DiatonicNote.valueOf(letter).ordinal
+        val chromatic = note.noteChromatic
+        //sharp spelling always names a non-diatonic note after the white key below it
+        //(C# names off C, D# off D, ...) - this mirrors the staff position the note is drawn at
+        val letter = if (chromatic.isDiatonic())
+            DiatonicNote.fromChromatic(chromatic)!!
+        else
+            DiatonicNote.fromChromatic(ChromaticNote.fromDegree(chromatic.ordinal - 1))!!
         val octave = note.octave
 
-        return octaveNote + octave*8 - 4*8
+        return letter.ordinal + octave*8 - 4*8
     }
     fun getScaleNotes(scale: Scale, root: ChromaticNote) : List<ChromaticNote> {
         val result: MutableList<ChromaticNote> = mutableListOf()
@@ -141,7 +84,7 @@ object MusicUtil {
 
         val result = mutableListOf<Note>()
         while(result.size < num) {
-            result.add(Note(scaleNotes[i].toString()+octave))
+            result.add(Note(scaleNotes[i], octave))
             i=(i+1)%scaleNotes.size
             if(i==newOctave)
                 octave+=1
@@ -168,7 +111,7 @@ object MusicUtil {
         val result = mutableListOf<Note>()
 
         while(result.size < num) {
-            result.add(Note(scaleNotes[i].toString()+octave))
+            result.add(Note(scaleNotes[i], octave))
             i=(i-1+scaleNotes.size)%scaleNotes.size
             if(i==newOctave)
                 octave-=1
@@ -184,9 +127,6 @@ object MusicUtil {
     fun getWhiteKeysTo(lastPitch: Int, num: Int) : List<Int> {
         val result = getScaleNotesTo(Scale.MAJOR, ChromaticNote.C, Note(lastPitch), num)
         return result.map{ note->note.midiCode}
-    }
-    fun getKeyIntervalFrom(pitch: String, num: Int): Int {
-        return midi(pitch) +num
     }
     fun addInterval(note: Note, interval: Interval) : Note {
         return Note(note.midiCode + interval.getSemitones())

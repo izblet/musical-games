@@ -3,10 +3,11 @@ package com.example.musicalgames.games.flappy
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.MusicUtil.midi
-import com.example.musicalgames.utils.MusicUtil.noteLetter
-import com.example.musicalgames.utils.MusicUtil.noteName
+import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.NoteSpelling
+import com.example.musicalgames.utils.SpellingPreference
 
 const val LEN_INF = -1
 const val DELIMITER = ","
@@ -16,7 +17,7 @@ object FlappyLevels {
         val minPitch = notes[0]
         val maxPitch = notes[notes.size-1]
 
-        val name = "${noteName(minPitch)} to ${noteName(maxPitch)}, root: ${noteLetter(root)} $mode"
+        val name = "${NoteSpelling.spell(Note(minPitch), SpellingPreference.SHARPS)} to ${NoteSpelling.spell(Note(maxPitch), SpellingPreference.SHARPS)}, root: ${NoteSpelling.spell(Note(root).noteChromatic, SpellingPreference.SHARPS)} $mode"
         val description = "Arcade"
         val level = FlappyLevel(minPitch, maxPitch, root, notes, LEN_INF)
         return TaggedLevel(Game.FLAPPY, 0, name, description, level, isFavourite = false, isCustom = false)
@@ -26,7 +27,7 @@ object FlappyLevels {
     private fun generateMajorLevels():List<TaggedLevel> {
         val levels = mutableListOf<TaggedLevel>()
 
-        val rootNote = midi("C4")
+        val rootNote = Note(ChromaticNote.C, 4).midiCode
 
         for(sizeList in listOf(listOf(3,4), listOf(5,6), listOf(7), listOf(8))) {
             //generate levels with notes above root
