@@ -14,6 +14,7 @@ data class GameInfo (
     val name: String,
     val description: String,
     val iconResourceId: Int,
+    val gameplayOptions: Set<GameplayOptions>,
     val gameFactoryProvider: ()-> GameFactory,
 )
 
@@ -26,25 +27,6 @@ enum class Game {
 }
 
 object GameMap {
-    val gameFactories : Map<Game, GameFactory> = Game.entries.associateWith { game->
-        when(game) {
-            Game.FLAPPY -> FlappyGameFactory()
-            Game.PLAY_BY_EAR -> EarGameFactory()
-            Game.MENTAL_INTERVALS -> MentalGameFactory()
-            Game.CIRCLE -> CircleGameFactory()
-            Game.CHORDS -> GameFactoryChords()
-        }
-
-    }
-    val gameplayOptions: Map<Game, Set<GameplayOptions>> = Game.entries.associateWith { game->
-        when(game) {
-            Game.FLAPPY -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
-            Game.PLAY_BY_EAR -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
-            Game.MENTAL_INTERVALS -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
-            Game.CIRCLE -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
-            Game.CHORDS -> setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
-        }
-    }
     val gameInfos : Map<Game, GameInfo> = Game.entries.associateWith { game ->
         when (game) {
             Game.FLAPPY ->
@@ -52,7 +34,8 @@ object GameMap {
                     2,
                     "Flappy Bird",
                     "Flappy bird game controlled with voice",
-                    R.drawable.microphone
+                    R.drawable.microphone,
+                    setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
                 ) { FlappyGameFactory() }
 
             Game.PLAY_BY_EAR ->
@@ -60,7 +43,8 @@ object GameMap {
                     3,
                     "Play By Ear",
                     "Play back melodies on a piano",
-                    R.drawable.ear
+                    R.drawable.ear,
+                    setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH)
                 ) { EarGameFactory() }
 
             Game.MENTAL_INTERVALS ->
@@ -68,23 +52,28 @@ object GameMap {
                         4,
                         "Note Arithmetic",
                         "Practice relationships between notes",
-                        R.drawable.mental
+                        R.drawable.mental,
+                        setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
                     ) { MentalGameFactory() }
             Game.CIRCLE ->
                     GameInfo(
                         5,
                         "Circle of Fifths",
                         "Learn the positions of scales on the circle of fifths",
-                        R.drawable.clock_icon
+                        R.drawable.clock_icon,
+                        setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
                     ) { CircleGameFactory() }
             Game.CHORDS ->
                 GameInfo(
                     6,
                     "Chords",
                     "Learn the notes for chords",
-                    R.drawable.default_game_icon
+                    R.drawable.default_game_icon,
+                    setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE)
                 ){ GameFactoryChords() }
         }
     }
+
+    val gameplayOptions: Map<Game, Set<GameplayOptions>> = gameInfos.mapValues { it.value.gameplayOptions }
 }
 
