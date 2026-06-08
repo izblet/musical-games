@@ -17,7 +17,6 @@ import com.example.musicalgames.game_activity.Level
 import kotlin.reflect.KClass
 
 data class GameInfo (
-    val id: Int,
     val name: String,
     val description: String,
     val iconResourceId: Int,
@@ -50,35 +49,35 @@ object GameMap {
     val registrations: List<GameRegistration> = listOf(
         GameRegistration(
             game = Game.FLAPPY,
-            info = GameInfo(2, "Flappy Bird", "Flappy bird game controlled with voice", R.drawable.microphone),
+            info = GameInfo("Flappy Bird", "Flappy bird game controlled with voice", R.drawable.microphone),
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH),
             factoryProvider = { FlappyGameFactory() },
             serialization = GameSerialization(FlappyLevel::class, "flappy"),
         ),
         GameRegistration(
             game = Game.PLAY_BY_EAR,
-            info = GameInfo(3, "Play By Ear", "Play back melodies on a piano", R.drawable.ear),
+            info = GameInfo("Play By Ear", "Play back melodies on a piano", R.drawable.ear),
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH),
             factoryProvider = { EarGameFactory() },
             serialization = GameSerialization(PlayEarLevel::class, "ear"),
         ),
         GameRegistration(
             game = Game.MENTAL_INTERVALS,
-            info = GameInfo(4, "Note Arithmetic", "Practice relationships between notes", R.drawable.mental),
+            info = GameInfo("Note Arithmetic", "Practice relationships between notes", R.drawable.mental),
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
             factoryProvider = { MentalGameFactory() },
             serialization = GameSerialization(MentalLevel::class, "mental"),
         ),
         GameRegistration(
             game = Game.CIRCLE,
-            info = GameInfo(5, "Circle of Fifths", "Learn the positions of scales on the circle of fifths", R.drawable.clock_icon),
+            info = GameInfo("Circle of Fifths", "Learn the positions of scales on the circle of fifths", R.drawable.clock_icon),
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
             factoryProvider = { CircleGameFactory() },
             serialization = GameSerialization(CircleLevel::class, "circle"),
         ),
         GameRegistration(
             game = Game.CHORDS,
-            info = GameInfo(6, "Chords", "Learn the notes for chords", R.drawable.default_game_icon),
+            info = GameInfo("Chords", "Learn the notes for chords", R.drawable.default_game_icon),
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
             factoryProvider = { GameFactoryChords() },
             serialization = GameSerialization(LevelChords::class, "chords"),

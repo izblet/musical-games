@@ -4,14 +4,11 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Note
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class FlappyViewModel() : ViewModel() {
-    private var gameId: Int = GameMap.gameInfos[Game.FLAPPY]!!.id
     var score = 0
     var pitchRecogniser: PitchRecogniser? = null
     var minRange: Int = Note(ChromaticNote.C, 3).midiCode
