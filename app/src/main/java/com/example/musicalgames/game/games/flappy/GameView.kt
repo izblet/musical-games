@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import com.example.musicalgames.components.StaffPainter
 import com.example.musicalgames.game_activity.GameListener
@@ -34,23 +34,30 @@ class FloppyGameView(context: Context) : View(context) {
     private var bassPainter: StaffPainter
 
    init {
+       val foregroundColor = TypedValue().let { tv ->
+           context.theme.resolveAttribute(android.R.attr.colorForeground, tv, true)
+           tv.data
+       }
+
        val trebleClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.treble_clef)
        val sharpBitmap = BitmapFactory.decodeResource(resources, R.drawable.sharp)
        val flatBitmap = BitmapFactory.decodeResource(resources, R.drawable.flat)
-       treblePainter = StaffPainter(trebleClefBitmap,sharpBitmap, flatBitmap, true)
+       treblePainter = StaffPainter(trebleClefBitmap, sharpBitmap, flatBitmap, true, foregroundColor)
 
        val bassClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.bass_clef)
-       bassPainter = StaffPainter(bassClefBitmap,sharpBitmap, flatBitmap, false)
-
+       bassPainter = StaffPainter(bassClefBitmap, sharpBitmap, flatBitmap, false, foregroundColor)
    }
 
     private val scorePaint = Paint().apply {
-        color = ContextCompat.getColor(context, R.color.white)
+        color = context.getColor(R.color.white)
         textSize = 48f
     }
 
-    private val backgroundColor = ContextCompat.getColor(context, R.color.blue)
-    private val pipeColor = ContextCompat.getColor(context, R.color.blue)
+    private val backgroundColor: Int = TypedValue().let { tv ->
+        context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+        tv.data
+    }
+    private val pipeColor = context.getColor(R.color.blue)
 
     fun setEndListener(listener: GameListener) {
         endListener = listener
@@ -106,11 +113,9 @@ class FloppyGameView(context: Context) : View(context) {
 
         canvas.drawColor(backgroundColor)
 
+        for (pipe in pipes) { pipe.drawLane(canvas, height.toFloat(), width.toFloat()) }
         bird!!.draw(canvas, height.toFloat(), width.toFloat())
-
-        for (pipe in pipes) {
-            pipe.draw(canvas, height.toFloat(), width.toFloat())
-        }
+        for (pipe in pipes) { pipe.draw(canvas, height.toFloat(), width.toFloat()) }
 
         // Draw the score
         canvas.drawText("Score: $score", 20f, 60f, scorePaint)
@@ -120,7 +125,7 @@ class FloppyGameView(context: Context) : View(context) {
 
     }
 
-    fun updateView() {
+    fun tickFrame() {
         bird!!.updatePosition()
         for (pipe in pipes) {
             pipe.move()

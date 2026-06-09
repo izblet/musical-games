@@ -4,19 +4,25 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import com.example.musicalgames.music_model.MusicUtil.cleffIndexC4
 import com.example.musicalgames.music_model.Note
 
 
-class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitmap, private val flatBitmap: Bitmap, private val treble: Boolean) {
+class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitmap, private val flatBitmap: Bitmap, private val treble: Boolean, color: Int = Color.BLACK) {
     private val staffLinePaint = Paint().apply {
-        color = Color.BLACK
+        this.color = color
         strokeWidth = 5f
     }
 
     private val notePaint = Paint().apply {
-        color = Color.BLACK
+        this.color = color
+    }
+
+    private val clefPaint = Paint().apply {
+        colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
     }
     private var top:Float = 0f
     private var bottom:Float = 0f
@@ -67,7 +73,7 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
         val trebleClefWidth = height / 2
         val trebleClefHeight = clefBitmap.height * (trebleClefWidth / clefBitmap.width)
         val dstRect = RectF(left, top, left + trebleClefWidth, top + trebleClefHeight)
-        canvas.drawBitmap(clefBitmap, null, dstRect, null)
+        canvas.drawBitmap(clefBitmap, null, dstRect, clefPaint)
     }
 
     private fun drawNotes(canvas: Canvas, left: Float, midiNotes: List<Int>) {

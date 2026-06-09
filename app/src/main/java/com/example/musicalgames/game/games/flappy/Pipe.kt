@@ -22,14 +22,16 @@ class Pipe(
         const val WIDTH = 0.01f
         const val SPEED = 0.002f
         const val PIPE_SPACE = 0.3f
+        const val LANE_PADDING = 0.015f
     }
 
+    private val laneColor = color
     private val paint = Paint()
     private val staffHeight = 200f
     private val staffWidth = 300f
 
     init {
-        paint.color = color
+        paint.color = laneColor
     }
 
     fun move() {
@@ -111,6 +113,15 @@ class Pipe(
         rect.top *= scaleY
         rect.right *= scaleX
         rect.bottom *= scaleY
+    }
+
+    fun drawLane(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
+        paint.color = laneColor
+        canvas.drawRect(
+            (x - LANE_PADDING) * screenWidth, 0f,
+            (x + WIDTH + LANE_PADDING) * screenWidth, screenHeight,
+            paint
+        )
     }
 
     fun draw(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
