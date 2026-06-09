@@ -19,21 +19,21 @@ class EnumSpinner  @JvmOverloads constructor(
     // if you find a better idea, go ahead. i want to inflate from xml but i don't want to have to
     // specify the type in order to retrieve the value
     // why? idk, i just don't wanna
-    inline fun <reified T: Enum<T>> setEnum() : SpinnerEnumValue<T> {
-       return setEnum(enumValues<T>()[0])
+    inline fun <reified T: Enum<T>> setEnum(noinline displayName: ((T) -> String)? = null) : SpinnerEnumValue<T> {
+       return setEnum(enumValues<T>()[0], displayName)
     }
 
-    inline fun <reified T: Enum<T>> setEnum(defaultVal : T) : SpinnerEnumValue<T> {
+    inline fun <reified T: Enum<T>> setEnum(defaultVal : T, noinline displayName: ((T) -> String)? = null) : SpinnerEnumValue<T> {
         val values = enumValues<T>()
-        return setEnum(values, defaultVal)
+        return setEnum(values, defaultVal, displayName)
 
     }
 
-    inline fun <reified T: Enum<T>> setEnum(values: Array<T>, defaultVal: T) :SpinnerEnumValue<T> {
+    inline fun <reified T: Enum<T>> setEnum(values: Array<T>, defaultVal: T, noinline displayName: ((T) -> String)? = null) :SpinnerEnumValue<T> {
         setCompleteOrThrow()
         val adapter = ArrayAdapter(context,
             android.R.layout.simple_spinner_dropdown_item,
-            values.map{it.toString()}
+            values.map{ displayName?.invoke(it) ?: it.toString() }
         ).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
         this.adapter=adapter
 

@@ -16,8 +16,10 @@ import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.MusicUtil
 import com.example.musicalgames.utils.Note
+import com.example.musicalgames.utils.NoteSpelling
 import com.example.musicalgames.utils.Octave
 import com.example.musicalgames.utils.Scale
+import com.example.musicalgames.utils.SpellingPreference
 
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
@@ -36,11 +38,12 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     }
 
     private fun setDefaultValues() {
-        rootSpinnerValue = binding.rootSpinner.setEnum(ChromaticNote.C)
+        val noteSpelling: ((ChromaticNote)->String)= { note -> NoteSpelling.spell(note, SpellingPreference.MIXED) }
+        rootSpinnerValue = binding.rootSpinner.setEnum(ChromaticNote.C,noteSpelling)
         scaleSpinnerValue = binding.scaleSpinner.setEnum(Scale.MAJOR)
         maxIntervalSpinner = binding.maxIntervalSpinner.setEnum(Interval.P8)
-        minSoundNoteSpinner = binding.minNoteSpinner.setEnum(ChromaticNote.C)
-        maxSoundNoteSpinner = binding.maxNoteSpinner.setEnum(ChromaticNote.C)
+        minSoundNoteSpinner = binding.minNoteSpinner.setEnum(ChromaticNote.C, noteSpelling)
+        maxSoundNoteSpinner = binding.maxNoteSpinner.setEnum(ChromaticNote.C,noteSpelling)
         minSoundOctaveSpinner = binding.minNoteOctave.setEnum(Octave.o4)
         maxSoundOctaveSpinner = binding.maxOctaveSpinner.setEnum(Octave.o5)
 
