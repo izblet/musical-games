@@ -33,6 +33,7 @@ data class GameRegistration(
     val gameplayOptions: Set<GameplayOptions>,
     val factoryProvider: () -> GameFactory,
     val serialization: GameSerialization,
+    val portrait: Boolean = false,
 )
 
 enum class Game {
@@ -74,6 +75,7 @@ object GameMap {
             gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
             factoryProvider = { CircleGameFactory() },
             serialization = GameSerialization(CircleLevel::class, "circle"),
+            portrait = true,
         ),
         GameRegistration(
             game = Game.CHORDS,
@@ -96,5 +98,6 @@ object GameMap {
     val gameplayOptions: Map<Game, Set<GameplayOptions>> = byGame.mapValues { it.value.gameplayOptions }
 
     fun createFactory(game: Game): GameFactory = byGame.getValue(game).factoryProvider()
+    fun isPortrait(game: Game): Boolean = byGame.getValue(game).portrait
 }
 

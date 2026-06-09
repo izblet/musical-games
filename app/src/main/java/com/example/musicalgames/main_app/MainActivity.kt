@@ -19,6 +19,10 @@ import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
 import com.example.musicalgames.game_activity.GameActivity
+import com.example.musicalgames.game_activity.LandscapeGameActivity
+import com.example.musicalgames.game_activity.PortraitGameActivity
+import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
@@ -70,10 +74,12 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
 
         val startGameFunction: (Unit)->Unit = {
             if (viewModel.gameplay != null) {
-                val intent = Intent(this@MainActivity, GameActivity::class.java).apply {
+                val game = viewModel.game!!
+                val activityClass = if (GameMap.isPortrait(game)) PortraitGameActivity::class.java else LandscapeGameActivity::class.java
+                val intent = Intent(this@MainActivity, activityClass).apply {
                     putExtra(GameActivity.ARG_LEVEL, viewModel.level)
                     putExtra(GameActivity.ARG_GAMEPlAY_INFO, viewModel.gameplay)
-                    putExtra(GameActivity.ARG_GAME_TYPE, viewModel.game!!.name)
+                    putExtra(GameActivity.ARG_GAME_TYPE, game.name)
                 }
                 startActivity(intent)
             }

@@ -39,7 +39,8 @@ open class CircleOfFifthsPaletteView(
     private val rotationOffset = -90f-pieceAngleLength/2f //so that C is on the top
 
     fun setHighlightedIndices(list:List<Int>) {
-       highlightedIndices = list
+        highlightedIndices = list
+        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {

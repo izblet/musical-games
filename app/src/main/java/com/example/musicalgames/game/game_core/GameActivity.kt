@@ -8,7 +8,7 @@ import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
 
-class GameActivity : AppCompatActivity() {
+abstract class GameActivity : AppCompatActivity() {
     companion object {
         const val ARG_GAME_TYPE = "game_type"
         const val ARG_LEVEL = "level"

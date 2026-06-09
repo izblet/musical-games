@@ -51,8 +51,13 @@
 
         <activity
             android:parentActivityName=".main_app.MainActivity"
-            android:name=".game_activity.GameActivity"
+            android:name=".game_activity.LandscapeGameActivity"
             android:screenOrientation="landscape"
+            android:exported="true" />
+        <activity
+            android:parentActivityName=".main_app.MainActivity"
+            android:name=".game_activity.PortraitGameActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
 
         <activity android:name=".games.mental_intervals.ActivitySightSing"
