@@ -16,7 +16,7 @@ abstract class GameActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game_floppy)
+        setContentView(R.layout.activity_game)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
@@ -33,7 +33,7 @@ abstract class GameActivity : AppCompatActivity() {
 
         gameFactory.prepareViewModel(level, gamePlay, this)
 
-        val action = StartGameFragmentDirections.actionStartGameFragmentToFlappyGameFragment(gameType.name)
+        val action = StartGameFragmentDirections.actionStartGameFragmentToGameFragment(gameType.name)
         navController.navigate(action)
 
     }

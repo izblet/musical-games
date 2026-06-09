@@ -27,7 +27,7 @@ class GameFragment : Fragment(), GameListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        val rootView = inflater.inflate(R.layout.fragment_flappy, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_game, container, false)
         startButton = rootView.findViewById(R.id.startGameButton)
 
         return rootView
@@ -83,7 +83,7 @@ class GameFragment : Fragment(), GameListener {
         gameController.endGame()
 
         //TODO: for now it does the same thing for every game, score could be some other value
-        val action = GameFragmentDirections.actionFlappyGameFragmentToGameEndedFragment(
+        val action = GameFragmentDirections.actionGameFragmentToGameEndedFragment(
             gameType!!.name,
             "Game Ended",
             "Your score: ${gameController.getScore()}",

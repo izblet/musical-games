@@ -25,12 +25,15 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     private var birdUpdateJob: Job? = null
     private var viewModel: FlappyViewModel? = null
     private var pitchRecogniser: PitchRecogniser? = null
+    private var lifecycleOwner: LifecycleOwner? = null
+    private var gameEnded = false
 
     companion object {
         val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
     }
 
     override fun startGame(owner: LifecycleOwner) {
+        lifecycleOwner = owner
         viewModel!!.playKeyEstablishment()
         handler.postDelayed({
             pitchRecogniser!!.start()
@@ -43,21 +46,25 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
         stopGameLoop()
         gameView.freezeBird()
         pitchRecogniser!!.stop()
+        viewModel!!.playKeyEstablishment()
+        handler.postDelayed(::resumeGame, 3000)
     }
 
-    fun resumeGame(owner: LifecycleOwner) {
+    private fun resumeGame() {
         pitchRecogniser!!.start()
         isGameRunning = true
-        startGameLoop(owner)
+        startGameLoop(lifecycleOwner!!)
     }
 
     override fun endGame() {
+        if (gameEnded) return
+        gameEnded = true
         stopGameLoop()
+        lifecycleOwner = null
         viewModel!!.pitchRecogniser!!.release()
     }
 
     override fun getScore(): Int {
-        Log.e("score controller", "${gameView.getScore()}")
         return gameView.getScore()
     }
 

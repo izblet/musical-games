@@ -12,8 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.games.flappy.FlappyViewModel
-import com.example.musicalgames.games.play_by_ear.EarViewModel
 
 class GameEndedFragment : Fragment() {
     private val args : GameEndedFragmentArgs by navArgs()
@@ -57,7 +55,7 @@ class GameEndedFragment : Fragment() {
         }
 
         buttonRetry.setOnClickListener {
-            val action =GameEndedFragmentDirections.actionGameEndedFragmentToFlappyGameFragment(game!!)
+            val action = GameEndedFragmentDirections.actionGameEndedFragmentToGameFragment(game!!)
             findNavController().navigate(action)
         }
     }

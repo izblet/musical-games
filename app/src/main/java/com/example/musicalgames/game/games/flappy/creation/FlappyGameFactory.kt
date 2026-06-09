@@ -77,13 +77,10 @@ class FlappyGameFactory : GameFactory {
         gameController.setViewModel(viewModel)
         gameController.initGame(context, gameListener)
 
-        val resumeHandler = Handler(Looper.getMainLooper())
         pauseButton.setOnClickListener {
             pauseButton.isEnabled = false
             gameController.pauseGame()
-            viewModel.playKeyEstablishment()
-            resumeHandler.postDelayed({
-                gameController.resumeGame(activity)
+            Handler(Looper.getMainLooper()).postDelayed({
                 pauseButton.isEnabled = true
             }, 3000)
         }
