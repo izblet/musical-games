@@ -2,20 +2,32 @@ package com.example.musicalgames.game.games.circle_of_fifths.creation
 
 import android.content.Context
 import android.util.AttributeSet
+import com.example.musicalgames.components.ui_components.MultiEnumSpinner
+import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.utils.Mode
+import com.example.musicalgames.utils.ModeSpelling
 
-class CircleCustomCreator(context:Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator(context, createLevelAction, attrs) {
+class CircleCustomCreator(context: Context, createLevelAction: (Level) -> Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
+
+    private val modesSpinner = MultiEnumSpinner(context)
+    private val modesValue = modesSpinner.setEnum<Mode>(displayName = ModeSpelling::common)
+
+    init {
+        addNewRow("Modes:", modesSpinner)
+    }
+
     override fun getLevel(): Level? {
-        TODO("Not yet implemented")
+        val modes = modesValue.getSelectedValues().toList()
+        if (modes.isEmpty()) return null
+        return CircleLevel(positionToName = true, modes = modes)
     }
 
     override fun highlightMissing() {
-        TODO("Not yet implemented")
     }
 
     override fun clearSelection() {
-        TODO("Not yet implemented")
+        modesValue.resetToDefault()
     }
-
 }

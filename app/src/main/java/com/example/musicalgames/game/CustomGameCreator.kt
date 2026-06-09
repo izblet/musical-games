@@ -3,7 +3,6 @@ package com.example.musicalgames.games
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -33,10 +32,10 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
         }
     }
 
-    private fun styleSelector(selector : ViewGroup) {
+    private fun styleSelector(selector : View) {
         //some of the parameters unnecessary for now but will probably be used later
         selector.apply {
-            layoutParams = TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            layoutParams = TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT)
                 .apply {
                     column = 2
                     span = 1
@@ -49,12 +48,12 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
             layoutParams = TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
                column =1
                span =1
-               weight =1f
+               weight = 0f
             }
         }
     }
 
-    protected fun makeRow(label: String, selector: ViewGroup) : TableRow {
+    protected fun makeRow(label: String, selector: View) : TableRow {
         val row= TableRow(context).apply {
            layoutParams = LayoutParams(
                LayoutParams.MATCH_PARENT,
@@ -76,7 +75,7 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
         return row
     }
 
-    protected fun addNewRow(label: String, selector : ViewGroup) : TableRow {
+    protected fun addNewRow(label: String, selector : View) : TableRow {
         val row = makeRow(label, selector)
         addView(row)
         return row
