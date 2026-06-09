@@ -1,8 +1,8 @@
 package com.example.musicalgames.game.games.play_by_ear
 
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Note
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

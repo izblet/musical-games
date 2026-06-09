@@ -1,4 +1,4 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
 // MusicUtils.kt
 object MusicUtil {

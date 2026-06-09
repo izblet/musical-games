@@ -8,8 +8,8 @@ import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 import kotlin.random.Random
 
 class MentalViewModel : ViewModel() {

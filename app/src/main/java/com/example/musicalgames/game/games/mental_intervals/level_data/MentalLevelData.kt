@@ -3,8 +3,8 @@ package com.example.musicalgames.games.mental_intervals
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
-import com.example.musicalgames.utils.DiatonicNote
-import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.music_model.DiatonicNote
+import com.example.musicalgames.music_model.Interval
 
 
 object MentalLevels {

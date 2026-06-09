@@ -1,10 +1,8 @@
 package com.example.musicalgames.game.games.circle_of_fifths
 
 import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.DiatonicNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.Mode
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Mode
 
 data class AnswerResult (
     val correct: Boolean,

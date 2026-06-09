@@ -5,8 +5,8 @@ import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Note
 import kotlin.math.PI
 import kotlin.math.log2
 import kotlin.math.pow

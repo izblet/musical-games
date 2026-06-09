@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.SpellingPreference
+import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.SoundPlayerListener
 import kotlinx.coroutines.CoroutineScope

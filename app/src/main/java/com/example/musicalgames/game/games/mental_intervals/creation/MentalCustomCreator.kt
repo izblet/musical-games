@@ -4,30 +4,17 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.Toast
 import com.example.musicalgames.R
 import com.example.musicalgames.components.ui_components.EnumSpinner
 import com.example.musicalgames.components.ui_components.IntervalSelector
 import com.example.musicalgames.components.ui_components.KeyboardSelector
-import com.example.musicalgames.databinding.MentalCustomCreatorBinding
-import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
-import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.games.mental_intervals.Type
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.Octave
-import com.example.musicalgames.utils.Scale
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 
 class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 

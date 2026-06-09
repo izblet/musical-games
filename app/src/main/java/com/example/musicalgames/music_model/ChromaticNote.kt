@@ -1,4 +1,4 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
 enum class ChromaticNote {
     C, CxD, D, DxE, E, F, FxG, G, GxA, A, AxB, B;

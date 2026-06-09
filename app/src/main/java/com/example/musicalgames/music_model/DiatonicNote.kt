@@ -1,4 +1,4 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
 enum class DiatonicNote (val chromaticNote : ChromaticNote) {
     C(ChromaticNote.C),

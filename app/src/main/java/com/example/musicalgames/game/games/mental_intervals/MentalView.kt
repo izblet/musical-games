@@ -12,10 +12,10 @@ import com.example.musicalgames.components.palettes.interval_palette.IntervalPal
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.SpellingPreference
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.display.SpellingPreference
 import kotlin.math.roundToInt
 
 class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener {

@@ -11,7 +11,7 @@ import com.example.musicalgames.components.palettes.circle_of_fifths_palette.Cir
 import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CirclePaletteListener
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
-import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.music_model.ChromaticNote
 import kotlinx.coroutines.launch
 
 class CircleView(context: Context, private val viewModel: CircleViewModel, lifecycleOwner: LifecycleOwner) : LinearLayout(context), CirclePaletteListener, KeyPaletteListener {

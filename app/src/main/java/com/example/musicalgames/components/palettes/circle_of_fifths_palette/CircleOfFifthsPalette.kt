@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.DiatonicNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.Mode
-import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.DiatonicNote
+import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.music_model.Mode
+import com.example.musicalgames.music_model.MusicUtil
 
 class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFifthsPaletteView(
     context,

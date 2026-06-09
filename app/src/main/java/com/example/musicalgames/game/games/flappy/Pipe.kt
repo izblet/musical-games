@@ -1,14 +1,11 @@
 package com.example.musicalgames.games.flappy
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import com.example.musicalgames.R
 import com.example.musicalgames.components.StaffPainter
-import com.example.musicalgames.utils.MusicUtil
+import com.example.musicalgames.music_model.MusicUtil
 
 
 

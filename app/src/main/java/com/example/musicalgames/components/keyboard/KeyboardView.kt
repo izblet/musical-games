@@ -14,8 +14,8 @@ import com.example.musicalgames.components.ComponentPaints.getDarkgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getLightgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteStrokePaint
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.MusicUtil
+import com.example.musicalgames.music_model.Note
 
 class KeyboardView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     constructor(context: Context, grayedOut: Set<Int>, attrs: AttributeSet?) : this(context, attrs) {

@@ -2,7 +2,7 @@ package com.example.musicalgames.wrappers.sound_recording
 
 import android.content.Context
 import com.example.musicalgames.R
-import com.example.musicalgames.utils.MusicUtil as MU
+import com.example.musicalgames.music_model.MusicUtil as MU
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context,

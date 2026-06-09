@@ -2,7 +2,7 @@ package com.example.musicalgames.components.palettes
 
 import android.content.Context
 import android.util.AttributeSet
-import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.music_model.ChromaticNote
 
 class PreviewPalette @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : KeyboardBasedPalette(context, attributeSet, defStyle) {
     private var onClickFun : ((ChromaticNote)->Unit)? = null

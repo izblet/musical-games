@@ -1,11 +1,10 @@
 package com.example.musicalgames.games.flappy
 
-import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
 
 class FlappyViewModel() : ViewModel() {

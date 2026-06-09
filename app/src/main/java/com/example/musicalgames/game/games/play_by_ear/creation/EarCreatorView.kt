@@ -12,14 +12,14 @@ import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.Octave
-import com.example.musicalgames.utils.Scale
-import com.example.musicalgames.utils.SpellingPreference
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.music_model.MusicUtil
+import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.Octave
+import com.example.musicalgames.music_model.Scale
+import com.example.musicalgames.music_model.display.SpellingPreference
 
 
 class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {

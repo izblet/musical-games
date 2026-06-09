@@ -7,8 +7,8 @@ import com.example.musicalgames.components.palettes.interval_palette.IntervalPal
 import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 //oh noo, why does it hold a reference to the viewwwww
 class MentalController(private val view: MentalView) : GameController, KeyPaletteListener,
     IntervalPaletteListener {

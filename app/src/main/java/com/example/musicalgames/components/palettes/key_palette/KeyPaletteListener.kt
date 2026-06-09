@@ -1,6 +1,6 @@
 package com.example.musicalgames.components.palettes.key_palette
 
-import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.music_model.ChromaticNote
 
 interface KeyPaletteListener {
     fun onClicked(note : ChromaticNote)

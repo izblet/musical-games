@@ -6,8 +6,8 @@ import com.example.musicalgames.components.ui_components.MultiEnumSpinner
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.utils.Mode
-import com.example.musicalgames.utils.ModeSpelling
+import com.example.musicalgames.music_model.Mode
+import com.example.musicalgames.music_model.display.ModeSpelling
 
 class CircleCustomCreator(context: Context, createLevelAction: (Level) -> Unit, attrs: AttributeSet?) : CustomGameCreator(context, createLevelAction, attrs) {
 

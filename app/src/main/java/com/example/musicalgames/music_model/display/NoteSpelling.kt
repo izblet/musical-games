@@ -1,4 +1,8 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model.display
+
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.DiatonicNote
+import com.example.musicalgames.music_model.Note
 
 enum class SpellingPreference { SHARPS, FLATS, MIXED }
 
@@ -21,12 +25,12 @@ object NoteSpelling {
         spell(note.noteChromatic, preference) + note.octave
 
     private fun sharpSpelling(note: ChromaticNote): String {
-        val below = ChromaticNote.fromDegree((note.ordinal - 1 + ChromaticNote.valuesSize()) % ChromaticNote.valuesSize())
-        return "${DiatonicNote.fromChromatic(below)!!.name}#"
+        val below = ChromaticNote.Companion.fromDegree((note.ordinal - 1 + ChromaticNote.Companion.valuesSize()) % ChromaticNote.Companion.valuesSize())
+        return "${DiatonicNote.Companion.fromChromatic(below)!!.name}#"
     }
 
     private fun flatSpelling(note: ChromaticNote): String {
-        val above = ChromaticNote.fromDegree((note.ordinal + 1) % ChromaticNote.valuesSize())
-        return "${DiatonicNote.fromChromatic(above)!!.name}b"
+        val above = ChromaticNote.Companion.fromDegree((note.ordinal + 1) % ChromaticNote.Companion.valuesSize())
+        return "${DiatonicNote.Companion.fromChromatic(above)!!.name}b"
     }
 }

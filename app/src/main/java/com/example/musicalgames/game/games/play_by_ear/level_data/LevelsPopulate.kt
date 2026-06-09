@@ -3,13 +3,13 @@ package com.example.musicalgames.games.play_by_ear
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.MusicUtil.getWhiteKeysFrom
-import com.example.musicalgames.utils.Note
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.Scale
-import com.example.musicalgames.utils.SpellingPreference
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.MusicUtil
+import com.example.musicalgames.music_model.MusicUtil.getWhiteKeysFrom
+import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.Scale
+import com.example.musicalgames.music_model.display.SpellingPreference
 
 object EarPlayLevels {
     val baseLevels: List<TaggedLevel> = generateLevels()

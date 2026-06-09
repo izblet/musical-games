@@ -2,21 +2,15 @@ package com.example.musicalgames.components.ui_components
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.FrameLayout
 import com.example.musicalgames.R
 import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
-import com.example.musicalgames.components.keyboard.KeyboardListener
-import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.components.palettes.PreviewPalette
 import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteListener
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 import com.google.android.material.bottomsheet.BottomSheetDialog
 class IntervalSelector @JvmOverloads constructor (context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : FrameLayout(context, attributeSet, defStyle){
     private var notePreview : PreviewPalette

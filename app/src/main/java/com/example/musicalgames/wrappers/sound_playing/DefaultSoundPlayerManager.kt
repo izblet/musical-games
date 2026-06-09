@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.media.MediaPlayer
 import android.util.Log
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.Note
 import kotlinx.coroutines.delay
 
 

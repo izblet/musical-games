@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat
 import com.example.musicalgames.R
 import com.example.musicalgames.components.StaffPainter
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.MusicUtil
+import com.example.musicalgames.music_model.Note
 import kotlin.random.Random
 
 class FloppyGameView(context: Context) : View(context) {

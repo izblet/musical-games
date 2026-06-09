@@ -3,10 +3,9 @@ package com.example.musicalgames.components.palettes.interval_palette
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import androidx.core.app.NotificationCompat.Style
 import com.example.musicalgames.components.palettes.KeyboardBasedPalette
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 
 
 class IntervalPaletteView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : KeyboardBasedPalette(context, attributeSet, defStyle) {

@@ -5,8 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import com.example.musicalgames.utils.MusicUtil.cleffIndexC4
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.MusicUtil.cleffIndexC4
+import com.example.musicalgames.music_model.Note
 
 
 class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitmap, private val flatBitmap: Bitmap, private val treble: Boolean) {

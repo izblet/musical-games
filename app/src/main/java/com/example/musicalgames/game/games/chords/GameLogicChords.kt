@@ -1,7 +1,7 @@
 package com.example.musicalgames.game.games.chords
 
-import com.example.musicalgames.utils.Chord
-import com.example.musicalgames.utils.ChromaticNote
+import com.example.musicalgames.music_model.Chord
+import com.example.musicalgames.music_model.ChromaticNote
 
 class GameLogicChords (private val rootNotes: Set<ChromaticNote>, private val extensions: Set<Chord.Companion.Extension?>, private val qualities: Set<Chord.Companion.Quality>) {
     data class AnswerResult(val correct: Boolean, val rightAns: Chord)

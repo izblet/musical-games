@@ -14,8 +14,8 @@ import com.example.musicalgames.components.ComponentPaints.getDarkgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getLightgrayFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteFillPaint
 import com.example.musicalgames.components.ComponentPaints.getWhiteTextPaint
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.DiatonicNote
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.DiatonicNote
 import kotlin.math.floor
 
 abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {

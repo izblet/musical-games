@@ -1,6 +1,6 @@
 package com.example.musicalgames.wrappers.sound_playing
 
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.Note
 
 interface SoundPlayerManager  {
     fun playNote(midiCode: Int, listener: SoundPlayerListener?=null)

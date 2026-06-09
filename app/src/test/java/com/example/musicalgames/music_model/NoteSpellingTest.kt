@@ -1,5 +1,7 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.display.SpellingPreference
 import org.junit.Assert.*
 import org.junit.Test
 

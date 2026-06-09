@@ -8,7 +8,7 @@ import android.widget.Button
 import com.example.musicalgames.components.keyboard.KeyboardListener
 import com.example.musicalgames.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.utils.Note
+import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 
 

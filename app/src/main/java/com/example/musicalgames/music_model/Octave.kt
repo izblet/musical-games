@@ -1,4 +1,4 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
 //suboptimal, but now that i have an enum spinner it is quicker
 

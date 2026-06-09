@@ -6,7 +6,7 @@ import com.example.musicalgames.components.ui_components.EnumSpinner
 import com.example.musicalgames.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
-import com.example.musicalgames.utils.Chord
+import com.example.musicalgames.music_model.Chord
 
 class CustomCreatorChords(
     context: Context,

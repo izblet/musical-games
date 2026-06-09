@@ -1,7 +1,7 @@
 package com.example.musicalgames.game.games.mental_intervals
 
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.Interval
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Interval
 
 interface MentalViewmodelListener {
     fun onNewProblem(interval: Interval, questionNote: ChromaticNote)

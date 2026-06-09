@@ -1,4 +1,4 @@
-package com.example.musicalgames.utils
+package com.example.musicalgames.music_model
 
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels

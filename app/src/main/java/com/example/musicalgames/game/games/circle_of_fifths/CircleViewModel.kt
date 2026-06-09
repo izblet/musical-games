@@ -7,13 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.utils.ChromaticNote
-import com.example.musicalgames.utils.DiatonicNote
-import com.example.musicalgames.utils.Mode
-import com.example.musicalgames.utils.ModeSpelling
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.SpellingPreference
+import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.display.ModeSpelling
+import com.example.musicalgames.music_model.display.NoteSpelling
+import com.example.musicalgames.music_model.display.SpellingPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
