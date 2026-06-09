@@ -96,7 +96,7 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         val root = rootSpinnerValue.getSelectedValue()
         Log.d("level", scale.toString())
         Log.d("level", root.name)
-        return MusicUtil.getScaleNotesFrom(scale, root, Note(min), max-min+1).map { it.midiCode }
+        return MusicUtil.getScaleNotesBetween(scale, root, Note(min), Note(max)).map { it.midiCode }
     }
 
     private fun makeLevelOrThrow(): Level {

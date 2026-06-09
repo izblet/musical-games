@@ -65,6 +65,18 @@ object MusicUtil {
 
         return result
     }
+    fun getScaleNotesBetween(scale: Scale, root: ChromaticNote, min: Note, max: Note) : List<Note> {
+        val scaleNotes = getScaleNotes(scale, root)
+        val result = mutableListOf<Note>()
+
+        for(midiCode in min.midiCode..max.midiCode) {
+            val note = Note(midiCode)
+            if(note.noteChromatic in scaleNotes)
+                result.add(note)
+        }
+
+        return result
+    }
     fun getScaleNotesFrom(scale: Scale, root: ChromaticNote, start: Note, num: Int) : List<Note> {
         val scaleNotes = getScaleNotes(scale, root)
         var octave = start.octave
