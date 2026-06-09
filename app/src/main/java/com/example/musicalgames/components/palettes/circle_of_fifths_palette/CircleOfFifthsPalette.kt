@@ -9,9 +9,6 @@ import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.Interval
 import com.example.musicalgames.utils.Mode
 import com.example.musicalgames.utils.MusicUtil
-import com.example.musicalgames.utils.NoteSpelling
-import com.example.musicalgames.utils.SpellingPreference
-import java.util.Locale
 
 class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFifthsPaletteView(
     context,
@@ -38,25 +35,6 @@ class CircleOfFifthsPalette(context: Context, attr: AttributeSet?) : CircleOfFif
                 map[Mode.fromDiatonicNote(note)]= generateCircle(note.chromaticNote)
             }
             return map
-        }
-
-        fun noteName(chromaticNote: ChromaticNote, mode: Mode) : String {
-            //TODO: for now this function does basically nothing
-            val index : Int
-            try {
-                index = circlesMap[mode]!!.indexOf(chromaticNote)
-            } catch(e : Exception) {
-                Log.e("Circle of fifths", "note not found in the circle")
-                return ""
-            }
-            val nameString = if(chromaticNote.isDiatonic()) NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)
-                else "${NoteSpelling.spell(chromaticNote, SpellingPreference.FLATS)}/${NoteSpelling.spell(chromaticNote, SpellingPreference.SHARPS)}"
-
-            return when (mode) {
-                Mode.AEOLIAN -> nameString.lowercase(Locale.getDefault())
-                Mode.IONIAN -> nameString
-                else -> "$nameString $mode"
-            }
         }
 
         fun noteAtIndex(index :Int, mode : Mode) : ChromaticNote {

@@ -71,10 +71,11 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     private fun newQuestionNoteToCircle() {
-        val questionString =CircleOfFifthsPalette.noteName(gameLogic.questionNote, gameLogic.questionMode).replace(" ", "\n")
+        val noteName = NoteSpelling.spell(gameLogic.questionNote, SpellingPreference.MIXED)
+        val modeName = ModeSpelling.common(gameLogic.questionMode)
         val newState = _viewState.value.copy(
             showKeyboard = false,
-            question = questionString,
+            question = "$noteName\n$modeName",
             highlightedNote = null,
             screenCommandMessage = null
         )
