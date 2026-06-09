@@ -11,6 +11,9 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.utils.ChromaticNote
 import com.example.musicalgames.utils.DiatonicNote
 import com.example.musicalgames.utils.Mode
+import com.example.musicalgames.utils.ModeSpelling
+import com.example.musicalgames.utils.NoteSpelling
+import com.example.musicalgames.utils.SpellingPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,7 +63,7 @@ class CircleViewModel: ViewModel(), GameController {
     private fun newQuestionCircleToNote() {
         val newState = _viewState.value.copy(
             showKeyboard = true,
-            question = null,
+            question = ModeSpelling.common(gameLogic.questionMode),
             highlightedNote = gameLogic.questionNoteIndex,
             screenCommandMessage = null
         )
@@ -136,7 +139,7 @@ class CircleViewModel: ViewModel(), GameController {
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {
-                "Wrong, the right answer was ${answerResult.rightAnsNote}"
+                "Wrong, the right answer was ${NoteSpelling.spell(answerResult.rightAnsNote!!, SpellingPreference.MIXED)}"
             }
 
             val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage)

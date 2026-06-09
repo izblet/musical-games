@@ -7,13 +7,21 @@ import com.example.musicalgames.utils.Mode
 
 object CircleLevels {
     val baseLevels: List<TaggedLevel> = listOf(
-        level("Major - name to position", "", listOf(Mode.IONIAN)),
-        level("Minor - name to position", "", listOf(Mode.AEOLIAN)),
-        level("Dorian - name to position", "", listOf(Mode.DORIAN)),
-        level("Mixolydian - name to position", "", listOf(Mode.MIXOLYDIAN)),
-        level("Major, minor", "name to position", listOf(Mode.IONIAN, Mode.AEOLIAN)),
+        nameToPosition("Major - name to position", "", listOf(Mode.IONIAN)),
+        nameToPosition("Minor - name to position", "", listOf(Mode.AEOLIAN)),
+        nameToPosition("Dorian - name to position", "", listOf(Mode.DORIAN)),
+        nameToPosition("Mixolydian - name to position", "", listOf(Mode.MIXOLYDIAN)),
+        nameToPosition("Major, minor - name to position", "", listOf(Mode.IONIAN, Mode.AEOLIAN)),
+        positionToName("Major - position to name", "", listOf(Mode.IONIAN)),
+        positionToName("Minor - position to name", "", listOf(Mode.AEOLIAN)),
+        positionToName("Dorian - position to name", "", listOf(Mode.DORIAN)),
+        positionToName("Mixolydian - position to name", "", listOf(Mode.MIXOLYDIAN)),
+        positionToName("Major, minor - position to name", "", listOf(Mode.IONIAN, Mode.AEOLIAN)),
     )
 
-    private fun level(name: String, description: String, modes: List<Mode>): TaggedLevel =
+    private fun nameToPosition(name: String, description: String, modes: List<Mode>): TaggedLevel =
         TaggedLevel(Game.CIRCLE, 0, name, description, CircleLevel(positionToName = false, modes), isFavourite = false, isCustom = false)
+
+    private fun positionToName(name: String, description: String, modes: List<Mode>): TaggedLevel =
+        TaggedLevel(Game.CIRCLE, 0, name, description, CircleLevel(positionToName = true, modes), isFavourite = false, isCustom = false)
 }

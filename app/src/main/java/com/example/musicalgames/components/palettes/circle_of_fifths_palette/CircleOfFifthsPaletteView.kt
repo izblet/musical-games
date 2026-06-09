@@ -21,6 +21,15 @@ open class CircleOfFifthsPaletteView(
     private val highlightPaint =ComponentPaints.getBlueFillPaint(context)
 
     private var highlightedIndices:List<Int> = listOf()
+    private var centerText: String? = null
+
+    private val centerTextPaint = Paint().apply {
+        val attrs = context.obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary))
+        color = attrs.getColor(0, Color.BLACK)
+        attrs.recycle()
+        textAlign = Paint.Align.CENTER
+        isAntiAlias = true
+    }
 
     private val totalSegments = 12
     private val separation = 6f  // gap between note segments
@@ -43,6 +52,11 @@ open class CircleOfFifthsPaletteView(
         invalidate()
     }
 
+    fun setCenterText(text: String?) {
+        centerText = text
+        invalidate()
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -62,8 +76,6 @@ open class CircleOfFifthsPaletteView(
         val gapAngleOuter = separationLengthToAngleLength(majorOuterRadius)
         val gapAngleMajorInner = separationLengthToAngleLength(majorInnerRadius)
 
-
-
         for (i in 0 until totalSegments) {
 
             val pieceOffset = rotationOffset + i*pieceAngleLength
@@ -74,6 +86,17 @@ open class CircleOfFifthsPaletteView(
                 startAngleInner = pieceOffset + gapAngleMajorInner, startAngleOuter = pieceOffset + gapAngleOuter,
                 sweepAngleInner = pieceAngleLength - gapAngleMajorInner, sweepAngleOuter = pieceAngleLength - gapAngleOuter,
                 paint)
+        }
+
+        centerText?.let { text ->
+            val lines = text.split("\n")
+            centerTextPaint.textSize = majorInnerRadius * 0.35f
+            val lineHeight = centerTextPaint.textSize * 1.2f
+            val totalTextHeight = lineHeight * lines.size
+            val startY = centerY - totalTextHeight / 2f + centerTextPaint.textSize
+            lines.forEachIndexed { i, line ->
+                canvas.drawText(line, centerX, startY + i * lineHeight, centerTextPaint)
+            }
         }
     }
 
