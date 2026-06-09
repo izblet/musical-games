@@ -19,7 +19,7 @@ class Pipe(
     private val staffPainter: StaffPainter
 ) {
     companion object {
-        const val WIDTH = 0.05f
+        const val WIDTH = 0.01f
         const val SPEED = 0.002f
         const val PIPE_SPACE = 0.3f
     }
