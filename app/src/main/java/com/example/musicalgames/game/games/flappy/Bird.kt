@@ -85,6 +85,10 @@ class Bird(private val pitchRecogniser: PitchRecogniser, private val minPitch: D
         return false
 
     }
+    fun freeze() {
+        targetY.set(y)
+    }
+
     fun updateTarget() {
         //pitch is -1 if does not exist because of an error or low confidence level
         //otherwise it is a number between 0 and 1 corresponding to spice value of the note

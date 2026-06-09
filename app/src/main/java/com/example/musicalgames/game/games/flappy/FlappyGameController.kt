@@ -32,18 +32,21 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
 
     override fun startGame(owner: LifecycleOwner) {
         viewModel!!.playKeyEstablishment()
-        pitchRecogniser!!.start()
         handler.postDelayed({
+            pitchRecogniser!!.start()
             isGameRunning = true
             startGameLoop(owner)
-        }, 3000)
+        }, 3500)
     }
 
     override fun pauseGame() {
         stopGameLoop()
+        gameView.freezeBird()
+        pitchRecogniser!!.stop()
     }
 
     fun resumeGame(owner: LifecycleOwner) {
+        pitchRecogniser!!.start()
         isGameRunning = true
         startGameLoop(owner)
     }

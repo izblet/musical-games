@@ -122,7 +122,10 @@ class FloppyGameView(context: Context) : View(context) {
     }
     fun updateBird() {
         bird!!.updateTarget()
+    }
 
+    fun freezeBird() {
+        bird?.freeze()
     }
 
     fun tickFrame() {

@@ -59,6 +59,10 @@ class PitchRecogniser (context: Context,
         microphone?.startRecording()
     }
 
+    fun stop() {
+        microphone?.stopRecording()
+    }
+
     fun release() {
         microphone?.stopRecording()
         SPICE?.close()
