@@ -11,12 +11,14 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
+import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.GameMap
 
 class FragmentLevelOptions : Fragment() {
@@ -54,26 +56,64 @@ class FragmentLevelOptions : Fragment() {
 
         if (game != null && level != null) {
             val factory = GameMap.createFactory(game)
-            val levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
+            var levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
             levelInfoView.setEditable(false)
             binding.levelInfoContainer.addView(levelInfoView)
 
-            fun toggleParamsEditMode() {
-                val editable = !levelInfoView.editable
-                levelInfoView.setEditable(editable)
-                binding.editLevelButton.isActivated = editable
-                binding.levelInfoContainer.setBackgroundResource(
-                    if (editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
-                )
-                if (editable) {
-                    binding.levelInfoSection.bringToFront()
-                    exitEditMode = ::toggleParamsEditMode
-                } else {
-                    exitEditMode = null
-                }
-                setOverlayVisible(editable)
+            //the last-known-good level for this section - "discard" rebuilds the view from this
+            var workingLevel: Level = level
+
+            fun exitParamsEditMode() {
+                levelInfoView.setEditable(false)
+                binding.editLevelButton.isActivated = false
+                binding.levelInfoContainer.setBackgroundResource(R.drawable.item_bordered)
+                binding.levelInfoSection.isClickable = false
+                exitEditMode = null
+                setOverlayVisible(false)
             }
-            binding.editLevelButton.setOnClickListener { toggleParamsEditMode() }
+
+            fun discardParamsEdit() {
+                binding.levelInfoContainer.removeAllViews()
+                levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), workingLevel, null)
+                binding.levelInfoContainer.addView(levelInfoView)
+                exitParamsEditMode()
+            }
+
+            fun saveParamsEdit() {
+                val newLevel = levelInfoView.getLevel()
+                if (newLevel == null) {
+                    levelInfoView.highlightMissing()
+                    return
+                }
+                workingLevel = newLevel
+                viewModel.level = newLevel
+                exitParamsEditMode()
+            }
+
+            fun promptExitParamsEditMode() {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Unsaved changes")
+                    .setMessage("Save or discard your changes to the game parameters?")
+                    .setPositiveButton("Save") { _, _ -> saveParamsEdit() }
+                    .setNegativeButton("Discard") { _, _ -> discardParamsEdit() }
+                    .show()
+            }
+
+            fun enterParamsEditMode() {
+                levelInfoView.setEditable(true)
+                binding.editLevelButton.isActivated = true
+                binding.levelInfoContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+                binding.levelInfoSection.bringToFront()
+                //absorbs taps on labels/padding within the section so they don't fall through
+                //to the overlay underneath and get treated as "tap outside"
+                binding.levelInfoSection.isClickable = true
+                exitEditMode = ::promptExitParamsEditMode
+                setOverlayVisible(true)
+            }
+
+            binding.editLevelButton.setOnClickListener {
+                if (levelInfoView.editable) promptExitParamsEditMode() else enterParamsEditMode()
+            }
         }
 
         if (viewModel.levelId == null) {
@@ -101,22 +141,51 @@ class FragmentLevelOptions : Fragment() {
         }
         setInfoEditable(false)
 
-        fun toggleInfoEditMode() {
-            val editable = !binding.levelTitleText.isEnabled
-            setInfoEditable(editable)
-            binding.editLevelInfoButton.isActivated = editable
-            binding.headingContainer.setBackgroundResource(
-                if (editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
-            )
-            if (editable) {
-                binding.headingContainer.bringToFront()
-                exitEditMode = ::toggleInfoEditMode
-            } else {
-                exitEditMode = null
-            }
-            setOverlayVisible(editable)
+        fun exitInfoEditMode() {
+            setInfoEditable(false)
+            binding.editLevelInfoButton.isActivated = false
+            binding.headingContainer.setBackgroundResource(R.drawable.item_bordered)
+            binding.headingContainer.isClickable = false
+            exitEditMode = null
+            setOverlayVisible(false)
         }
-        binding.editLevelInfoButton.setOnClickListener { toggleInfoEditMode() }
+
+        fun discardInfoEdit() {
+            binding.levelTitleText.setText(viewModel.levelName)
+            binding.levelDescriptionText.setText(viewModel.levelDescription)
+            exitInfoEditMode()
+        }
+
+        fun saveInfoEdit() {
+            viewModel.levelName = binding.levelTitleText.text.toString()
+            viewModel.levelDescription = binding.levelDescriptionText.text.toString()
+            exitInfoEditMode()
+        }
+
+        fun promptExitInfoEditMode() {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Unsaved changes")
+                .setMessage("Save or discard your changes to the level title and description?")
+                .setPositiveButton("Save") { _, _ -> saveInfoEdit() }
+                .setNegativeButton("Discard") { _, _ -> discardInfoEdit() }
+                .show()
+        }
+
+        fun enterInfoEditMode() {
+            setInfoEditable(true)
+            binding.editLevelInfoButton.isActivated = true
+            binding.headingContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+            binding.headingContainer.bringToFront()
+            //absorbs taps on padding within the section so they don't fall through to the
+            //overlay underneath and get treated as "tap outside"
+            binding.headingContainer.isClickable = true
+            exitEditMode = ::promptExitInfoEditMode
+            setOverlayVisible(true)
+        }
+
+        binding.editLevelInfoButton.setOnClickListener {
+            if (binding.levelTitleText.isEnabled) promptExitInfoEditMode() else enterInfoEditMode()
+        }
 
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {
