@@ -43,19 +43,7 @@ object MusicUtil {
         val cqtBin = BINS_PER_OCTAVE * (Math.log(hz / FMIN) / Math.log(2.0)) - PT_OFFSET
         return (cqtBin / PT_SLOPE)
     }
-    fun cleffIndexC4(note: Note): Int {
-        //returns the number of white notes from/to C4
-        val chromatic = note.noteChromatic
-        //sharp spelling always names a non-diatonic note after the white key below it
-        //(C# names off C, D# off D, ...) - this mirrors the staff position the note is drawn at
-        val letter = if (chromatic.isDiatonic())
-            DiatonicNote.fromChromatic(chromatic)!!
-        else
-            DiatonicNote.fromChromatic(ChromaticNote.fromDegree(chromatic.ordinal - 1))!!
-        val octave = note.octave
 
-        return letter.ordinal + octave*8 - 4*8
-    }
     fun getScaleNotes(scale: Scale, root: ChromaticNote) : List<ChromaticNote> {
         val result: MutableList<ChromaticNote> = mutableListOf()
         val scaleDegrees = scale.getDegrees()

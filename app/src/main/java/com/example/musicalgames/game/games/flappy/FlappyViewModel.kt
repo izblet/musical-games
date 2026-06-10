@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.wrappers.sound_playing.SoundPlayerManager
@@ -19,6 +20,7 @@ class FlappyViewModel() : ViewModel() {
     var minRange: Int = Note(ChromaticNote.C, 3).midiCode
     var maxRange: Int = Note(ChromaticNote.C, 4).midiCode
     var root: Int = Note(ChromaticNote.C, 4).midiCode
+    var mode: Mode = Mode.IONIAN
     var endAfter: Int = LEN_INF
     var gapPositions: List<Int> = listOf()
 
@@ -47,6 +49,7 @@ class FlappyViewModel() : ViewModel() {
         minRange = flappyLevel.minPitch
         maxRange = flappyLevel.maxPitch
         root = flappyLevel.root
+        mode = flappyLevel.mode
         endAfter = flappyLevel.endAfter
         gapPositions = flappyLevel.keyList
     }

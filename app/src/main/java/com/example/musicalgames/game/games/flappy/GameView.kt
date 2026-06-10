@@ -1,7 +1,6 @@
 package com.example.musicalgames.games.flappy
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.TypedValue
@@ -11,8 +10,10 @@ import com.example.musicalgames.R
 import com.example.musicalgames.components.StaffPainter
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.MusicUtil
 import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.wrappers.BitmapUtil
 import kotlin.random.Random
 
 class FloppyGameView(context: Context) : View(context) {
@@ -39,13 +40,13 @@ class FloppyGameView(context: Context) : View(context) {
            tv.data
        }
 
-       val trebleClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.treble_clef)
-       val sharpBitmap = BitmapFactory.decodeResource(resources, R.drawable.sharp)
-       val flatBitmap = BitmapFactory.decodeResource(resources, R.drawable.flat)
-       treblePainter = StaffPainter(trebleClefBitmap, sharpBitmap, flatBitmap, true, foregroundColor)
+       val trebleClefBitmap = BitmapUtil.decodeSampledBitmap(resources, R.drawable.treble_clef, 256)
+       val sharpBitmap = BitmapUtil.decodeSampledBitmap(resources, R.drawable.sharp, 256)
+       val flatBitmap = BitmapUtil.decodeSampledBitmap(resources, R.drawable.flat, 256)
+       treblePainter = StaffPainter(trebleClefBitmap, sharpBitmap, flatBitmap, foregroundColor).apply { setTreble(true) }
 
-       val bassClefBitmap = BitmapFactory.decodeResource(resources, R.drawable.bass_clef)
-       bassPainter = StaffPainter(bassClefBitmap, sharpBitmap, flatBitmap, false, foregroundColor)
+       val bassClefBitmap = BitmapUtil.decodeSampledBitmap(resources, R.drawable.bass_clef, 256)
+       bassPainter = StaffPainter(bassClefBitmap, sharpBitmap, flatBitmap, foregroundColor).apply { setTreble(false) }
    }
 
     private val scorePaint = Paint().apply {
@@ -66,6 +67,10 @@ class FloppyGameView(context: Context) : View(context) {
         this.viewModel=viewModel
         this.minNote = viewModel.minRange
         this.maxNote = viewModel.maxRange
+
+        val keySignature = KeySignature.forKey(Note(viewModel.root).noteChromatic, viewModel.mode)
+        treblePainter.setKeySignature(keySignature)
+        bassPainter.setKeySignature(keySignature)
 
         val notespace = 1
         this.minVisible = MusicUtil.spiceNoteBottomEnd(minNote!!-notespace)
