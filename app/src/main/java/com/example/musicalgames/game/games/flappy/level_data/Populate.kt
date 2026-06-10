@@ -4,6 +4,7 @@ import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.MusicUtil
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
@@ -19,7 +20,7 @@ object FlappyLevels {
 
         val name = "${NoteSpelling.spell(Note(minPitch), SpellingPreference.SHARPS)} to ${NoteSpelling.spell(Note(maxPitch), SpellingPreference.SHARPS)}, root: ${NoteSpelling.spell(Note(root).noteChromatic, SpellingPreference.SHARPS)} $mode"
         val description = "Arcade"
-        val level = FlappyLevel(minPitch, maxPitch, root, notes, LEN_INF)
+        val level = FlappyLevel(minPitch, maxPitch, root, Mode.IONIAN, notes, LEN_INF)
         return TaggedLevel(Game.FLAPPY, 0, name, description, level, isFavourite = false, isCustom = false)
 
     }

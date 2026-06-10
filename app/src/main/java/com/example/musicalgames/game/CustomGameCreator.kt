@@ -32,12 +32,22 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
         }
     }
 
-    private fun styleSelector(selector : View) {
+    //customInputElementStyle fixes layout_height to 50dp - XML's style= attribute applies this
+    //automatically via generateLayoutParams, but layoutParams built by hand here would otherwise
+    //fall back to each widget's own intrinsic height, which differs between widget types
+    private val inputElementHeight: Int = run {
+        val a = context.obtainStyledAttributes(R.style.customInputElementStyle, intArrayOf(android.R.attr.layout_height))
+        val height = a.getDimensionPixelSize(0, LayoutParams.MATCH_PARENT)
+        a.recycle()
+        height
+    }
+
+    private fun styleSelector(selector : View, column: Int = 2) {
         //some of the parameters unnecessary for now but will probably be used later
         selector.apply {
-            layoutParams = TableRow.LayoutParams(0, LayoutParams.MATCH_PARENT)
+            layoutParams = TableRow.LayoutParams(0, inputElementHeight)
                 .apply {
-                    column = 2
+                    this.column = column
                     span = 1
                     weight = 1f
                 }
@@ -75,8 +85,39 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
         return row
     }
 
+    protected fun makeRow(label: String, selector1: View, selector2: View) : TableRow {
+        val row= TableRow(context).apply {
+           layoutParams = LayoutParams(
+               LayoutParams.MATCH_PARENT,
+               LayoutParams.MATCH_PARENT
+           )
+        }
+
+        val lab = TextView(context, null, 0, R.style.customLabelStyle).apply {
+            text = label
+        }
+
+        lab.text = label
+        styleLabel(lab)
+        row.addView(lab)
+
+        styleSelector(selector1, column = 2)
+        row.addView(selector1)
+
+        styleSelector(selector2, column = 3)
+        row.addView(selector2)
+
+        return row
+    }
+
     protected fun addNewRow(label: String, selector : View) : TableRow {
         val row = makeRow(label, selector)
+        addView(row)
+        return row
+    }
+
+    protected fun addNewRow(label: String, selector1: View, selector2: View) : TableRow {
+        val row = makeRow(label, selector1, selector2)
         addView(row)
         return row
     }
