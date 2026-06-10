@@ -52,28 +52,58 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
     init {
         _binding = ViewEarCustomCreatorBinding.inflate(LayoutInflater.from(context), this, true)
 
-       setDefaultValues()
+        setDefaultValues()
 
-        val setSelectionMethod: ()->Unit = {
-            if(binding.isSelectionToggle.isChecked) {
-                binding.customNotesRow.visibility = View.VISIBLE
-                binding.scaleRow.visibility = View.GONE
-            } else {
-                binding.customNotesRow.visibility = View.GONE
-                binding.scaleRow.visibility = View.VISIBLE
-            }
-        }
-        setSelectionMethod()
+        registerSelector(binding.editLen)
+        registerSelector(binding.rootSpinner)
+        registerSelector(binding.isSelectionToggle)
+        registerSelector(binding.scaleSpinner)
+        registerSelector(binding.keyboardSelector)
+        registerSelector(binding.maxIntervalSpinner)
+        registerSelector(binding.minNoteSpinner)
+        registerSelector(binding.minNoteOctave)
+        registerSelector(binding.maxNoteSpinner)
+        registerSelector(binding.maxOctaveSpinner)
+
+        updateNotesFromVisibility()
 
         binding.isSelectionToggle.setOnClickListener{
-            setSelectionMethod()
+            updateNotesFromVisibility()
         }
 
 
     }
 
-    //TODO: not yet filled in from level data - shows the default/empty view
-    constructor(context: Context, level: PlayEarLevel, attrs: AttributeSet?) : this(context, {}, attrs)
+    constructor(context: Context, level: PlayEarLevel, attrs: AttributeSet?) : this(context, {}, attrs) {
+        binding.editLen.setText(level.problemLen.toString())
+        rootSpinnerValue.setSelectedValue(level.root)
+        maxIntervalSpinner.setSelectedValue(Interval.fromSemitones(level.maxSemitoneInterval))
+
+        val minNote = Note(level.minPitchDisplayed)
+        minSoundNoteSpinner.setSelectedValue(minNote.noteChromatic)
+        minSoundOctaveSpinner.setSelectedValue(Octave.entries[minNote.octave - 1])
+
+        val maxNote = Note(level.maxPitchDisplayed)
+        maxSoundNoteSpinner.setSelectedValue(maxNote.noteChromatic)
+        maxSoundOctaveSpinner.setSelectedValue(Octave.entries[maxNote.octave - 1])
+
+        binding.keyboardSelector.setSelected(level.keyList.map { Note(it).noteChromatic }.toSet())
+
+        binding.isSelectionToggle.isChecked = true
+        updateNotesFromVisibility()
+
+        setEditable(false)
+    }
+
+    private fun updateNotesFromVisibility() {
+        if(binding.isSelectionToggle.isChecked) {
+            binding.customNotesRow.visibility = View.VISIBLE
+            binding.scaleRow.visibility = View.GONE
+        } else {
+            binding.customNotesRow.visibility = View.GONE
+            binding.scaleRow.visibility = View.VISIBLE
+        }
+    }
 
 
     private fun getFieldVal(id: Int): String {

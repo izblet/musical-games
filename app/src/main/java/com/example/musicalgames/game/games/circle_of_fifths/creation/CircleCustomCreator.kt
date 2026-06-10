@@ -18,8 +18,10 @@ class CircleCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
         addNewRow("Modes:", modesSpinner)
     }
 
-    //TODO: not yet filled in from level data - shows the default/empty view
-    constructor(context: Context, level: CircleLevel, attrs: AttributeSet?) : this(context, {}, attrs)
+    constructor(context: Context, level: CircleLevel, attrs: AttributeSet?) : this(context, {}, attrs) {
+        modesValue.setSelectedValues(level.modes.toSet())
+        setEditable(false)
+    }
 
     override fun getLevel(): Level? {
         val modes = modesValue.getSelectedValues().toList()

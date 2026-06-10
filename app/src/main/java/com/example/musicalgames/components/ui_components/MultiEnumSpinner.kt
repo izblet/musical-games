@@ -74,5 +74,10 @@ class MultiEnumSpinner @JvmOverloads constructor(
             values.forEachIndexed { i, v -> selected[i] = v in defaultVals }
             updateButtonText(labels, selected)
         }
+
+        fun setSelectedValues(selectedValues: Set<T>) {
+            values.forEachIndexed { i, v -> selected[i] = v in selectedValues }
+            updateButtonText(labels, selected)
+        }
     }
 }

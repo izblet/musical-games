@@ -31,8 +31,12 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
         addNewRow("Intervals", intervalSelector)
     }
 
-    //TODO: not yet filled in from level data - shows the default/empty view
-    constructor(context: Context, level: MentalLevel, attrs: AttributeSet?) : this(context, {}, attrs)
+    constructor(context: Context, level: MentalLevel, attrs: AttributeSet?) : this(context, {}, attrs) {
+        modeSpinnerValue.setSelectedValue(level.mode)
+        notesSelector.setSelected(level.startingNotes.toSet())
+        intervalSelector.setSelected(level.intervals.toSet())
+        setEditable(false)
+    }
 
     private fun getNotesFromSelection(): List<ChromaticNote> {
         //TODO: there is probably a simpler way

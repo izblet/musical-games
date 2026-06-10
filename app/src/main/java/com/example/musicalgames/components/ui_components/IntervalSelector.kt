@@ -41,6 +41,11 @@ class IntervalSelector @JvmOverloads constructor (context: Context, attributeSet
         notePreview.setGrayedOut()
     }
 
+    fun setSelected(intervals: Set<Interval>) {
+        val selectedChromatic = intervals.mapTo(mutableSetOf()) { ChromaticNote.fromDegree(it.getSemitones()) }
+        notePreview.setGrayedOutSet(ChromaticNote.entries.toSet() - selectedChromatic)
+    }
+
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         notePreview.isEnabled = enabled

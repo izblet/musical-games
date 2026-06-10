@@ -1,8 +1,10 @@
 package com.example.musicalgames.games
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.View
+import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -26,11 +28,28 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
         )
     }
 
+    private val editTextColors: MutableMap<EditText, ColorStateList> = mutableMapOf()
+
     fun setEditable(editable: Boolean) {
         this.editable = editable
         for (selector in selectors) {
+            //EditText's default disabled style greys out the text, making the value hard to
+            //read - keep its normal "enabled" colour even while disabled
+            if (selector is EditText) {
+                if (editable) {
+                    editTextColors[selector]?.let { selector.setTextColor(it) }
+                } else {
+                    val originalColors = editTextColors.getOrPut(selector) { selector.textColors }
+                    selector.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
+                }
+            }
             selector.isEnabled = editable
         }
+    }
+
+    //for creators that build their selectors from an inflated layout instead of makeRow/addNewRow
+    protected fun registerSelector(selector: View) {
+        selectors.add(selector)
     }
 
     fun saveLevel() : Boolean {
