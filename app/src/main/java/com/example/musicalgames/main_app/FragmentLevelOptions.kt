@@ -34,6 +34,12 @@ class FragmentLevelOptions : Fragment() {
         val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         val game = viewModel.game
         val level = viewModel.level
+
+        //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can
+        if (viewModel.isCustom == false) {
+            binding.editLevelButton.visibility = View.GONE
+            binding.editLevelInfoButton.visibility = View.GONE
+        }
         if (game != null && level != null) {
             val factory = GameMap.createFactory(game)
             val levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
@@ -49,8 +55,15 @@ class FragmentLevelOptions : Fragment() {
             }
         }
 
-        binding.levelTitleText.setText(viewModel.levelName)
-        binding.levelDescriptionText.setText(viewModel.levelDescription)
+        if (viewModel.levelId == null) {
+            //temporary levels don't have a name/description yet - show a placeholder instead of the editable row
+            binding.levelTitleDescContainer.visibility = View.GONE
+            binding.editLevelInfoButton.visibility = View.GONE
+            binding.temporaryLevelMessage.visibility = View.VISIBLE
+        } else {
+            binding.levelTitleText.setText(viewModel.levelName)
+            binding.levelDescriptionText.setText(viewModel.levelDescription)
+        }
 
         //this is so long because of the fact that EditTexts really want to be grayed out when they're disabled
         val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()

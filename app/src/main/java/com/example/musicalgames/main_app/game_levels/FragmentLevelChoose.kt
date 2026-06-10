@@ -85,7 +85,7 @@ class FragmentLevelChoose : Fragment() {
 
         adapter = AdapterLevelList(favouriteList, object : AdapterLevelList.OnItemClickListener {
             override fun onItemClick(level: TaggedLevel) {
-               launchLevel(level.level, level.name, level.description)
+               launchLevel(level.level, level.name, level.description, level.levelId, level.isCustom)
             }
 
             override fun onBinClick(level: TaggedLevel) {
@@ -157,9 +157,9 @@ class FragmentLevelChoose : Fragment() {
         }
     }
 
-    private fun launchLevel(level: Level, name: String? = null, description: String? = null) {
+    private fun launchLevel(level: Level, name: String? = null, description: String? = null, levelId: Int? = null, isCustom: Boolean? = null) {
         Log.d("level choose", "launchlevel")
-        viewModel.chooseLevel(level, name, description)
+        viewModel.chooseLevel(level, name, description, levelId, isCustom)
 
     }
 
