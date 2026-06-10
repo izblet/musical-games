@@ -35,11 +35,52 @@
         app:layout_constraintTop_toBottomOf="@id/startGameButton" />
 
     <LinearLayout
-        android:id="@+id/level_info_container"
+        android:id="@+id/level_info_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameplay_options_container" />
+        app:layout_constraintTop_toBottomOf="@id/gameplay_options_container">
+
+        <LinearLayout
+            android:id="@+id/level_info_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/item_bordered"
+            android:padding="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="Game Parameters"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/editLevelButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:background="@drawable/item_bordered"
+                android:src="@drawable/pencil" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/level_info_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/item_bordered"
+            android:padding="4dp"
+            android:layout_marginTop="4dp"
+            />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
