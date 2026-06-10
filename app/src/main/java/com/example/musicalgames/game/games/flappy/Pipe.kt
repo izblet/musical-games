@@ -28,7 +28,6 @@ class Pipe(
     private val laneColor = color
     private val paint = Paint()
     private val staffHeight = 200f
-    private val staffWidth = 300f
 
     init {
         paint.color = laneColor
@@ -125,12 +124,12 @@ class Pipe(
     }
 
     fun draw(canvas: Canvas, screenHeight: Float, screenWidth: Float) {
-        val staffLeft = x * screenWidth - staffWidth - 0.01f * screenWidth
+        val staffRight = (x - 0.01f) * screenWidth
         val staffTop = (screenHeight - staffHeight) / 2
         val notePositions = listOf(gap)
 
         staffPainter.setConstraints(staffTop, staffTop+staffHeight)
-        staffPainter.drawStaff(canvas, staffLeft, staffWidth, notePositions)
+        staffPainter.drawStaff(canvas, staffRight, notePositions)
 
         val topKeys = getTopKeys()
         val bottomKeys = getBottomKeys()

@@ -25,6 +25,13 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
         private val sharpPositions = listOf(10, 7, 11, 8, 5, 9, 6)
         private val flatPositions = listOf(6, 9, 5, 8, 4, 7, 3)
         private const val BASS_CLEF_OFFSET = -13
+
+        //note layout: first note is centered NOTE_START_OFFSET past the clef/key signature,
+        //further notes are NOTE_SPACING apart, and the staff extends NOTE_TRAILING_MARGIN
+        //past the last note's center
+        private const val NOTE_START_OFFSET = 150f
+        private const val NOTE_SPACING = 200f
+        private const val NOTE_TRAILING_MARGIN = 50f
     }
 
     private val staffLinePaint = Paint().apply {
@@ -76,12 +83,19 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
         return middleCPosition - clefIndex * (lineSpacing / 2)
     }
 
-    fun drawStaff(canvas: Canvas, left: Float, width: Float, midiNotes: List<Int>) {
-        drawStaffLines(canvas, left, width)
-        val clefWidth = drawClef(canvas, left)
-        val keySignatureWidth = drawKeySignature(canvas, left + clefWidth + lineSpacing * 0.3f)
-        val notesLeft = if (keySignatureWidth > 0f) left + 150f + keySignatureWidth + lineSpacing * 0.3f else left + 150f
-        drawNotes(canvas, notesLeft, midiNotes)
+    fun drawStaff(canvas: Canvas, right: Float, midiNotes: List<Int>) {
+        val keySignatureGap = lineSpacing * 0.3f
+        val keySignatureWidth = keySignatureWidth()
+        val keySignatureSpace = if (keySignatureWidth > 0f) keySignatureWidth + keySignatureGap else 0f
+        val notesWidth = NOTE_START_OFFSET + (midiNotes.size - 1).coerceAtLeast(0) * NOTE_SPACING + NOTE_TRAILING_MARGIN
+
+        val totalWidth = clefWidth() + keySignatureSpace + notesWidth
+        val left = right - totalWidth
+
+        drawStaffLines(canvas, left, totalWidth)
+        drawClef(canvas, left)
+        drawKeySignature(canvas, left + clefWidth() + keySignatureGap)
+        drawNotes(canvas, left + clefWidth() + keySignatureSpace + NOTE_START_OFFSET, midiNotes)
     }
 
     private fun drawStaffLines(canvas: Canvas, left: Float, width: Float) {
@@ -93,17 +107,22 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
         }
     }
 
-    private fun drawClef(canvas: Canvas, left: Float): Float {
-        val trebleClefWidth = height / 2
-        val trebleClefHeight = clefBitmap.height * (trebleClefWidth / clefBitmap.width)
-        val dstRect = RectF(left, top, left + trebleClefWidth, top + trebleClefHeight)
+    private fun clefWidth(): Float = height / 2
+
+    private fun drawClef(canvas: Canvas, left: Float) {
+        val width = clefWidth()
+        val clefHeight = clefBitmap.height * (width / clefBitmap.width)
+        val dstRect = RectF(left, top, left + width, top + clefHeight)
         canvas.drawBitmap(clefBitmap, null, dstRect, clefPaint)
-        return trebleClefWidth
     }
 
-    private fun drawKeySignature(canvas: Canvas, left: Float): Float {
+    private fun accidentalSpacing(): Float = lineSpacing * 0.9f
+
+    private fun keySignatureWidth(): Float = keySignature.notes.size * accidentalSpacing()
+
+    private fun drawKeySignature(canvas: Canvas, left: Float) {
         val accidentalCount = keySignature.notes.size
-        if (accidentalCount == 0) return 0f
+        if (accidentalCount == 0) return
 
         val bitmap = if (keySignature.accidental == Accidental.SHARP) sharpBitmap else flatBitmap
         val positions = if (keySignature.accidental == Accidental.SHARP) sharpPositions else flatPositions
@@ -111,7 +130,7 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
 
         val accidentalWidth = lineSpacing
         val accidentalHeight = bitmap.height * (accidentalWidth / bitmap.width)
-        val spacing = accidentalWidth * 0.9f
+        val spacing = accidentalSpacing()
 
         for (i in 0 until accidentalCount) {
             val centerY = getNoteYPosition(positions[i] + clefOffset)
@@ -119,8 +138,6 @@ class StaffPainter(private val clefBitmap: Bitmap, private val sharpBitmap: Bitm
             val dstRect = RectF(x, centerY - accidentalHeight / 2, x + accidentalWidth, centerY + accidentalHeight / 2)
             canvas.drawBitmap(bitmap, null, dstRect, clefPaint)
         }
-
-        return accidentalCount * spacing
     }
 
     private fun drawNotes(canvas: Canvas, left: Float, midiNotes: List<Int>) {
