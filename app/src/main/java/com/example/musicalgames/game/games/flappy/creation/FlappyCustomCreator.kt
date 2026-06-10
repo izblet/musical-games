@@ -92,8 +92,6 @@ class FlappyCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
 
         isSelectionToggle.isChecked = true
         updateNotesFromVisibility()
-
-        setEditable(false)
     }
 
     private fun updateNotesFromVisibility() {

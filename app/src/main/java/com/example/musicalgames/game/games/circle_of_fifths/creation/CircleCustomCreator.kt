@@ -20,7 +20,6 @@ class CircleCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
 
     constructor(context: Context, level: CircleLevel, attrs: AttributeSet?) : this(context, {}, attrs) {
         modesValue.setSelectedValues(level.modes.toSet())
-        setEditable(false)
     }
 
     override fun getLevel(): Level? {

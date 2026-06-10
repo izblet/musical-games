@@ -35,7 +35,6 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
         modeSpinnerValue.setSelectedValue(level.mode)
         notesSelector.setSelected(level.startingNotes.toSet())
         intervalSelector.setSelected(level.intervals.toSet())
-        setEditable(false)
     }
 
     private fun getNotesFromSelection(): List<ChromaticNote> {

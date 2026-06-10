@@ -51,7 +51,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
-            android:background ="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/edit_toggle_background"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/pencil" />
 
     </LinearLayout>
@@ -109,7 +110,8 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="8dp"
-                android:background ="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/edit_toggle_background"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/pencil" />
 
         </LinearLayout>

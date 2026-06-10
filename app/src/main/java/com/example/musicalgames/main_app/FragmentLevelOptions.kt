@@ -1,5 +1,6 @@
 package com.example.musicalgames.main_app
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.InputType
@@ -35,11 +36,37 @@ class FragmentLevelOptions : Fragment() {
         if (game != null && level != null) {
             val factory = GameMap.createFactory(game)
             val levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
+            levelInfoView.setEditable(false)
             binding.levelInfoContainer.addView(levelInfoView)
+
+            binding.editLevelButton.setOnClickListener {
+                levelInfoView.setEditable(!levelInfoView.editable)
+                binding.editLevelButton.isActivated = levelInfoView.editable
+            }
         }
 
         binding.levelTitleText.setText(viewModel.levelName)
         binding.levelDescriptionText.setText(viewModel.levelDescription)
+
+        //this is so long because of the fact that EditTexts really want to be grayed out when they're disabled
+        val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()
+        fun setInfoEditable(editable: Boolean) {
+            for (editText in listOf(binding.levelTitleText, binding.levelDescriptionText)) {
+                if (editable) {
+                    infoEditTextColors[editText]?.let { editText.setTextColor(it) }
+                } else {
+                    val originalColors = infoEditTextColors.getOrPut(editText) { editText.textColors }
+                    editText.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
+                }
+                editText.isEnabled = editable
+            }
+        }
+        setInfoEditable(false)
+
+        binding.editLevelInfoButton.setOnClickListener {
+            setInfoEditable(!binding.levelTitleText.isEnabled)
+            binding.editLevelInfoButton.isActivated = binding.levelTitleText.isEnabled
+        }
 
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {

@@ -91,8 +91,6 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
         binding.isSelectionToggle.isChecked = true
         updateNotesFromVisibility()
-
-        setEditable(false)
     }
 
     private fun updateNotesFromVisibility() {
