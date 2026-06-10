@@ -25,6 +25,59 @@ class FragmentLevelOptions : Fragment() {
     private var _binding: FragmentLevelOptionsBinding? = null
     private val binding get() = _binding!!
 
+    //predefined levels are read-only: hide both edit pencils, just show their name/description
+    private fun setupPredefinedLevel(viewModel: MainViewModel) {
+        binding.editLevelButton.visibility = View.GONE
+        binding.editLevelInfoButton.visibility = View.GONE
+        binding.levelTitleText.setText(viewModel.levelName)
+        binding.levelDescriptionText.setText(viewModel.levelDescription)
+    }
+
+    //custom levels show their saved name/description and are editable like everything else
+    private fun setupCustomLevel(viewModel: MainViewModel) {
+        binding.levelTitleText.setText(viewModel.levelName)
+        binding.levelDescriptionText.setText(viewModel.levelDescription)
+    }
+
+    //temporary levels have no name/description yet - show a placeholder and a button to persist them
+    private fun setupTemporaryLevel(viewModel: MainViewModel) {
+        binding.levelTitleDescContainer.visibility = View.GONE
+        binding.editLevelInfoButton.visibility = View.GONE
+        binding.temporaryLevelMessage.visibility = View.VISIBLE
+        binding.saveLevelButton.visibility = View.VISIBLE
+
+        binding.saveLevelButton.setOnClickListener {
+            val dialogLayout = LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+            }
+            val nameInput = EditText(context).apply {
+                hint = "Enter level name"
+                inputType = InputType.TYPE_CLASS_TEXT
+            }
+            val descriptionInput = EditText(context).apply {
+                hint = "Enter description"
+                inputType = InputType.TYPE_CLASS_TEXT
+            }
+            dialogLayout.addView(nameInput)
+            dialogLayout.addView(descriptionInput)
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("Save Level")
+                .setView(dialogLayout)
+                .setPositiveButton("Save") { _, _ ->
+                    viewModel.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
+                        //the level is now a saved custom level - swap the placeholder for the normal editable row
+                        binding.temporaryLevelMessage.visibility = View.GONE
+                        binding.saveLevelButton.visibility = View.GONE
+                        binding.levelTitleDescContainer.visibility = View.VISIBLE
+                        binding.editLevelInfoButton.visibility = View.VISIBLE
+                        setupCustomLevel(viewModel)
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,9 +91,10 @@ class FragmentLevelOptions : Fragment() {
         val level = viewModel.level
 
         //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can
-        if (viewModel.isCustom == false) {
-            binding.editLevelButton.visibility = View.GONE
-            binding.editLevelInfoButton.visibility = View.GONE
+        when (viewModel.isCustom) {
+            false -> setupPredefinedLevel(viewModel)
+            true -> setupCustomLevel(viewModel)
+            null -> setupTemporaryLevel(viewModel)
         }
 
         //while a section is being edited, the overlay sits on top of everything except that
@@ -117,50 +171,6 @@ class FragmentLevelOptions : Fragment() {
             binding.editLevelButton.setOnClickListener {
                 if (levelInfoView.editable) promptExitParamsEditMode() else enterParamsEditMode()
             }
-        }
-
-        if (viewModel.levelId == null) {
-            //temporary levels don't have a name/description yet - show a placeholder instead of the editable row
-            binding.levelTitleDescContainer.visibility = View.GONE
-            binding.editLevelInfoButton.visibility = View.GONE
-            binding.temporaryLevelMessage.visibility = View.VISIBLE
-            binding.saveLevelButton.visibility = View.VISIBLE
-
-            binding.saveLevelButton.setOnClickListener {
-                val dialogLayout = LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                }
-                val nameInput = EditText(context).apply {
-                    hint = "Enter level name"
-                    inputType = InputType.TYPE_CLASS_TEXT
-                }
-                val descriptionInput = EditText(context).apply {
-                    hint = "Enter description"
-                    inputType = InputType.TYPE_CLASS_TEXT
-                }
-                dialogLayout.addView(nameInput)
-                dialogLayout.addView(descriptionInput)
-
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Save Level")
-                    .setView(dialogLayout)
-                    .setPositiveButton("Save") { _, _ ->
-                        viewModel.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
-                            //the level is now a saved custom level - swap the placeholder for the normal editable row
-                            binding.temporaryLevelMessage.visibility = View.GONE
-                            binding.saveLevelButton.visibility = View.GONE
-                            binding.levelTitleDescContainer.visibility = View.VISIBLE
-                            binding.editLevelInfoButton.visibility = View.VISIBLE
-                            binding.levelTitleText.setText(viewModel.levelName)
-                            binding.levelDescriptionText.setText(viewModel.levelDescription)
-                        }
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-            }
-        } else {
-            binding.levelTitleText.setText(viewModel.levelName)
-            binding.levelDescriptionText.setText(viewModel.levelDescription)
         }
 
         //this is so long because of the fact that EditTexts really want to be grayed out when they're disabled
