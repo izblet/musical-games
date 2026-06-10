@@ -19,6 +19,7 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyGameController
 import com.example.musicalgames.games.flappy.FlappyLevels
@@ -44,6 +45,10 @@ class FlappyGameFactory : GameFactory {
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
         return FlappyCustomCreator(context, createLevelAction, attrs)
+    }
+
+    override fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?): CustomGameCreator {
+        return FlappyCustomCreator(context, level as FlappyLevel, attrs)
     }
 
     override fun createGame(

@@ -23,5 +23,6 @@ interface GameFactory {
     )
 
     fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator
+    fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?) : CustomGameCreator
     fun createGame( context: Context, activity: FragmentActivity, gameContainer: ViewGroup, gameListener: GameListener) : GameController
 }

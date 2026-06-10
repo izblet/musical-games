@@ -49,6 +49,10 @@ class CircleGameFactory : GameFactory {
         return CircleCustomCreator(context, createLevelAction, attrs)
     }
 
+    override fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?): CustomGameCreator {
+        return CircleCustomCreator(context, level as CircleLevel, attrs)
+    }
+
     override fun createGame(
         context: Context,
         activity: FragmentActivity,

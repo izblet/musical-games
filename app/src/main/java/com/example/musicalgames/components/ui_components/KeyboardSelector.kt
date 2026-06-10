@@ -43,6 +43,15 @@ class KeyboardSelector @JvmOverloads constructor (context: Context, attributeSet
         notePreview.setGrayedOut()
     }
 
+    fun setSelected(notes: Set<ChromaticNote>) {
+        notePreview.setGrayedOutSet(ChromaticNote.entries.toSet() - notes)
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        notePreview.isEnabled = enabled
+    }
+
     inner class KeyboardDialog(context: Context) : BottomSheetDialog(context), KeyPaletteListener {
         private var keyboardView: KeyPaletteView
 

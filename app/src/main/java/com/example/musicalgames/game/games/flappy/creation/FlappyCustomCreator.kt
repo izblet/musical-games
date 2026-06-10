@@ -76,6 +76,26 @@ class FlappyCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
         updateNotesFromVisibility()
     }
 
+    constructor(context: Context, level: FlappyLevel, attrs: AttributeSet?) : this(context, {}, attrs) {
+        rootSpinnerValue.setSelectedValue(Note(level.root).noteChromatic)
+        modeSpinnerValue.setSelectedValue(level.mode)
+
+        val minNote = Note(level.minPitch)
+        minNoteSpinnerValue.setSelectedValue(minNote.noteChromatic)
+        minOctaveSpinnerValue.setSelectedValue(Octave.entries[minNote.octave - 1])
+
+        val maxNote = Note(level.maxPitch)
+        maxNoteSpinnerValue.setSelectedValue(maxNote.noteChromatic)
+        maxOctaveSpinnerValue.setSelectedValue(Octave.entries[maxNote.octave - 1])
+
+        notesSelector.setSelected(level.keyList.map { Note(it).noteChromatic }.toSet())
+
+        isSelectionToggle.isChecked = true
+        updateNotesFromVisibility()
+
+        setEditable(false)
+    }
+
     private fun updateNotesFromVisibility() {
         if (isSelectionToggle.isChecked) {
             scaleRow.visibility = View.GONE

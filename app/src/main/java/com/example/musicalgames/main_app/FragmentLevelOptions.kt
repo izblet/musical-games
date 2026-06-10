@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
+import com.example.musicalgames.games.GameMap
 
 class FragmentLevelOptions : Fragment() {
     private var _binding: FragmentLevelOptionsBinding? = null
@@ -27,6 +28,16 @@ class FragmentLevelOptions : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLevelOptionsBinding.inflate(inflater,container,false)
+
+        val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+        val game = viewModel.game
+        val level = viewModel.level
+        if (game != null && level != null) {
+            val factory = GameMap.createFactory(game)
+            val levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
+            binding.levelInfoContainer.addView(levelInfoView)
+        }
+
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {
             orientation= LinearLayout.HORIZONTAL
@@ -48,7 +59,6 @@ class FragmentLevelOptions : Fragment() {
         binding.gameplayOptionsContainer.addView(linearLayout)
 
         binding.startGameButton.setOnClickListener{
-            val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
             val bpm = editText.text.toString().toIntOrNull()
 
             if(bpm==null) {

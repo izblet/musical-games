@@ -25,6 +25,9 @@ class CustomCreatorChords(
         addNewRow("Quality", qualitiesSpinner)
         addNewRow("Extension", extensionsSpinner)
     }
+
+    //TODO: not yet filled in from level data - shows the default/empty view
+    constructor(context: Context, level: LevelChords, attrs: AttributeSet?) : this(context, {}, attrs)
     override fun getLevel(): Level? {
         val quality = qualitiesValue.getSelectedValue()
         val extension = extensionsValue.getSelectedValue()

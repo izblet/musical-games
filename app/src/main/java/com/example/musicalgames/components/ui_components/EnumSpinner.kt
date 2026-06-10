@@ -66,5 +66,13 @@ class EnumSpinner  @JvmOverloads constructor(
         fun resetToDefault() {
             setSelection(defaultIndex)
         }
+
+        fun setSelectedValue(value: T) {
+            val index = values.indexOf(value)
+            if(index == -1) {
+                throw IllegalArgumentException("value is not in the set of options")
+            }
+            setSelection(index)
+        }
     }
 }

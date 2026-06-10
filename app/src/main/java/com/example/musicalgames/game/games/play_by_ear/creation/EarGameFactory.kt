@@ -12,6 +12,7 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
@@ -38,6 +39,10 @@ class EarGameFactory : GameFactory {
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
         return EarCreatorView(context, createLevelAction, attrs)
+    }
+
+    override fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?): CustomGameCreator {
+        return EarCreatorView(context, level as PlayEarLevel, attrs)
     }
 
     override fun createGame(

@@ -12,6 +12,7 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator
 import com.example.musicalgames.game.game_core.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.mental_intervals.MentalController
 import com.example.musicalgames.games.mental_intervals.MentalLevels
@@ -38,6 +39,10 @@ class MentalGameFactory : GameFactory {
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
         return MentalCustomCreator(context, createLevelAction, attrs)
+    }
+
+    override fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?): CustomGameCreator {
+        return MentalCustomCreator(context, level as MentalLevel, attrs)
     }
 
     override fun createGame(

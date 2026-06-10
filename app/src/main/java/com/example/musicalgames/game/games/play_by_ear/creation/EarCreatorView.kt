@@ -72,6 +72,9 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
 
     }
 
+    //TODO: not yet filled in from level data - shows the default/empty view
+    constructor(context: Context, level: PlayEarLevel, attrs: AttributeSet?) : this(context, {}, attrs)
+
 
     private fun getFieldVal(id: Int): String {
         return findViewById<EditText>(id).text.toString()

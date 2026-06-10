@@ -41,6 +41,11 @@ class IntervalSelector @JvmOverloads constructor (context: Context, attributeSet
         notePreview.setGrayedOut()
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        notePreview.isEnabled = enabled
+    }
+
     inner class IntervalDialog(context: Context) : BottomSheetDialog(context), IntervalPaletteListener {
         private var keyboardView: IntervalPaletteView
 

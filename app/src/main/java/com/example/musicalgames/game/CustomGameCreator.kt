@@ -14,11 +14,23 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
     abstract fun highlightMissing()
     abstract fun clearSelection()
 
+    private val selectors: MutableList<View> = mutableListOf()
+
+    var editable: Boolean = true
+        private set
+
     init {
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
             LayoutParams.WRAP_CONTENT
         )
+    }
+
+    fun setEditable(editable: Boolean) {
+        this.editable = editable
+        for (selector in selectors) {
+            selector.isEnabled = editable
+        }
     }
 
     fun saveLevel() : Boolean {
@@ -81,6 +93,7 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
 
         styleSelector(selector)
         row.addView(selector)
+        selectors.add(selector)
 
         return row
     }
@@ -103,9 +116,11 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
 
         styleSelector(selector1, column = 2)
         row.addView(selector1)
+        selectors.add(selector1)
 
         styleSelector(selector2, column = 3)
         row.addView(selector2)
+        selectors.add(selector2)
 
         return row
     }

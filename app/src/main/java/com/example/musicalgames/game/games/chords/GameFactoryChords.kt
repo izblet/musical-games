@@ -46,6 +46,10 @@ class GameFactoryChords: GameFactory {
         return CustomCreatorChords(context, createLevelAction, attrs)
     }
 
+    override fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?): CustomGameCreator {
+        return CustomCreatorChords(context, level as LevelChords, attrs)
+    }
+
     override fun createGame(
         context: Context,
         activity: FragmentActivity,

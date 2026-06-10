@@ -177,6 +177,8 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
     abstract fun onClickAction(note : ChromaticNote)
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) return false
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 if (event.y > keyHeight) {
