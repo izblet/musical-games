@@ -40,19 +40,40 @@ class FragmentLevelOptions : Fragment() {
             binding.editLevelButton.visibility = View.GONE
             binding.editLevelInfoButton.visibility = View.GONE
         }
+
+        //while a section is being edited, the overlay sits on top of everything except that
+        //section (brought to front below) and blocks taps on the rest of the screen; tapping
+        //the overlay itself exits edit mode for whichever section is currently active
+        var exitEditMode: (() -> Unit)? = null
+        fun setOverlayVisible(visible: Boolean) {
+            binding.editBlockOverlay.visibility = if (visible) View.VISIBLE else View.GONE
+        }
+        binding.editBlockOverlay.setOnClickListener {
+            exitEditMode?.invoke()
+        }
+
         if (game != null && level != null) {
             val factory = GameMap.createFactory(game)
             val levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
             levelInfoView.setEditable(false)
             binding.levelInfoContainer.addView(levelInfoView)
 
-            binding.editLevelButton.setOnClickListener {
-                levelInfoView.setEditable(!levelInfoView.editable)
-                binding.editLevelButton.isActivated = levelInfoView.editable
+            fun toggleParamsEditMode() {
+                val editable = !levelInfoView.editable
+                levelInfoView.setEditable(editable)
+                binding.editLevelButton.isActivated = editable
                 binding.levelInfoContainer.setBackgroundResource(
-                    if (levelInfoView.editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
+                    if (editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
                 )
+                if (editable) {
+                    binding.levelInfoSection.bringToFront()
+                    exitEditMode = ::toggleParamsEditMode
+                } else {
+                    exitEditMode = null
+                }
+                setOverlayVisible(editable)
             }
+            binding.editLevelButton.setOnClickListener { toggleParamsEditMode() }
         }
 
         if (viewModel.levelId == null) {
@@ -80,14 +101,22 @@ class FragmentLevelOptions : Fragment() {
         }
         setInfoEditable(false)
 
-        binding.editLevelInfoButton.setOnClickListener {
-            setInfoEditable(!binding.levelTitleText.isEnabled)
-            val editable = binding.levelTitleText.isEnabled
+        fun toggleInfoEditMode() {
+            val editable = !binding.levelTitleText.isEnabled
+            setInfoEditable(editable)
             binding.editLevelInfoButton.isActivated = editable
             binding.headingContainer.setBackgroundResource(
                 if (editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
             )
+            if (editable) {
+                binding.headingContainer.bringToFront()
+                exitEditMode = ::toggleInfoEditMode
+            } else {
+                exitEditMode = null
+            }
+            setOverlayVisible(editable)
         }
+        binding.editLevelInfoButton.setOnClickListener { toggleInfoEditMode() }
 
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {
