@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
@@ -42,6 +43,9 @@ class FragmentLevelOptions : Fragment() {
             binding.editLevelButton.setOnClickListener {
                 levelInfoView.setEditable(!levelInfoView.editable)
                 binding.editLevelButton.isActivated = levelInfoView.editable
+                binding.levelInfoContainer.setBackgroundResource(
+                    if (levelInfoView.editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
+                )
             }
         }
 
@@ -65,7 +69,11 @@ class FragmentLevelOptions : Fragment() {
 
         binding.editLevelInfoButton.setOnClickListener {
             setInfoEditable(!binding.levelTitleText.isEnabled)
-            binding.editLevelInfoButton.isActivated = binding.levelTitleText.isEnabled
+            val editable = binding.levelTitleText.isEnabled
+            binding.editLevelInfoButton.isActivated = editable
+            binding.headingContainer.setBackgroundResource(
+                if (editable) R.drawable.item_selected_bordered else R.drawable.item_bordered
+            )
         }
 
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
