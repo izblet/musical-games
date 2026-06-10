@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -41,6 +43,7 @@ class FragmentLevelChoose : Fragment() {
     private lateinit var gameFactory: GameFactory
     private lateinit var adapter: AdapterLevelList
     private lateinit var recyclerView: RecyclerView
+    private lateinit var stateTextView: TextView
     private lateinit var content: FrameLayout
     private lateinit var viewCreate: ConstraintLayout
 
@@ -72,7 +75,7 @@ class FragmentLevelChoose : Fragment() {
         }
         binding.levelsButton.setOnClickListener{
             updateButtons(binding.levelsButton)
-            showLevels()
+            showPredefined()
         }
         binding.customButton.setOnClickListener{
             updateButtons(binding.customButton)
@@ -107,7 +110,17 @@ class FragmentLevelChoose : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = this@FragmentLevelChoose.adapter
         }
+        stateTextView = TextView(requireContext()).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            gravity = Gravity.CENTER
+            textSize = 18f
+            visibility = View.GONE
+        }
         content.addView(recyclerView)
+        content.addView(stateTextView)
 
         val layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
@@ -153,7 +166,7 @@ class FragmentLevelChoose : Fragment() {
         } else if(clickedButton == binding.customButton){
             showCustom()
         } else if(clickedButton == binding.levelsButton) {
-           showLevels()
+           showPredefined()
         }
     }
 
@@ -170,39 +183,78 @@ class FragmentLevelChoose : Fragment() {
     }
 
     private fun showFavourites() {
-        content.removeAllViews()
-        content.addView(recyclerView)
-        binding.pageTitle.text = "Favourite"
-        adapter.setData(favouriteList)
-        lifecycleScope.launch {
-            favouriteList = levelDao.getFavourites(viewModel.game!!)
-            //this ensures that we don't add data after the user changed their mind
-            //should pbbly be made thread-safe, but whatever
-            if(clickedButton==binding.favouritesButton)
-                adapter.setData(favouriteList)
-        }
+        showLevelList(
+            title = "Favourite",
+            cachedList = favouriteList,
+            emptyMessage = "Your favourite levels will show up here",
+            isStillSelected = { clickedButton == binding.favouritesButton },
+            fetch = { levelDao.getFavourites(viewModel.game!!) },
+            onResult = { favouriteList = it }
+        )
     }
-    private fun showLevels() {
-        content.removeAllViews()
-        content.addView(recyclerView)
-        binding.pageTitle.text = "Predefined"
-        adapter.setData(baseList)
-        lifecycleScope.launch {
-            baseList = levelDao.getLevels(viewModel.game!!, false)
-            if(clickedButton==binding.levelsButton)
-                adapter.setData(baseList)
-        }
-
+    private fun showPredefined() {
+        showLevelList(
+            title = "Predefined",
+            cachedList = baseList,
+            emptyMessage = "No predefined levels",
+            isStillSelected = { clickedButton == binding.levelsButton },
+            fetch = { levelDao.getLevels(viewModel.game!!, false) },
+            onResult = { baseList = it }
+        )
     }
     private fun showCustom() {
+        showLevelList(
+            title = "Custom",
+            cachedList = customList,
+            emptyMessage = "Your custom levels will show up here",
+            isStillSelected = { clickedButton == binding.customButton },
+            fetch = { levelDao.getLevels(viewModel.game!!, true) },
+            onResult = { customList = it }
+        )
+    }
+
+    private fun showLevelList(
+        title: String,
+        cachedList: List<TaggedLevel>,
+        emptyMessage: String,
+        isStillSelected: () -> Boolean,
+        fetch: suspend () -> List<TaggedLevel>,
+        onResult: (List<TaggedLevel>) -> Unit
+    ) {
         content.removeAllViews()
         content.addView(recyclerView)
-        binding.pageTitle.text = "Custom"
-        adapter.setData(customList)
+        content.addView(stateTextView)
+        binding.pageTitle.text = title
+        adapter.setData(cachedList)
+        setListState(cachedList, emptyMessage, isLoading = cachedList.isEmpty())
         lifecycleScope.launch {
-            customList = levelDao.getLevels(viewModel.game!!, true)
-            if(clickedButton==binding.customButton)
-                adapter.setData(customList)
+            val result = fetch()
+            onResult(result)
+            //this ensures that we don't add data after the user changed their mind
+            //should pbbly be made thread-safe, but whatever
+            if (isStillSelected()) {
+                adapter.setData(result)
+                setListState(result, emptyMessage, isLoading = false)
+            }
+        }
+    }
+
+    private fun setListState(list: List<TaggedLevel>, emptyMessage: String, isLoading: Boolean) {
+        when {
+            isLoading -> {
+                stateTextView.text = "Loading..."
+                stateTextView.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            }
+            list.isEmpty() -> {
+                stateTextView.text = emptyMessage
+                stateTextView.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            }
+            else -> {
+                stateTextView.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
         }
     }
     private fun showCreate() {
