@@ -10,7 +10,7 @@ import com.example.musicalgames.main_app.game_levels.TaggedLevel
 @Dao
 interface LevelDao {
     @Insert
-    suspend fun insert(level: LevelEntity)
+    suspend fun insert(level: LevelEntity): Long
 
     @Query("SELECT COUNT(*) FROM levels")
     suspend fun getLevelCount(): Long
@@ -23,6 +23,9 @@ interface LevelDao {
 
     @Query("UPDATE levels SET isFavourite = :newVal WHERE id = :id")
     suspend fun changeFavourite(newVal: Boolean, id: Int)
+
+    @Query("UPDATE levels SET name = :name, description = :description, levelJSON = :levelJSON WHERE id = :id")
+    suspend fun updateLevelEntity(id: Int, name: String, description: String, levelJSON: String)
 
     @Query("DELETE FROM levels WHERE id = :id")
     suspend fun deleteLevel(id: Int)
@@ -56,7 +59,7 @@ interface LevelDao {
     suspend fun addLevel(
         level: TaggedLevel,
         game: Game
-    ) {
+    ): Int {
         val levelEntity = LevelEntity(0,
             game.ordinal,
             level.name,
@@ -64,7 +67,11 @@ interface LevelDao {
             MoshiUtil.adapters[game]!!.toJson(level.level),
             isCustom = level.isCustom,
             isFavourite = level.isFavourite)
-        insert(levelEntity)
+        return insert(levelEntity).toInt()
+    }
+
+    suspend fun updateLevel(id: Int, game: Game, name: String, description: String, level: Level) {
+        updateLevelEntity(id, name, description, MoshiUtil.adapters[game]!!.toJson(level))
     }
 
 }

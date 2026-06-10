@@ -87,13 +87,16 @@ class FragmentLevelOptions : Fragment() {
                 }
                 workingLevel = newLevel
                 viewModel.level = newLevel
+                if (viewModel.levelId != null) {
+                    viewModel.updateLevel()
+                }
                 exitParamsEditMode()
             }
 
+            //TODO: this is the same as for the other editing field, they should be combined
             fun promptExitParamsEditMode() {
                 AlertDialog.Builder(requireContext())
-                    .setTitle("Unsaved changes")
-                    .setMessage("Save or discard your changes to the game parameters?")
+                    .setTitle("Save changes?")
                     .setPositiveButton("Save") { _, _ -> saveParamsEdit() }
                     .setNegativeButton("Discard") { _, _ -> discardParamsEdit() }
                     .show()
@@ -121,6 +124,40 @@ class FragmentLevelOptions : Fragment() {
             binding.levelTitleDescContainer.visibility = View.GONE
             binding.editLevelInfoButton.visibility = View.GONE
             binding.temporaryLevelMessage.visibility = View.VISIBLE
+            binding.saveLevelButton.visibility = View.VISIBLE
+
+            binding.saveLevelButton.setOnClickListener {
+                val dialogLayout = LinearLayout(context).apply {
+                    orientation = LinearLayout.VERTICAL
+                }
+                val nameInput = EditText(context).apply {
+                    hint = "Enter level name"
+                    inputType = InputType.TYPE_CLASS_TEXT
+                }
+                val descriptionInput = EditText(context).apply {
+                    hint = "Enter description"
+                    inputType = InputType.TYPE_CLASS_TEXT
+                }
+                dialogLayout.addView(nameInput)
+                dialogLayout.addView(descriptionInput)
+
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Save Level")
+                    .setView(dialogLayout)
+                    .setPositiveButton("Save") { _, _ ->
+                        viewModel.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
+                            //the level is now a saved custom level - swap the placeholder for the normal editable row
+                            binding.temporaryLevelMessage.visibility = View.GONE
+                            binding.saveLevelButton.visibility = View.GONE
+                            binding.levelTitleDescContainer.visibility = View.VISIBLE
+                            binding.editLevelInfoButton.visibility = View.VISIBLE
+                            binding.levelTitleText.setText(viewModel.levelName)
+                            binding.levelDescriptionText.setText(viewModel.levelDescription)
+                        }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
         } else {
             binding.levelTitleText.setText(viewModel.levelName)
             binding.levelDescriptionText.setText(viewModel.levelDescription)
@@ -159,13 +196,15 @@ class FragmentLevelOptions : Fragment() {
         fun saveInfoEdit() {
             viewModel.levelName = binding.levelTitleText.text.toString()
             viewModel.levelDescription = binding.levelDescriptionText.text.toString()
+            if (viewModel.levelId != null) {
+                viewModel.updateLevel()
+            }
             exitInfoEditMode()
         }
 
         fun promptExitInfoEditMode() {
             AlertDialog.Builder(requireContext())
-                .setTitle("Unsaved changes")
-                .setMessage("Save or discard your changes to the level title and description?")
+                .setTitle("Save changes?")
                 .setPositiveButton("Save") { _, _ -> saveInfoEdit() }
                 .setNegativeButton("Discard") { _, _ -> discardInfoEdit() }
                 .show()
