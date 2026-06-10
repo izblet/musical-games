@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game.database.GameDatabase
@@ -26,7 +25,6 @@ import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.game.game_core.GameFactory
-import com.example.musicalgames.games.GameInfo
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
@@ -169,20 +167,6 @@ class FragmentLevelChoose : Fragment() {
         clickedButton.isSelected = false
         clickedButton = newClicked
         clickedButton.isSelected = true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
-        (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val gameInfo: GameInfo = GameMap.gameInfos[viewModel.game!!]!!
-        (requireActivity() as? IToolbarTitleUpdater)?.updateToolbarTitle(gameInfo.name)
-
     }
 
     private fun showFavourites() {

@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.musicalgames.IToolbarTitleUpdater
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
 import com.example.musicalgames.game_activity.GameActivity
@@ -26,15 +25,10 @@ import com.example.musicalgames.games.GameMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
-    //used when fragments change to update the title of the toolbar
-    override fun updateToolbarTitle(title: String) {
-       supportActionBar?.title = title
-    }
 
     private fun setCollectFor(sharedFlow: MutableSharedFlow<Unit>, function: (Unit)->Unit) {
        lifecycleScope.launch {
@@ -90,6 +84,13 @@ class MainActivity : AppCompatActivity(), IToolbarTitleUpdater {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        //on the per-game screens, show the chosen game's name instead of the nav graph's label
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val game = viewModel.game
+            if (game != null && destination.id in setOf(R.id.fragmentNewModeChoose, R.id.fragmentLevelOptions)) {
+                supportActionBar?.title = GameMap.gameInfos[game]?.name
+            }
+        }
     }
 
     //TODO: should probably add more options to the menu
