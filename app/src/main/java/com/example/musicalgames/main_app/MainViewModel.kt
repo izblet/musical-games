@@ -16,6 +16,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     @Volatile
     var level: Level? = null
     @Volatile
+    var levelName: String? = null
+    @Volatile
+    var levelDescription: String? = null
+    @Volatile
     var gameplay: GamePlayInstance? = null
 
     val navigateToLevels = MutableSharedFlow<Unit>()
@@ -27,8 +31,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch { navigateToLevels.emit(Unit) }
     }
 
-    fun chooseLevel(level: Level) {
+    fun chooseLevel(level: Level, name: String? = null, description: String? = null) {
         this.level = level
+        this.levelName = name
+        this.levelDescription = description
         viewModelScope.launch { navigateToGamePlay.emit(Unit) }
     }
 

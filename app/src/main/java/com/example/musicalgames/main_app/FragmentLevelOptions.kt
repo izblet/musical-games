@@ -38,6 +38,9 @@ class FragmentLevelOptions : Fragment() {
             binding.levelInfoContainer.addView(levelInfoView)
         }
 
+        binding.levelTitleText.setText(viewModel.levelName)
+        binding.levelDescriptionText.setText(viewModel.levelDescription)
+
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {
             orientation= LinearLayout.HORIZONTAL

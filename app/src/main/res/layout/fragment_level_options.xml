@@ -9,21 +9,52 @@
         android:id="@+id/heading_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/item_bordered"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/startGameButton"
-        android:text="Start Game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/heading_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-         />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/levelTitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/levelDescriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/editLevelInfoButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:background ="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/pencil" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/gameplay_options_container"
@@ -32,7 +63,18 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startGameButton" />
+        app:layout_constraintTop_toBottomOf="@id/heading_container" />
+
+    <Button
+        android:id="@+id/startGameButton"
+        android:text="Start Game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/gameplay_options_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+         />
 
     <LinearLayout
         android:id="@+id/level_info_section"
@@ -42,7 +84,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gameplay_options_container">
+        app:layout_constraintTop_toBottomOf="@id/startGameButton">
 
         <LinearLayout
             android:id="@+id/level_info_heading"
@@ -51,7 +93,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/item_bordered"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -67,7 +109,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="8dp"
-                android:background="@drawable/item_bordered"
+                android:background ="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/pencil" />
 
         </LinearLayout>
