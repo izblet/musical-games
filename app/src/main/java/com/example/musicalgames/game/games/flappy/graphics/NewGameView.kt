@@ -2,10 +2,14 @@ package com.example.musicalgames.game.games.flappy.graphics
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.example.musicalgames.games.flappy.FlappyViewModel
+import com.example.musicalgames.R
+import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
+import com.example.musicalgames.game.games.flappy.graphics.flappy_renderer.FlappyRenderer
+import com.example.musicalgames.game.games.flappy.FlappyViewModel
 import com.example.musicalgames.utils.geometry.Rect
 import kotlinx.coroutines.launch
 
@@ -18,6 +22,11 @@ class NewGameView(
 ) : View(context) {
 
     private var renderState: FlappyRenderState? = null
+
+    private val scorePaint = Paint().apply {
+        color = context.getColor(R.color.white)
+        textSize = 48f
+    }
 
     init {
         lifecycleOwner.lifecycleScope.launch {
@@ -33,5 +42,6 @@ class NewGameView(
         val state = renderState ?: return
 
         renderer.draw(canvas, state.birdShape, state.pipes, state.pipeNotes, gameRect, width.toFloat(), height.toFloat())
+        canvas.drawText("Score: ${state.score}", 20f, 60f, scorePaint)
     }
 }

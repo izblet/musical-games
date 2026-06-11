@@ -4,15 +4,23 @@ import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 import com.example.musicalgames.utils.geometry.Shape
 
+enum class GameEndReason {
+    COLLISION,
+    SCORE_REACHED
+}
+
 class GameLogic (
     private val bird : Bird, //the bird should be in the starting position
     private val gameRectMidiCoordinates: Rect,
     private val pipeDistance: Double,
     private val speed: Double,
     private val pipeGenerator: PipeGenerator,
-    private val midiCoordinateController: MidiCoordinateController
+    private val midiCoordinateController: MidiCoordinateController,
+    private val endAfter: Int? = null
 ){
     var gameEnded = false
+        private set
+    var endReason: GameEndReason? = null
         private set
     var score = 0
         private set
@@ -79,9 +87,14 @@ class GameLogic (
     }
 
 
+    //runs the (potentially slow) pitch recognition; called from a separate, lower-rate loop
+    //so it doesn't block tickFrame()/rendering
+    fun pollPitch() {
+        midiCoordinateController.getCoordinate()?.let { bird.setTarget(it) }
+    }
+
     fun tickFrame() {
-        val targetY = midiCoordinateController.getCoordinate()
-        targetY?.let { bird.move(it) }
+        bird.advance()
         movePipes()
 
         val currentPipe = pipes[currentPipeIndex]
@@ -92,6 +105,11 @@ class GameLogic (
 
         if (collided) {
             gameEnded = true
+            endReason = GameEndReason.COLLISION
+        }
+        if (endAfter != null && score >= endAfter) {
+            gameEnded = true
+            endReason = GameEndReason.SCORE_REACHED
         }
     }
 

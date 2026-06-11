@@ -9,6 +9,8 @@ class Bird (shape: Shape, private val moveSpeedDiv: Int, translation : Point = P
     private var shape = shape.getTranslated(translation)
     private var constraint: Rect? = null
 
+    //written from the pitch-polling loop, read from the game-tick loop
+    @Volatile
     private var target = shape.getCenter().y
 
 
@@ -23,8 +25,13 @@ class Bird (shape: Shape, private val moveSpeedDiv: Int, translation : Point = P
         return shape.copy()
     }
 
-    fun move(newTarget: Double) {
+    //called from the pitch-polling loop to record the latest detected pitch
+    fun setTarget(newTarget: Double) {
         target = newTarget
+    }
+
+    //called from the game-tick loop to move towards the latest target
+    fun advance() {
         val deltaY = (target - shape.getCenter().y) / moveSpeedDiv
         val translatedShape = shape.getTranslated(Point(.0, deltaY))
 

@@ -1,42 +1,42 @@
 package com.example.musicalgames.utils.geometry
 
-class Circle(val center: Point, val radius: Double) : Shape {
+class Circle(val centerPoint: Point, val radius: Double) : Shape {
     init {
         require(radius>0) {"Circle radius has to be positive"}
     }
     override fun intersects(rect: Rect) : Boolean {
-        val closestX = center.x.coerceIn(rect.left, rect.right)
-        val closestY = center.y.coerceIn(rect.bottom, rect.top)
-        val dx = center.x - closestX
-        val dy = center.y - closestY
+        val closestX = centerPoint.x.coerceIn(rect.left, rect.right)
+        val closestY = centerPoint.y.coerceIn(rect.bottom, rect.top)
+        val dx = centerPoint.x - closestX
+        val dy = centerPoint.y - closestY
         return dx * dx + dy * dy <= radius * radius
     }
 
     override fun isContained(rect: Rect): Boolean {
-        return center.x - radius >= rect.left &&
-                center.x + radius <= rect.right &&
-                center.y - radius >= rect.bottom &&
-                center.y + radius <= rect.top
+        return centerPoint.x - radius >= rect.left &&
+                centerPoint.x + radius <= rect.right &&
+                centerPoint.y - radius >= rect.bottom &&
+                centerPoint.y + radius <= rect.top
     }
 
     override fun getTranslated(translationVector: Point): Circle {
-        return Circle(center.getTranslated(translationVector), radius)
+        return Circle(centerPoint.getTranslated(translationVector), radius)
     }
 
     override fun getCenter(): Point {
-        return center
+        return centerPoint
     }
 
     override fun copy(): Circle {
-        return Circle(center, radius)
+        return Circle(centerPoint, radius)
     }
 
     override fun getBoundingRectangle(): Rect {
         return Rect(
-            left = center.x - radius,
-            top = center.y + radius,
-            right = center.x + radius,
-            bottom = center.y - radius
+            left = centerPoint.x - radius,
+            top = centerPoint.y + radius,
+            right = centerPoint.x + radius,
+            bottom = centerPoint.y - radius
         )
     }
 }

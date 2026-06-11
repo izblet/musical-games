@@ -1,4 +1,4 @@
-package com.example.musicalgames.game.games.flappy.graphics
+package com.example.musicalgames.game.games.flappy.graphics.flappy_renderer
 
 import android.graphics.Canvas
 import com.example.musicalgames.utils.geometry.Rect

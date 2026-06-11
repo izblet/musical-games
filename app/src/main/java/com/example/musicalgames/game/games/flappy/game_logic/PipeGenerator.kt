@@ -1,9 +1,14 @@
 package com.example.musicalgames.game.games.flappy.game_logic
 
 import com.example.musicalgames.utils.question_generation.NoteGenerator
-import kotlin.random.Random
 
-class PipeGenerator(val width: Double, val minHoleMidi: Int, val maxHoleMidi: Int, private val noteGenerator: NoteGenerator) {
+class PipeGenerator(
+    val width: Double,
+    val minHoleMidi: Int,
+    val maxHoleMidi: Int,
+    private val noteGenerator: NoteGenerator,
+    private val holePadding: Double
+) {
 
     fun getPipe(left: Double, bottomMidiCoordinate: Double, topMidiCoordinate: Double) : Pipe {
         val holeMidi = noteGenerator.getNoteMidi(minHoleMidi, maxHoleMidi)
@@ -12,7 +17,8 @@ class PipeGenerator(val width: Double, val minHoleMidi: Int, val maxHoleMidi: In
             bottomMidiCoordinate = bottomMidiCoordinate,
             left = left,
             right = left + width,
-            holeMidi = holeMidi
+            holeMidi = holeMidi,
+            holePadding = holePadding
         )
     }
 }

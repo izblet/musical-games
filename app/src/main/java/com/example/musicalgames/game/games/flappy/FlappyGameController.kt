@@ -1,5 +1,7 @@
 package com.example.musicalgames.games.flappy
 
+// commented out: superseded by FlappyController, kept temporarily until the new game is verified
+/*
 import android.Manifest
 import android.content.Context
 import android.os.Handler
@@ -114,3 +116,4 @@ class FlappyGameController(private val gameView: FloppyGameView) : GameControlle
     }
 
 }
+*/

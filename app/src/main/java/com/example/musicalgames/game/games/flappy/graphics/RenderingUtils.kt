@@ -36,7 +36,7 @@ fun drawLane(
     screenHeight: Float,
     paint: Paint
 ) {
-    val padding = pipeRect.width * 1.5
+    val padding = pipeRect.width * .5
     val laneRect = Rect(
         left = pipeRect.left - padding,
         top = pipeRect.top,
@@ -54,15 +54,16 @@ fun drawKeyboardTiles(
     screenWidth: Float,
     screenHeight: Float,
     whitePaint: Paint,
-    blackPaint: Paint
+    blackPaint: Paint,
+    padding: Double
 ) {
     var note = rect.bottom.roundToInt()
     while (note - 0.5 < rect.top) {
         val tile = Rect(
             left = rect.left,
-            top = (note + 0.5).coerceAtMost(rect.top),
+            top = (note + 0.5-padding).coerceAtMost(rect.top),
             right = rect.right,
-            bottom = (note - 0.5).coerceAtLeast(rect.bottom)
+            bottom = (note - 0.5+padding).coerceAtLeast(rect.bottom)
         )
         val paint = if (MusicUtil.isWhite(note)) whitePaint else blackPaint
         canvas.drawRect(tile.toScreenRectF(gameRect, screenWidth, screenHeight), paint)

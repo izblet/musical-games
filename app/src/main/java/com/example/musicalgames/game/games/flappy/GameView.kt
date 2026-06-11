@@ -1,5 +1,7 @@
 package com.example.musicalgames.games.flappy
 
+// commented out: superseded by NewGameView/FlappyController, kept temporarily until the new game is verified
+/*
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -162,4 +164,5 @@ class FloppyGameView(context: Context) : View(context) {
         return score
     }
 }
+*/
 
