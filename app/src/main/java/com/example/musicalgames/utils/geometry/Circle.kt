@@ -1,6 +1,9 @@
 package com.example.musicalgames.utils.geometry
 
 class Circle(val center: Point, val radius: Double) : Shape {
+    init {
+        require(radius>0) {"Circle radius has to be positive"}
+    }
     override fun intersects(rect: Rect) : Boolean {
         val closestX = center.x.coerceIn(rect.left, rect.right)
         val closestY = center.y.coerceIn(rect.bottom, rect.top)

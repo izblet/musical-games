@@ -6,6 +6,11 @@ import kotlin.math.min
 
 data class Rect (val left: Double, val top: Double, val right: Double, val bottom: Double) : Shape {
 
+    init {
+        require(left<right){"left coordinate has to be smaller than right"}
+        require(top>bottom){"bottom coordinate has to be smaller than top"}
+    }
+
     override fun intersects(rect: Rect): Boolean {
         val xOverlap = left < rect.right && rect.left < right
         val yOverlap = bottom < rect.top && rect.bottom < top
