@@ -2,6 +2,7 @@ package com.example.musicalgames.game.games.flappy.game_logic
 
 import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
+import com.example.musicalgames.utils.geometry.Shape
 
 class GameLogic (
     private val bird : Bird, //the bird should be in the starting position
@@ -13,8 +14,10 @@ class GameLogic (
     private val pipeGenerator: PipeGenerator,
     private val midiCoordinateController: MidiCoordinateController
 ){
-    private var gameEnded = false
-    private var score = 0
+    var gameEnded = false
+        private set
+    var score = 0
+        private set
 
     val pipes : MutableList<Pipe> = mutableListOf(getPipe())
 
@@ -30,6 +33,14 @@ class GameLogic (
         //maybe also some constraints on speed? I don't know what it's supposed to be exactly
         bird.setConstraints(gameRect)
     }
+    fun getBirdShape(): Shape {
+        return bird.getShape()
+    }
+
+    fun getPipeRects(): List<Pair<Rect?, Rect?>> {
+        return pipes.map { it.rectTop to it.rectBottom }
+    }
+
     private fun getPipe() : Pipe {
         return pipeGenerator.getPipe(
             left=gameRect.right,
