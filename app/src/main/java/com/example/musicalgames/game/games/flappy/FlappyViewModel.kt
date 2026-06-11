@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.games.flappy.FlappyLevel
-import com.example.musicalgames.game.games.flappy.FlappyRenderState
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
+import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Mode

@@ -5,15 +5,13 @@ import kotlin.random.Random
 
 class PipeGenerator(val width: Double, val minHoleMidi: Int, val maxHoleMidi: Int, private val noteGenerator: NoteGenerator) {
 
-    fun getPipe(left: Double, bottom: Double, top: Double, minDisplayMidi: Int, maxDisplayMidi: Int) : Pipe {
+    fun getPipe(left: Double, bottomMidiCoordinate: Double, topMidiCoordinate: Double) : Pipe {
         val holeMidi = noteGenerator.getNoteMidi(minHoleMidi, maxHoleMidi)
         return Pipe(
-            top = top,
-            bottom = bottom,
+            topMidiCoordinate = topMidiCoordinate,
+            bottomMidiCoordinate = bottomMidiCoordinate,
             left = left,
             right = left + width,
-            minMidi = minDisplayMidi,
-            maxMidi = maxDisplayMidi,
             holeMidi = holeMidi
         )
     }

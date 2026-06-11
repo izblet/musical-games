@@ -6,11 +6,9 @@ import com.example.musicalgames.utils.geometry.Shape
 
 class GameLogic (
     private val bird : Bird, //the bird should be in the starting position
-    private val gameRect: Rect,
+    private val gameRectMidiCoordinates: Rect,
     private val pipeDistance: Double,
     private val speed: Double,
-    private val minDisplayMidi: Int,
-    private val maxDisplayMidi: Int,
     private val pipeGenerator: PipeGenerator,
     private val midiCoordinateController: MidiCoordinateController
 ){
@@ -27,27 +25,25 @@ class GameLogic (
     init {
         require(pipeDistance>0){"Pipe distance should be positive"}
         require(speed>0){"Speed should be positive"}
-        require(bird.getShape().isContained(gameRect)) {"The bird is not contained in game rectangle"}
-        require(pipeDistance<gameRect.right-gameRect.left){"At least one pipe should be in game screen at all times"}
+        require(bird.getShape().isContained(gameRectMidiCoordinates)) {"The bird is not contained in game rectangle"}
+        require(pipeDistance<gameRectMidiCoordinates.right-gameRectMidiCoordinates.left){"At least one pipe should be in game screen at all times"}
         require(bird.getShape().getBoundingRectangle().width<pipeDistance){"The bird cannot be wider than the distance between pipes"}
         //maybe also some constraints on speed? I don't know what it's supposed to be exactly
-        bird.setConstraints(gameRect)
+        bird.setConstraints(gameRectMidiCoordinates)
     }
     fun getBirdShape(): Shape {
         return bird.getShape()
     }
 
-    fun getPipeRects(): List<Pair<Rect?, Rect?>> {
-        return pipes.map { it.rectTop to it.rectBottom }
+    fun getPipeRects(): List<Triple<Rect, Rect?, Rect?>> {
+        return pipes.map { Triple(it.getBoundingRectangle(), it.rectTop, it.rectBottom) }
     }
 
     private fun getPipe() : Pipe {
         return pipeGenerator.getPipe(
-            left=gameRect.right,
-            bottom=gameRect.bottom,
-            top=gameRect.top,
-            minDisplayMidi=minDisplayMidi,
-            maxDisplayMidi=maxDisplayMidi)
+            left=gameRectMidiCoordinates.right,
+            bottomMidiCoordinate=gameRectMidiCoordinates.bottom,
+            topMidiCoordinate=gameRectMidiCoordinates.top)
     }
     private fun movePipes() {
         //first move the existing pipes
@@ -66,12 +62,12 @@ class GameLogic (
         }
 
         //then remove invisible pipes, update the index accordingly
-        val removedCount = pipes.count {it.getBoundingRectangle().right<gameRect.left}
-        pipes.removeAll { it.getBoundingRectangle().right<gameRect.left }
+        val removedCount = pipes.count {it.getBoundingRectangle().right<gameRectMidiCoordinates.left}
+        pipes.removeAll { it.getBoundingRectangle().right<gameRectMidiCoordinates.left }
         currentPipeIndex-=removedCount
 
         //then add pipes if necessary
-        while(pipes.last().getBoundingRectangle().left <=gameRect.right - pipeDistance) {
+        while(pipes.last().getBoundingRectangle().left <=gameRectMidiCoordinates.right - pipeDistance) {
             pipes.add(getPipe())
         }
 

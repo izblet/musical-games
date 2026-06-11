@@ -4,16 +4,14 @@ import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 
 class Pipe(
-    top: Double,
-    bottom: Double,
+    topMidiCoordinate: Double,
+    bottomMidiCoordinate: Double,
     left: Double,
     right: Double,
-    minMidi: Int,
-    maxMidi: Int,
     holeMidi: Int,
     holePadding: Double = 0.0
 ) {
-    private var rect = Rect(left = left, top = top, right = right, bottom = bottom)
+    private var rect = Rect(left = left, top = topMidiCoordinate, right = right, bottom = bottomMidiCoordinate)
 
     //for max and min midi-holes in the range there can be no top/bottom pipe, and the rectangle is null
     var rectTop: Rect?
@@ -22,16 +20,12 @@ class Pipe(
         private set
 
     init {
+        //one unit of midi coordinate corresponds to one semitone slot
+        val holeBottom = holeMidi - holePadding
+        val holeTop = holeMidi + 1 + holePadding
 
-        val slotHeight = (top - bottom) / (maxMidi - minMidi + 1)
-        val holeIndex = holeMidi - minMidi
-
-        val holeBottom = bottom + holeIndex * slotHeight - holePadding
-        val holeTop = bottom + (holeIndex + 1) * slotHeight + holePadding
-
-
-        rectTop = if (holeTop < top) Rect(left = left, top = top, right = right, bottom = holeTop) else null
-        rectBottom = if (holeBottom > bottom) Rect(left = left, top = holeBottom, right = right, bottom = bottom) else null
+        rectTop = if (holeTop < topMidiCoordinate) Rect(left = left, top = topMidiCoordinate, right = right, bottom = holeTop) else null
+        rectBottom = if (holeBottom > bottomMidiCoordinate) Rect(left = left, top = holeBottom, right = right, bottom = bottomMidiCoordinate) else null
     }
     fun moveByVector(vector: Point) {
         rect = rect.getTranslated(vector)
