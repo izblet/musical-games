@@ -11,10 +11,28 @@ data class Rect (val left: Double, val top: Double, val right: Double, val botto
         require(top>bottom){"bottom coordinate has to be smaller than top"}
     }
 
+    val width: Double get() = right - left
+
     override fun intersects(rect: Rect): Boolean {
         val xOverlap = left < rect.right && rect.left < right
         val yOverlap = bottom < rect.top && rect.bottom < top
         return xOverlap && yOverlap
+    }
+
+    override fun isContained(rect: Rect): Boolean {
+        return rect.left <= left && right <= rect.right && rect.bottom <= bottom && top <= rect.top
+    }
+
+    override fun getCenter(): Point {
+        return Point((left + right) / 2, (top + bottom) / 2)
+    }
+
+    override fun copy(): Rect {
+        return Rect(left, top, right, bottom)
+    }
+
+    override fun getBoundingRectangle(): Rect {
+        return copy()
     }
 
     override fun getTranslated(translationVector: Point): Rect {
