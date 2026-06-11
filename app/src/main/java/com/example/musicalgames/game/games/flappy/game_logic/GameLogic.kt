@@ -39,6 +39,11 @@ class GameLogic (
         return pipes.map { Triple(it.getBoundingRectangle(), it.rectTop, it.rectBottom) }
     }
 
+    //the i-th note here is the one the i-th pipe in getPipeRects() corresponds to
+    fun getPipeNotes(): List<Int> {
+        return pipes.map { it.holeMidi }
+    }
+
     private fun getPipe() : Pipe {
         return pipeGenerator.getPipe(
             left=gameRectMidiCoordinates.right,

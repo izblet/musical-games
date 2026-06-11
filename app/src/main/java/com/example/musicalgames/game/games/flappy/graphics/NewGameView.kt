@@ -32,6 +32,6 @@ class NewGameView(
         super.onDraw(canvas)
         val state = renderState ?: return
 
-        renderer.draw(canvas, state.birdShape, state.pipes, gameRect, width.toFloat(), height.toFloat())
+        renderer.draw(canvas, state.birdShape, state.pipes, state.pipeNotes, gameRect, width.toFloat(), height.toFloat())
     }
 }

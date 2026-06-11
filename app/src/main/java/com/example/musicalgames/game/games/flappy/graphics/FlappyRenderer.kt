@@ -9,6 +9,7 @@ interface FlappyRenderer {
         canvas: Canvas,
         birdShape: Shape,
         pipes: List<Triple<Rect, Rect?, Rect?>>,
+        pipeNotes: List<Int>,
         gameRect: Rect,
         screenWidth: Float,
         screenHeight: Float

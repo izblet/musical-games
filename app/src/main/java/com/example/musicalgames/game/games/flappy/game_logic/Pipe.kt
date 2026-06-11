@@ -8,7 +8,7 @@ class Pipe(
     bottomMidiCoordinate: Double,
     left: Double,
     right: Double,
-    holeMidi: Int,
+    val holeMidi: Int,
     holePadding: Double = 0.0
 ) {
     private var rect = Rect(left = left, top = topMidiCoordinate, right = right, bottom = bottomMidiCoordinate)
@@ -20,9 +20,9 @@ class Pipe(
         private set
 
     init {
-        //one unit of midi coordinate corresponds to one semitone slot
-        val holeBottom = holeMidi - holePadding
-        val holeTop = holeMidi + 1 + holePadding
+        //a key for midi note m spans [m - 0.5, m + 0.5] in midi coordinates
+        val holeBottom = holeMidi - 0.5 - holePadding
+        val holeTop = holeMidi + 0.5 + holePadding
 
         rectTop = if (holeTop < topMidiCoordinate) Rect(left = left, top = topMidiCoordinate, right = right, bottom = holeTop) else null
         rectBottom = if (holeBottom > bottomMidiCoordinate) Rect(left = left, top = holeBottom, right = right, bottom = bottomMidiCoordinate) else null

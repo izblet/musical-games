@@ -43,6 +43,7 @@ class FlappyViewModel() : ViewModel() {
                 _renderState.value = FlappyRenderState(
                     birdShape = gameLogic.getBirdShape(),
                     pipes = gameLogic.getPipeRects(),
+                    pipeNotes = gameLogic.getPipeNotes(),
                     score = gameLogic.score,
                     gameEnded = gameLogic.gameEnded
                 )
