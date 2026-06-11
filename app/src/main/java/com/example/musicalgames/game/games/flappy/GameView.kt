@@ -7,13 +7,13 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import com.example.musicalgames.R
-import com.example.musicalgames.components.StaffPainter
+import com.example.musicalgames.utils.components.StaffPainter
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.MusicUtil
 import com.example.musicalgames.music_model.Note
-import com.example.musicalgames.wrappers.BitmapUtil
+import com.example.musicalgames.utils.wrappers.BitmapUtil
 import kotlin.random.Random
 
 class FloppyGameView(context: Context) : View(context) {

@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteListener
-import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteView
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
+import com.example.musicalgames.utils.components.palettes.interval_palette.IntervalPaletteListener
+import com.example.musicalgames.utils.components.palettes.interval_palette.IntervalPaletteView
+import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval

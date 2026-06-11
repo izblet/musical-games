@@ -8,9 +8,9 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.Note
-import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
-import com.example.musicalgames.wrappers.sound_playing.SoundPlayerManager
-import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
+import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerManager
+import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

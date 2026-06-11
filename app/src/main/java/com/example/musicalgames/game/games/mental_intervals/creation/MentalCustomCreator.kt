@@ -6,9 +6,9 @@ import android.util.Log
 import android.view.ContextThemeWrapper
 import android.widget.Toast
 import com.example.musicalgames.R
-import com.example.musicalgames.components.ui_components.EnumSpinner
-import com.example.musicalgames.components.ui_components.IntervalSelector
-import com.example.musicalgames.components.ui_components.KeyboardSelector
+import com.example.musicalgames.utils.components.ui_components.EnumSpinner
+import com.example.musicalgames.utils.components.ui_components.IntervalSelector
+import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator

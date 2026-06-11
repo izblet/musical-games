@@ -3,8 +3,8 @@ package com.example.musicalgames.games.mental_intervals
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import com.example.musicalgames.components.palettes.interval_palette.IntervalPaletteListener
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.utils.components.palettes.interval_palette.IntervalPaletteListener
+import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.ChromaticNote

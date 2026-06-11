@@ -4,14 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
-import com.example.musicalgames.games.flappy.FlappyViewModel as FlappyViewModel
+import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

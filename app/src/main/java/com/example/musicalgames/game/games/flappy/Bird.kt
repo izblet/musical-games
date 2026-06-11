@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import com.example.musicalgames.music_model.MusicUtil
-import com.example.musicalgames.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import java.lang.Float.max
 import java.lang.Float.min
 import java.util.concurrent.atomic.AtomicReference

@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.ContextThemeWrapper
 import com.example.musicalgames.R
-import com.example.musicalgames.components.ui_components.EnumSpinner
-import com.example.musicalgames.components.ui_components.MultiEnumSpinner
+import com.example.musicalgames.utils.components.ui_components.EnumSpinner
+import com.example.musicalgames.utils.components.ui_components.MultiEnumSpinner
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator

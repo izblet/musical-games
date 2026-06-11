@@ -5,11 +5,11 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
-import com.example.musicalgames.components.keyboard.KeyboardListener
-import com.example.musicalgames.components.keyboard.KeyboardView
+import com.example.musicalgames.utils.components.keyboard.KeyboardListener
+import com.example.musicalgames.utils.components.keyboard.KeyboardView
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.Note
-import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
+import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
 
 
 import android.widget.TextView

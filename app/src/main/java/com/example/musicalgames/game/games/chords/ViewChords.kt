@@ -7,8 +7,8 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteListener
-import com.example.musicalgames.components.palettes.key_palette.KeyPaletteView
+import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.music_model.ChromaticNote
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt

@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import com.example.musicalgames.components.ui_components.EnumSpinner
+import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game_activity.Level

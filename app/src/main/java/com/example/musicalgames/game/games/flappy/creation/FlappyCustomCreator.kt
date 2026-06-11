@@ -10,8 +10,8 @@ import android.widget.TableRow
 import android.widget.ToggleButton
 import android.widget.Toast
 import com.example.musicalgames.R
-import com.example.musicalgames.components.ui_components.EnumSpinner
-import com.example.musicalgames.components.ui_components.KeyboardSelector
+import com.example.musicalgames.utils.components.ui_components.EnumSpinner
+import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.games.CustomGameCreator

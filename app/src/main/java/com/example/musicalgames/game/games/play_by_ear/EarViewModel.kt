@@ -9,8 +9,8 @@ import com.example.musicalgames.game_activity.Level
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
-import com.example.musicalgames.wrappers.sound_playing.DefaultSoundPlayerManager
-import com.example.musicalgames.wrappers.sound_playing.SoundPlayerListener
+import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
+import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
