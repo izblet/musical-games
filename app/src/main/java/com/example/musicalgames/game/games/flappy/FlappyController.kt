@@ -1,6 +1,7 @@
 package com.example.musicalgames.game.games.flappy
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +35,7 @@ class FlappyController(
         val level = viewModel.level
         val player = soundPlayer
 
+        Log.d("LOOPS", "starting the game")
         owner.lifecycleScope.launch {
             player?.playNote(level.minPitch)
             delay(1000)
@@ -45,7 +47,8 @@ class FlappyController(
         owner.lifecycleScope.launch {
             delay(3500)
             pitchRecogniser.start()
-            viewModel.startGameLoop().join()
+            delay(1000)
+            viewModel.startBirdLoop(owner).join()
             gameListener?.onGameEnded()
         }
     }
@@ -55,6 +58,7 @@ class FlappyController(
     }
 
     override fun endGame() {
+        Log.d("LOOPS", "end game")
         viewModel.stopGameLoop()
         pitchRecogniser.release()
     }

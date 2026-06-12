@@ -1,5 +1,6 @@
 package com.example.musicalgames.game.games.flappy.game_logic
 
+import android.util.Log
 import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 import com.example.musicalgames.utils.geometry.Shape
@@ -86,14 +87,8 @@ class GameLogic (
 
     }
 
-
-    //runs the (potentially slow) pitch recognition; called from a separate, lower-rate loop
-    //so it doesn't block tickFrame()/rendering
-    fun pollPitch() {
-        midiCoordinateController.getCoordinate()?.let { bird.setTarget(it) }
-    }
-
     fun tickFrame() {
+        Log.d("LOOPS", "tick frame")
         bird.advance()
         movePipes()
 
@@ -111,6 +106,12 @@ class GameLogic (
             gameEnded = true
             endReason = GameEndReason.SCORE_REACHED
         }
+    }
+    fun tickBird() {
+        Log.d("LOOPS","tick bird")
+        val pitch = midiCoordinateController.getCoordinate()
+        if(pitch!=null)
+            bird.setTarget(pitch)
     }
 
 }

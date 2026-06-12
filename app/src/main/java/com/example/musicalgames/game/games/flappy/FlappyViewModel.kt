@@ -1,7 +1,11 @@
 package com.example.musicalgames.game.games.flappy
 
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
@@ -11,8 +15,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FlappyViewModel : ViewModel() {
 
@@ -40,18 +44,13 @@ class FlappyViewModel : ViewModel() {
         _gameLogic = logic
     }
 
-    fun startGameLoop(): Job {
-        //pitch recognition can be slow, so it runs in its own loop on a background dispatcher
-        //and must not block the render/tick loop below
-        pitchLoopJob = viewModelScope.launch(Dispatchers.Default) {
-            while (isActive) {
-                gameLogic.pollPitch()
-                delay(frameRateMillis)
-            }
-        }
+    private val handler = Handler(Looper.getMainLooper())
+    fun startBirdLoop(owner: LifecycleOwner): Job {
 
-        val job = viewModelScope.launch {
-            while (true) {
+        //redraw loop
+        handler.post(object : Runnable {
+            override fun run() {
+                Log.d("LOOPS", "refresh loop")
                 gameLogic.tickFrame()
                 _renderState.value = FlappyRenderState(
                     birdShape = gameLogic.getBirdShape(),
@@ -60,10 +59,22 @@ class FlappyViewModel : ViewModel() {
                     score = gameLogic.score,
                     gameEnded = gameLogic.gameEnded
                 )
+                //TODO: remove magic framepersecond number
+                if(!gameLogic.gameEnded)
+                    handler.postDelayed(this, 1000/60)
+
+            }
+        })
+
+        //bird loop
+        val job = owner.lifecycleScope.launch {
+            while (true) {
+                withContext(Dispatchers.IO) {
+                    gameLogic.tickBird()
+                }
                 if (gameLogic.gameEnded) break
                 delay(frameRateMillis)
             }
-            pitchLoopJob?.cancel()
         }
         loopJob = job
         return job
