@@ -41,8 +41,7 @@ class GameView(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val state = state
-        if (state==null) return
+        val state = state ?: return
 
         renderer.draw(canvas, state.birdShape, state.pipes, state.pipeNotes, gameRect, width.toFloat(), height.toFloat())
         canvas.drawText("Score: ${state.score}", 20f, 60f, scorePaint)

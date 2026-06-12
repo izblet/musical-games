@@ -33,7 +33,7 @@ class SPICEModelManager (context: Context, modelFile: String){
     private fun getStandardDeviation(notes: MutableList<Float>, mean: Float): Float {
         return notes.map{abs(it-mean)}.average().toFloat()
     }
-    fun getDominantPitch(data: FloatArray, inputSize:Int, outputSize:Int):Float? {
+    fun getMeanDominantPitch(data: FloatArray, inputSize:Int, outputSize:Int):Float? {
         val inputs = arrayOf<Any>(data)
         val outputs = HashMap<Int, Any>()
         val pitches = FloatArray(inputSize)
@@ -55,11 +55,11 @@ class SPICEModelManager (context: Context, modelFile: String){
             if(uncertainties[i]<maxUncertainty)
                 results.add(pitches[i])
         }
-        //Log.e("Spice", results.size.toString())
-        if(results.size == 0)
+
+        if(results.isEmpty())
             return null
 
-        //then remove values that seem uncorrect (are too far from the mean)
+        //then remove values that seem incorrect (are too far from the mean)
         val mean = getMean(results)
         val standardDeviation = getStandardDeviation(results, mean)
         results.removeAll { result -> (abs(result-mean)>2*standardDeviation)  }
@@ -68,19 +68,6 @@ class SPICEModelManager (context: Context, modelFile: String){
         //Log.e("Spice", getMean(results).toString())
         //results cannot be empty if everything before works as expected
         return getMean(results)
-
-        /*
-        var result: Float ?= null
-        var maxConfidence = 0f
-        for(i in 0 until outputSize) {
-            if(1f-uncertainties[i]>maxConfidence) {
-                maxConfidence = 1f-uncertainties[i]
-                result=pitches[i]
-            }
-        }
-        return result
-
-         */
     }
 
     private fun loadModelFile(context: Context, modelFile: String): MappedByteBuffer {

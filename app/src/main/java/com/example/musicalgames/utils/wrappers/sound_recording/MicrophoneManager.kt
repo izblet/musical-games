@@ -23,6 +23,9 @@ class MicrophoneManager {
     private var ringBufferFull = 0
     private var audioRecord: AudioRecord? = null
 
+    //TODO: stopRecording()/startRecording() doesn't reset ringBufferIndex/ringBufferFull, so
+    //right after a restart this immediately returns a full buffer that's still (partly) old
+    //audio from before the stop - stale for up to bufferDurationMs until fresh samples cycle in
     fun getBufferIfFull(): ShortArray? {
         if (ringBufferFull < ringBufferLength) {
             return null
@@ -69,6 +72,9 @@ class MicrophoneManager {
         audioRecord?.stop()
         audioRecord?.release()
         audioRecord = null
+    }
+    fun isRecording(): Boolean {
+        return recording
     }
 
 }

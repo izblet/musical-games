@@ -9,15 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FlappyViewModel : ViewModel() {
 
@@ -27,10 +24,11 @@ class FlappyViewModel : ViewModel() {
     private var _gameLogic: GameLogic? = null
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
-    private var birdLoopJob: Job? = null
+    private val frameRateMillis = 1000L / 60
     private var refreshViewJob: Job? = null
 
-    private val frameRateMillis = 1000L / 60
+    private val controllerUpdateMS = 1000L / 60
+    
 
     //after this much real time with no tick (app backgrounded, GC pause, debugger...), stop
     //scaling pipe movement further - avoids a big visual "jump"
@@ -64,6 +62,7 @@ class FlappyViewModel : ViewModel() {
                 } ?: 0.0
                 lastFrameTimeNanos = frameTimeNanos
 
+                gameLogic.tickBird()
                 gameLogic.tickFrame(deltaTimeSeconds)
                 //TODO: remove magic framepersecond number
 
@@ -81,26 +80,10 @@ class FlappyViewModel : ViewModel() {
         }
         refreshViewJob = refreshView
 
-
-
-        //bird loop
-        val birdLoop = owner.lifecycleScope.launch {
-            while (true) {
-                //Dispatchers.Default is for CPU-bound heavy processes, runs on a different thread
-                withContext(Dispatchers.Default) {
-                    gameLogic.tickBird()
-                }
-                if (gameLogic.gameEnded) break
-                delay(frameRateMillis)
-            }
-        }
-        birdLoopJob = birdLoop
-
-        return owner.lifecycleScope.launch { joinAll(refreshView, birdLoop) }
+        return refreshView
     }
 
     fun stopGameLoop() {
-        birdLoopJob?.cancel()
         refreshViewJob?.cancel()
     }
 
