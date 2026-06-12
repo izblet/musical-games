@@ -15,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -26,8 +27,8 @@ class FlappyViewModel : ViewModel() {
     private var _gameLogic: GameLogic? = null
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
-    private var loopJob: Job? = null
-    private var pitchLoopJob: Job? = null
+    private var birdLoopJob: Job? = null
+    private var refreshViewJob: Job? = null
 
     private val frameRateMillis = 1000L / 60
 
@@ -48,14 +49,15 @@ class FlappyViewModel : ViewModel() {
         _gameLogic = logic
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-    fun startBirdLoop(owner: LifecycleOwner): Job {
+
+    fun startGameLoop(owner: LifecycleOwner): Job {
 
         //redraw loop
         var lastFrameTimeNanos: Long? = null
-        handler.post(object : Runnable {
-            override fun run() {
-                Log.d("LOOPS", "refresh loop")
+
+        val refreshView = owner.lifecycleScope.launch {
+
+            while(true) {
                 val frameTimeNanos = System.nanoTime()
                 val deltaTimeSeconds = lastFrameTimeNanos?.let {
                     ((frameTimeNanos - it) / 1_000_000_000.0).coerceAtMost(maxDeltaTimeSeconds)
@@ -64,23 +66,25 @@ class FlappyViewModel : ViewModel() {
 
                 gameLogic.tickFrame(deltaTimeSeconds)
                 //TODO: remove magic framepersecond number
-                if(!gameLogic.gameEnded) {
-                    _renderState.value = FlappyRenderState(
-                        birdShape = gameLogic.getBirdShape(),
-                        pipes = gameLogic.getPipeRects(),
-                        pipeNotes = gameLogic.getPipeNotes(),
-                        score = gameLogic.score,
-                        gameEnded = gameLogic.gameEnded
-                    )
 
-                    handler.postDelayed(this, 1000 / 60)
-                }
+                _renderState.value = FlappyRenderState(
+                    birdShape = gameLogic.getBirdShape(),
+                    pipes = gameLogic.getPipeRects(),
+                    pipeNotes = gameLogic.getPipeNotes(),
+                    score = gameLogic.score,
+                    gameEnded = gameLogic.gameEnded
+                )
 
+                if (gameLogic.gameEnded) break
+                delay(frameRateMillis)
             }
-        })
+        }
+        refreshViewJob = refreshView
+
+
 
         //bird loop
-        val job = owner.lifecycleScope.launch {
+        val birdLoop = owner.lifecycleScope.launch {
             while (true) {
                 //Dispatchers.Default is for CPU-bound heavy processes, runs on a different thread
                 withContext(Dispatchers.Default) {
@@ -90,13 +94,14 @@ class FlappyViewModel : ViewModel() {
                 delay(frameRateMillis)
             }
         }
-        loopJob = job
-        return job
+        birdLoopJob = birdLoop
+
+        return owner.lifecycleScope.launch { joinAll(refreshView, birdLoop) }
     }
 
     fun stopGameLoop() {
-        loopJob?.cancel()
-        pitchLoopJob?.cancel()
+        birdLoopJob?.cancel()
+        refreshViewJob?.cancel()
     }
 
     fun getScore(): Int = gameLogic.score

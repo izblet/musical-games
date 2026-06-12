@@ -3,22 +3,16 @@ package com.example.musicalgames.game.games.flappy.graphics
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.musicalgames.R
-import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
 import com.example.musicalgames.game.games.flappy.graphics.flappy_renderer.FlappyRenderer
 import com.example.musicalgames.game.games.flappy.FlappyViewModel
 import com.example.musicalgames.utils.geometry.Rect
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class NewGameView(
+class GameView(
     context: Context,
     private val viewModel: FlappyViewModel,
     private val renderer: FlappyRenderer,
@@ -36,8 +30,6 @@ class NewGameView(
 
     init {
 
-        //copied from previous version of project
-        //this is supposed to trigger redraws, but without changing target direction for bird
         lifecycleOwner.lifecycleScope.launch {
                 viewModel.renderState.collect {renderState ->
                     state=renderState

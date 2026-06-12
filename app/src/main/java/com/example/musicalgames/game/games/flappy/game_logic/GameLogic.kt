@@ -98,17 +98,17 @@ class GameLogic (
         val collided = listOfNotNull(currentPipe.rectTop, currentPipe.rectBottom)
             .any { bird.intersects(it) }
 
-        if (collided) {
-            gameEnded = true
-            endReason = GameEndReason.COLLISION
-        }
         if (endAfter != null && score >= endAfter) {
             gameEnded = true
             endReason = GameEndReason.SCORE_REACHED
         }
+
+        if (collided) {
+            gameEnded = true
+            endReason = GameEndReason.COLLISION
+        }
     }
     fun tickBird() {
-        Log.d("LOOPS","tick bird")
         val pitch = midiCoordinateController.getCoordinate()
         if(pitch!=null)
             bird.setTarget(pitch)

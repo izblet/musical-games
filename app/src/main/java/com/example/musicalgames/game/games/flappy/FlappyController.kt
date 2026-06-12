@@ -35,7 +35,6 @@ class FlappyController(
         val level = viewModel.level
         val player = soundPlayer
 
-        Log.d("LOOPS", "starting the game")
         owner.lifecycleScope.launch {
             player?.playNote(level.minPitch)
             delay(1000)
@@ -48,7 +47,7 @@ class FlappyController(
             delay(3500)
             pitchRecogniser.start()
             delay(1000)
-            viewModel.startBirdLoop(owner).join()
+            viewModel.startGameLoop(owner).join()
             gameListener?.onGameEnded()
         }
     }
@@ -58,7 +57,6 @@ class FlappyController(
     }
 
     override fun endGame() {
-        Log.d("LOOPS", "end game")
         viewModel.stopGameLoop()
         pitchRecogniser.release()
     }

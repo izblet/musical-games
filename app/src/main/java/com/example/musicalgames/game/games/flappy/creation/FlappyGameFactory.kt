@@ -28,7 +28,7 @@ import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.game_logic.MidiCoordinateController
 import com.example.musicalgames.game.games.flappy.game_logic.PipeGenerator
 import com.example.musicalgames.game.games.flappy.graphics.CircleBirdAppearance
-import com.example.musicalgames.game.games.flappy.graphics.NewGameView
+import com.example.musicalgames.game.games.flappy.graphics.GameView
 import com.example.musicalgames.game.games.flappy.graphics.flappy_renderer.StaffFlappyRenderer
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyLevels
@@ -162,7 +162,7 @@ class FlappyGameFactory : GameFactory {
             keyPadding = keyPadding
         )
 
-        val gameView = NewGameView(context, viewModel, renderer, gameRect, activity)
+        val gameView = GameView(context, viewModel, renderer, gameRect, activity)
         gameContainer.addView(gameView, FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
