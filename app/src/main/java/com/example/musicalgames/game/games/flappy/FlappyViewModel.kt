@@ -63,16 +63,18 @@ class FlappyViewModel : ViewModel() {
                 lastFrameTimeNanos = frameTimeNanos
 
                 gameLogic.tickFrame(deltaTimeSeconds)
-                _renderState.value = FlappyRenderState(
-                    birdShape = gameLogic.getBirdShape(),
-                    pipes = gameLogic.getPipeRects(),
-                    pipeNotes = gameLogic.getPipeNotes(),
-                    score = gameLogic.score,
-                    gameEnded = gameLogic.gameEnded
-                )
                 //TODO: remove magic framepersecond number
-                if(!gameLogic.gameEnded)
-                    handler.postDelayed(this, 1000/60)
+                if(!gameLogic.gameEnded) {
+                    _renderState.value = FlappyRenderState(
+                        birdShape = gameLogic.getBirdShape(),
+                        pipes = gameLogic.getPipeRects(),
+                        pipeNotes = gameLogic.getPipeNotes(),
+                        score = gameLogic.score,
+                        gameEnded = gameLogic.gameEnded
+                    )
+
+                    handler.postDelayed(this, 1000 / 60)
+                }
 
             }
         })

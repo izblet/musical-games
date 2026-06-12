@@ -95,9 +95,7 @@ class FlappyGameFactory : GameFactory {
         val pipeWidth = gameWidth / 25.0
         val pipeDistance = gameWidth / 3.0
         //speed is in game-space units per second (GameLogic.movePipes scales by deltaTime).
-        //Originally tuned as gameWidth/300.0 units per tick at a 60fps tick rate;
-        //gameWidth/300.0 * 60 == gameWidth/5.0 preserves that same on-screen speed.
-        val speed = gameWidth / 5.0
+        val speed = gameWidth / 6.0
 
         //the bird's diameter represents the targeting precision: half a semitone, same as
         //the pitch-detection display precision in the previous version of this game

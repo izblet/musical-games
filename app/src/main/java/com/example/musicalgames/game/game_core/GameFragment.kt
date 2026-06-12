@@ -29,6 +29,7 @@ class GameFragment : Fragment(), GameListener {
 
         val rootView = inflater.inflate(R.layout.fragment_game, container, false)
         startButton = rootView.findViewById(R.id.startGameButton)
+        
 
         return rootView
     }
