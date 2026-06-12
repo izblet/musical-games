@@ -3,6 +3,7 @@ package com.example.musicalgames.game.games.flappy
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Choreographer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -10,11 +11,12 @@ import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class FlappyViewModel : ViewModel() {
 
@@ -24,7 +26,6 @@ class FlappyViewModel : ViewModel() {
     private var _gameLogic: GameLogic? = null
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
-    private val frameRateMillis = 1000L / 60
     private var refreshViewJob: Job? = null
 
     private val controllerUpdateMS = 1000L / 60
@@ -48,6 +49,16 @@ class FlappyViewModel : ViewModel() {
     }
 
 
+    private suspend fun awaitFrame(): Long = suspendCancellableCoroutine { cont ->
+        val callback = Choreographer.FrameCallback { frameTimeNanos ->
+            cont.resume(frameTimeNanos)
+        }
+        Choreographer.getInstance().postFrameCallback(callback)
+        cont.invokeOnCancellation {
+            Choreographer.getInstance().removeFrameCallback(callback)
+        }
+    }
+
     fun startGameLoop(owner: LifecycleOwner): Job {
 
         //redraw loop
@@ -56,7 +67,7 @@ class FlappyViewModel : ViewModel() {
         val refreshView = owner.lifecycleScope.launch {
 
             while(true) {
-                val frameTimeNanos = System.nanoTime()
+                val frameTimeNanos = awaitFrame()
                 val deltaTimeSeconds = lastFrameTimeNanos?.let {
                     ((frameTimeNanos - it) / 1_000_000_000.0).coerceAtMost(maxDeltaTimeSeconds)
                 } ?: 0.0
@@ -64,7 +75,6 @@ class FlappyViewModel : ViewModel() {
 
                 gameLogic.tickBird()
                 gameLogic.tickFrame(deltaTimeSeconds)
-                //TODO: remove magic framepersecond number
 
                 _renderState.value = FlappyRenderState(
                     birdShape = gameLogic.getBirdShape(),
@@ -75,7 +85,6 @@ class FlappyViewModel : ViewModel() {
                 )
 
                 if (gameLogic.gameEnded) break
-                delay(frameRateMillis)
             }
         }
         refreshViewJob = refreshView
