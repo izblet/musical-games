@@ -69,7 +69,8 @@ class FlappyViewModel : ViewModel() {
         //bird loop
         val job = owner.lifecycleScope.launch {
             while (true) {
-                withContext(Dispatchers.IO) {
+                //Dispatchers.Default is for CPU-bound heavy processes, runs on a different thread
+                withContext(Dispatchers.Default) {
                     gameLogic.tickBird()
                 }
                 if (gameLogic.gameEnded) break
