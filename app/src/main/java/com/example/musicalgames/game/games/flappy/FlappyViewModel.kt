@@ -31,6 +31,10 @@ class FlappyViewModel : ViewModel() {
 
     private val frameRateMillis = 1000L / 60
 
+    //after this much real time with no tick (app backgrounded, GC pause, debugger...), stop
+    //scaling pipe movement further - avoids a big visual "jump"
+    private val maxDeltaTimeSeconds = 0.1
+
     private val _renderState = MutableStateFlow<FlappyRenderState?>(null)
     val renderState: StateFlow<FlappyRenderState?> = _renderState.asStateFlow()
 
@@ -48,10 +52,17 @@ class FlappyViewModel : ViewModel() {
     fun startBirdLoop(owner: LifecycleOwner): Job {
 
         //redraw loop
+        var lastFrameTimeNanos: Long? = null
         handler.post(object : Runnable {
             override fun run() {
                 Log.d("LOOPS", "refresh loop")
-                gameLogic.tickFrame()
+                val frameTimeNanos = System.nanoTime()
+                val deltaTimeSeconds = lastFrameTimeNanos?.let {
+                    ((frameTimeNanos - it) / 1_000_000_000.0).coerceAtMost(maxDeltaTimeSeconds)
+                } ?: 0.0
+                lastFrameTimeNanos = frameTimeNanos
+
+                gameLogic.tickFrame(deltaTimeSeconds)
                 _renderState.value = FlappyRenderState(
                     birdShape = gameLogic.getBirdShape(),
                     pipes = gameLogic.getPipeRects(),

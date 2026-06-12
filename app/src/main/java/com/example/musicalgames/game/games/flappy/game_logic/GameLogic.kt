@@ -14,7 +14,7 @@ class GameLogic (
     private val bird : Bird, //the bird should be in the starting position
     private val gameRectMidiCoordinates: Rect,
     private val pipeDistance: Double,
-    private val speed: Double,
+    private val speed: Double, //pipe movement speed, in game-space units per second
     private val pipeGenerator: PipeGenerator,
     private val midiCoordinateController: MidiCoordinateController,
     private val endAfter: Int? = null
@@ -59,9 +59,9 @@ class GameLogic (
             bottomMidiCoordinate=gameRectMidiCoordinates.bottom,
             topMidiCoordinate=gameRectMidiCoordinates.top)
     }
-    private fun movePipes() {
+    private fun movePipes(deltaTimeSeconds: Double) {
         //first move the existing pipes
-        val moveVector = Point(-speed, .0)
+        val moveVector = Point(-speed * deltaTimeSeconds, .0)
         pipes.forEach { it.moveByVector(moveVector) }
 
         //then update the current pipe, check if we should increase the score
@@ -87,10 +87,10 @@ class GameLogic (
 
     }
 
-    fun tickFrame() {
+    fun tickFrame(deltaTimeSeconds: Double) {
         Log.d("LOOPS", "tick frame")
         bird.advance()
-        movePipes()
+        movePipes(deltaTimeSeconds)
 
         val currentPipe = pipes[currentPipeIndex]
 
