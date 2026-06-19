@@ -2,6 +2,7 @@ package com.example.musicalgames.game_activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.NavHostFragment
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.GamePlayInstance
@@ -19,11 +20,7 @@ abstract class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
         val gameType = Game.valueOf(intent.getStringExtra(ARG_GAME_TYPE)!!)
-
-
         val gameFactory = GameMap.createFactory(gameType)
 
         val level = intent.getParcelableExtra<Level>(ARG_LEVEL)
@@ -31,12 +28,18 @@ abstract class GameActivity : AppCompatActivity() {
 
         val gamePlay = intent.getParcelableExtra(ARG_GAMEPlAY_INFO) ?: GamePlayInstance()
 
-
         gameFactory.prepareViewModel(level, gamePlay, this)
 
-        val action = StartGameFragmentDirections.actionStartGameFragmentToGameFragment(gameType.name)
-        navController.navigate(action)
-
+        if (savedInstanceState == null) {
+            val navHostFragment = NavHostFragment.create(
+                R.navigation.game_navigation,
+                bundleOf(ARG_GAME_TYPE to gameType.name)
+            )
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, navHostFragment)
+                .setPrimaryNavigationFragment(navHostFragment)
+                .commitNow()
+        }
     }
 
     override fun onBackPressed() {

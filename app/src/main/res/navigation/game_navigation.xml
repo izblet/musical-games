@@ -4,18 +4,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/game_navigation"
-    app:startDestination="@id/startGameFragment">
-    <fragment
-        android:id="@+id/startGameFragment"
-        android:name="com.example.musicalgames.game_activity.StartGameFragment"
-        android:label="StartGameFragment" >
-
-        <action
-            android:id="@+id/action_startGameFragment_to_gameFragment"
-            app:destination="@id/gameFragment" >
-
-        </action>
-    </fragment>
+    app:startDestination="@id/gameFragment">
 
     <fragment
         android:id="@+id/gameFragment"
