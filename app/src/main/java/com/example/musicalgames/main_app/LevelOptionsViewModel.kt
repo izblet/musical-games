@@ -19,10 +19,7 @@ class LevelOptionsViewModel(private val mainViewModel: MainViewModel) : ViewMode
 
     val game: Game? get() = mainViewModel.game
     val level: Level? get() = mainViewModel.level
-    val levelName: String? get() = mainViewModel.levelName
-    val levelDescription: String? get() = mainViewModel.levelDescription
-    val levelId: Int? get() = mainViewModel.levelId
-    val isCustom: Boolean? get() = mainViewModel.isCustom
+     val isCustom: Boolean? get() = mainViewModel.isCustom
 
     //temporary -> should be made into variables with simple access, here we use it so that we can test without plugging in
     data class UIState (
@@ -32,52 +29,9 @@ class LevelOptionsViewModel(private val mainViewModel: MainViewModel) : ViewMode
         val activeEditSection: EditSection
     )
 
-    private val _activeEditSection = MutableStateFlow(EditSection.NONE)
-    val activeEditSection: StateFlow<EditSection> = _activeEditSection.asStateFlow()
 
     private val _invalidBpmError = MutableSharedFlow<Unit>()
     val invalidBpmError: SharedFlow<Unit> = _invalidBpmError
-
-    private var workingLevel: Level? = mainViewModel.level
-
-    fun beginEditingParams() {
-        _activeEditSection.value = EditSection.PARAMS
-    }
-
-    fun beginEditingInfo() {
-        _activeEditSection.value = EditSection.INFO
-    }
-
-    fun saveParamsEdit(newLevel: Level) {
-        workingLevel = newLevel
-        mainViewModel.level = newLevel
-        if (mainViewModel.levelId != null) {
-            mainViewModel.updateLevel()
-        }
-        _activeEditSection.value = EditSection.NONE
-    }
-
-    fun discardParamsEdit(): Level? {
-        _activeEditSection.value = EditSection.NONE
-        return workingLevel
-    }
-
-    fun saveInfoEdit(name: String, description: String) {
-        mainViewModel.levelName = name
-        mainViewModel.levelDescription = description
-        if (mainViewModel.levelId != null) {
-            mainViewModel.updateLevel()
-        }
-        _activeEditSection.value = EditSection.NONE
-    }
-
-    fun cancelInfoEdit() {
-        _activeEditSection.value = EditSection.NONE
-    }
-
-    fun saveNewLevel(name: String, description: String, onSaved: () -> Unit) {
-        mainViewModel.saveNewLevel(name, description, onSaved)
-    }
 
     fun startGame(bpmInput: String?) {
         val bpm = bpmInput?.toIntOrNull()

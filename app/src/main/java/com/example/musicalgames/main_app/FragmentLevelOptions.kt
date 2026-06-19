@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.GamePlayInstance
-import com.example.musicalgames.game.game_core.GameplayOptions
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
@@ -31,7 +30,6 @@ class FragmentLevelOptions : Fragment() {
     //while a section is being edited, the overlay sits on top of everything except that
     //section (brought to front by that section) and blocks taps on the rest of the screen;
     //tapping the overlay itself exits edit mode for whichever section is currently active
-    //private var exitEditMode: (() -> Unit)? = null
     private var saveEditAction: (()->Unit)? = null
     private var discardEditAction: (()->Unit)? = null
 
@@ -42,8 +40,6 @@ class FragmentLevelOptions : Fragment() {
 
     lateinit var state : LevelOptionsViewModel.UIState
 
-    //not yet populated anywhere - setupParamsEditMode/setupInfoEditMode still keep their own
-    //local versions of these for now, so refreshUI can't actually toggle them yet
     private var levelInfoView: CustomGameCreator? = null
     private val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()
 
@@ -124,34 +120,9 @@ class FragmentLevelOptions : Fragment() {
        }
     }
 
-    private fun setOverlayVisible(visible: Boolean) {
-        binding.editBlockOverlay.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    //predefined levels are read-only: hide both edit pencils, just show their name/description
-    private fun setupPredefinedLevel(viewModel: MainViewModel) {
-        binding.editLevelButton.visibility = View.GONE
-        binding.editLevelInfoButton.visibility = View.GONE
-        binding.levelTitleText.setText(viewModel.levelName)
-        binding.levelDescriptionText.setText(viewModel.levelDescription)
-    }
-
-    //custom levels show their saved name/description and are editable like everything else
-    private fun setupCustomLevel(viewModel: MainViewModel) {
-        binding.levelTitleText.setText(viewModel.levelName)
-        binding.levelDescriptionText.setText(viewModel.levelDescription)
-    }
-
-    //temporary levels have no name/description yet - show a placeholder and a button to persist them
+    //temporary levels have no name/description yet - show a placeholder and a button to persist them;
+    //the placeholder/header visibility itself is handled by refreshUI via state.temporaryTitle
     private fun setupTemporaryLevel(viewModel: MainViewModel) {
-        fun toggleTemporaryName(isTemporary: Boolean) {
-            binding.temporaryLevelMessage.isVisible = isTemporary
-            binding.saveLevelButton.isVisible = isTemporary
-            binding.levelTitleDescContainer.isVisible = !isTemporary
-            binding.editLevelInfoButton.isVisible = !isTemporary
-        }
-        toggleTemporaryName(true)
-
         binding.saveLevelButton.setOnClickListener {
             val dialogLayout = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
@@ -173,8 +144,8 @@ class FragmentLevelOptions : Fragment() {
                 .setPositiveButton("Save") { _, _ ->
                     viewModel.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
                         //the level is now a saved custom level - swap the placeholder for the normal editable row
-                        toggleTemporaryName(false)
-                        setupCustomLevel(viewModel)
+                        state = state.copy(temporaryTitle = false, infoEditable = true)
+                        refreshUI(viewModel)
                     }
                 }
                 .setNegativeButton("Cancel", null)
@@ -183,7 +154,6 @@ class FragmentLevelOptions : Fragment() {
     }
 
 
-    //handles editing of the game-specific level parameters (the custom creator view)
     private fun promptSaveChanges() {
         AlertDialog.Builder(requireContext())
             .setTitle("Save changes?")
@@ -191,40 +161,32 @@ class FragmentLevelOptions : Fragment() {
             .setNegativeButton("Discard") { _, _ -> discardEditAction?.invoke() }
             .show()
     }
+
+    //handles editing of the game-specific level parameters (the custom creator view)
     private fun setupParamsEditMode(viewModel: MainViewModel, game: Game, level: Level) {
         val factory = GameMap.createFactory(game)
-        var levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
-        levelInfoView.setEditable(false)
-        binding.levelInfoContainer.addView(levelInfoView)
+        val initialView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
+        initialView.setEditable(false)
+        binding.levelInfoContainer.addView(initialView)
+        levelInfoView = initialView
 
         //the last-known-good level for this section - "discard" rebuilds the view from this
         var workingLevel: Level = level
 
-        fun toggleParamsEditMode(active: Boolean) {
-            levelInfoView.setEditable(active)
-            binding.editLevelButton.isActivated = active
-            binding.levelInfoContainer.setBackgroundResource(
-                if (active) R.drawable.item_selected_bordered else R.drawable.item_bordered
-            )
-            //absorbs taps on labels/padding within the section so they don't fall through
-            //to the overlay underneath and get treated as "tap outside"
-            binding.levelInfoSection.isClickable = active
-            if (active) binding.levelInfoSection.bringToFront()
-            setOverlayVisible(active)
-        }
-
         fun discardParamsEdit() {
             binding.levelInfoContainer.removeAllViews()
-            levelInfoView = factory.getCustomCreatorFromLevel(requireContext(), workingLevel, null)
-            binding.levelInfoContainer.addView(levelInfoView)
-            toggleParamsEditMode(false)
+            val restoredView = factory.getCustomCreatorFromLevel(requireContext(), workingLevel, null)
+            binding.levelInfoContainer.addView(restoredView)
+            levelInfoView = restoredView
+            state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.NONE)
+            refreshUI(viewModel)
             resetEditActions()
         }
 
         fun saveParamsEdit() {
-            val newLevel = levelInfoView.getLevel()
+            val newLevel = levelInfoView?.getLevel()
             if (newLevel == null) {
-                levelInfoView.highlightMissing()
+                levelInfoView?.highlightMissing()
                 return
             }
             workingLevel = newLevel
@@ -232,15 +194,17 @@ class FragmentLevelOptions : Fragment() {
             if (viewModel.levelId != null) {
                 viewModel.updateLevel()
             }
-            toggleParamsEditMode(false)
+            state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.NONE)
+            refreshUI(viewModel)
             resetEditActions()
         }
 
         binding.editLevelButton.setOnClickListener {
-            if (levelInfoView.editable) {
+            if (state.activeEditSection == LevelOptionsViewModel.EditSection.PARAMS) {
                 promptSaveChanges()
             } else {
-                toggleParamsEditMode(true)
+                state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.PARAMS)
+                refreshUI(viewModel)
                 saveEditAction = ::saveParamsEdit
                 discardEditAction = ::discardParamsEdit
             }
@@ -249,38 +213,9 @@ class FragmentLevelOptions : Fragment() {
 
     //handles editing of the level's name/description shown in the heading
     private fun setupInfoEditMode(viewModel: MainViewModel) {
-        //this is so long because of the fact that EditTexts really want to be grayed out when they're disabled
-        val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()
-        fun setInfoEditable(editable: Boolean) {
-            for (editText in listOf(binding.levelTitleText, binding.levelDescriptionText)) {
-                if (editable) {
-                    infoEditTextColors[editText]?.let { editText.setTextColor(it) }
-                } else {
-                    val originalColors = infoEditTextColors.getOrPut(editText) { editText.textColors }
-                    editText.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
-                }
-                editText.isEnabled = editable
-            }
-        }
-        setInfoEditable(false)
-
-        fun toggleInfoEditMode(active: Boolean) {
-            setInfoEditable(active)
-            binding.editLevelInfoButton.isActivated = active
-            binding.headingContainer.setBackgroundResource(
-                if (active) R.drawable.item_selected_bordered else R.drawable.item_bordered
-            )
-            //absorbs taps on padding within the section so they don't fall through to the
-            //overlay underneath and get treated as "tap outside"
-            binding.headingContainer.isClickable = active
-            if (active) binding.headingContainer.bringToFront()
-            setOverlayVisible(active)
-        }
-
         fun discardInfoEdit() {
-            binding.levelTitleText.setText(viewModel.levelName)
-            binding.levelDescriptionText.setText(viewModel.levelDescription)
-            toggleInfoEditMode(false)
+            state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.NONE)
+            refreshUI(viewModel)
             resetEditActions()
         }
 
@@ -290,15 +225,17 @@ class FragmentLevelOptions : Fragment() {
             if (viewModel.levelId != null) {
                 viewModel.updateLevel()
             }
-            toggleInfoEditMode(false)
+            state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.NONE)
+            refreshUI(viewModel)
             resetEditActions()
         }
 
         binding.editLevelInfoButton.setOnClickListener {
-            if (binding.levelTitleText.isEnabled) {
+            if (state.activeEditSection == LevelOptionsViewModel.EditSection.INFO) {
                 promptSaveChanges()
             } else {
-                toggleInfoEditMode(true)
+                state = state.copy(activeEditSection = LevelOptionsViewModel.EditSection.INFO)
+                refreshUI(viewModel)
                 saveEditAction = ::saveInfoEdit
                 discardEditAction = ::discardInfoEdit
             }
@@ -321,11 +258,10 @@ class FragmentLevelOptions : Fragment() {
             viewModel.isCustom==null,
             LevelOptionsViewModel.EditSection.NONE)
 
-        //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can
-        when (viewModel.isCustom) {
-            false -> setupPredefinedLevel(viewModel)
-            true -> setupCustomLevel(viewModel)
-            null -> setupTemporaryLevel(viewModel)
+        //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can -
+        //refreshUI below already handles the text/visibility for all three cases via `state`
+        if (viewModel.isCustom == null) {
+            setupTemporaryLevel(viewModel)
         }
 
         binding.editBlockOverlay.setOnClickListener { promptSaveChanges() }
@@ -335,6 +271,8 @@ class FragmentLevelOptions : Fragment() {
         }
 
         setupInfoEditMode(viewModel)
+
+        refreshUI(viewModel)
 
         //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
         val linearLayout = LinearLayout(context).apply {
