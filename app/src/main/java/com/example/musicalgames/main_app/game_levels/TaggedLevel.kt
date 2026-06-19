@@ -1,6 +1,6 @@
 package com.example.musicalgames.main_app.game_levels
 
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 
 data class TaggedLevel(

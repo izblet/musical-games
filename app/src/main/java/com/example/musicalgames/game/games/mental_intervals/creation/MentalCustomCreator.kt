@@ -10,8 +10,8 @@ import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.IntervalSelector
 import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.mental_intervals.Type
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval

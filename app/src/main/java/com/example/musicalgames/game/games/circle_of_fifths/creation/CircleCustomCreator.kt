@@ -7,8 +7,8 @@ import com.example.musicalgames.R
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.MultiEnumSpinner
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.display.ModeSpelling
 

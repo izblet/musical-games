@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game.games.circle_of_fifths.CircleView
@@ -15,8 +15,8 @@ import com.example.musicalgames.game.games.circle_of_fifths.GameLogicCircle
 import com.example.musicalgames.game.games.circle_of_fifths.level_data.CircleLevels
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 

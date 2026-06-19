@@ -25,8 +25,8 @@ import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch

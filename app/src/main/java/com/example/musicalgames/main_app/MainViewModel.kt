@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.game_core.GamePlayInstance
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import kotlinx.coroutines.flow.MutableSharedFlow

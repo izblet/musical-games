@@ -1,4 +1,4 @@
-package com.example.musicalgames.game_activity
+package com.example.musicalgames.game.game_core.creation
 
 import android.os.Parcelable
 

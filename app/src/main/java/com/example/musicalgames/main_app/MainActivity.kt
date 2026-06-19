@@ -2,7 +2,6 @@ package com.example.musicalgames.main_app
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,13 +13,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.ActivityMainBinding
 import com.example.musicalgames.game_activity.GameActivity
-import com.example.musicalgames.game_activity.LandscapeGameActivity
-import com.example.musicalgames.game_activity.PortraitGameActivity
-import com.example.musicalgames.games.Game
+import com.example.musicalgames.game.game_core.game_activity.LandscapeGameActivity
+import com.example.musicalgames.game.game_core.game_activity.PortraitGameActivity
 import com.example.musicalgames.games.GameMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch

@@ -1,7 +1,7 @@
 package com.example.musicalgames.games
 
 import com.example.musicalgames.R
-import com.example.musicalgames.game.game_core.GameFactory
+import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.game.game_core.GameplayOptions
 import com.example.musicalgames.game.games.chords.GameFactoryChords
 import com.example.musicalgames.game.games.chords.LevelChords
@@ -13,7 +13,7 @@ import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.creation.MentalGameFactory
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game.games.play_by_ear.creation.EarGameFactory
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import kotlin.reflect.KClass
 
 data class GameInfo (

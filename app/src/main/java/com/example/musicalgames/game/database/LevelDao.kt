@@ -3,7 +3,7 @@ package com.example.musicalgames.game.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 

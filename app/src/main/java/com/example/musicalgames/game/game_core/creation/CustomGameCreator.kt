@@ -1,5 +1,6 @@
-package com.example.musicalgames.games
+package com.example.musicalgames.game.game_core.creation
 
+import android.R
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
@@ -8,10 +9,8 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import com.example.musicalgames.R
-import com.example.musicalgames.game_activity.Level
 
-abstract class CustomGameCreator(context :Context, private val createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : TableLayout(context, attrSet) {
+abstract class CustomGameCreator(context : Context, private val createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : TableLayout(context, attrSet) {
     abstract fun getLevel(): Level?
     abstract fun highlightMissing()
     abstract fun clearSelection()
@@ -40,7 +39,7 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
                     editTextColors[selector]?.let { selector.setTextColor(it) }
                 } else {
                     val originalColors = editTextColors.getOrPut(selector) { selector.textColors }
-                    selector.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
+                    selector.setTextColor(originalColors.getColorForState(intArrayOf(R.attr.state_enabled), originalColors.defaultColor))
                 }
             }
             selector.isEnabled = editable
@@ -67,7 +66,9 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
     //automatically via generateLayoutParams, but layoutParams built by hand here would otherwise
     //fall back to each widget's own intrinsic height, which differs between widget types
     private val inputElementHeight: Int = run {
-        val a = context.obtainStyledAttributes(R.style.customInputElementStyle, intArrayOf(android.R.attr.layout_height))
+        val a = context.obtainStyledAttributes(
+            com.example.musicalgames.R.style.customInputElementStyle, intArrayOf(
+                R.attr.layout_height))
         val height = a.getDimensionPixelSize(0, LayoutParams.MATCH_PARENT)
         a.recycle()
         height
@@ -102,7 +103,7 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
            )
         }
 
-        val lab = TextView(context, null, 0, R.style.customLabelStyle).apply {
+        val lab = TextView(context, null, 0, com.example.musicalgames.R.style.customLabelStyle).apply {
             text = label
         }
 
@@ -125,7 +126,7 @@ abstract class CustomGameCreator(context :Context, private val createLevelAction
            )
         }
 
-        val lab = TextView(context, null, 0, R.style.customLabelStyle).apply {
+        val lab = TextView(context, null, 0, com.example.musicalgames.R.style.customLabelStyle).apply {
             text = label
         }
 

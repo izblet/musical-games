@@ -7,7 +7,7 @@ import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
 import kotlin.random.Random

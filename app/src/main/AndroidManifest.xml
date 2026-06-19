@@ -51,12 +51,12 @@
 
         <activity
             android:parentActivityName=".main_app.MainActivity"
-            android:name=".game_activity.LandscapeGameActivity"
+            android:name=".game.game_core.game_activity.LandscapeGameActivity"
             android:screenOrientation="landscape"
             android:exported="true" />
         <activity
             android:parentActivityName=".main_app.MainActivity"
-            android:name=".game_activity.PortraitGameActivity"
+            android:name=".game.game_core.game_activity.PortraitGameActivity"
             android:screenOrientation="portrait"
             android:exported="true" />
 

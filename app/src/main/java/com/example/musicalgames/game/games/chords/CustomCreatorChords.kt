@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.music_model.Chord
 
 class CustomCreatorChords(

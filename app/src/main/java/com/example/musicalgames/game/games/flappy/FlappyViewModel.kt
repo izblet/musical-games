@@ -1,8 +1,6 @@
 package com.example.musicalgames.game.games.flappy
 
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
+
 import android.view.Choreographer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -31,8 +29,8 @@ class FlappyViewModel : ViewModel() {
     private val controllerUpdateMS = 1000L / 60
     
 
-    //after this much real time with no tick (app backgrounded, GC pause, debugger...), stop
-    //scaling pipe movement further - avoids a big visual "jump"
+    //after this much real time with no tick, stop
+    //scaling pipe movement further
     private val maxDeltaTimeSeconds = 0.1
 
     private val _renderState = MutableStateFlow<FlappyRenderState?>(null)

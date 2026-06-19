@@ -10,8 +10,8 @@ import android.widget.Toast
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
-import com.example.musicalgames.game_activity.Level
-import com.example.musicalgames.games.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
 import com.example.musicalgames.music_model.MusicUtil

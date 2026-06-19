@@ -1,6 +1,6 @@
 package com.example.musicalgames.game.games.circle_of_fifths
 
-import com.example.musicalgames.game_activity.Level
+import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.Mode
 import kotlinx.parcelize.Parcelize
 
