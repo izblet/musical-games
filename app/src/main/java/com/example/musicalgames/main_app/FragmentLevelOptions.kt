@@ -39,6 +39,67 @@ class FragmentLevelOptions : Fragment() {
         discardEditAction = null
     }
 
+    lateinit var state : LevelOptionsViewModel.UIState
+
+    private fun refreshUI(viewModel: MainViewModel) {
+        binding.levelTitleText.setText(viewModel.levelName)
+        binding.levelDescriptionText.setText(viewModel.levelDescription)
+
+        binding.editLevelButton.visibility = if (state.parametersEditable) View.VISIBLE else View.GONE
+        binding.editLevelInfoButton.visibility = if (state.infoEditable) View.VISIBLE else View.GONE
+
+        //For temporary levels we substitute the title with a "temporary level message"
+        //and add an option to make the level permanent
+        if(state.temporaryTitle) {
+            binding.temporaryLevelMessage.isVisible = true
+            binding.saveLevelButton.isVisible = true
+            binding.levelTitleDescContainer.isVisible = false
+        } else {
+            binding.temporaryLevelMessage.isVisible = false
+            binding.saveLevelButton.isVisible = false
+            binding.levelTitleDescContainer.isVisible = true
+        }
+
+        //Now we will draw the edition sections
+        fun clearEdited() {
+            binding.editBlockOverlay.visibility = View.GONE
+
+            binding.editLevelInfoButton.isActivated = false
+            binding.editLevelButton.isActivated = false
+
+            //the containers are not clickable
+            binding.headingContainer.isClickable = false
+            binding.headingContainer.setBackgroundResource(R.drawable.item_bordered)
+            binding.levelInfoSection.isClickable = false
+            binding.levelInfoContainer.setBackgroundResource(R.drawable.item_bordered)
+        }
+
+        //before we set the edit, we clear
+        clearEdited()
+
+        //Nothing is being edited
+        if(state.activeEditSection == LevelOptionsViewModel.EditSection.NONE) {
+            return
+        }
+
+        //We know something is being edited
+        binding.editBlockOverlay.visibility = View.VISIBLE
+        binding.editBlockOverlay.bringToFront()
+
+       if(state.activeEditSection == LevelOptionsViewModel.EditSection.PARAMS) {
+           binding.editLevelButton.isActivated = true
+           binding.levelInfoContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+           binding.levelInfoSection.isClickable = true //this is here temporarily, can be moved to initialisation (the "clickable" just so that it is not click-through)
+           binding.levelInfoSection.bringToFront()
+       }
+       else {
+           binding.editLevelInfoButton.isActivated = true
+           binding.headingContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+           binding.headingContainer.isClickable = true //tmp
+           binding.headingContainer.bringToFront()
+       }
+    }
+
     private fun setOverlayVisible(visible: Boolean) {
         binding.editBlockOverlay.visibility = if (visible) View.VISIBLE else View.GONE
     }
@@ -230,6 +291,11 @@ class FragmentLevelOptions : Fragment() {
         val viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         val game = viewModel.game
         val level = viewModel.level
+        state = LevelOptionsViewModel.UIState(
+            viewModel.isCustom==true,
+            viewModel.isCustom==null||viewModel.isCustom!!,
+            viewModel.isCustom==null,
+            LevelOptionsViewModel.EditSection.NONE)
 
         //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can
         when (viewModel.isCustom) {

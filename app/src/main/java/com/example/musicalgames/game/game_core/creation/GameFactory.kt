@@ -17,6 +17,7 @@ interface GameFactory {
 
     suspend fun getLevels(pack: GamePackage, context: Context) : List<TaggedLevel>
     fun getPermissions() : Array<String>
+    fun getStartDelayMs() : Long { return 2000 }
     fun prepareViewModel(
         level: Level,
         gameplay: GamePlayInstance,
