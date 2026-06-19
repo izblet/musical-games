@@ -19,6 +19,7 @@ import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
+import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
@@ -40,6 +41,24 @@ class FragmentLevelOptions : Fragment() {
     }
 
     lateinit var state : LevelOptionsViewModel.UIState
+
+    //not yet populated anywhere - setupParamsEditMode/setupInfoEditMode still keep their own
+    //local versions of these for now, so refreshUI can't actually toggle them yet
+    private var levelInfoView: CustomGameCreator? = null
+    private val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()
+
+    //this is so long because of the fact that EditTexts really want to be grayed out when they're disabled
+    private fun setInfoEditable(editable: Boolean) {
+        for (editText in listOf(binding.levelTitleText, binding.levelDescriptionText)) {
+            if (editable) {
+                infoEditTextColors[editText]?.let { editText.setTextColor(it) }
+            } else {
+                val originalColors = infoEditTextColors.getOrPut(editText) { editText.textColors }
+                editText.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
+            }
+            editText.isEnabled = editable
+        }
+    }
 
     private fun refreshUI(viewModel: MainViewModel) {
         binding.levelTitleText.setText(viewModel.levelName)
@@ -72,6 +91,9 @@ class FragmentLevelOptions : Fragment() {
             binding.headingContainer.setBackgroundResource(R.drawable.item_bordered)
             binding.levelInfoSection.isClickable = false
             binding.levelInfoContainer.setBackgroundResource(R.drawable.item_bordered)
+
+            levelInfoView?.setEditable(false)
+            setInfoEditable(false)
         }
 
         //before we set the edit, we clear
@@ -91,12 +113,14 @@ class FragmentLevelOptions : Fragment() {
            binding.levelInfoContainer.setBackgroundResource(R.drawable.item_selected_bordered)
            binding.levelInfoSection.isClickable = true //this is here temporarily, can be moved to initialisation (the "clickable" just so that it is not click-through)
            binding.levelInfoSection.bringToFront()
+           levelInfoView?.setEditable(true)
        }
        else {
            binding.editLevelInfoButton.isActivated = true
            binding.headingContainer.setBackgroundResource(R.drawable.item_selected_bordered)
            binding.headingContainer.isClickable = true //tmp
            binding.headingContainer.bringToFront()
+           setInfoEditable(true)
        }
     }
 
