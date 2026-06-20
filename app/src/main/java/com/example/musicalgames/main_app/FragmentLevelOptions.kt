@@ -122,6 +122,7 @@ class FragmentLevelOptions : Fragment() {
 
     //temporary levels have no name/description yet - show a placeholder and a button to persist them;
     //the placeholder/header visibility itself is handled by refreshUI via state.temporaryTitle
+    //move this to xml as the rest
     private fun setupTemporaryLevel(viewModel: MainViewModel) {
         binding.saveLevelButton.setOnClickListener {
             val dialogLayout = LinearLayout(context).apply {
