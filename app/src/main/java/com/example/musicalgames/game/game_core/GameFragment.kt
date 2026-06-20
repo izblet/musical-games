@@ -1,16 +1,12 @@
 package com.example.musicalgames.game_activity
-import android.content.pm.PackageManager
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.musicalgames.R
@@ -20,21 +16,14 @@ import com.example.musicalgames.games.GameMap
 class GameFragment : Fragment(), GameListener {
     private val args: GameFragmentArgs by navArgs()
     private lateinit var gameController: GameController
-    private lateinit var permissionList: Array<String>
-    private lateinit var startButton: Button
     private var gameType: Game? = null
-    //private var viewModel: AbstractViewModel? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val rootView = inflater.inflate(R.layout.fragment_game, container, false)
-        startButton = rootView.findViewById(R.id.startGameButton)
-        
-
-        return rootView
+        return inflater.inflate(R.layout.fragment_game, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,42 +37,12 @@ class GameFragment : Fragment(), GameListener {
         val game = this.gameType!!
         val gameFactory = GameMap.createFactory(game)
 
-        permissionList = gameFactory.getPermissions()
+        //permissions are requested from the level options screen before the game is launched,
+        //so they're already granted by the time this fragment is reached
         gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, this)
 
-        if (!checkPermissions())
-            requestMultiplePermissions.launch(permissionList)
-
-        Handler(Looper.getMainLooper()).postDelayed( { gameController.startGame(this) }, gameFactory.getStartDelayMs())
-
-        /*startButton.setOnClickListener {
-            if (checkPermissions()) {
-                startButton.visibility = View.GONE
-                gameController.startGame(this)
-            } else {
-                requestMultiplePermissions.launch(permissionList)
-            }
-        }*/
+        Handler(Looper.getMainLooper()).postDelayed({ gameController.startGame(this) }, gameFactory.getStartDelayMs())
     }
-
-    private fun checkPermissions(): Boolean {
-        for(permission in permissionList) {
-            val permissionResult = ContextCompat.checkSelfPermission(
-                requireContext(), permission
-            )
-            if(permissionResult != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private val requestMultiplePermissions =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permission ->
-            // Handle permission request result
-        }
 
     override fun onGameEnded() {
         gameController.endGame()
@@ -102,4 +61,3 @@ class GameFragment : Fragment(), GameListener {
         gameController.endGame()
     }
 }
-

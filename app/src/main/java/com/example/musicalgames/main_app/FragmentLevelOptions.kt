@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -36,6 +37,25 @@ class FragmentLevelOptions : Fragment() {
     }
 
     private lateinit var controller: LevelOptionsController
+    private lateinit var bpmEditText: EditText
+
+    private val requestMultiplePermissions = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        if (results.values.all { it }) {
+            attemptStartGame()
+        }
+    }
+
+    private fun attemptStartGame() {
+        if (controller.hasRequiredPermissions(requireContext())) {
+            if (!controller.startGame(bpmEditText.text.toString())) {
+                Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            requestMultiplePermissions.launch(controller.requiredPermissions)
+        }
+    }
 
     private var levelInfoView: CustomGameCreator? = null
     private val infoEditTextColors = mutableMapOf<EditText, ColorStateList>()
@@ -72,7 +92,7 @@ class FragmentLevelOptions : Fragment() {
             binding.levelTitleDescContainer.isVisible = true
         }
 
-        //Now we will draw the edition sections
+        //Now we will draw the editing sections
         fun clearEdited() {
             //while a section is being edited, the overlay sits on top of everything except that
             //section (brought to front by that section) and blocks taps on the rest of the screen;
@@ -266,7 +286,7 @@ class FragmentLevelOptions : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        val editText = EditText(context).apply {
+        bpmEditText = EditText(context).apply {
             inputType=InputType.TYPE_CLASS_NUMBER
             filters = arrayOf(InputFilter.LengthFilter(3))
         }
@@ -275,13 +295,11 @@ class FragmentLevelOptions : Fragment() {
 
 
         linearLayout.addView(textView)
-        linearLayout.addView(editText)
+        linearLayout.addView(bpmEditText)
         binding.gameplayOptionsContainer.addView(linearLayout)
 
         binding.startGameButton.setOnClickListener {
-            if (!controller.startGame(editText.text.toString())) {
-                Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT).show()
-            }
+            attemptStartGame()
         }
         return binding.root
     }

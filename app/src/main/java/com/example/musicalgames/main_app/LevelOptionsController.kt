@@ -1,8 +1,12 @@
 package com.example.musicalgames.main_app
 
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
+import com.example.musicalgames.games.GameMap
 
 class LevelOptionsController(private val mainViewModel: MainViewModel) {
 
@@ -65,6 +69,14 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
         mainViewModel.saveNewLevel(name, description, onSaved)
     }
 
+    val requiredPermissions: Array<String>
+        get() = game?.let { GameMap.createFactory(it).getPermissions() } ?: emptyArray()
+
+    fun hasRequiredPermissions(context: Context): Boolean =
+        requiredPermissions.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
     //returns false if the bpm couldn't be used to start the game (caller should show an error)
     fun startGame(bpmInput: String?): Boolean {
         val bpm = bpmInput?.toIntOrNull()
@@ -79,4 +91,6 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
             false
         }
     }
+
+
 }
