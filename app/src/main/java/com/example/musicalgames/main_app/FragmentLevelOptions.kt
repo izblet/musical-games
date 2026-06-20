@@ -123,7 +123,7 @@ class FragmentLevelOptions : Fragment() {
     //temporary levels have no name/description yet - show a placeholder and a button to persist them;
     //the placeholder/header visibility itself is handled by refreshUI via state.temporaryTitle
     //move this to xml as the rest
-    private fun setupTemporaryLevel(viewModel: MainViewModel) {
+    private fun setupTemporaryLevel() {
         binding.saveLevelButton.setOnClickListener {
             val dialogLayout = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
@@ -143,7 +143,7 @@ class FragmentLevelOptions : Fragment() {
                 .setTitle("Save Level")
                 .setView(dialogLayout)
                 .setPositiveButton("Save") { _, _ ->
-                    viewModel.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
+                    controller.saveNewLevel(nameInput.text.toString(), descriptionInput.text.toString()) {
                         //the level is now a saved custom level - swap the placeholder for the normal editable row;
                         //temporaryTitle/infoEditable are derived from isCustom, which saveNewLevel already updated
                         refreshUI()
@@ -164,22 +164,19 @@ class FragmentLevelOptions : Fragment() {
     }
 
     //handles editing of the game-specific level parameters (the custom creator view)
-    private fun setupParamsEditMode(viewModel: MainViewModel, game: Game, level: Level) {
+    private fun setupParamsEditMode(game: Game, level: Level) {
         val factory = GameMap.createFactory(game)
         val initialView = factory.getCustomCreatorFromLevel(requireContext(), level, null)
         initialView.setEditable(false)
         binding.levelInfoContainer.addView(initialView)
         levelInfoView = initialView
 
-        //the last-known-good level for this section - "discard" rebuilds the view from this
-        var workingLevel: Level = level
-
         fun discardParamsEdit() {
             binding.levelInfoContainer.removeAllViews()
-            val restoredView = factory.getCustomCreatorFromLevel(requireContext(), workingLevel, null)
+            val restoredLevel = controller.discardParamsEdit() ?: level
+            val restoredView = factory.getCustomCreatorFromLevel(requireContext(), restoredLevel, null)
             binding.levelInfoContainer.addView(restoredView)
             levelInfoView = restoredView
-            controller.activeEditSection = LevelOptionsController.EditSection.NONE
             refreshUI()
             resetEditActions()
         }
@@ -190,12 +187,7 @@ class FragmentLevelOptions : Fragment() {
                 levelInfoView?.highlightMissing()
                 return
             }
-            workingLevel = newLevel
-            viewModel.level = newLevel
-            if (viewModel.levelId != null) {
-                viewModel.updateLevel()
-            }
-            controller.activeEditSection = LevelOptionsController.EditSection.NONE
+            controller.saveParamsEdit(newLevel)
             refreshUI()
             resetEditActions()
         }
@@ -204,7 +196,7 @@ class FragmentLevelOptions : Fragment() {
             if (controller.activeEditSection == LevelOptionsController.EditSection.PARAMS) {
                 promptSaveChanges()
             } else {
-                controller.activeEditSection = LevelOptionsController.EditSection.PARAMS
+                controller.beginEditingParams()
                 refreshUI()
                 saveEditAction = ::saveParamsEdit
                 discardEditAction = ::discardParamsEdit
@@ -213,20 +205,15 @@ class FragmentLevelOptions : Fragment() {
     }
 
     //handles editing of the level's name/description shown in the heading
-    private fun setupInfoEditMode(viewModel: MainViewModel) {
+    private fun setupInfoEditMode() {
         fun discardInfoEdit() {
-            controller.activeEditSection = LevelOptionsController.EditSection.NONE
+            controller.cancelInfoEdit()
             refreshUI()
             resetEditActions()
         }
 
         fun saveInfoEdit() {
-            viewModel.levelName = binding.levelTitleText.text.toString()
-            viewModel.levelDescription = binding.levelDescriptionText.text.toString()
-            if (viewModel.levelId != null) {
-                viewModel.updateLevel()
-            }
-            controller.activeEditSection = LevelOptionsController.EditSection.NONE
+            controller.saveInfoEdit(binding.levelTitleText.text.toString(), binding.levelDescriptionText.text.toString())
             refreshUI()
             resetEditActions()
         }
@@ -235,7 +222,7 @@ class FragmentLevelOptions : Fragment() {
             if (controller.activeEditSection == LevelOptionsController.EditSection.INFO) {
                 promptSaveChanges()
             } else {
-                controller.activeEditSection = LevelOptionsController.EditSection.INFO
+                controller.beginEditingInfo()
                 refreshUI()
                 saveEditAction = ::saveInfoEdit
                 discardEditAction = ::discardInfoEdit
@@ -258,16 +245,16 @@ class FragmentLevelOptions : Fragment() {
         //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can -
         //refreshUI below already handles the text/visibility for all three cases via `controller`
         if (controller.isCustom == null) {
-            setupTemporaryLevel(viewModel)
+            setupTemporaryLevel()
         }
 
         binding.editBlockOverlay.setOnClickListener { promptSaveChanges() }
 
         if (game != null && level != null) {
-            setupParamsEditMode(viewModel, game, level)
+            setupParamsEditMode(game, level)
         }
 
-        setupInfoEditMode(viewModel)
+        setupInfoEditMode()
 
         refreshUI()
 
@@ -291,23 +278,10 @@ class FragmentLevelOptions : Fragment() {
         linearLayout.addView(editText)
         binding.gameplayOptionsContainer.addView(linearLayout)
 
-        binding.startGameButton.setOnClickListener{
-            val bpm = editText.text.toString().toIntOrNull()
-
-            if(bpm==null) {
-                viewModel.playLevel(GamePlayInstance())
+        binding.startGameButton.setOnClickListener {
+            if (!controller.startGame(editText.text.toString())) {
+                Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT).show()
             }
-
-            else {
-                try {
-                    val gameplay = GamePlayInstance(bpm = bpm)
-                    viewModel.playLevel(gameplay)
-                } catch(e: Exception) {
-                    val toast = Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT)
-                    toast.show()
-                }
-            }
-
         }
         return binding.root
     }

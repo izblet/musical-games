@@ -20,9 +20,8 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
     val parametersEditable: Boolean get() = isCustom != false
     val temporaryTitle: Boolean get() = isCustom == null
 
-    //setter is public for now - the Fragment still assigns this directly in a couple of
-    //places pending the save/discard logic itself moving over here
     var activeEditSection: EditSection = EditSection.NONE
+        private set
 
     //the last-known-good level for the params section - "discard" reverts to this
     private var workingLevel: Level? = mainViewModel.level
