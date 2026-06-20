@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.example.musicalgames.utils.components.keyboard.KeyboardListener
+import com.example.musicalgames.game.game_core.input.OnscreenNoteInputSource
 import com.example.musicalgames.utils.components.keyboard.KeyboardView
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
@@ -20,12 +20,12 @@ class EarView(
     context: Context,
     attrs: AttributeSet?,
     private val viewModel: EarViewModel,
-    lifecycleOwner: LifecycleOwner
-) : ViewGroup(context, attrs), KeyboardListener {
+    lifecycleOwner: LifecycleOwner,
+    noteInputSource: OnscreenNoteInputSource
+) : ViewGroup(context, attrs) {
 
     private var keyboardView: KeyboardView = KeyboardView(context, null)
     private val soundPlayer : DefaultSoundPlayerManager by lazy { DefaultSoundPlayerManager(context) }
-    private var keyboardDisabled = true
     private val level: PlayEarLevel = viewModel.level!!
     private val messageTextView: TextView
     private val rootButton: Button
@@ -58,7 +58,8 @@ class EarView(
         addView(rootButton)
         addView(nextButton)
 
-        keyboardView.registerListener(this)
+        keyboardView.registerListener(noteInputSource)
+        keyboardView.setDisabled(true)
 
         viewModel.setPlayer(soundPlayer)
         keyboardView.setRange(Note(level.minPitchDisplayed), Note(level.maxPitchDisplayed))
@@ -71,13 +72,7 @@ class EarView(
 
     private fun render(state: EarRenderState) {
         messageTextView.text = state.message
-        keyboardDisabled = !state.keyboardEnabled
-    }
-
-    override fun onKeyClicked(key: Note) {
-        if (keyboardDisabled)
-            return
-        viewModel.selectNote(key)
+        keyboardView.setDisabled(!state.keyboardEnabled)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

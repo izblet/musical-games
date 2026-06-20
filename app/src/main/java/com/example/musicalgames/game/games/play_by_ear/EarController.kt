@@ -4,12 +4,16 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import com.example.musicalgames.game.game_core.input.NoteInputSource
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class EarController(private val viewModel: EarViewModel) : GameController {
+class EarController(
+    private val viewModel: EarViewModel,
+    private val noteInputSource: NoteInputSource
+) : GameController {
     //TODO: nothing currently calls gameListener?.onGameEnded() for this game - the previous
     //wiring (relayed through EarView.onWrongAnswer()) was already commented out before this
     //field existed, so Play By Ear has never had a way to end itself. Needs deciding what should
@@ -26,6 +30,11 @@ class EarController(private val viewModel: EarViewModel) : GameController {
     }
 
     override fun startGame(owner: LifecycleOwner) {
+        noteInputSource.start()
+        owner.lifecycleScope.launch {
+            noteInputSource.noteSelected.collect { viewModel.selectNote(it) }
+        }
+
         viewModel.playRoot()
         owner.lifecycleScope.launch {
             delay(2000)
@@ -38,7 +47,7 @@ class EarController(private val viewModel: EarViewModel) : GameController {
     }
 
     override fun endGame() {
-        //TODO("Not yet implemented")
+        noteInputSource.stop()
     }
 
     override fun getScore(): Int {

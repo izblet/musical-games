@@ -12,6 +12,7 @@ import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.input.OnscreenNoteInputSource
 import com.example.musicalgames.game.games.play_by_ear.EarController
 import com.example.musicalgames.game.games.play_by_ear.EarView
 import com.example.musicalgames.game.games.play_by_ear.EarViewModel
@@ -52,10 +53,11 @@ class EarGameFactory : GameFactory {
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[EarViewModel::class.java]
-        val gameView = EarView(context, null, viewModel, activity)
+        val noteInputSource = OnscreenNoteInputSource()
+        val gameView = EarView(context, null, viewModel, activity, noteInputSource)
         gameContainer.addView(gameView)
 
-        val gameController = EarController(viewModel)
+        val gameController = EarController(viewModel, noteInputSource)
         gameController.initGame(context, gameListener)
 
         return gameController
