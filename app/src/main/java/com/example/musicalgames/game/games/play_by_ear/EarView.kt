@@ -5,26 +5,29 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.utils.components.keyboard.KeyboardListener
 import com.example.musicalgames.utils.components.keyboard.KeyboardView
-import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
+import kotlinx.coroutines.launch
 
 
 import android.widget.TextView
-import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 
-class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs), KeyboardListener, EarViewmodelListener {
+class EarView(
+    context: Context,
+    attrs: AttributeSet?,
+    private val viewModel: EarViewModel,
+    lifecycleOwner: LifecycleOwner
+) : ViewGroup(context, attrs), KeyboardListener {
 
     private var keyboardView: KeyboardView = KeyboardView(context, null)
     private val soundPlayer : DefaultSoundPlayerManager by lazy { DefaultSoundPlayerManager(context) }
-    private var endListener: GameListener? = null
     private var keyboardDisabled = true
-    private var score: Int = 0
-    private var viewModel: EarViewModel? = null
-    private var level: PlayEarLevel? = null
+    private val level: PlayEarLevel = viewModel.level!!
     private val messageTextView: TextView
     private val rootButton: Button
     private val nextButton: Button
@@ -38,15 +41,15 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         rootButton = Button(context).apply {
             text = "Play Root"
             setOnClickListener {
-                viewModel!!.playRoot()
+                viewModel.playRoot()
             }
         }
         //TODO: think about what to do with this button, disabled for now
         nextButton = Button(context).apply {
             text = "Next Problem"
             setOnClickListener{
-                if(viewModel!!.problemFinished()) {
-                    viewModel!!.newProblem()
+                if(viewModel.problemFinished()) {
+                    viewModel.newProblem()
                 }
             }
         }
@@ -57,50 +60,25 @@ class EarView(context: Context, attrs: AttributeSet?) : ViewGroup(context, attrs
         addView(nextButton)
 
         keyboardView.registerListener(this)
+
+        viewModel.setPlayer(soundPlayer)
+        keyboardView.setRange(Note(level.minPitchDisplayed), Note(level.maxPitchDisplayed))
+        level.getDisplayedRoot()?.let { keyboardView.setColoured(it) }
+
+        lifecycleOwner.lifecycleScope.launch {
+            viewModel.renderState.collect { render(it) }
+        }
     }
 
-    fun setViewModel(viewModel: EarViewModel) {
-        this.viewModel = viewModel
-        level = viewModel.level!!
-        this.viewModel!!.setPlayer(soundPlayer)
-        this.viewModel!!.registerListener(this)
-        keyboardView.setRange(Note(level!!.minPitchDisplayed), Note(level!!.maxPitchDisplayed))
-        if(level!!.getDisplayedRoot()!=null)
-            keyboardView.setColoured(level!!.getDisplayedRoot()!!)
-    }
-
-
-    fun getScore(): Int {
-        return score
+    private fun render(state: EarRenderState) {
+        messageTextView.text = state.message
+        keyboardDisabled = !state.keyboardEnabled
     }
 
     override fun onKeyClicked(key: Note) {
         if (keyboardDisabled)
             return
-        viewModel!!.selectNote(key)
-    }
-
-    fun registerEndListener(listener: GameListener) {
-        this.endListener = listener
-    }
-
-    override fun onNewProblem() {
-        messageTextView.text = "Play the melody"
-    }
-    override fun onPlaybackStarted() {
-        messageTextView.text = "Listen to the melody..."
-        keyboardDisabled = true
-    }
-    override fun onPlaybackFinished() {
-        keyboardDisabled = false
-        messageTextView.text = "Play the melody"
-    }
-    override fun onRightAnswer() {
-        messageTextView.text="Good!"
-    }
-    override fun onWrongAnswer() {
-        messageTextView.text="Wrong! The correct note was ${viewModel!!.getCorrectNote()}."
-        //endListener?.onGameEnded()
+        viewModel.selectNote(key)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

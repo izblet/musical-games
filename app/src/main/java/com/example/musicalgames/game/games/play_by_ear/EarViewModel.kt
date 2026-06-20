@@ -3,7 +3,6 @@ package com.example.musicalgames.games.play_by_ear
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
-import com.example.musicalgames.game.games.play_by_ear.EarViewmodelListener
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.Note
@@ -13,8 +12,16 @@ import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerM
 import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.abs
+
+data class EarRenderState(
+    val message: String = "",
+    val keyboardEnabled: Boolean = false
+)
 
 class EarViewModel() : ViewModel(), SoundPlayerListener {
 
@@ -34,7 +41,9 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     var score = 0
     private var questionActive = false
 
-    private var listener: EarViewmodelListener? = null
+    private val _renderState = MutableStateFlow(EarRenderState())
+    val renderState: StateFlow<EarRenderState> = _renderState.asStateFlow()
+
     private var soundPlayer: DefaultSoundPlayerManager? = null
     private var rootPlaying = false
     private var problemPlaying = false
@@ -42,12 +51,9 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
     }
-    fun registerListener(listener: EarViewmodelListener) {
-        this.listener = listener
-    }
 
     fun newProblem() {
-        listener!!.onNewProblem()
+        _renderState.value = _renderState.value.copy(message = "Play the melody")
         index = 0
         questionActive = true
         generateProblem()
@@ -66,7 +72,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
 
     private fun playProblem() {
         problemPlaying = true
-        listener!!.onPlaybackStarted()
+        _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false)
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
             soundPlayer!!.playSequence(problem, this@EarViewModel)
@@ -86,7 +92,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             return
         }
         if (problem[index] != note) {
-            listener!!.onWrongAnswer()
+            _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}.")
             questionActive = false
             //nextQuestion()
             return
@@ -95,7 +101,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if (index == problem.size) {
             questionActive = false
             score++
-            listener!!.onRightAnswer()
+            _renderState.value = _renderState.value.copy(message = "Good!")
             //nextQuestion()
         }
     }
@@ -114,7 +120,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         } else if(problemPlaying) {
             problemPlaying = false
         }
-       listener!!.onPlaybackFinished()
+        _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = "Play the melody")
     }
 
     fun playRoot() {

@@ -52,11 +52,10 @@ class EarGameFactory : GameFactory {
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[EarViewModel::class.java]
-        val gameView = EarView(context, null)
+        val gameView = EarView(context, null, viewModel, activity)
         gameContainer.addView(gameView)
 
-        val gameController = EarController(gameView)
-        gameController.setViewModel(viewModel)
+        val gameController = EarController(viewModel)
         gameController.initGame(context, gameListener)
 
         return gameController
