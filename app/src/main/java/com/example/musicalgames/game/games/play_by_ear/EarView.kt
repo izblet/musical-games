@@ -1,4 +1,4 @@
-package com.example.musicalgames.games.play_by_ear
+package com.example.musicalgames.game.games.play_by_ear
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 
 import android.widget.TextView
-import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 
 class EarView(
     context: Context,

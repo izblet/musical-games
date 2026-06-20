@@ -1,17 +1,13 @@
-package com.example.musicalgames.games.play_by_ear
+package com.example.musicalgames.game.games.play_by_ear
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.ViewModel
-import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
+import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,15 +69,9 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     private fun playProblem() {
         problemPlaying = true
         _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false)
-        val scope = CoroutineScope(Dispatchers.Main)
-        scope.launch {
+        viewModelScope.launch {
             soundPlayer!!.playSequence(problem, this@EarViewModel)
         }
-    }
-    private fun nextQuestion() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            newProblem()
-        }, 2000)
     }
 
     fun selectNote(note: Note) {
@@ -94,7 +84,6 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if (problem[index] != note) {
             _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}.")
             questionActive = false
-            //nextQuestion()
             return
         }
         index++
@@ -102,7 +91,6 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             questionActive = false
             score++
             _renderState.value = _renderState.value.copy(message = "Good!")
-            //nextQuestion()
         }
     }
 

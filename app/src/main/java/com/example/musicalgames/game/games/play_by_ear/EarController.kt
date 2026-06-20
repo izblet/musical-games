@@ -1,12 +1,13 @@
-package com.example.musicalgames.games.play_by_ear
+package com.example.musicalgames.game.games.play_by_ear
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class EarController(private val viewModel: EarViewModel) : GameController {
     //TODO: nothing currently calls gameListener?.onGameEnded() for this game - the previous
@@ -26,10 +27,10 @@ class EarController(private val viewModel: EarViewModel) : GameController {
 
     override fun startGame(owner: LifecycleOwner) {
         viewModel.playRoot()
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
+        owner.lifecycleScope.launch {
+            delay(2000)
             viewModel.newProblem()
-        },2000)
+        }
     }
 
     override fun pauseGame() {

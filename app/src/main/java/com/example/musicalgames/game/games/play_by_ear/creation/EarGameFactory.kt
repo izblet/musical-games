@@ -12,12 +12,12 @@ import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.games.play_by_ear.EarController
+import com.example.musicalgames.game.games.play_by_ear.EarView
+import com.example.musicalgames.game.games.play_by_ear.EarViewModel
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.games.play_by_ear.EarController
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
-import com.example.musicalgames.games.play_by_ear.EarView
-import com.example.musicalgames.games.play_by_ear.EarViewModel
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 
 class EarGameFactory : GameFactory {

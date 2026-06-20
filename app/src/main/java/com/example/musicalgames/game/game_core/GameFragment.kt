@@ -1,17 +1,18 @@
 package com.example.musicalgames.game_activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.musicalgames.R
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class GameFragment : Fragment(), GameListener {
     private val args: GameFragmentArgs by navArgs()
@@ -41,7 +42,10 @@ class GameFragment : Fragment(), GameListener {
         //so they're already granted by the time this fragment is reached
         gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, this)
 
-        Handler(Looper.getMainLooper()).postDelayed({ gameController.startGame(this) }, gameFactory.getStartDelayMs())
+        lifecycleScope.launch {
+            delay(gameFactory.getStartDelayMs())
+            gameController.startGame(this@GameFragment)
+        }
     }
 
     override fun onGameEnded() {
