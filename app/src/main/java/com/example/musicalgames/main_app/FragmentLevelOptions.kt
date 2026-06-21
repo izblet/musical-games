@@ -48,12 +48,13 @@ class FragmentLevelOptions : Fragment() {
     }
 
     private fun attemptStartGame() {
-        if (controller.hasRequiredPermissions(requireContext())) {
-            if (!controller.startGame(bpmEditText.text.toString())) {
+        val bpmInput = bpmEditText.text.toString()
+        if (controller.hasRequiredPermissions(requireContext(), bpmInput)) {
+            if (!controller.startGame(bpmInput)) {
                 Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT).show()
             }
         } else {
-            requestMultiplePermissions.launch(controller.requiredPermissions)
+            requestMultiplePermissions.launch(controller.requiredPermissions(bpmInput))
         }
     }
 

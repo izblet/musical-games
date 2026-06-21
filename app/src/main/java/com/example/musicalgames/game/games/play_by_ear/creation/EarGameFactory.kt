@@ -27,13 +27,13 @@ class EarGameFactory : GameFactory {
         return EarPlayLevels.baseLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf()
     }
 
     override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         val viewModel = ViewModelProvider(owner)[EarViewModel::class.java]
-        viewModel.setLevel(level)
+        viewModel.setLevel(level, gameplay)
         return
     }
 

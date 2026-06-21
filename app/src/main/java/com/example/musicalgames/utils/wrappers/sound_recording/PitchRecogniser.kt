@@ -85,6 +85,12 @@ class PitchRecogniser (context: Context,
 
         updateJob = recogniserScope.launch {
             while(isActive) {
+                //TODO: fixed-delay scheduling - recognizePitch() (mic buffer read + SPICE
+                //model inference, not free) runs before the delay, so the actual period is
+                //recognizePitch()'s duration + updateRateMS, not a clean updateRateMS. If
+                //precise timing ever matters here, switch to fixed-rate scheduling (track an
+                //absolute next-tick target and delay only the remainder) - see
+                //MicrophoneNoteInput's polling loop for that pattern.
                 lastPitchSpice = recognizePitch()
                 delay(updateRateMS)
             }

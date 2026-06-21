@@ -26,7 +26,7 @@ class MentalGameFactory : GameFactory {
         return MentalLevels.intervalNoteLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf()
     }
 

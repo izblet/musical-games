@@ -21,7 +21,7 @@ class GameFactoryChords: GameFactory {
         return ChordsLevels.baseLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf()
     }
 

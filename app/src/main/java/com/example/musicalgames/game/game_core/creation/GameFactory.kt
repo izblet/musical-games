@@ -16,7 +16,7 @@ import com.example.musicalgames.main_app.game_levels.TaggedLevel
 interface GameFactory {
 
     suspend fun getLevels(pack: GamePackage, context: Context) : List<TaggedLevel>
-    fun getPermissions() : Array<String>
+    fun getPermissions(gameplay: GamePlayInstance) : Array<String>
     fun getStartDelayMs() : Long { return 2000 }
     fun prepareViewModel(
         level: Level,

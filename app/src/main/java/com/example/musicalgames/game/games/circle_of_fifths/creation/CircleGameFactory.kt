@@ -26,7 +26,7 @@ class CircleGameFactory : GameFactory {
         return CircleLevels.baseLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf()
     }
 

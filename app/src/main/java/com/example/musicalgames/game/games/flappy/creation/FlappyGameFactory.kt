@@ -50,7 +50,7 @@ class FlappyGameFactory : GameFactory {
         return FlappyLevels.baseLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf(Manifest.permission.RECORD_AUDIO)
     }
 

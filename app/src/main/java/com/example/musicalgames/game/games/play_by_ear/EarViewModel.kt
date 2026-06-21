@@ -2,6 +2,7 @@ package com.example.musicalgames.game.games.play_by_ear
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
@@ -21,14 +22,16 @@ data class EarRenderState(
 
 class EarViewModel() : ViewModel(), SoundPlayerListener {
 
-    fun setLevel(level: Level) {
+    fun setLevel(level: Level, gameplay: GamePlayInstance) {
         this.level = level as PlayEarLevel
+        this.gameplay = gameplay
         rootNote = level.getDisplayedRoot()
         available = this.level!!.keyList.map { Note(it) }
     }
 
     //TODO: level will be passed in constructor prbbly, otherwise change this
     var level: PlayEarLevel? = null
+    var gameplay: GamePlayInstance = GamePlayInstance()
     var rootNote: Note? = null
     private var available: List<Note> = listOf()
 
