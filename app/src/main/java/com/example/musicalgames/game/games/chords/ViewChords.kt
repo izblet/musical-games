@@ -7,14 +7,19 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
+import com.example.musicalgames.game.game_core.input.KeyPaletteNoteInputSource
 import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteView
 import com.example.musicalgames.music_model.ChromaticNote
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 
-class ViewChords(context: Context, private val viewModel: ViewModelChords, lifecycleOwner: LifecycleOwner) : ViewGroup(context), KeyPaletteListener {
+class ViewChords(
+    context: Context,
+    private val viewModel: ViewModelChords,
+    lifecycleOwner: LifecycleOwner,
+    noteInputSource: KeyPaletteNoteInputSource
+) : ViewGroup(context) {
     private val notePalette = KeyPaletteView(context)
     private val textView = TextView(context).apply {
         text="text"
@@ -28,7 +33,7 @@ class ViewChords(context: Context, private val viewModel: ViewModelChords, lifec
 
 
     init {
-        notePalette.registerListener(this)
+        notePalette.registerListener(noteInputSource)
 
         addView(notePalette)
         addView(textView)
@@ -81,9 +86,5 @@ class ViewChords(context: Context, private val viewModel: ViewModelChords, lifec
         notePalette.layout(0, height - keyPaletteHeight, width, height)
         textView.layout(0,0,width,height)
         confirmButton.layout((.5*width).roundToInt(),0,width,(0.2*height).roundToInt())
-    }
-
-    override fun onClicked(note: ChromaticNote) {
-        viewModel.clickNote(note)
     }
 }

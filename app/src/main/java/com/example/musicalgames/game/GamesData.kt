@@ -80,7 +80,7 @@ object GameMap {
         GameRegistration(
             game = Game.CHORDS,
             info = GameInfo("Chords", "Learn the notes for chords", R.drawable.default_game_icon),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { GameFactoryChords() },
             serialization = GameSerialization(LevelChords::class, "chords"),
         ),

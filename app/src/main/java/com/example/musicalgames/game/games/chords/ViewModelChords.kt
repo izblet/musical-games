@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
+import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.Chord
@@ -29,9 +32,16 @@ class ViewModelChords(): ViewModel(), GameController {
     private var _gameLogic: GameLogicChords? = null
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
+    var gameplay: GamePlayInstance = GamePlayInstance()
+    private var _noteInputSource: ChromaticNoteInputSource? = null
+    private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
 
     fun setLogic(logic: GameLogicChords) {
         _gameLogic=logic
+    }
+
+    fun setNoteInput(source: ChromaticNoteInputSource) {
+        _noteInputSource = source
     }
 
     fun setBpm(bpm: Long) {
@@ -84,6 +94,11 @@ class ViewModelChords(): ViewModel(), GameController {
         } else {
           newQuestion()
         }
+
+        noteInputSource.start()
+        viewModelScope.launch {
+            noteInputSource.noteSelected.collect { clickNote(it) }
+        }
     }
 
     fun clickNote(note: ChromaticNote) {
@@ -115,6 +130,8 @@ class ViewModelChords(): ViewModel(), GameController {
     }
 
     override fun endGame() {
+        _noteInputSource?.stop()
+        (_noteInputSource as? MicrophoneChromaticNoteInput)?.release()
     }
 
     override fun getScore(): Int {
