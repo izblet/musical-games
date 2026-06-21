@@ -2,14 +2,12 @@ package com.example.musicalgames.main_app
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.InputFilter
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
-import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
@@ -37,7 +34,7 @@ class FragmentLevelOptions : Fragment() {
     }
 
     private lateinit var controller: LevelOptionsController
-    private lateinit var bpmEditText: EditText
+    private lateinit var optionsView: GameplayOptionsView
 
     private val requestMultiplePermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -48,13 +45,15 @@ class FragmentLevelOptions : Fragment() {
     }
 
     private fun attemptStartGame() {
-        val bpmInput = bpmEditText.text.toString()
-        if (controller.hasRequiredPermissions(requireContext(), bpmInput)) {
-            if (!controller.startGame(bpmInput)) {
-                Toast.makeText(context, "Could not create a game with this bpm, probably illegal value", Toast.LENGTH_SHORT).show()
-            }
+        val gameplay = optionsView.getGameplay()
+        if (gameplay == null) {
+            Toast.makeText(context, "Could not create a game with these options, probably an illegal value", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (controller.hasRequiredPermissions(requireContext(), gameplay)) {
+            controller.startGame(gameplay)
         } else {
-            requestMultiplePermissions.launch(controller.requiredPermissions(bpmInput))
+            requestMultiplePermissions.launch(controller.requiredPermissions(gameplay))
         }
     }
 
@@ -279,25 +278,9 @@ class FragmentLevelOptions : Fragment() {
 
         refreshUI()
 
-        //TODO: temporary solution, for now i just want bpm - think about how to implement it properly
-        val linearLayout = LinearLayout(context).apply {
-            orientation= LinearLayout.HORIZONTAL
-            layoutParams =LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        bpmEditText = EditText(context).apply {
-            inputType=InputType.TYPE_CLASS_NUMBER
-            filters = arrayOf(InputFilter.LengthFilter(3))
-        }
-        val textView = TextView(context)
-        textView.text = "Set bpm (min: ${GamePlayInstance.getMinBpmValue()}, max: ${GamePlayInstance.getMaxBpmValue()}):"
-
-
-        linearLayout.addView(textView)
-        linearLayout.addView(bpmEditText)
-        binding.gameplayOptionsContainer.addView(linearLayout)
+        val options = game?.let { GameMap.gameplayOptions[it] } ?: emptySet()
+        optionsView = GameplayOptionsView(requireContext(), options)
+        binding.gameplayOptionsContainer.addView(optionsView)
 
         binding.startGameButton.setOnClickListener {
             attemptStartGame()

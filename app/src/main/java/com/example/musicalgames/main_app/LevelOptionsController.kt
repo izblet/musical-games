@@ -69,34 +69,16 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
         mainViewModel.saveNewLevel(name, description, onSaved)
     }
 
-    //TODO: this bpm-string-in-everywhere shape is temporary scaffolding for the
-    //getPermissions(gameplay) signature change - it'll be replaced once the generic
-    //per-GameplayOptions UI renderer (and the single provisional GamePlayInstance it
-    //assembles) lands.
-    private fun buildGameplay(bpmInput: String?): GamePlayInstance? {
-        val bpm = bpmInput?.toIntOrNull() ?: return GamePlayInstance()
-        return try {
-            GamePlayInstance(bpm = bpm)
-        } catch (e: Exception) {
-            null
-        }
-    }
+    fun requiredPermissions(gameplay: GamePlayInstance): Array<String> =
+        game?.let { GameMap.createFactory(it).getPermissions(gameplay) } ?: emptyArray()
 
-    fun requiredPermissions(bpmInput: String?): Array<String> {
-        val gameplay = buildGameplay(bpmInput) ?: GamePlayInstance()
-        return game?.let { GameMap.createFactory(it).getPermissions(gameplay) } ?: emptyArray()
-    }
-
-    fun hasRequiredPermissions(context: Context, bpmInput: String?): Boolean =
-        requiredPermissions(bpmInput).all {
+    fun hasRequiredPermissions(context: Context, gameplay: GamePlayInstance): Boolean =
+        requiredPermissions(gameplay).all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
-    //returns false if the bpm couldn't be used to start the game (caller should show an error)
-    fun startGame(bpmInput: String?): Boolean {
-        val gameplay = buildGameplay(bpmInput) ?: return false
+    fun startGame(gameplay: GamePlayInstance) {
         mainViewModel.playLevel(gameplay)
-        return true
     }
 
 
