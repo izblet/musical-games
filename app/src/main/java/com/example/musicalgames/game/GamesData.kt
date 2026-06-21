@@ -58,7 +58,7 @@ object GameMap {
         GameRegistration(
             game = Game.PLAY_BY_EAR,
             info = GameInfo("Play By Ear", "Play back melodies on a piano", R.drawable.ear),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH, GameplayOptions.INPUT_METHOD),
             factoryProvider = { EarGameFactory() },
             serialization = GameSerialization(PlayEarLevel::class, "ear"),
         ),

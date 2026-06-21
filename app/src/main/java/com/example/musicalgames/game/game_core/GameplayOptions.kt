@@ -11,7 +11,13 @@ enum class GameplayType {
 }
 
 enum class InputMethod {
-    ONSCREEN, EXTERNAL_INSTRUMENT
+    ONSCREEN, EXTERNAL_INSTRUMENT;
+    override fun toString(): String {
+        return when(this) {
+            ONSCREEN -> "Onscreen keyboard"
+            EXTERNAL_INSTRUMENT -> "External instrument"
+        }
+    }
 }
 enum class keyEstablishOption {
     ROOT, ROOT_CHORD

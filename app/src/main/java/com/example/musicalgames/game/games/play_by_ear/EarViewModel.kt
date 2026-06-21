@@ -3,7 +3,9 @@ package com.example.musicalgames.game.games.play_by_ear
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.input.MicrophoneNoteDetector
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
@@ -47,6 +49,13 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     private var rootPlaying = false
     private var problemPlaying = false
 
+    //after audio playback "finishes", the mic can still be hearing the tail of it for a bit -
+    //both the detector's own trailing window and any hardware/acoustic latency beyond that - so
+    //EXTERNAL_INSTRUMENT input is ignored for a further cooldown past onPlaybackFinished(),
+    //long enough to outlast the detector's window with a small safety margin
+    private val externalInstrumentSettleMs = MicrophoneNoteDetector.DEFAULT_WINDOW_MS + 200L
+    private var acceptExternalInputAfterMs = 0L
+
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
     }
@@ -78,8 +87,20 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     }
 
     fun selectNote(note: Note) {
-        if((!rootPlaying)&&(!problemPlaying))
+        //while the root note or the melody is playing aloud, ignore any input entirely - this
+        //matters most for EXTERNAL_INSTRUMENT, where the mic is already listening at this point
+        //and would otherwise pick up the device's own speaker output and "answer" the melody
+        //with itself
+        if (rootPlaying || problemPlaying) {
+            return
+        }
+        if (gameplay.inputMethod == InputMethod.EXTERNAL_INSTRUMENT && System.currentTimeMillis() < acceptExternalInputAfterMs) {
+            return
+        }
+
+        if (gameplay.inputMethod == InputMethod.ONSCREEN) {
             soundPlayer!!.playNote(note.midiCode, null)
+        }
 
         if (!questionActive) {
             return
@@ -111,6 +132,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         } else if(problemPlaying) {
             problemPlaying = false
         }
+        acceptExternalInputAfterMs = System.currentTimeMillis() + externalInstrumentSettleMs
         _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = "Play the melody")
     }
 

@@ -27,9 +27,14 @@ import kotlin.math.roundToInt
  */
 class MicrophoneNoteDetector(
     private val entryThreshold: Float = 0.95f,
-    private val windowMs: Long = 500L,
+    private val windowMs: Long = DEFAULT_WINDOW_MS,
     private val exitThreshold: Float = entryThreshold
 ) {
+    companion object {
+        const val DEFAULT_WINDOW_MS = 300L
+    }
+
+
     private data class Sample(val timestampMs: Long, val note: Note?)
 
     private val window = ArrayDeque<Sample>()

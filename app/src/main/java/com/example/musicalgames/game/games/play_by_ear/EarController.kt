@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
+import com.example.musicalgames.game.game_core.input.MicrophoneNoteInput
 import com.example.musicalgames.game.game_core.input.NoteInputSource
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
@@ -48,6 +49,7 @@ class EarController(
 
     override fun endGame() {
         noteInputSource.stop()
+        (noteInputSource as? MicrophoneNoteInput)?.release()
     }
 
     override fun getScore(): Int {
