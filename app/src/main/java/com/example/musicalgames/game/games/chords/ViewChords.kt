@@ -3,7 +3,6 @@ package com.example.musicalgames.game.games.chords
 import android.content.Context
 import android.util.TypedValue
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,7 @@ import kotlin.math.roundToInt
 
 class ViewChords(
     context: Context,
-    private val viewModel: ViewModelChords,
+    viewModel: ViewModelChords,
     lifecycleOwner: LifecycleOwner,
     noteInputSource: KeyPaletteNoteInputSource
 ) : ViewGroup(context) {
@@ -24,10 +23,6 @@ class ViewChords(
     private val textView = TextView(context).apply {
         text="text"
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
-    }
-    private val confirmButton = Button(context).apply {
-        height=LayoutParams.WRAP_CONTENT
-        width=LayoutParams.WRAP_CONTENT
     }
     private val keyboardHeightRatio=.5
 
@@ -37,11 +32,6 @@ class ViewChords(
 
         addView(notePalette)
         addView(textView)
-        addView(confirmButton)
-        confirmButton.text="confirm"
-        confirmButton.setOnClickListener{
-            viewModel.confirm()
-        }
 
         lifecycleOwner.lifecycleScope.launch {
             viewModel.viewState.collect {
@@ -85,6 +75,5 @@ class ViewChords(
         val keyPaletteHeight = (height.toFloat() * keyboardHeightRatio).roundToInt()
         notePalette.layout(0, height - keyPaletteHeight, width, height)
         textView.layout(0,0,width,height)
-        confirmButton.layout((.5*width).roundToInt(),0,width,(0.2*height).roundToInt())
     }
 }

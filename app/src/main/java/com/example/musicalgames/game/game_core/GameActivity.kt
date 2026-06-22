@@ -1,6 +1,7 @@
 package com.example.musicalgames.game_activity
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.NavHostFragment
@@ -19,6 +20,10 @@ abstract class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        //input methods that don't involve touching the screen (external instrument, voice
+        //commands later) would otherwise let the screen idle out mid-game
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val gameType = Game.valueOf(intent.getStringExtra(ARG_GAME_TYPE)!!)
         val gameFactory = GameMap.createFactory(gameType)

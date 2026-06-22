@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
 import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
+import com.example.musicalgames.game.game_core.input.NoteGestureEvent
+import com.example.musicalgames.game.game_core.input.RepeatNoteConfirmGesture
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.Chord
@@ -35,6 +37,9 @@ class ViewModelChords(): ViewModel(), GameController {
     var gameplay: GamePlayInstance = GamePlayInstance()
     private var _noteInputSource: ChromaticNoteInputSource? = null
     private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
+    //confirms by repeating the question's root note twice in a row instead of a button -
+    //works the same regardless of input method, since both flow through the same noteSelected
+    private val confirmGesture = RepeatNoteConfirmGesture<ChromaticNote>()
 
     fun setLogic(logic: GameLogicChords) {
         _gameLogic=logic
@@ -80,6 +85,7 @@ class ViewModelChords(): ViewModel(), GameController {
 
     private fun newQuestion() {
         val question = gameLogic.newQuestion()
+        confirmGesture.setTrigger(question.root)
         val newState = _viewState.value.copy(
             screenMessage = question.getName(Random.nextBoolean()),
             highlightedNotes = setOf()
@@ -97,7 +103,12 @@ class ViewModelChords(): ViewModel(), GameController {
 
         noteInputSource.start()
         viewModelScope.launch {
-            noteInputSource.noteSelected.collect { clickNote(it) }
+            noteInputSource.noteSelected.collect { note ->
+                when (val event = confirmGesture.onNote(note)) {
+                    is NoteGestureEvent.NoteSelected -> clickNote(event.note)
+                    is NoteGestureEvent.Confirmed -> confirm()
+                }
+            }
         }
     }
 
@@ -105,22 +116,16 @@ class ViewModelChords(): ViewModel(), GameController {
         if(!gameLogic.awaitingAnswer())
             return
 
-        val result = gameLogic.addToSelection(note)
-        val newState: ViewState
-        if(!result.correct)
-            onWrongAns(result.rightAns)
-
-        else {
-            val oldnotes = _viewState.value.highlightedNotes ?: listOf()
-            newState = _viewState.value.copy(
-                highlightedNotes = (oldnotes+note).toSet()
-            )
-            _viewState.value = newState
-        }
+        gameLogic.addToSelection(note)
+        val oldNotes = _viewState.value.highlightedNotes
+        _viewState.value = _viewState.value.copy(highlightedNotes = oldNotes + note)
     }
 
     fun confirm() {
-       val result = gameLogic.confirm()
+        if(!gameLogic.awaitingAnswer())
+            return
+
+        val result = gameLogic.confirm()
         if(result.correct)
             onRightAns()
         else onWrongAns(result.rightAns)

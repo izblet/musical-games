@@ -58,34 +58,19 @@ class GameLogicChords (private val rootNotes: Set<ChromaticNote>, private val ex
         val question = _questionChord ?: throw IllegalStateException("There is no question to answer")
         val notes = question.getChromaticNotes().toSet()
 
-        if(answerNotes.size!=notes.size) {
-            return AnswerResult(false, question)
+        val correct = answerNotes == notes
+        awaitingAns = false
+        if (correct) {
+            _rightAnsNum++
+        } else {
+            _wrongAnsNum++
         }
-
-        for(note in notes) {
-            if(!answerNotes.contains(note)) {
-                _wrongAnsNum++
-                return AnswerResult(false, question)
-            }
-        }
-        val result = AnswerResult(true, question)
-        _rightAnsNum++
-
-        awaitingAns=false
-        return result
+        return AnswerResult(correct, question)
     }
 
-    fun addToSelection(note: ChromaticNote): AnswerResult {
+    //correctness is judged entirely on confirm() now, not per note - a wrong or incomplete
+    //selection just stays selected until the player confirms
+    fun addToSelection(note: ChromaticNote) {
         answerNotes.add(note)
-        val question = _questionChord ?: throw IllegalStateException("There is no question to answer")
-        if(!question.getChromaticNotes().contains(note)) {
-           val result=AnswerResult(false, question)
-            _wrongAnsNum++
-            awaitingAns=false
-            return result
-        }
-        else {
-            return AnswerResult(true, question)
-        }
     }
 }
