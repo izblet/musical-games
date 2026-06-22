@@ -20,10 +20,15 @@ import kotlinx.coroutines.launch
  */
 class MicrophoneNoteInput(
     private val pitchRecogniser: PitchRecogniser,
-    private val detector: MicrophoneNoteDetector = MicrophoneNoteDetector()
+    private val detector: MicrophoneNoteDetector = MicrophoneNoteDetector(
+        minWindowSize = (MicrophoneNoteDetector.DEFAULT_WINDOW_MS / POLL_RATE_MS
+            * MicrophoneNoteDetector.DEFAULT_MIN_WINDOW_SIZE_PERCENT / 100).toInt()
+    )
 ) : NoteInputSource {
 
-    private val pollRateMs = 1000L / 60
+    companion object {
+        private const val POLL_RATE_MS = 1000L / 60
+    }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var pollJob: Job? = null
@@ -42,14 +47,12 @@ class MicrophoneNoteInput(
             while (true) {
                 val pitch = pitchRecogniser.getPitch().takeIf { it != PitchRecogniser.UNDEFINED }
                 val note = detector.onPitchSample(pitch, System.currentTimeMillis())
-                // emit() (not tryEmit()) suspends until the collector is ready instead of
-                // ever silently dropping an onset - this producer is itself a coroutine, so
-                // unlike OnscreenNoteInputSource it can afford to suspend here.
+                // emit() suspends until the collector is ready
                 if (note != null) {
                     _noteSelected.emit(note)
                 }
 
-                nextTick += pollRateMs
+                nextTick += POLL_RATE_MS
                 val waitMs = nextTick - System.currentTimeMillis()
                 if (waitMs > 0) {
                     delay(waitMs)

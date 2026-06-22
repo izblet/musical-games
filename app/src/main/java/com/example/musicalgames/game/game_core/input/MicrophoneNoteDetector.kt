@@ -12,54 +12,79 @@ import kotlin.math.roundToInt
  * threshold).
  *
  * Recognition rule: a note is "recognised" once it accounts for more than
- * [entryThreshold] of the samples within the trailing [windowMs] milliseconds;
- * once recognised, it stays recognised until its prevalence in the window
- * drops below [exitThreshold] (defaults to [entryThreshold], i.e. no
- * hysteresis unless a lower exit value is supplied). Pitch is snapped to the
- * nearest chromatic note regardless of which notes the current level expects
- * - a snapped note that isn't a valid answer is just handled as a wrong
- * answer further up, the same as a wrong tap.
- *
- * The snapping/windowing/prevalence logic below is deliberately self-contained
- * (no Android/coroutine types, no game-specific knowledge) so it can be lifted
- * out wholesale if this moves to an external pitch-recognition tool later -
- * see the input-method-abstraction project notes.
+ * [entryThresholdPercent]% of the samples within the trailing [windowMs]
+ * milliseconds; once recognised, it stays recognised until its share of the
+ * window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]).
+ * Pitch is snapped to the nearest chromatic note.
  */
 class MicrophoneNoteDetector(
-    private val entryThreshold: Float = 0.95f,
+    private val minWindowSize: Int,
+    private val entryThresholdPercent: Int = DEFAULT_ENTRY_THRESHOLD_PERCENT,
     private val windowMs: Long = DEFAULT_WINDOW_MS,
-    private val exitThreshold: Float = entryThreshold
+    private val exitThresholdPercent: Int = DEFAULT_EXIT_THRESHOLD_PERCENT
 ) {
     companion object {
-        const val DEFAULT_WINDOW_MS = 300L
+        const val DEFAULT_WINDOW_MS = 100L
+        //how much confidence of enter (percent of samples pointing to one note)
+        const val DEFAULT_ENTRY_THRESHOLD_PERCENT = 95
+        //how much confidence of exit (percent of "exit samples" - i.e. nulls - in window)
+        const val DEFAULT_EXIT_THRESHOLD_PERCENT = 10
+        //suggested fraction of the caller's own expected window size (it knows the actual
+        //sample interval, this class doesn't) to use when computing minWindowSize
+        const val DEFAULT_MIN_WINDOW_SIZE_PERCENT = 50
     }
-
 
     private data class Sample(val timestampMs: Long, val note: Note?)
 
     private val window = ArrayDeque<Sample>()
     private var recognisedNote: Note? = null
 
+    //maps midicode to the frequency of the note
+    private val counts = IntArray(128)
+    //for each frequency, we keep a mutable set of notes with this frequency (update in time log n)
+    private val countsByFrequency = java.util.TreeMap<Int, MutableSet<Note>>()
+
     /** Feed one raw pitch sample (null = no clear pitch this sample, e.g. silence). */
     fun onPitchSample(spicePitch: Float?, timestampMs: Long): Note? {
-        window.addLast(Sample(timestampMs, spicePitch?.let(::snapToNearestNote)))
+        val note = spicePitch?.let(::snapToNearestNote)
+        window.addLast(Sample(timestampMs, note))
+        note?.let(::incrementCount)
         evictOldSamples(timestampMs)
 
         val current = recognisedNote
-        val stillDominant = current != null && prevalenceOf(current) >= exitThreshold
-        if (!stillDominant) {
+        if (current != null && !meetsThreshold(counts[current.midiCode], exitThresholdPercent)) {
             recognisedNote = null
+            purgeNote(current)
+            return null
         }
 
-        if (recognisedNote == null) {
-            val (candidate, candidatePrevalence) = mostPrevalentNote()
-            if (candidate != null && candidatePrevalence >= entryThreshold) {
+        if (recognisedNote == null && window.size >= minWindowSize) {
+            val (candidate, candidateCount) = mostPrevalentNote()
+            if (candidate != null && meetsThreshold(candidateCount, entryThresholdPercent)) {
                 recognisedNote = candidate
                 return candidate
             }
         }
 
         return null
+    }
+
+    private fun purgeNote(note: Note) {
+        window.removeAll { it.note == note }
+        val count = counts[note.midiCode]
+        if (count > 0) {
+            removeFromBucket(note, count)
+            counts[note.midiCode] = 0
+        }
+    }
+
+    private fun mostPrevalentNote(): Pair<Note?, Int> {
+        val (topCount, topNotes) = countsByFrequency.lastEntry() ?: return null to 0
+        return topNotes.first() to topCount
+    }
+
+    private fun meetsThreshold(count: Int, thresholdPercent: Int): Boolean {
+        return window.isNotEmpty() && count * 100 >= thresholdPercent * window.size
     }
 
     // --- self-contained recognition core (candidate for extraction later) ---
@@ -72,24 +97,31 @@ class MicrophoneNoteDetector(
         return Note(semitoneOffset.roundToInt())
     }
 
+    private fun incrementCount(note: Note) {
+        val oldCount = counts[note.midiCode]
+        if (oldCount > 0) removeFromBucket(note, oldCount)
+        counts[note.midiCode] = oldCount + 1
+        countsByFrequency.getOrPut(oldCount + 1) { mutableSetOf() }.add(note)
+    }
     private fun evictOldSamples(nowMs: Long) {
         while (window.isNotEmpty() && nowMs - window.first().timestampMs > windowMs) {
-            window.removeFirst()
+            val evicted = window.removeFirst()
+            evicted.note?.let(::decrementCount)
         }
     }
-
-    private fun mostPrevalentNote(): Pair<Note?, Float> {
-        if (window.isEmpty()) return null to 0f
-        val mostCommon = window.mapNotNull { it.note }
-            .groupingBy { it }
-            .eachCount()
-            .maxByOrNull { it.value }
-            ?: return null to 0f
-        return mostCommon.key to mostCommon.value.toFloat() / window.size
+    private fun decrementCount(note: Note) {
+        val oldCount = counts[note.midiCode]
+        removeFromBucket(note, oldCount)
+        val newCount = oldCount - 1
+        counts[note.midiCode] = newCount
+        if (newCount > 0) countsByFrequency.getOrPut(newCount) { mutableSetOf() }.add(note)
     }
 
-    private fun prevalenceOf(note: Note): Float {
-        if (window.isEmpty()) return 0f
-        return window.count { it.note == note }.toFloat() / window.size
+    private fun removeFromBucket(note: Note, count: Int) {
+        val bucket = countsByFrequency[count] ?: return
+        bucket.remove(note)
+        if (bucket.isEmpty()) countsByFrequency.remove(count)
     }
+
+
 }
