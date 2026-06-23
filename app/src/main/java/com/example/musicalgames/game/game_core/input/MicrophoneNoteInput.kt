@@ -1,6 +1,7 @@
 package com.example.musicalgames.game.game_core.input
 
 import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.settings.MicrophoneSettings
 import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,14 +21,23 @@ import kotlinx.coroutines.launch
  */
 class MicrophoneNoteInput(
     private val pitchRecogniser: PitchRecogniser,
-    private val detector: MicrophoneNoteDetector = MicrophoneNoteDetector(
-        minWindowSize = (MicrophoneNoteDetector.DEFAULT_WINDOW_MS / POLL_RATE_MS
-            * MicrophoneNoteDetector.DEFAULT_MIN_WINDOW_SIZE_PERCENT / 100).toInt()
-    )
+    private val detector: MicrophoneNoteDetector
 ) : NoteInputSource {
 
     companion object {
         private const val POLL_RATE_MS = 1000L / 60
+
+        /** Builds a [MicrophoneNoteInput] whose [MicrophoneNoteDetector] is configured from [settings]. */
+        fun withSettings(pitchRecogniser: PitchRecogniser, settings: MicrophoneSettings): MicrophoneNoteInput {
+            val detector = MicrophoneNoteDetector(
+                minWindowSize = (settings.windowMs / POLL_RATE_MS
+                    * MicrophoneNoteDetector.DEFAULT_MIN_WINDOW_SIZE_PERCENT / 100).toInt(),
+                entryThresholdPercent = settings.entryThresholdPercent,
+                windowMs = settings.windowMs,
+                exitThresholdPercent = settings.exitThresholdPercent
+            )
+            return MicrophoneNoteInput(pitchRecogniser, detector)
+        }
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)

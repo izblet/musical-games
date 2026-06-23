@@ -21,6 +21,7 @@ import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 
 class GameFactoryChords: GameFactory {
@@ -75,8 +76,14 @@ class GameFactoryChords: GameFactory {
 
         val noteInputSource: ChromaticNoteInputSource = when (viewmodel.gameplay.inputMethod) {
             InputMethod.ONSCREEN -> tapSource
-            InputMethod.EXTERNAL_INSTRUMENT ->
-                MicrophoneChromaticNoteInput(MicrophoneNoteInput(PitchRecogniser(context, "C2", "C6")))
+            InputMethod.EXTERNAL_INSTRUMENT -> {
+                val micSettings = MicrophoneSettingsRepository(context).get()
+                val pitchRecogniser = PitchRecogniser(
+                    context, "C2", "C6",
+                    micSettings.energyThreshold, micSettings.maxUncertainty
+                )
+                MicrophoneChromaticNoteInput(MicrophoneNoteInput.withSettings(pitchRecogniser, micSettings))
+            }
         }
         viewmodel.setNoteInput(noteInputSource)
 

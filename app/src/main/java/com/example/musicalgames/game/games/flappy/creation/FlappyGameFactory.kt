@@ -36,6 +36,7 @@ import com.example.musicalgames.games.flappy.LEN_INF
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.components.StaffPainter
 import com.example.musicalgames.utils.geometry.Circle
 import com.example.musicalgames.utils.geometry.Point
@@ -102,7 +103,11 @@ class FlappyGameFactory : GameFactory {
         // TODO: hardcoded for now, should probably come from a difficulty/precision setting
         val birdRadius = 0.25
 
-        val pitchRecogniser = PitchRecogniser(context, "C2", "C6")
+        val micSettings = MicrophoneSettingsRepository(context).get()
+        val pitchRecogniser = PitchRecogniser(
+            context, "C2", "C6",
+            micSettings.energyThreshold, micSettings.maxUncertainty
+        )
         val midiCoordinateController = MidiCoordinateController(
             pitchRecogniser,
             minCoordinate = gameRect.bottom,

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.creation.Level
-import com.example.musicalgames.game.game_core.input.MicrophoneNoteDetector
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
@@ -52,9 +51,16 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     //after audio playback "finishes", the mic can still be hearing the tail of it for a bit -
     //both the detector's own trailing window and any hardware/acoustic latency beyond that - so
     //EXTERNAL_INSTRUMENT input is ignored for a further cooldown past onPlaybackFinished(),
-    //long enough to outlast the detector's window with a small safety margin
-    private val externalInstrumentSettleMs = MicrophoneNoteDetector.DEFAULT_WINDOW_MS + 200L
+    //long enough to outlast the detector's window with a small safety margin. The window itself
+    //is a tunable microphone setting, so the caller must report its actual configured value via
+    //setMicrophoneWindowMs() - this can't default to a fixed value without risking drifting out
+    //of sync with whatever window size is actually configured.
+    private var externalInstrumentSettleMs = 0L
     private var acceptExternalInputAfterMs = 0L
+
+    fun setMicrophoneWindowMs(windowMs: Long) {
+        externalInstrumentSettleMs = windowMs + SETTLE_SAFETY_MARGIN_MS
+    }
 
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
@@ -148,5 +154,9 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if(index<problem.size)
             return NoteSpelling.spell(problem[index], SpellingPreference.SHARPS)
         return ""
+    }
+
+    companion object {
+        private const val SETTLE_SAFETY_MARGIN_MS = 200L
     }
 }

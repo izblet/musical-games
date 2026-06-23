@@ -70,4 +70,9 @@
             android:id="@+id/action_fragmentLevelOptions_to_fragmentNewModeChoose"
             app:destination="@id/fragmentNewModeChoose" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.example.musicalgames.main_app.FragmentSettings"
+        android:label="@string/action_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

@@ -19,18 +19,14 @@ import kotlin.math.roundToInt
  */
 class MicrophoneNoteDetector(
     private val minWindowSize: Int,
-    private val entryThresholdPercent: Int = DEFAULT_ENTRY_THRESHOLD_PERCENT,
-    private val windowMs: Long = DEFAULT_WINDOW_MS,
-    private val exitThresholdPercent: Int = DEFAULT_EXIT_THRESHOLD_PERCENT
+    private val entryThresholdPercent: Int,
+    private val windowMs: Long,
+    private val exitThresholdPercent: Int
 ) {
     companion object {
-        const val DEFAULT_WINDOW_MS = 100L
-        //how much confidence of enter (percent of samples pointing to one note)
-        const val DEFAULT_ENTRY_THRESHOLD_PERCENT = 95
-        //how much confidence of exit (percent of "exit samples" - i.e. nulls - in window)
-        const val DEFAULT_EXIT_THRESHOLD_PERCENT = 10
         //suggested fraction of the caller's own expected window size (it knows the actual
-        //sample interval, this class doesn't) to use when computing minWindowSize
+        //sample interval, this class doesn't) to use when computing minWindowSize - not
+        //user-tunable, unlike the constructor params above (see MicrophoneSettings)
         const val DEFAULT_MIN_WINDOW_SIZE_PERCENT = 50
     }
 

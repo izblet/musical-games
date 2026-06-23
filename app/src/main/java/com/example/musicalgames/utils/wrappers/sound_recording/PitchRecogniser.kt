@@ -15,7 +15,9 @@ import com.example.musicalgames.music_model.MusicUtil as MU
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context,
-                       minRecognised: String, maxRecognised: String) {
+                       minRecognised: String, maxRecognised: String,
+                       private val energyThreshold: Int,
+                       private val maxUncertainty: Float) {
     private var SPICE: SPICEModelManager? = null
     private var microphone: MicrophoneManager? = null
 
@@ -37,7 +39,6 @@ class PitchRecogniser (context: Context,
     }
 
     companion object {
-        const val THRESHOLD_ENERGY= 30000
         const val UNDEFINED=-1f
     }
 
@@ -56,7 +57,7 @@ class PitchRecogniser (context: Context,
 
         val buffer: ShortArray = microphone?.getBufferIfFull() ?: return null
 
-        if(calculateEnergy(buffer)< THRESHOLD_ENERGY)
+        if(calculateEnergy(buffer)< energyThreshold)
             return null
 
         val maxAbsValue = Short.MAX_VALUE.toFloat()
@@ -64,7 +65,7 @@ class PitchRecogniser (context: Context,
 
 
         val outputSize = 7
-        val result = SPICE?.getMeanDominantPitch(audioData, outputSize, outputSize)
+        val result = SPICE?.getMeanDominantPitch(audioData, outputSize, outputSize, maxUncertainty)
             ?: return null
 
         if(result< minPitch || result> maxPitch)
