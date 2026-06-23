@@ -67,6 +67,7 @@ class EarGameFactory : GameFactory {
     ): GameController {
         val viewModel = ViewModelProvider(activity)[EarViewModel::class.java]
         val level = viewModel.level!!
+        viewModel.setNoteDurationMs(NOTE_DURATION_MS) //TODO: placeholder value, revisit once the new recordings are tuned
         val onscreenSource = OnscreenNoteInputSource()
         val gameView = EarView(context, null, viewModel, activity, onscreenSource)
         gameContainer.addView(gameView)
@@ -90,5 +91,9 @@ class EarGameFactory : GameFactory {
         gameController.initGame(context, gameListener)
 
         return gameController
+    }
+
+    companion object {
+        private const val NOTE_DURATION_MS = 800L
     }
 }

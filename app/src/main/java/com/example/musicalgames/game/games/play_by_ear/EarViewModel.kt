@@ -66,6 +66,14 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         soundPlayer = pl
     }
 
+    //null plays each note recording to its natural end; set this once note recordings are
+    //longer than what a melody should actually wait for, to cut them off after this many ms
+    private var noteDurationMs: Long? = null
+
+    fun setNoteDurationMs(durationMs: Long?) {
+        noteDurationMs = durationMs
+    }
+
     fun newProblem() {
         _renderState.value = _renderState.value.copy(message = "Play the melody")
         index = 0
@@ -88,7 +96,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         problemPlaying = true
         _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false)
         viewModelScope.launch {
-            soundPlayer!!.playSequence(problem, this@EarViewModel)
+            soundPlayer!!.playSequence(problem, this@EarViewModel, noteDurationMs)
         }
     }
 
@@ -105,7 +113,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         }
 
         if (gameplay.inputMethod == InputMethod.ONSCREEN) {
-            soundPlayer!!.playNote(note.midiCode, null)
+            soundPlayer!!.playNote(note.midiCode, null, noteDurationMs)
         }
 
         if (!questionActive) {
@@ -146,7 +154,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if((!problemPlaying)&&(!rootPlaying)&&(rootNote!=null)) {
             //TODO: the following assumes that we have at least one note available, this should be checked somewhere
             rootPlaying = true
-            soundPlayer!!.playNote(rootNote!!.midiCode, this)
+            soundPlayer!!.playNote(rootNote!!.midiCode, this, noteDurationMs)
         }
     }
 
