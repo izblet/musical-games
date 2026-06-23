@@ -16,6 +16,7 @@ import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
+import com.example.musicalgames.settings.IntervalColorSettingsRepository
 import kotlin.math.roundToInt
 
 class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener {
@@ -29,21 +30,9 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
         gravity = Gravity.CENTER_HORIZONTAL
         text = ""
     }
-    private fun Interval.findColour(): Int = when(this) {
-       Interval.P1 -> 0xffffffff.toInt()
-        Interval.m2 -> 0xff00f5f8.toInt()
-        Interval.M2 -> 0xff04acff.toInt()
-        Interval.m3 -> 0xffe68400.toInt()
-        Interval.M3 -> 0xffffef00.toInt()
-        Interval.P4 -> 0xff76bbe7.toInt()
-        Interval.TT -> 0xffdcfb00.toInt()
-        Interval.P5 -> 0xff5ac400.toInt()
-        Interval.m6 -> 0xffd00051.toInt()
-        Interval.M6 -> 0xffb50c00.toInt()
-        Interval.m7 -> 0xff814eae.toInt()
-        Interval.M7 -> 0xfffc00c2.toInt()
-        Interval.P8 -> 0xffffffff.toInt()
-    }
+    // user-configurable via the Settings screen - loaded once, since there's no path from
+    // gameplay back to Settings without leaving/ending this game first
+    private val intervalColors: Map<Interval, Int> = IntervalColorSettingsRepository(context).get().colors
 
     init {
         addView(messageTextView)
@@ -107,7 +96,7 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
 
         messageTextView.text = buildSpannedString {
             append("${NoteSpelling.spell(questionNote, SpellingPreference.MIXED)} + ")
-            color(interval.findColour()) {
+            color(intervalColors.getValue(interval)) {
                 append("$interval")
             }
 

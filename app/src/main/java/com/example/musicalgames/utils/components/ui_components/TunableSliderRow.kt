@@ -1,6 +1,7 @@
 package com.example.musicalgames.utils.components.ui_components
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageButton
@@ -21,7 +22,7 @@ class TunableSliderRow @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0
-) : LinearLayout(context, attributeSet, defStyle) {
+) : LinearLayout(context, attributeSet, defStyle), EditableSettingsBlock {
 
     private val label: TextView
     private val valueText: TextView
@@ -38,17 +39,9 @@ class TunableSliderRow @JvmOverloads constructor(
     private var isEditing = false
     private var valueBeforeEdit = 0f
 
-    /** Fired when the edit button is tapped while not editing - only reachable when no other
-     * row is mid-edit, since the screen's overlay blocks every other touch until then. */
-    var onEditRequested: (() -> Unit)? = null
-
-    /** Fired when the edit button is tapped again while already editing - same "save changes?"
-     * prompt as tapping outside the row. */
-    var onEditButtonReTapped: (() -> Unit)? = null
-
-    /** Fired whenever an edit session ends, however it ended (confirmed, discarded, or reset
-     * mid-edit) - lets the screen tear down its cross-row overlay/tracking from one place. */
-    var onEditEnded: (() -> Unit)? = null
+    override var onEditRequested: (() -> Unit)? = null
+    override var onEditButtonReTapped: (() -> Unit)? = null
+    override var onEditEnded: (() -> Unit)? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_tunable_slider_row, this, true)
@@ -111,23 +104,25 @@ class TunableSliderRow @JvmOverloads constructor(
 
     fun getValue(): Float = slider.value
 
-    fun beginEdit() {
+    override fun beginEdit() {
         isEditing = true
         valueBeforeEdit = slider.value
         editButton.isActivated = true
         setControlsEnabled(true)
     }
 
-    /** Called by the screen when the user picks "Save" in the confirmation prompt. */
-    fun confirmEdit() {
+    override fun confirmEdit() {
         onCommit(slider.value)
         endEdit()
     }
 
-    /** Called by the screen when the user picks "Discard" in the confirmation prompt. */
-    fun discardEdit() {
+    override fun discardEdit() {
         setValue(valueBeforeEdit)
         endEdit()
+    }
+
+    override fun getBoundsOnScreen(outRect: Rect) {
+        getGlobalVisibleRect(outRect)
     }
 
     private fun endEdit() {

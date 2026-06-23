@@ -68,9 +68,30 @@
                 android:id="@+id/resetAllSettingsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reset all to defaults" />
+                android:text="Reset microphone settings to defaults" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Colour coding"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Customize the colours used to tell musical concepts apart."
+            android:textSize="14sp" />
+
+        <com.example.musicalgames.utils.components.ui_components.ColorCodingBlock
+            android:id="@+id/intervalColorBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
 
     </LinearLayout>
     </ScrollView>

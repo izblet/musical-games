@@ -63,6 +63,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("org.tensorflow:tensorflow-lite:2.16.1")
     implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
+    implementation("com.github.skydoves:colorpickerview:2.3.0")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

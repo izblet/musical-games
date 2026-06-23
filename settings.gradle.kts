@@ -16,6 +16,9 @@ dependencyResolutionManagement {
             url = uri("http://oss.sonatype.org/content/repositories/snapshots")
             isAllowInsecureProtocol = true
         }
+        maven { // repo for com.github.skydoves:colorpickerview
+            url = uri("https://jitpack.io")
+        }
     }
 }
 
