@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,243 +16,46 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tune how the microphone/instrument input recognises notes. These settings affect every game that uses microphone input."
+            android:text="Microphone settings"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tune how the microphone/instrument input recognises notes. These settings affect every game that uses microphone input. Tap the pencil to edit a value."
             android:textSize="14sp" />
 
-        <LinearLayout
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/energyThresholdRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:layout_marginTop="16dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/energyThresholdLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Energy threshold (noise gate)" />
-
-                <TextView
-                    android:id="@+id/energyThresholdValueText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="64dp"
-                    android:textAlignment="textEnd" />
-
-                <ImageButton
-                    android:id="@+id/energyThresholdResetButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="6dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Reset to default"
-                    android:scaleX="-1"
-                    android:src="@drawable/refresh" />
-            </LinearLayout>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/energyThresholdSlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="1000.0"
-                android:valueTo="200000.0"
-                android:stepSize="1000.0" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/maxUncertaintyRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+            android:layout_marginTop="12dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/maxUncertaintyLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Max pitch uncertainty (0.01 - 1.0)" />
-
-                <TextView
-                    android:id="@+id/maxUncertaintyValueText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="64dp"
-                    android:textAlignment="textEnd" />
-
-                <ImageButton
-                    android:id="@+id/maxUncertaintyResetButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="6dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Reset to default"
-                    android:scaleX="-1"
-                    android:src="@drawable/refresh" />
-            </LinearLayout>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/maxUncertaintySlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="0.01"
-                android:valueTo="1.0"
-                android:stepSize="0.01" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/entryThresholdPercentRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+            android:layout_marginTop="12dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/entryThresholdPercentLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Note entry confidence % (1 - 100)" />
-
-                <TextView
-                    android:id="@+id/entryThresholdPercentValueText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="64dp"
-                    android:textAlignment="textEnd" />
-
-                <ImageButton
-                    android:id="@+id/entryThresholdPercentResetButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="6dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Reset to default"
-                    android:scaleX="-1"
-                    android:src="@drawable/refresh" />
-            </LinearLayout>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/entryThresholdPercentSlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="1.0"
-                android:valueTo="100.0"
-                android:stepSize="1.0" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/exitThresholdPercentRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+            android:layout_marginTop="12dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/exitThresholdPercentLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Note exit confidence % (1 - 100)" />
-
-                <TextView
-                    android:id="@+id/exitThresholdPercentValueText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="64dp"
-                    android:textAlignment="textEnd" />
-
-                <ImageButton
-                    android:id="@+id/exitThresholdPercentResetButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="6dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Reset to default"
-                    android:scaleX="-1"
-                    android:src="@drawable/refresh" />
-            </LinearLayout>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/exitThresholdPercentSlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="1.0"
-                android:valueTo="100.0"
-                android:stepSize="1.0" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/windowMsRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/windowMsLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Recognition window (ms) (10 - 1000)" />
-
-                <TextView
-                    android:id="@+id/windowMsValueText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="64dp"
-                    android:textAlignment="textEnd" />
-
-                <ImageButton
-                    android:id="@+id/windowMsResetButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="4dp"
-                    android:padding="6dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Reset to default"
-                    android:scaleX="-1"
-                    android:src="@drawable/refresh" />
-            </LinearLayout>
-
-            <com.google.android.material.slider.Slider
-                android:id="@+id/windowMsSlider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="10.0"
-                android:valueTo="1000.0"
-                android:stepSize="10.0" />
-        </LinearLayout>
+            android:layout_marginTop="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -263,14 +70,16 @@
                 android:layout_height="wrap_content"
                 android:text="Reset all to defaults" />
 
-            <Button
-                android:id="@+id/saveSettingsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Save" />
-
         </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <View
+        android:id="@+id/editBlockOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>
