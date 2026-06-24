@@ -65,14 +65,14 @@ object GameMap {
         GameRegistration(
             game = Game.MENTAL_INTERVALS,
             info = GameInfo("Note Arithmetic", "Practice relationships between notes", R.drawable.mental),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { MentalGameFactory() },
             serialization = GameSerialization(MentalLevel::class, "mental"),
         ),
         GameRegistration(
             game = Game.CIRCLE,
             info = GameInfo("Circle of Fifths", "Learn the positions of scales on the circle of fifths", R.drawable.clock_icon),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { CircleGameFactory() },
             serialization = GameSerialization(CircleLevel::class, "circle"),
             portrait = true,

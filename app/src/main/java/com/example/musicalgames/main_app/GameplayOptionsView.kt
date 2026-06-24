@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
 import com.example.musicalgames.game.game_core.InputMethod
+import com.example.musicalgames.game.game_core.creation.Level
 
 /**
  * Shows whichever of a game's supported [GameplayOptions] have a rendered control today, and
@@ -20,7 +21,7 @@ import com.example.musicalgames.game.game_core.InputMethod
  * option wants the exact same control for it, there's no per-game/per-option domain variation
  * here to justify subclassing the way CustomGameCreator's level-editing UI needs to.
  */
-class GameplayOptionsView(context: Context, options: Set<GameplayOptions>) : LinearLayout(context) {
+class GameplayOptionsView(context: Context, options: Set<GameplayOptions>, level: Level?) : LinearLayout(context) {
 
     private var bpmEditText: EditText? = null
     private var inputMethodButtons: Map<InputMethod, RadioButton> = emptyMap()
@@ -44,7 +45,7 @@ class GameplayOptionsView(context: Context, options: Set<GameplayOptions>) : Lin
             addView(row)
         }
 
-        if (GameplayOptions.INPUT_METHOD in options) {
+        if (GameplayOptions.INPUT_METHOD in options && (level == null || level.supportsMicrophoneInput())) {
             val label = TextView(context).apply { text = "Input method:" }
             val group = RadioGroup(context).apply { orientation = HORIZONTAL }
             val buttons = InputMethod.entries.associateWith { method ->

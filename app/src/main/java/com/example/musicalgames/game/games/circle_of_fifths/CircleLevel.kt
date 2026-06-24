@@ -8,4 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class CircleLevel(
     val positionToName: Boolean,
     val modes: List<Mode>
-) : Level()
+) : Level() {
+    override fun supportsMicrophoneInput(): Boolean = positionToName
+}

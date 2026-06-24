@@ -209,6 +209,7 @@ class FragmentLevelOptions : Fragment() {
             }
             controller.saveParamsEdit(newLevel)
             refreshUI()
+            rebuildOptionsView()
             resetEditActions()
         }
 
@@ -250,6 +251,16 @@ class FragmentLevelOptions : Fragment() {
         }
     }
 
+    //rebuilds the input-method/bpm controls from the current level - the available options can
+    //change after editing a custom level's params (e.g. flipping a question direction), so this
+    //is called both on initial creation and after a params edit is saved
+    private fun rebuildOptionsView() {
+        binding.gameplayOptionsContainer.removeAllViews()
+        val options = controller.game?.let { GameMap.gameplayOptions[it] } ?: emptySet()
+        optionsView = GameplayOptionsView(requireContext(), options, controller.level)
+        binding.gameplayOptionsContainer.addView(optionsView)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -278,9 +289,7 @@ class FragmentLevelOptions : Fragment() {
 
         refreshUI()
 
-        val options = game?.let { GameMap.gameplayOptions[it] } ?: emptySet()
-        optionsView = GameplayOptionsView(requireContext(), options)
-        binding.gameplayOptionsContainer.addView(optionsView)
+        rebuildOptionsView()
 
         binding.startGameButton.setOnClickListener {
             attemptStartGame()

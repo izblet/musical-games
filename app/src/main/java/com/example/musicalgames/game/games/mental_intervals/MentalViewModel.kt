@@ -3,24 +3,36 @@ package com.example.musicalgames.games.mental_intervals
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
+import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MentalViewModel : ViewModel() {
 
+    var gameplay: GamePlayInstance = GamePlayInstance()
+        private set
+
     fun setLevel(level: Level, gameplay: GamePlayInstance) {
+        this.gameplay = gameplay
         waitTime = (2*60*1000/gameplay.bpm).toLong()
         this._level = level as MentalLevel
         availableNotes = this.level.startingNotes
         availableIntervals = this.level.intervals
         _type = this.level.mode
     }
+
+    private var _noteInputSource: ChromaticNoteInputSource? = null
+    private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
+    fun setNoteInput(source: ChromaticNoteInputSource) { _noteInputSource = source }
 
     private var _level: MentalLevel? = null
     val level get() = _level!!
@@ -47,7 +59,13 @@ class MentalViewModel : ViewModel() {
     fun registerUI(ui: MentalViewmodelListener) { _UI = ui }
     private val UI get() = _UI!!
 
-    fun startGame() { generateQuestion() }
+    fun startGame() {
+        generateQuestion()
+        noteInputSource.start()
+        viewModelScope.launch {
+            noteInputSource.noteSelected.collect { note -> select(note) }
+        }
+    }
 
     private fun getRandomInterval():Interval {
         val i = Random.nextInt(availableIntervals!!.size)
@@ -73,7 +91,7 @@ class MentalViewModel : ViewModel() {
 
     }
     fun select(note: ChromaticNote) {
-        if(disabled)
+        if(disabled || type != Type.INTERVAL_NOTE)
             return
 
         if (note == this.note) {
@@ -110,5 +128,10 @@ class MentalViewModel : ViewModel() {
         Handler(Looper.getMainLooper()).postDelayed({
             endListener?.onGameEnded()
         }, waitTime)
+    }
+
+    fun releaseNoteInput() {
+        _noteInputSource?.stop()
+        (_noteInputSource as? MicrophoneChromaticNoteInput)?.release()
     }
 }

@@ -5,6 +5,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
+import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
+import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.ChromaticNote
@@ -35,6 +38,12 @@ class CircleViewModel: ViewModel(), GameController {
 
     private var waitLen:Long =1000
 
+    var gameplay: GamePlayInstance = GamePlayInstance()
+
+    private var _noteInputSource: ChromaticNoteInputSource? = null
+    private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
+    fun setNoteInput(source: ChromaticNoteInputSource) { _noteInputSource = source }
+
     fun setLogic(logic: GameLogicCircle) {
         _gameLogic = logic
     }
@@ -56,6 +65,10 @@ class CircleViewModel: ViewModel(), GameController {
            throw IllegalStateException("Game failed to start or game length 0")
         }
 
+        noteInputSource.start()
+        viewModelScope.launch {
+            noteInputSource.noteSelected.collect { note -> clickNote(note) }
+        }
     }
     private fun newQuestionCircleToNote() {
         val newState = _viewState.value.copy(
@@ -152,7 +165,8 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     override fun endGame() {
-        //TODO("Not yet implemented")
+        _noteInputSource?.stop()
+        (_noteInputSource as? MicrophoneChromaticNoteInput)?.release()
     }
 
     override fun getScore(): Int {

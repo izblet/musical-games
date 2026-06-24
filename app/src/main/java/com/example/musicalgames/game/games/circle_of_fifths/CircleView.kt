@@ -11,10 +11,9 @@ import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palet
 import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CirclePaletteListener
 import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteView
-import com.example.musicalgames.music_model.ChromaticNote
 import kotlinx.coroutines.launch
 
-class CircleView(context: Context, private val viewModel: CircleViewModel, lifecycleOwner: LifecycleOwner) : LinearLayout(context), CirclePaletteListener, KeyPaletteListener {
+class CircleView(context: Context, private val viewModel: CircleViewModel, lifecycleOwner: LifecycleOwner) : LinearLayout(context), CirclePaletteListener {
     private val circle = CircleOfFifthsPalette(context, null)
     private val keyboard = KeyPaletteView(context)
     private val textView = TextView(context)
@@ -25,7 +24,6 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
         textView.textSize = 40f
         textView.gravity = Gravity.CENTER
 
-        keyboard.registerListener(this)
         keyboard.visibility = View.GONE
 
         addView(circle, LayoutParams(LayoutParams.MATCH_PARENT, 0, 3f))
@@ -51,8 +49,8 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
         viewModel.clickCircle(index)
     }
 
-    override fun onClicked(note: ChromaticNote) {
-        viewModel.clickNote(note)
+    fun setKeyboardListener(listener: KeyPaletteListener) {
+        keyboard.registerListener(listener)
     }
 
 }
