@@ -79,6 +79,20 @@ class FragmentSettings : Fragment() {
             format = { it.toLong().toString() },
             onCommit = { value -> updateMicSettings { it.copy(windowMs = value.toLong()) } }
         )
+        binding.onsetRiseFactorRow.configure(
+            label = "Onset sensitivity (rise factor) (1.2 - 5.0)",
+            valueFrom = 1.2f, valueTo = 5f, stepSize = 0.1f,
+            defaultValue = MicrophoneSettings.DEFAULT_ONSET_RISE_FACTOR,
+            format = { "%.1fx".format(it) },
+            onCommit = { value -> updateMicSettings { it.copy(onsetRiseFactor = value) } }
+        )
+        binding.onsetRefractoryMsRow.configure(
+            label = "Onset refractory period (ms) (20 - 500)",
+            valueFrom = 20f, valueTo = 500f, stepSize = 10f,
+            defaultValue = MicrophoneSettings.DEFAULT_ONSET_REFRACTORY_MS.toFloat(),
+            format = { it.toLong().toString() },
+            onCommit = { value -> updateMicSettings { it.copy(onsetRefractoryMs = value.toLong()) } }
+        )
         binding.intervalColorBlock.configure(
             title = "Intervals",
             keys = Interval.entries.map { it.name },
@@ -108,6 +122,8 @@ class FragmentSettings : Fragment() {
         binding.entryThresholdPercentRow,
         binding.exitThresholdPercentRow,
         binding.windowMsRow,
+        binding.onsetRiseFactorRow,
+        binding.onsetRefractoryMsRow,
         binding.intervalColorBlock
     )
 
@@ -232,6 +248,8 @@ class FragmentSettings : Fragment() {
         binding.entryThresholdPercentRow.setValue(settings.entryThresholdPercent.toFloat())
         binding.exitThresholdPercentRow.setValue(settings.exitThresholdPercent.toFloat())
         binding.windowMsRow.setValue(settings.windowMs.toFloat())
+        binding.onsetRiseFactorRow.setValue(settings.onsetRiseFactor)
+        binding.onsetRefractoryMsRow.setValue(settings.onsetRefractoryMs.toFloat())
     }
 
     private fun resetMicSettings() {

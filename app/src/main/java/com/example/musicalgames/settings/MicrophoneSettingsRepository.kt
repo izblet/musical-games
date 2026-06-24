@@ -12,7 +12,9 @@ class MicrophoneSettingsRepository(context: Context) {
             maxUncertainty = prefs.getFloat(KEY_MAX_UNCERTAINTY, defaults.maxUncertainty),
             entryThresholdPercent = prefs.getInt(KEY_ENTRY_THRESHOLD_PERCENT, defaults.entryThresholdPercent),
             exitThresholdPercent = prefs.getInt(KEY_EXIT_THRESHOLD_PERCENT, defaults.exitThresholdPercent),
-            windowMs = prefs.getLong(KEY_WINDOW_MS, defaults.windowMs)
+            windowMs = prefs.getLong(KEY_WINDOW_MS, defaults.windowMs),
+            onsetRiseFactor = prefs.getFloat(KEY_ONSET_RISE_FACTOR, defaults.onsetRiseFactor),
+            onsetRefractoryMs = prefs.getLong(KEY_ONSET_REFRACTORY_MS, defaults.onsetRefractoryMs)
         )
     }
 
@@ -23,6 +25,8 @@ class MicrophoneSettingsRepository(context: Context) {
             .putInt(KEY_ENTRY_THRESHOLD_PERCENT, settings.entryThresholdPercent)
             .putInt(KEY_EXIT_THRESHOLD_PERCENT, settings.exitThresholdPercent)
             .putLong(KEY_WINDOW_MS, settings.windowMs)
+            .putFloat(KEY_ONSET_RISE_FACTOR, settings.onsetRiseFactor)
+            .putLong(KEY_ONSET_REFRACTORY_MS, settings.onsetRefractoryMs)
             .apply()
     }
 
@@ -35,5 +39,7 @@ class MicrophoneSettingsRepository(context: Context) {
         private const val KEY_ENTRY_THRESHOLD_PERCENT = "microphone_entry_threshold_percent"
         private const val KEY_EXIT_THRESHOLD_PERCENT = "microphone_exit_threshold_percent"
         private const val KEY_WINDOW_MS = "microphone_window_ms"
+        private const val KEY_ONSET_RISE_FACTOR = "microphone_onset_rise_factor"
+        private const val KEY_ONSET_REFRACTORY_MS = "microphone_onset_refractory_ms"
     }
 }

@@ -29,12 +29,18 @@ class MicrophoneNoteInput(
 
         /** Builds a [MicrophoneNoteInput] whose [MicrophoneNoteDetector] is configured from [settings]. */
         fun withSettings(pitchRecogniser: PitchRecogniser, settings: MicrophoneSettings): MicrophoneNoteInput {
+            val onsetDetector = OnsetDetector(
+                energyFloor = settings.energyThreshold.toFloat(),
+                riseFactor = settings.onsetRiseFactor,
+                refractoryMs = settings.onsetRefractoryMs
+            )
             val detector = MicrophoneNoteDetector(
                 minWindowSize = (settings.windowMs / POLL_RATE_MS
                     * MicrophoneNoteDetector.DEFAULT_MIN_WINDOW_SIZE_PERCENT / 100).toInt(),
                 entryThresholdPercent = settings.entryThresholdPercent,
                 windowMs = settings.windowMs,
-                exitThresholdPercent = settings.exitThresholdPercent
+                exitThresholdPercent = settings.exitThresholdPercent,
+                onsetDetector = onsetDetector
             )
             return MicrophoneNoteInput(pitchRecogniser, detector)
         }
@@ -51,12 +57,13 @@ class MicrophoneNoteInput(
         pitchRecogniser.start()
         pollJob = scope.launch {
             // fixed-rate scheduling: track an absolute next-tick target and delay only the
-            // remainder, so getPitch()/onPitchSample()'s own (small) duration doesn't add up
+            // remainder, so getPitch()/onSample()'s own (small) duration doesn't add up
             // on top of pollRateMs each iteration.
             var nextTick = System.currentTimeMillis()
             while (true) {
                 val pitch = pitchRecogniser.getPitch().takeIf { it != PitchRecogniser.UNDEFINED }
-                val note = detector.onPitchSample(pitch, System.currentTimeMillis())
+                val energy = pitchRecogniser.getEnergy()
+                val note = detector.onSample(pitch, energy, System.currentTimeMillis())
                 // emit() suspends until the collector is ready
                 if (note != null) {
                     _noteSelected.emit(note)

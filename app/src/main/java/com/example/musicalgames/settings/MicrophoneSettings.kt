@@ -12,7 +12,9 @@ data class MicrophoneSettings(
     val maxUncertainty: Float = DEFAULT_MAX_UNCERTAINTY,
     val entryThresholdPercent: Int = DEFAULT_ENTRY_THRESHOLD_PERCENT,
     val exitThresholdPercent: Int = DEFAULT_EXIT_THRESHOLD_PERCENT,
-    val windowMs: Long = DEFAULT_WINDOW_MS
+    val windowMs: Long = DEFAULT_WINDOW_MS,
+    val onsetRiseFactor: Float = DEFAULT_ONSET_RISE_FACTOR,
+    val onsetRefractoryMs: Long = DEFAULT_ONSET_REFRACTORY_MS
 ) {
     companion object {
         const val DEFAULT_ENERGY_THRESHOLD = 30000
@@ -20,5 +22,9 @@ data class MicrophoneSettings(
         const val DEFAULT_ENTRY_THRESHOLD_PERCENT = 95
         const val DEFAULT_EXIT_THRESHOLD_PERCENT = 10
         const val DEFAULT_WINDOW_MS = 300L
+        //instant energy must clear this multiple of the adaptive baseline to count as an attack
+        const val DEFAULT_ONSET_RISE_FACTOR = 2.0f
+        //minimum gap between onsets, to debounce vibrato/tremolo within one attack
+        const val DEFAULT_ONSET_REFRACTORY_MS = 120L
     }
 }

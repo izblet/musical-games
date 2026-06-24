@@ -5,7 +5,7 @@ import com.example.musicalgames.music_model.Note
 import kotlin.math.roundToInt
 
 /**
- * Turns a stream of raw microphone pitch samples into discrete, edge-triggered
+ * Turns a stream of raw microphone pitch+energy samples into discrete, edge-triggered
  * note-onset events: returns a [Note] exactly once when that note becomes the
  * dominant pitch over a trailing time window, and null on every other sample
  * (including while a note remains dominant, or while nothing clears the
@@ -13,15 +13,19 @@ import kotlin.math.roundToInt
  *
  * Recognition rule: a note is "recognised" once it accounts for more than
  * [entryThresholdPercent]% of the samples within the trailing [windowMs]
- * milliseconds; once recognised, it stays recognised until its share of the
- * window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]).
- * Pitch is snapped to the nearest chromatic note.
+ * milliseconds; once recognised, it stays recognised until EITHER its share of
+ * the window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]),
+ * OR [onsetDetector] reports a fresh attack - so a note that's re-attacked (sung/played
+ * again with no pitch change and no silence gap) is cleared and immediately re-recognised,
+ * instead of only ever clearing via prevalence decay. Pitch is snapped to the nearest
+ * chromatic note.
  */
 class MicrophoneNoteDetector(
     private val minWindowSize: Int,
     private val entryThresholdPercent: Int,
     private val windowMs: Long,
-    private val exitThresholdPercent: Int
+    private val exitThresholdPercent: Int,
+    private val onsetDetector: OnsetDetector
 ) {
     companion object {
         //suggested fraction of the caller's own expected window size (it knows the actual
@@ -40,18 +44,26 @@ class MicrophoneNoteDetector(
     //for each frequency, we keep a mutable set of notes with this frequency (update in time log n)
     private val countsByFrequency = java.util.TreeMap<Int, MutableSet<Note>>()
 
-    /** Feed one raw pitch sample (null = no clear pitch this sample, e.g. silence). */
-    fun onPitchSample(spicePitch: Float?, timestampMs: Long): Note? {
+    /** Feed one raw pitch+energy sample (null pitch = no clear pitch this sample, e.g. silence). */
+    fun onSample(spicePitch: Float?, energy: Float, timestampMs: Long): Note? {
         val note = spicePitch?.let(::snapToNearestNote)
         window.addLast(Sample(timestampMs, note))
         note?.let(::incrementCount)
         evictOldSamples(timestampMs)
 
+        val onsetFired = onsetDetector.onEnergySample(energy, timestampMs)
+
         val current = recognisedNote
-        if (current != null && !meetsThreshold(counts[current.midiCode], exitThresholdPercent)) {
-            recognisedNote = null
-            purgeNote(current)
-            return null
+        if (current != null) {
+            val decayed = !meetsThreshold(counts[current.midiCode], exitThresholdPercent)
+            if (decayed || onsetFired) {
+                recognisedNote = null
+                //decay means the note has genuinely left the window - purge it. An attack-
+                //triggered clear leaves counts untouched: the audio hasn't changed, so the same
+                //note is still dominant and should immediately re-qualify on the next sample.
+                if (decayed) purgeNote(current)
+                return null
+            }
         }
 
         if (recognisedNote == null && window.size >= minWindowSize) {
