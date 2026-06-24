@@ -17,8 +17,13 @@ import kotlin.math.roundToInt
  * the window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]),
  * OR [onsetDetector] reports a fresh attack - so a note that's re-attacked (sung/played
  * again with no pitch change and no silence gap) is cleared and immediately re-recognised,
- * instead of only ever clearing via prevalence decay. Pitch is snapped to the nearest
- * chromatic note.
+ * instead of only ever clearing via prevalence decay. Either way, the note being left has its
+ * own samples purged from the window, not just its recognised-flag cleared: an onset reacts on
+ * transient-time, well before the window's own vote has caught up, so leaving its stale samples
+ * in place would let the entry-check immediately hand back the note being left rather than the
+ * one being attacked, whenever the attack is actually a pitch change. Only that note's samples
+ * are purged (not the whole window), so any evidence already accumulating for a genuinely new
+ * note is preserved rather than thrown away. Pitch is snapped to the nearest chromatic note.
  */
 class MicrophoneNoteDetector(
     private val minWindowSize: Int,
@@ -58,10 +63,14 @@ class MicrophoneNoteDetector(
             val decayed = !meetsThreshold(counts[current.midiCode], exitThresholdPercent)
             if (decayed || onsetFired) {
                 recognisedNote = null
-                //decay means the note has genuinely left the window - purge it. An attack-
-                //triggered clear leaves counts untouched: the audio hasn't changed, so the same
-                //note is still dominant and should immediately re-qualify on the next sample.
-                if (decayed) purgeNote(current)
+                //purge the note being left either way (not the whole window): decay means it
+                //genuinely left the window, and an onset means we can't trust its still-high
+                //count as the answer for what comes next, since the window's vote lags behind
+                //the onset's transient-time reaction. Purging only this note (rather than
+                //everything) keeps any evidence already accumulating for a different, genuinely
+                //new note intact, so a pitch-change attack can still be recognised as soon as
+                //its own count qualifies, not after a full rebuild from empty.
+                purgeNote(current)
                 return null
             }
         }

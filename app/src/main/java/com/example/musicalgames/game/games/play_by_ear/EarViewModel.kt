@@ -40,6 +40,9 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     private var index : Int = 0
     var score = 0
     private var questionActive = false
+    //distinguishes "no problem asked yet" from "problem finished" - both leave questionActive
+    //false, but only the latter should count as problemFinished()
+    private var problemStarted = false
 
     private val _renderState = MutableStateFlow(EarRenderState())
     val renderState: StateFlow<EarRenderState> = _renderState.asStateFlow()
@@ -78,6 +81,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         _renderState.value = _renderState.value.copy(message = "Play the melody")
         index = 0
         questionActive = true
+        problemStarted = true
         generateProblem()
         playProblem()
     }
@@ -120,7 +124,8 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             return
         }
         if (problem[index] != note) {
-            _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}.")
+            val playedNote = NoteSpelling.spell(note, SpellingPreference.SHARPS)
+            _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}. You played $playedNote.")
             questionActive = false
             return
         }
@@ -133,7 +138,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     }
 
     fun problemFinished() : Boolean {
-        return !questionActive
+        return problemStarted && !questionActive
     }
 
     private fun getRandomNote(): Note {
