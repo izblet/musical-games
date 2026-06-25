@@ -54,4 +54,13 @@ class OnsetDetector(
         if (isOnset) lastOnsetMs = timestampMs
         return isOnset
     }
+
+    /** Clears all tracked state - for a caller that knows recent energy readings shouldn't
+     * influence what counts as a "rise" going forward (e.g. they were the caller's own speaker
+     * output, not the input being listened for). */
+    fun reset() {
+        baseline = 0f
+        lastOnsetMs = 0
+        lastSampleMs = null
+    }
 }

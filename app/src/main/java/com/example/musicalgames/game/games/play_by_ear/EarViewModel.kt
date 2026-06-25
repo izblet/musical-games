@@ -19,7 +19,11 @@ import kotlin.math.abs
 
 data class EarRenderState(
     val message: String = "",
-    val keyboardEnabled: Boolean = false
+    val keyboardEnabled: Boolean = false,
+    //true for the whole time the root note or melody is sounding aloud - the controller watches
+    //this to know when to stop forwarding input (and, on the falling edge, when to reset/cooldown
+    //the input source) rather than this view model making any input-trust decisions itself
+    val playbackActive: Boolean = false
 )
 
 class EarViewModel() : ViewModel(), SoundPlayerListener {
@@ -54,22 +58,11 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     val renderState: StateFlow<EarRenderState> = _renderState.asStateFlow()
 
     private var soundPlayer: DefaultSoundPlayerManager? = null
+    //still tracked locally (not just via renderState) so playRoot()/playProblem() can guard
+    //against re-triggering playback while already playing - a game-logic concern, distinct from
+    //whether input should be trusted right now, which the controller decides for itself
     private var rootPlaying = false
     private var problemPlaying = false
-
-    //after audio playback "finishes", the mic can still be hearing the tail of it for a bit -
-    //both the detector's own trailing window and any hardware/acoustic latency beyond that - so
-    //EXTERNAL_INSTRUMENT input is ignored for a further cooldown past onPlaybackFinished(),
-    //long enough to outlast the detector's window with a small safety margin. The window itself
-    //is a tunable microphone setting, so the caller must report its actual configured value via
-    //setMicrophoneWindowMs() - this can't default to a fixed value without risking drifting out
-    //of sync with whatever window size is actually configured.
-    private var externalInstrumentSettleMs = 0L
-    private var acceptExternalInputAfterMs = 0L
-
-    fun setMicrophoneWindowMs(windowMs: Long) {
-        externalInstrumentSettleMs = windowMs + SETTLE_SAFETY_MARGIN_MS
-    }
 
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
@@ -104,24 +97,16 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
 
     private fun playProblem() {
         problemPlaying = true
-        _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false)
+        _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false, playbackActive = true)
         viewModelScope.launch {
             soundPlayer!!.playSequence(problem, this@EarViewModel, noteDurationMs)
         }
     }
 
+    //the controller is responsible for not calling this at all while playback is active or
+    //during its post-playback cooldown (see EarRenderState.playbackActive) - this is purely
+    //game logic now, not an input-trust decision
     fun selectNote(note: Note) {
-        //while the root note or the melody is playing aloud, ignore any input entirely - this
-        //matters most for EXTERNAL_INSTRUMENT, where the mic is already listening at this point
-        //and would otherwise pick up the device's own speaker output and "answer" the melody
-        //with itself
-        if (rootPlaying || problemPlaying) {
-            return
-        }
-        if (gameplay.inputMethod == InputMethod.EXTERNAL_INSTRUMENT && System.currentTimeMillis() < acceptExternalInputAfterMs) {
-            return
-        }
-
         if (gameplay.inputMethod == InputMethod.ONSCREEN) {
             soundPlayer!!.playNote(note.midiCode, null, noteDurationMs)
         }
@@ -136,11 +121,11 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             questionActive = false
             return
         }
+        screenHighlighter?.correct()
         index++
         if (index == problem.size) {
             questionActive = false
             score++
-            screenHighlighter?.correct()
             _renderState.value = _renderState.value.copy(message = "Good!")
         }
     }
@@ -159,14 +144,14 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         } else if(problemPlaying) {
             problemPlaying = false
         }
-        acceptExternalInputAfterMs = System.currentTimeMillis() + externalInstrumentSettleMs
-        _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = "Play the melody")
+        _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = "Play the melody", playbackActive = false)
     }
 
     fun playRoot() {
         if((!problemPlaying)&&(!rootPlaying)&&(rootNote!=null)) {
             //TODO: the following assumes that we have at least one note available, this should be checked somewhere
             rootPlaying = true
+            _renderState.value = _renderState.value.copy(playbackActive = true)
             soundPlayer!!.playNote(rootNote!!.midiCode, this, noteDurationMs)
         }
     }
@@ -175,9 +160,5 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if(index<problem.size)
             return NoteSpelling.spell(problem[index], SpellingPreference.SHARPS)
         return ""
-    }
-
-    companion object {
-        private const val SETTLE_SAFETY_MARGIN_MS = 200L
     }
 }

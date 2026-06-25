@@ -81,7 +81,6 @@ class EarGameFactory : GameFactory {
                 val minNote = NoteSpelling.spell(Note(level.minPitchDisplayed), SpellingPreference.SHARPS)
                 val maxNote = NoteSpelling.spell(Note(level.maxPitchDisplayed), SpellingPreference.SHARPS)
                 val micSettings = MicrophoneSettingsRepository(context).get()
-                viewModel.setMicrophoneWindowMs(micSettings.windowMs)
                 val pitchRecogniser = PitchRecogniser(
                     context, minNote, maxNote,
                     micSettings.energyThreshold, micSettings.maxUncertainty

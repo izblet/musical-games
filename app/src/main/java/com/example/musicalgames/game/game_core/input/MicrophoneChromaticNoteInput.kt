@@ -13,6 +13,9 @@ class MicrophoneChromaticNoteInput(private val delegate: MicrophoneNoteInput) : 
 
     override fun start() = delegate.start()
     override fun stop() = delegate.stop()
+    override fun reset() = delegate.reset()
+    override fun mute() = delegate.mute()
+    override fun unmuteWhenQuiet() = delegate.unmuteWhenQuiet()
 
     //TODO: must be wired into the game's endGame(), same as MicrophoneNoteInput.release() itself.
     fun release() = delegate.release()

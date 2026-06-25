@@ -12,4 +12,13 @@ interface ChromaticNoteInputSource {
 
     fun start()
     fun stop()
+
+    /** See [NoteInputSource.reset]. No-op by default. */
+    fun reset() {}
+
+    /** See [NoteInputSource.mute]. No-op by default. */
+    fun mute() {}
+
+    /** See [NoteInputSource.unmuteWhenQuiet]. No-op by default. */
+    fun unmuteWhenQuiet() {}
 }

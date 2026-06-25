@@ -92,6 +92,18 @@ class MicrophoneNoteDetector(
         return null
     }
 
+    /** Discards whatever is currently being recognised, without reporting it - for a caller
+     * that knows the recent input shouldn't count (e.g. it overlapped the caller's own
+     * speaker playback), so a stale recognition can't surface later as a misleading report
+     * once it happens to clear. */
+    fun reset() {
+        recognisedNote = null
+        window.clear()
+        counts.fill(0)
+        countsByFrequency.clear()
+        onsetDetector.reset()
+    }
+
     private fun purgeNote(note: Note) {
         window.removeAll { it.note == note }
         val count = counts[note.midiCode]

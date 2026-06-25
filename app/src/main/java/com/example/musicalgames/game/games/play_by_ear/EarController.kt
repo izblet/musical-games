@@ -40,8 +40,33 @@ class EarController(
     override fun startGame(owner: LifecycleOwner) {
         noteInputSource.start()
         viewModel.rootNote?.let { confirmGesture.setTrigger(it) }
+
+        //the input source is reported a note once it's *finished*, not when it starts - so
+        //anything it picked up from our own speaker during playback could otherwise sit "held"
+        //and only surface later as a misleading report once cleared. Mute as soon as we start
+        //talking (the rising edge) so the source stops paying attention to whatever it hears for
+        //the whole time, not just cleaning up after - but only arm the auto-resume once we're
+        //truly done (the falling edge): playbackActive stays true for an entire multi-note
+        //sequence (e.g. a melody), and the ordinary silent gaps *between* its notes would
+        //otherwise look like "done" to a countdown armed too early, resuming mid-sequence.
+        owner.lifecycleScope.launch {
+            var wasPlaybackActive = false
+            viewModel.renderState.collect { state ->
+                if (state.playbackActive && !wasPlaybackActive) {
+                    noteInputSource.mute()
+                } else if (!state.playbackActive && wasPlaybackActive) {
+                    noteInputSource.unmuteWhenQuiet()
+                }
+                wasPlaybackActive = state.playbackActive
+            }
+        }
+
         owner.lifecycleScope.launch {
             noteInputSource.noteSelected.collect { note ->
+                if (viewModel.renderState.value.playbackActive) {
+                    return@collect
+                }
+
                 val wasFinished = viewModel.problemFinished()
                 viewModel.selectNote(note)
                 if (wasFinished) {
