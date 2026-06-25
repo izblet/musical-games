@@ -29,7 +29,7 @@ import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 
 class EarGameFactory : GameFactory {
 
@@ -81,9 +81,9 @@ class EarGameFactory : GameFactory {
                 val minNote = NoteSpelling.spell(Note(level.minPitchDisplayed), SpellingPreference.SHARPS)
                 val maxNote = NoteSpelling.spell(Note(level.maxPitchDisplayed), SpellingPreference.SHARPS)
                 val micSettings = MicrophoneSettingsRepository(context).get()
-                val pitchRecogniser = PitchRecogniser(
+                val pitchRecogniser = SwiftF0PitchRecogniser(
                     context, minNote, maxNote,
-                    micSettings.energyThreshold, micSettings.maxUncertainty
+                    micSettings.energyThreshold, micSettings.minConfidence
                 )
                 MicrophoneNoteInput.withSettings(pitchRecogniser, micSettings)
             }

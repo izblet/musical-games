@@ -2,7 +2,6 @@ package com.example.musicalgames.game.game_core.input
 
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.settings.MicrophoneSettings
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,13 +14,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 /**
- * Reads notes played/sung into an external instrument or voice, via a [PitchRecogniser]
+ * Reads notes played/sung into an external instrument or voice, via a [PitchSource]
  * polled on its own coroutine and turned into discrete [NoteEvent]s by a [MicrophoneNoteDetector]
  * - exposed as two separate streams ([noteStarted]/[noteFinished]) so each caller can pick
  * whichever timing it actually wants, rather than this class deciding for everyone.
  */
 class MicrophoneNoteInput(
-    private val pitchRecogniser: PitchRecogniser,
+    private val pitchRecogniser: PitchSource,
     private val detector: MicrophoneNoteDetector,
     private val quietEnergyFloor: Float
 ) : NoteInputSource {
@@ -36,7 +35,7 @@ class MicrophoneNoteInput(
         private const val QUIET_CONFIRM_MS = 250L
 
         /** Builds a [MicrophoneNoteInput] whose [MicrophoneNoteDetector] is configured from [settings]. */
-        fun withSettings(pitchRecogniser: PitchRecogniser, settings: MicrophoneSettings): MicrophoneNoteInput {
+        fun withSettings(pitchRecogniser: PitchSource, settings: MicrophoneSettings): MicrophoneNoteInput {
             val onsetDetector = OnsetDetector(
                 energyFloor = settings.energyThreshold.toFloat(),
                 riseFactor = settings.onsetRiseFactor,
@@ -83,7 +82,7 @@ class MicrophoneNoteInput(
             // on top of pollRateMs each iteration.
             var nextTick = System.currentTimeMillis()
             while (true) {
-                val pitch = pitchRecogniser.getPitch().takeIf { it != PitchRecogniser.UNDEFINED }
+                val pitch = pitchRecogniser.getPitch().takeIf { it != PitchSource.UNDEFINED }
                 val energy = pitchRecogniser.getEnergy()
                 val now = System.currentTimeMillis()
 

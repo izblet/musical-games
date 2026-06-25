@@ -3,6 +3,7 @@ package com.example.musicalgames.utils.wrappers.sound_recording
 import android.content.Context
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.input.PitchSource
+import com.example.musicalgames.music_model.Note
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,20 +16,30 @@ import kotlinx.coroutines.runBlocking
 import com.example.musicalgames.music_model.MusicUtil as MU
 import kotlin.math.pow
 
-class PitchRecogniser (context: Context,
-                       minRecognised: String, maxRecognised: String,
-                       private val energyThreshold: Int,
-                       private val maxUncertainty: Float) : PitchSource {
-    private var SPICE: SPICEModelManager? = null
+/**
+ * [PitchSource] backed by SwiftF0 (https://github.com/lars76/swift-f0) rather than SPICE -
+ * same polling shape as [PitchRecogniser], but the model already returns Hz and a 0-1
+ * confidence directly (no fixed-size arrays, no bin-calibration decode), so filtering happens
+ * in Hz/confidence space before the single surviving value is converted into the same "spice"
+ * unit [PitchRecogniser] returns, so downstream code (MicrophoneNoteDetector etc.) doesn't
+ * need to know which model produced it.
+ */
+class SwiftF0PitchRecogniser(
+    context: Context,
+    minRecognised: String, maxRecognised: String,
+    private val energyThreshold: Int,
+    private val minConfidence: Float
+) : PitchSource {
+    private var swiftF0: SwiftF0ModelManager? = null
     private var microphone: MicrophoneManager? = null
 
-    val minPitch = MU.spice(minRecognised)
-    val maxPitch = MU.spice(maxRecognised)
+    private val minPitchHz = Note.parse(minRecognised)!!.frequency
+    private val maxPitchHz = Note.parse(maxRecognised)!!.frequency
 
-    private var updateRateMS =1000L/60
+    private var updateRateMS = 1000L / 60
     private var isActive = false
 
-    private val recogniserScope = CoroutineScope(SupervisorJob()+Dispatchers.Default)
+    private val recogniserScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var updateJob: Job? = null
 
     @Volatile
@@ -37,21 +48,18 @@ class PitchRecogniser (context: Context,
     private var lastFastEnergy: Float = 0f
 
     init {
-        SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
+        swiftF0 = SwiftF0ModelManager.fromAssets(context, context.getString(R.string.swiftf0_model))
         microphone = MicrophoneManager()
     }
 
     companion object {
-        const val UNDEFINED=-1f
         //trailing slice of the 200ms buffer used for the fast/local energy reading that feeds
-        //onset detection - short enough that a real attack's energy rise shows up almost
-        //immediately, instead of being smeared across the whole (much longer) pitch buffer
+        //onset detection - mirrors PitchRecogniser's own constant of the same name
         private const val FAST_ENERGY_WINDOW_SAMPLES = 320 //20ms @ 16kHz
     }
 
-
     override fun getPitch(): Float {
-        return lastPitchSpice ?: UNDEFINED
+        return lastPitchSpice ?: PitchSource.UNDEFINED
     }
 
     /** Fast, local energy reading (last ~20ms), for onset detection - distinct from the
@@ -74,42 +82,36 @@ class PitchRecogniser (context: Context,
     }
 
     private fun recognizePitch(buffer: ShortArray): Float? {
-
-        if(calculateEnergy(buffer)< energyThreshold)
+        if (calculateEnergy(buffer) < energyThreshold)
             return null
 
         val maxAbsValue = Short.MAX_VALUE.toFloat()
-        val audioData :FloatArray = buffer.map { it.toFloat() / maxAbsValue }.toFloatArray()
+        val audioData: FloatArray = buffer.map { it.toFloat() / maxAbsValue }.toFloatArray()
 
+        val (pitchHz, confidence) = swiftF0?.getPitchAndConfidence(audioData) ?: return null
 
-        val outputSize = 7
-        val result = SPICE?.getMeanDominantPitch(audioData, outputSize, outputSize, maxUncertainty)
-            ?: return null
-
-        if(result< minPitch || result> maxPitch)
+        val survivors = pitchHz.indices.filter { i ->
+            confidence[i] > minConfidence && pitchHz[i] >= minPitchHz && pitchHz[i] <= maxPitchHz
+        }
+        if (survivors.isEmpty())
             return null
 
-        return result
+        val meanHz = survivors.sumOf { pitchHz[it].toDouble() } / survivors.size
+        return MU.spice(meanHz).toFloat()
     }
 
     override fun start() {
-        if(isActive)
+        if (isActive)
             return
         isActive = true
-        require(microphone!=null){"Microphone is not set for pitch recogniser"}
+        require(microphone != null) { "Microphone is not set for pitch recogniser" }
 
-        if(!microphone!!.isRecording()) {
+        if (!microphone!!.isRecording()) {
             microphone!!.startRecording()
         }
 
         updateJob = recogniserScope.launch {
-            while(isActive) {
-                //TODO: fixed-delay scheduling - recognizePitch() (mic buffer read + SPICE
-                //model inference, not free) runs before the delay, so the actual period is
-                //recognizePitch()'s duration + updateRateMS, not a clean updateRateMS. If
-                //precise timing ever matters here, switch to fixed-rate scheduling (track an
-                //absolute next-tick target and delay only the remainder) - see
-                //MicrophoneNoteInput's polling loop for that pattern.
+            while (isActive) {
                 val buffer = microphone?.getBufferIfFull()
                 //fast energy must update every tick - including ticks where pitch comes back
                 //null/filtered - since onset detection needs to see the attack that precedes a
@@ -130,9 +132,9 @@ class PitchRecogniser (context: Context,
     override fun release() {
         runBlocking { updateJob?.cancelAndJoin() }
         microphone?.stopRecording()
-        SPICE?.close()
+        swiftF0?.close()
         microphone = null
-        SPICE = null
+        swiftF0 = null
         recogniserScope.cancel()
     }
 }
