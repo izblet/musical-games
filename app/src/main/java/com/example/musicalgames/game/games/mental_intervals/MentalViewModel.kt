@@ -107,6 +107,13 @@ class MentalViewModel : ViewModel() {
             UI.onRightAnswer()
             nextQuestion()
         } else {
+            //disable here too, same as the correct branch - otherwise input stays accepted for
+            //the rest of waitTime (until nextQuestion()'s delayed generateQuestion() resets it),
+            //so any further note reported in that window gets evaluated against this same,
+            //already-wrong question - and if one happens to coincidentally match, it triggers
+            //its own nextQuestion(), stacking up multiple delayed generateQuestion() calls that
+            //then fire in a quick burst, looking like the game skipped several questions
+            disabled=true
             screenHighlighter?.wrong()
             UI.onWrongAnswer(this.note!!)
             nextQuestion()
@@ -124,6 +131,8 @@ class MentalViewModel : ViewModel() {
             UI.onRightAnswer()
             nextQuestion()
         } else {
+            //see select(ChromaticNote) above for why this must also disable on the wrong path
+            disabled=true
             screenHighlighter?.wrong()
             UI.onWrongAnswer(this.interval)
             nextQuestion()
