@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.R
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
@@ -72,9 +73,11 @@ class FlappyGameFactory : GameFactory {
         context: Context,
         activity: FragmentActivity,
         gameContainer: ViewGroup,
+        screenHighlighter: ScreenHighlighter,
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[FlappyViewModel::class.java]
+        viewModel.setScreenHighlighter(screenHighlighter)
         val level = viewModel.level
 
         //the game-space rectangle's height directly represents the level's midi pitch range

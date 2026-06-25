@@ -6,4 +6,9 @@
        android:layout_height="match_parent"
        android:id="@+id/game_container"/>
 
+    <com.example.musicalgames.game_activity.AnswerFeedbackOverlayView
+        android:id="@+id/answer_feedback_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </RelativeLayout>

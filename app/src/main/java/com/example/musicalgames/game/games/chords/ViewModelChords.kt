@@ -11,6 +11,7 @@ import com.example.musicalgames.game.game_core.input.NoteGestureEvent
 import com.example.musicalgames.game.game_core.input.RepeatNoteConfirmGesture
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.Chord
 import com.example.musicalgames.music_model.ChromaticNote
 import kotlinx.coroutines.delay
@@ -33,6 +34,7 @@ class ViewModelChords(): ViewModel(), GameController {
     private val wrongWaitMultiplier: Long = 3
     private var _gameLogic: GameLogicChords? = null
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
+    private var screenHighlighter: ScreenHighlighter? = null
 
     var gameplay: GamePlayInstance = GamePlayInstance()
     private var _noteInputSource: ChromaticNoteInputSource? = null
@@ -53,6 +55,10 @@ class ViewModelChords(): ViewModel(), GameController {
         this.waitTime=2*60*1000/bpm
     }
 
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
+    }
+
     override fun setViewModel(viewModel: ViewModel) {
         //TODO: should be deleted
     }
@@ -61,6 +67,7 @@ class ViewModelChords(): ViewModel(), GameController {
         this.listener = listener
     }
     private fun onWrongAns(correct: Chord) {
+        screenHighlighter?.wrong()
         val newState = ViewState(
             screenMessage = "Wrong",
             highlightedNotes = correct.getChromaticNotes().toSet()
@@ -72,6 +79,7 @@ class ViewModelChords(): ViewModel(), GameController {
         }
     }
     private fun onRightAns() {
+        screenHighlighter?.correct()
         val newState = ViewState(
             screenMessage = "Correct",
             highlightedNotes = setOf()

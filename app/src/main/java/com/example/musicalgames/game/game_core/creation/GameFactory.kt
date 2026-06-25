@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
@@ -26,5 +27,5 @@ interface GameFactory {
 
     fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator
     fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?) : CustomGameCreator
-    fun createGame(context: Context, activity: FragmentActivity, gameContainer: ViewGroup, gameListener: GameListener) : GameController
+    fun createGame(context: Context, activity: FragmentActivity, gameContainer: ViewGroup, screenHighlighter: ScreenHighlighter, gameListener: GameListener) : GameController
 }

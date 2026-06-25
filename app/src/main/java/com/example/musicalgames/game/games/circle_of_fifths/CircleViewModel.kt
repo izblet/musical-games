@@ -10,6 +10,7 @@ import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
 import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.display.ModeSpelling
 import com.example.musicalgames.music_model.display.NoteSpelling
@@ -35,6 +36,7 @@ class CircleViewModel: ViewModel(), GameController {
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
     private var gameListener: GameListener? = null
+    private var screenHighlighter: ScreenHighlighter? = null
 
     private var waitLen:Long =1000
 
@@ -46,6 +48,10 @@ class CircleViewModel: ViewModel(), GameController {
 
     fun setLogic(logic: GameLogicCircle) {
         _gameLogic = logic
+    }
+
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
     }
 
     fun setBpm(bpm: Long) {
@@ -120,6 +126,7 @@ class CircleViewModel: ViewModel(), GameController {
 
         if(!gameLogic.isCircleToNote()) {
             val answerResult = gameLogic.answer(note)
+            if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
 
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
@@ -147,6 +154,7 @@ class CircleViewModel: ViewModel(), GameController {
 
         if(gameLogic.isCircleToNote()) {
             val answerResult = gameLogic.answer(note)
+            if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {

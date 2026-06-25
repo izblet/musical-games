@@ -10,6 +10,7 @@ import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInpu
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.games.mental_intervals.MentalViewmodelListener
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
@@ -38,6 +39,11 @@ class MentalViewModel : ViewModel() {
     val level get() = _level!!
     private var waitTime: Long =1000
     var score = 0
+    private var screenHighlighter: ScreenHighlighter? = null
+
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
+    }
 
     private var _type : Type = Type.INTERVAL_NOTE
     val type get() = _type
@@ -97,9 +103,11 @@ class MentalViewModel : ViewModel() {
         if (note == this.note) {
             disabled=true
             score++
+            screenHighlighter?.correct()
             UI.onRightAnswer()
             nextQuestion()
         } else {
+            screenHighlighter?.wrong()
             UI.onWrongAnswer(this.note!!)
             nextQuestion()
         }
@@ -112,9 +120,11 @@ class MentalViewModel : ViewModel() {
         if (interval == this.interval) {
             disabled=true
             score++
+            screenHighlighter?.correct()
             UI.onRightAnswer()
             nextQuestion()
         } else {
+            screenHighlighter?.wrong()
             UI.onWrongAnswer(this.interval)
             nextQuestion()
         }

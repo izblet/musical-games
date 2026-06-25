@@ -17,6 +17,7 @@ import com.example.musicalgames.game.game_core.input.MicrophoneNoteInput
 import com.example.musicalgames.game.games.chords.level_data.ChordsLevels
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
@@ -67,9 +68,11 @@ class GameFactoryChords: GameFactory {
         context: Context,
         activity: FragmentActivity,
         gameContainer: ViewGroup,
+        screenHighlighter: ScreenHighlighter,
         gameListener: GameListener
     ): GameController {
         val viewmodel = ViewModelProvider(activity)[ViewModelChords::class.java]
+        viewmodel.setScreenHighlighter(screenHighlighter)
         val tapSource = KeyPaletteNoteInputSource()
         val gameView = ViewChords(context, viewmodel, activity, tapSource)
         gameContainer.addView(gameView)

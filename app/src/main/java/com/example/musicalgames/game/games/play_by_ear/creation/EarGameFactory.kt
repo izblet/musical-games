@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
@@ -63,9 +64,11 @@ class EarGameFactory : GameFactory {
         context: Context,
         activity: FragmentActivity,
         gameContainer: ViewGroup,
+        screenHighlighter: ScreenHighlighter,
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[EarViewModel::class.java]
+        viewModel.setScreenHighlighter(screenHighlighter)
         val level = viewModel.level!!
         viewModel.setNoteDurationMs(NOTE_DURATION_MS) //TODO: placeholder value, revisit once the new recordings are tuned
         val onscreenSource = OnscreenNoteInputSource()

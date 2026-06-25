@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
@@ -39,6 +40,11 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
     var problem : List<Note> = listOf()
     private var index : Int = 0
     var score = 0
+    private var screenHighlighter: ScreenHighlighter? = null
+
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
+    }
     private var questionActive = false
     //distinguishes "no problem asked yet" from "problem finished" - both leave questionActive
     //false, but only the latter should count as problemFinished()
@@ -124,6 +130,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             return
         }
         if (problem[index] != note) {
+            screenHighlighter?.wrong()
             val playedNote = NoteSpelling.spell(note, SpellingPreference.SHARPS)
             _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}. You played $playedNote.")
             questionActive = false
@@ -133,6 +140,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         if (index == problem.size) {
             questionActive = false
             score++
+            screenHighlighter?.correct()
             _renderState.value = _renderState.value.copy(message = "Good!")
         }
     }

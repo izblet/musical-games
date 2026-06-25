@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
@@ -61,9 +62,11 @@ class MentalGameFactory : GameFactory {
         context: Context,
         activity: FragmentActivity,
         gameContainer: ViewGroup,
+        screenHighlighter: ScreenHighlighter,
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[MentalViewModel::class.java]
+        viewModel.setScreenHighlighter(screenHighlighter)
         val gameView = MentalView(context)
         gameView.setViewModel(viewModel)
         gameContainer.addView(gameView)

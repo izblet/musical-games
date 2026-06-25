@@ -38,9 +38,15 @@ class GameFragment : Fragment(), GameListener {
         val game = this.gameType!!
         val gameFactory = GameMap.createFactory(game)
 
+        val overlay: AnswerFeedbackOverlayView = requireView().findViewById(R.id.answer_feedback_overlay)
+        val screenHighlighter = ScreenHighlighter(
+            onCorrect = overlay::flashCorrect,
+            onWrong = overlay::flashWrong
+        )
+
         //permissions are requested from the level options screen before the game is launched,
         //so they're already granted by the time this fragment is reached
-        gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, this)
+        gameController = gameFactory.createGame(requireContext(), requireActivity(), gameContainer, screenHighlighter, this)
 
         lifecycleScope.launch {
             delay(gameFactory.getStartDelayMs())
