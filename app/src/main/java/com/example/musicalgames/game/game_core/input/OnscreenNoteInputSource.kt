@@ -11,8 +11,11 @@ class OnscreenNoteInputSource : NoteInputSource, KeyboardListener {
     // tryEmit() is called synchronously from a UI touch callback, with no guarantee that the
     // collector (an independently-scheduled coroutine) is suspended and ready at that instant -
     // a buffer of 0 (the MutableSharedFlow default) silently drops the tap in that case.
+    //a tap has no duration - the same instant is both the start and the end, so both streams
+    //share this one underlying flow rather than needing separate emissions
     private val _noteSelected = MutableSharedFlow<Note>(extraBufferCapacity = 1)
-    override val noteSelected: SharedFlow<Note> = _noteSelected.asSharedFlow()
+    override val noteStarted: SharedFlow<Note> = _noteSelected.asSharedFlow()
+    override val noteFinished: SharedFlow<Note> = _noteSelected.asSharedFlow()
 
     override fun start() {}
     override fun stop() {}

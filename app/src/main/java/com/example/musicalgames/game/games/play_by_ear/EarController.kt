@@ -41,14 +41,14 @@ class EarController(
         noteInputSource.start()
         viewModel.rootNote?.let { confirmGesture.setTrigger(it) }
 
-        //the input source is reported a note once it's *finished*, not when it starts - so
-        //anything it picked up from our own speaker during playback could otherwise sit "held"
-        //and only surface later as a misleading report once cleared. Mute as soon as we start
-        //talking (the rising edge) so the source stops paying attention to whatever it hears for
-        //the whole time, not just cleaning up after - but only arm the auto-resume once we're
-        //truly done (the falling edge): playbackActive stays true for an entire multi-note
-        //sequence (e.g. a melody), and the ordinary silent gaps *between* its notes would
-        //otherwise look like "done" to a countdown armed too early, resuming mid-sequence.
+        //the input source could otherwise pick up our own speaker output during playback and
+        //hold onto it (even just recognising it counts, regardless of which stream we listen
+        //to) - only to surface later as a misleading report once cleared. Mute as soon as we
+        //start talking (the rising edge) so the source stops paying attention to whatever it
+        //hears for the whole time, not just cleaning up after - but only arm the auto-resume
+        //once we're truly done (the falling edge): playbackActive stays true for an entire
+        //multi-note sequence (e.g. a melody), and the ordinary silent gaps *between* its notes
+        //would otherwise look like "done" to a countdown armed too early, resuming mid-sequence.
         owner.lifecycleScope.launch {
             var wasPlaybackActive = false
             viewModel.renderState.collect { state ->
@@ -62,22 +62,35 @@ class EarController(
         }
 
         owner.lifecycleScope.launch {
-            noteInputSource.noteSelected.collect { note ->
+            //melody answer entry wants to react as soon as a note is confidently identified,
+            //not wait for it to finish (e.g. decay/be superseded) - see NoteInputSource for the
+            //distinction
+            noteInputSource.noteStarted.collect { note ->
                 if (viewModel.renderState.value.playbackActive) {
                     return@collect
                 }
 
                 val wasFinished = viewModel.problemFinished()
                 viewModel.selectNote(note)
-                if (wasFinished) {
-                    if (confirmGesture.onNote(note) is NoteGestureEvent.Confirmed) {
-                        viewModel.newProblem()
-                    }
-                } else if (viewModel.problemFinished()) {
+                if (!wasFinished && viewModel.problemFinished()) {
                     //this note just finished the round (right or wrong) - reset the gesture so
                     //the melody's own last note (which may equal the root) can't count as the
                     //first half of a repeat for the confirm that follows
                     viewModel.rootNote?.let { confirmGesture.setTrigger(it) }
+                }
+            }
+        }
+
+        owner.lifecycleScope.launch {
+            //unlike melody answer entry, the confirm gesture wants a settled, complete note -
+            //it's a deliberate "I'm done" signal, not something that should react to a note
+            //that's merely been identified but might still resolve into something else
+            noteInputSource.noteFinished.collect { note ->
+                if (viewModel.renderState.value.playbackActive || !viewModel.problemFinished()) {
+                    return@collect
+                }
+                if (confirmGesture.onNote(note) is NoteGestureEvent.Confirmed) {
+                    viewModel.newProblem()
                 }
             }
         }

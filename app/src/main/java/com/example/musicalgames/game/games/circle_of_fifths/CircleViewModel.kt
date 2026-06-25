@@ -73,7 +73,7 @@ class CircleViewModel: ViewModel(), GameController {
 
         noteInputSource.start()
         viewModelScope.launch {
-            noteInputSource.noteSelected.collect { note -> clickNote(note) }
+            noteInputSource.noteFinished.collect { note -> clickNote(note) }
         }
     }
     private fun newQuestionCircleToNote() {

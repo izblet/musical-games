@@ -40,7 +40,7 @@ class ViewModelChords(): ViewModel(), GameController {
     private var _noteInputSource: ChromaticNoteInputSource? = null
     private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
     //confirms by repeating the question's root note twice in a row instead of a button -
-    //works the same regardless of input method, since both flow through the same noteSelected
+    //works the same regardless of input method, since both flow through the same noteFinished
     private val confirmGesture = RepeatNoteConfirmGesture<ChromaticNote>()
 
     fun setLogic(logic: GameLogicChords) {
@@ -111,7 +111,7 @@ class ViewModelChords(): ViewModel(), GameController {
 
         noteInputSource.start()
         viewModelScope.launch {
-            noteInputSource.noteSelected.collect { note ->
+            noteInputSource.noteFinished.collect { note ->
                 when (val event = confirmGesture.onNote(note)) {
                     is NoteGestureEvent.NoteSelected -> clickNote(event.note)
                     is NoteGestureEvent.Confirmed -> confirm()

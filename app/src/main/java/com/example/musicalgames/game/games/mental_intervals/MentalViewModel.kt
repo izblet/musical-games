@@ -69,7 +69,7 @@ class MentalViewModel : ViewModel() {
         generateQuestion()
         noteInputSource.start()
         viewModelScope.launch {
-            noteInputSource.noteSelected.collect { note -> select(note) }
+            noteInputSource.noteFinished.collect { note -> select(note) }
         }
     }
 

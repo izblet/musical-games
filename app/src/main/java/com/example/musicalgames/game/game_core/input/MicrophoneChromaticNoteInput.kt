@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.map
  * that work in pitch-class space - no duplicated detection logic, just a type-level translation.
  */
 class MicrophoneChromaticNoteInput(private val delegate: MicrophoneNoteInput) : ChromaticNoteInputSource {
-    override val noteSelected: Flow<ChromaticNote> = delegate.noteSelected.map { it.noteChromatic }
+    override val noteStarted: Flow<ChromaticNote> = delegate.noteStarted.map { it.noteChromatic }
+    override val noteFinished: Flow<ChromaticNote> = delegate.noteFinished.map { it.noteChromatic }
 
     override fun start() = delegate.start()
     override fun stop() = delegate.stop()

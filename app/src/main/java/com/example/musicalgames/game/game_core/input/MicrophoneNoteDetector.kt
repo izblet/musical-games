@@ -6,15 +6,15 @@ import kotlin.math.roundToInt
 
 /**
  * Turns a stream of raw microphone pitch+energy samples into discrete, edge-triggered
- * note-FINISHED events: returns a [Note] exactly once when that note stops being recognised -
- * i.e. once the caller can be sure what was played and that it's done - and null on every other
- * sample. Nothing is returned at the moment a note starts; callers see it only once it ends,
- * either by prevalence decay (silence/wrong pitch for long enough) or by a fresh attack
- * elsewhere (see below) - so a caller reacting to this stream is always reacting to a complete,
- * settled note, not a still-forming one.
+ * [NoteEvent]s: a [NoteEvent.Started] exactly once when a note becomes recognised, and a
+ * [NoteEvent.Finished] exactly once when it stops being recognised - never both for the same
+ * sample, and null on every other sample. Callers that only care about complete, settled notes
+ * can listen for [NoteEvent.Finished] only; callers that want to react as soon as a note is
+ * confidently identified (not caring yet whether/when it ends) can listen for
+ * [NoteEvent.Started] only - both are derived from the same underlying recognition state, so
+ * either view is always consistent with the other.
  *
- * Recognition rule (for internal bookkeeping - what actually gets reported is the note being
- * left, not the one being grabbed): a note is "recognised" once it accounts for more than
+ * Recognition rule: a note is "recognised" once it accounts for more than
  * [entryThresholdPercent]% of the samples within the trailing [windowMs]
  * milliseconds; once recognised, it stays recognised until EITHER its share of
  * the window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]),
@@ -53,7 +53,7 @@ class MicrophoneNoteDetector(
     private val countsByFrequency = java.util.TreeMap<Int, MutableSet<Note>>()
 
     /** Feed one raw pitch+energy sample (null pitch = no clear pitch this sample, e.g. silence). */
-    fun onSample(spicePitch: Float?, energy: Float, timestampMs: Long): Note? {
+    fun onSample(spicePitch: Float?, energy: Float, timestampMs: Long): NoteEvent? {
         val note = spicePitch?.let(::snapToNearestNote)
         window.addLast(Sample(timestampMs, note))
         note?.let(::incrementCount)
@@ -74,9 +74,7 @@ class MicrophoneNoteDetector(
                 //new note intact, so a pitch-change attack can still be recognised as soon as
                 //its own count qualifies, not after a full rebuild from empty.
                 purgeNote(current)
-                //report the note that just finished, not the one (if any) about to start - the
-                //caller should only ever hear about a complete, settled note
-                return current
+                return NoteEvent.Finished(current)
             }
         }
 
@@ -84,8 +82,7 @@ class MicrophoneNoteDetector(
             val (candidate, candidateCount) = mostPrevalentNote()
             if (candidate != null && meetsThreshold(candidateCount, entryThresholdPercent)) {
                 recognisedNote = candidate
-                //starting to recognise candidate, but it isn't reported yet - only once it
-                //finishes, via the branch above
+                return NoteEvent.Started(candidate)
             }
         }
 

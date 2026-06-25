@@ -5,10 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Sibling of [NoteInputSource] for games that work in pitch-class space (no octave concept
- * in their answer/onscreen palette - Chords, and eventually Mental/Circle).
+ * in their answer/onscreen palette - Chords, and eventually Mental/Circle). See
+ * [NoteInputSource] for what [noteStarted]/[noteFinished] mean.
  */
 interface ChromaticNoteInputSource {
-    val noteSelected: Flow<ChromaticNote>
+    val noteStarted: Flow<ChromaticNote>
+    val noteFinished: Flow<ChromaticNote>
 
     fun start()
     fun stop()

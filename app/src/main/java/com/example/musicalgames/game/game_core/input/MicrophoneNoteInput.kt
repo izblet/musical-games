@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 
 /**
  * Reads notes played/sung into an external instrument or voice, via a [PitchRecogniser]
- * polled on its own coroutine and turned into discrete note-FINISHED events by a
- * [MicrophoneNoteDetector] - a note is only emitted once it's done (silence, a wrong pitch for
- * long enough, or a fresh attack), never while it's still being played/sung.
+ * polled on its own coroutine and turned into discrete [NoteEvent]s by a [MicrophoneNoteDetector]
+ * - exposed as two separate streams ([noteStarted]/[noteFinished]) so each caller can pick
+ * whichever timing it actually wants, rather than this class deciding for everyone.
  */
 class MicrophoneNoteInput(
     private val pitchRecogniser: PitchRecogniser,
@@ -57,8 +57,10 @@ class MicrophoneNoteInput(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private var pollJob: Job? = null
 
-    private val _noteSelected = MutableSharedFlow<Note>()
-    override val noteSelected: SharedFlow<Note> = _noteSelected.asSharedFlow()
+    private val _noteStarted = MutableSharedFlow<Note>()
+    override val noteStarted: SharedFlow<Note> = _noteStarted.asSharedFlow()
+    private val _noteFinished = MutableSharedFlow<Note>()
+    override val noteFinished: SharedFlow<Note> = _noteFinished.asSharedFlow()
 
     @Volatile
     private var muted = false
@@ -100,10 +102,11 @@ class MicrophoneNoteInput(
                     //don't feed the detector at all while muted - nothing should get a chance to
                     //accumulate that could later surface as a misleading report once unmuted
                 } else {
-                    val note = detector.onSample(pitch, energy, now)
                     // emit() suspends until the collector is ready
-                    if (note != null) {
-                        _noteSelected.emit(note)
+                    when (val event = detector.onSample(pitch, energy, now)) {
+                        is NoteEvent.Started -> _noteStarted.emit(event.note)
+                        is NoteEvent.Finished -> _noteFinished.emit(event.note)
+                        null -> {}
                     }
                 }
 

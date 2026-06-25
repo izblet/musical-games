@@ -4,11 +4,17 @@ import com.example.musicalgames.music_model.Note
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A pluggable source of discrete, edge-triggered note-selected events
- * (e.g. tapping an onscreen keyboard, or singing/playing into a mic).
+ * A pluggable source of discrete, edge-triggered note events (e.g. tapping an onscreen
+ * keyboard, or singing/playing into a mic). [noteStarted] and [noteFinished] are independent
+ * streams of the same underlying notes - a caller that wants to react as soon as a note is
+ * confidently identified uses [noteStarted]; one that only wants complete, settled notes (and
+ * doesn't care about being told the instant one starts) uses [noteFinished]. For a tap-based
+ * source (nothing to wait for - the same instant is both the start and the end), both streams
+ * emit the same event at the same time.
  */
 interface NoteInputSource {
-    val noteSelected: Flow<Note>
+    val noteStarted: Flow<Note>
+    val noteFinished: Flow<Note>
 
     fun start()
     fun stop()
