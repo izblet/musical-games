@@ -6,17 +6,20 @@ import kotlin.math.roundToInt
 
 /**
  * Turns a stream of raw microphone pitch+energy samples into discrete, edge-triggered
- * note-onset events: returns a [Note] exactly once when that note becomes the
- * dominant pitch over a trailing time window, and null on every other sample
- * (including while a note remains dominant, or while nothing clears the
- * threshold).
+ * note-FINISHED events: returns a [Note] exactly once when that note stops being recognised -
+ * i.e. once the caller can be sure what was played and that it's done - and null on every other
+ * sample. Nothing is returned at the moment a note starts; callers see it only once it ends,
+ * either by prevalence decay (silence/wrong pitch for long enough) or by a fresh attack
+ * elsewhere (see below) - so a caller reacting to this stream is always reacting to a complete,
+ * settled note, not a still-forming one.
  *
- * Recognition rule: a note is "recognised" once it accounts for more than
+ * Recognition rule (for internal bookkeeping - what actually gets reported is the note being
+ * left, not the one being grabbed): a note is "recognised" once it accounts for more than
  * [entryThresholdPercent]% of the samples within the trailing [windowMs]
  * milliseconds; once recognised, it stays recognised until EITHER its share of
  * the window drops below [exitThresholdPercent]% (defaults to [entryThresholdPercent]),
  * OR [onsetDetector] reports a fresh attack - so a note that's re-attacked (sung/played
- * again with no pitch change and no silence gap) is cleared and immediately re-recognised,
+ * again with no pitch change and no silence gap) is cleared (and reported as finished)
  * instead of only ever clearing via prevalence decay. Either way, the note being left has its
  * own samples purged from the window, not just its recognised-flag cleared: an onset reacts on
  * transient-time, well before the window's own vote has caught up, so leaving its stale samples
@@ -71,7 +74,9 @@ class MicrophoneNoteDetector(
                 //new note intact, so a pitch-change attack can still be recognised as soon as
                 //its own count qualifies, not after a full rebuild from empty.
                 purgeNote(current)
-                return null
+                //report the note that just finished, not the one (if any) about to start - the
+                //caller should only ever hear about a complete, settled note
+                return current
             }
         }
 
@@ -79,7 +84,8 @@ class MicrophoneNoteDetector(
             val (candidate, candidateCount) = mostPrevalentNote()
             if (candidate != null && meetsThreshold(candidateCount, entryThresholdPercent)) {
                 recognisedNote = candidate
-                return candidate
+                //starting to recognise candidate, but it isn't reported yet - only once it
+                //finishes, via the branch above
             }
         }
 

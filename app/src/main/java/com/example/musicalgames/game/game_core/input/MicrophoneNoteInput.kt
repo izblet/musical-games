@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 
 /**
  * Reads notes played/sung into an external instrument or voice, via a [PitchRecogniser]
- * polled on its own coroutine and turned into discrete note-selected events by a
- * [MicrophoneNoteDetector].
+ * polled on its own coroutine and turned into discrete note-FINISHED events by a
+ * [MicrophoneNoteDetector] - a note is only emitted once it's done (silence, a wrong pitch for
+ * long enough, or a fresh attack), never while it's still being played/sung.
  */
 class MicrophoneNoteInput(
     private val pitchRecogniser: PitchRecogniser,
