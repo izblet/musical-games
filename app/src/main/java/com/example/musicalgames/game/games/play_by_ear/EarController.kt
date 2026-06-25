@@ -1,6 +1,7 @@
 package com.example.musicalgames.game.games.play_by_ear
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -64,18 +65,28 @@ class EarController(
         owner.lifecycleScope.launch {
             //melody answer entry wants to react as soon as a note is confidently identified,
             //not wait for it to finish (e.g. decay/be superseded) - see NoteInputSource for the
-            //distinction
+            //distinction. Once the round is already finished, a note starting instead feeds the
+            //confirm gesture's start-tracking - critically, NOT the round-completing note itself
+            //(its own start happens while the round is still active, in the branch below), so
+            //the gesture never thinks it watched that note start, and its later Finished event
+            //(handled in the other collector) is correctly recognised as orphaned rather than
+            //silently counted as the repeat's first half.
             noteInputSource.noteStarted.collect { note ->
+                Log.d("EarConfirmDebug", "STARTED note=$note t=${System.currentTimeMillis()} playbackActive=${viewModel.renderState.value.playbackActive} problemFinished=${viewModel.problemFinished()}")
                 if (viewModel.renderState.value.playbackActive) {
                     return@collect
                 }
 
-                val wasFinished = viewModel.problemFinished()
+                if (viewModel.problemFinished()) {
+                    confirmGesture.onNoteStarted(note)
+                    return@collect
+                }
+
                 viewModel.selectNote(note)
-                if (!wasFinished && viewModel.problemFinished()) {
+                if (viewModel.problemFinished()) {
                     //this note just finished the round (right or wrong) - reset the gesture so
-                    //the melody's own last note (which may equal the root) can't count as the
-                    //first half of a repeat for the confirm that follows
+                    //the melody's own root-coincident note can't count as part of the repeat
+                    Log.d("EarConfirmDebug", "problem just finished -> resetting confirmGesture trigger to rootNote=${viewModel.rootNote}")
                     viewModel.rootNote?.let { confirmGesture.setTrigger(it) }
                 }
             }
@@ -86,10 +97,16 @@ class EarController(
             //it's a deliberate "I'm done" signal, not something that should react to a note
             //that's merely been identified but might still resolve into something else
             noteInputSource.noteFinished.collect { note ->
-                if (viewModel.renderState.value.playbackActive || !viewModel.problemFinished()) {
+                val playbackActive = viewModel.renderState.value.playbackActive
+                val problemFinished = viewModel.problemFinished()
+                Log.d("EarConfirmDebug", "FINISHED note=$note t=${System.currentTimeMillis()} playbackActive=$playbackActive problemFinished=$problemFinished")
+                if (playbackActive || !problemFinished) {
+                    Log.d("EarConfirmDebug", "FINISHED note=$note -> gated out, not fed to confirmGesture")
                     return@collect
                 }
-                if (confirmGesture.onNote(note) is NoteGestureEvent.Confirmed) {
+                val event = confirmGesture.onNoteFinished(note)
+                Log.d("EarConfirmDebug", "FINISHED note=$note -> confirmGesture result=$event")
+                if (event is NoteGestureEvent.Confirmed) {
                     viewModel.newProblem()
                 }
             }

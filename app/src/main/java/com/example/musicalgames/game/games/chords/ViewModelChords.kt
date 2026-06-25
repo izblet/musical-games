@@ -110,9 +110,15 @@ class ViewModelChords(): ViewModel(), GameController {
         }
 
         noteInputSource.start()
+        //the gesture needs both ends of each note's lifecycle: a Finished event with no
+        //matching Started call on record (e.g. one that began before this game ever started
+        //listening) is recognised as orphaned rather than silently counted towards a repeat
+        viewModelScope.launch {
+            noteInputSource.noteStarted.collect { note -> confirmGesture.onNoteStarted(note) }
+        }
         viewModelScope.launch {
             noteInputSource.noteFinished.collect { note ->
-                when (val event = confirmGesture.onNote(note)) {
+                when (val event = confirmGesture.onNoteFinished(note)) {
                     is NoteGestureEvent.NoteSelected -> clickNote(event.note)
                     is NoteGestureEvent.Confirmed -> confirm()
                 }
