@@ -83,7 +83,7 @@ class FlappyViewModel : ViewModel() {
                 gameLogic.tickFrame(deltaTimeSeconds)
 
                 if (gameLogic.score > previousScore) {
-                    screenHighlighter?.correct()
+                    //screenHighlighter?.correct()
                     previousScore = gameLogic.score
                 }
                 if (gameLogic.gameEnded && gameLogic.endReason == GameEndReason.COLLISION) {

@@ -12,7 +12,7 @@ import android.content.Context
  */
 class SwiftF0ModelManager(modelBytes: ByteArray) {
     private val environment: OrtEnvironment = OrtEnvironment.getEnvironment()
-    private val session: OrtSession = environment.createSession(modelBytes, OrtSession.SessionOptions())
+    private val session: OrtSession = environment.createSession(modelBytes, buildSessionOptions())
 
     /** Runs the model on [audio] (mono, 16kHz, any length) - returns (pitch_hz, confidence),
      * one entry per analysis frame, in chronological order. */
@@ -37,6 +37,23 @@ class SwiftF0ModelManager(modelBytes: ByteArray) {
 
         fun fromAssets(context: Context, modelFile: String): SwiftF0ModelManager {
             return SwiftF0ModelManager(context.assets.open(modelFile).use { it.readBytes() })
+        }
+
+        //unbounded SessionOptions lets ONNX Runtime's CPU provider fan a single inference call's
+        //intra-op work out across every core - fine in isolation, but this recogniser polls at
+        //~60Hz on a background thread, so left unbounded it periodically saturates every core
+        //and starves whatever's rendering at the same time. Forcing it down to 1 thread (what
+        //the model's own reference implementation, swift_f0/core.py, uses) avoids that, but
+        //measurably slows down each individual call - benchmarked at ~1.75x slower than a couple
+        //of threads for this model/buffer size - which risks a single call missing the ~16.67ms
+        //polling budget and showing up as the recogniser falling behind in real time instead.
+        //2 intra-op threads recovers nearly all of that speed while still bounding worst-case
+        //core usage well below "every core on the device".
+        private fun buildSessionOptions(): OrtSession.SessionOptions {
+            return OrtSession.SessionOptions().apply {
+                setIntraOpNumThreads(2)
+                setInterOpNumThreads(1)
+            }
         }
     }
 }

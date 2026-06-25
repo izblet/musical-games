@@ -176,30 +176,30 @@ class FlappyGameFactory : GameFactory {
             ViewGroup.LayoutParams.MATCH_PARENT
         ))
 
-        val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics).toInt()
-        val pauseButton = MaterialButton(context).apply {
-            text = "Pause"
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            setPadding(dp16 * 2, dp16, dp16 * 2, dp16)
-        }
-        gameContainer.addView(pauseButton, FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ).also {
-            it.gravity = Gravity.BOTTOM or Gravity.START
-            it.setMargins(dp16, 0, 0, dp16)
-        })
+//        val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics).toInt()
+//        val pauseButton = MaterialButton(context).apply {
+//            text = "Pause"
+//            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+//            setPadding(dp16 * 2, dp16, dp16 * 2, dp16)
+//        }
+//        gameContainer.addView(pauseButton, FrameLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        ).also {
+//            it.gravity = Gravity.BOTTOM or Gravity.START
+//            it.setMargins(dp16, 0, 0, dp16)
+//        })
 
         val gameController = FlappyController(viewModel, pitchRecogniser)
         gameController.initGame(context, gameListener)
 
-        pauseButton.setOnClickListener {
-            pauseButton.isEnabled = false
-            gameController.pauseGame()
-            Handler(Looper.getMainLooper()).postDelayed({
-                pauseButton.isEnabled = true
-            }, 3000)
-        }
+//        pauseButton.setOnClickListener {
+//            pauseButton.isEnabled = false
+//            gameController.pauseGame()
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                pauseButton.isEnabled = true
+//            }, 3000)
+//        }
 
         return gameController
     }
