@@ -9,15 +9,15 @@ import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.ScreenHighlighter
+import com.example.musicalgames.game.game_core.input.PitchSource
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerManager
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FlappyController(
     private val viewModel: FlappyViewModel,
-    private val pitchRecogniser: PitchRecogniser
+    private val pitchRecogniser: PitchSource
 ) : GameController {
 
     private var soundPlayer: SoundPlayerManager? = null

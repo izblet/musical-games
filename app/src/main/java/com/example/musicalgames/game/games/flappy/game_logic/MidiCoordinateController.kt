@@ -1,10 +1,10 @@
 package com.example.musicalgames.game.games.flappy.game_logic
 
+import com.example.musicalgames.game.game_core.input.PitchSource
 import com.example.musicalgames.music_model.MusicUtil
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 
 class MidiCoordinateController (
-    private val pitchRecogniser: PitchRecogniser,
+    private val pitchRecogniser: PitchSource,
     private val minCoordinate: Double,
     private val maxCoordinate: Double
 ){
@@ -13,7 +13,7 @@ class MidiCoordinateController (
 
     fun getCoordinate() : Double? {
         val pitch = pitchRecogniser.getPitch()
-        if (pitch == PitchRecogniser.UNDEFINED) return null
+        if (pitch == PitchSource.UNDEFINED) return null
 
         val coordinate = (pitch - spiceAtMidi0) / spicePerSemitone
 

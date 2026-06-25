@@ -44,7 +44,7 @@ import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 import com.example.musicalgames.utils.question_generation.ListNoteGenerator
 import com.example.musicalgames.utils.wrappers.BitmapUtil
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 
 class FlappyGameFactory : GameFactory {
 
@@ -107,9 +107,9 @@ class FlappyGameFactory : GameFactory {
         val birdRadius = 0.25
 
         val micSettings = MicrophoneSettingsRepository(context).get()
-        val pitchRecogniser = PitchRecogniser(
+        val pitchRecogniser = SwiftF0PitchRecogniser(
             context, "C2", "C6",
-            micSettings.energyThreshold, micSettings.maxUncertainty
+            micSettings.energyThreshold, micSettings.minConfidence
         )
         val midiCoordinateController = MidiCoordinateController(
             pitchRecogniser,

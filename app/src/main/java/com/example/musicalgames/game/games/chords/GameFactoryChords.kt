@@ -23,7 +23,7 @@ import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 
 class GameFactoryChords: GameFactory {
     override suspend fun getLevels(pack: GamePackage, context: Context): List<TaggedLevel> {
@@ -81,9 +81,9 @@ class GameFactoryChords: GameFactory {
             InputMethod.ONSCREEN -> tapSource
             InputMethod.EXTERNAL_INSTRUMENT -> {
                 val micSettings = MicrophoneSettingsRepository(context).get()
-                val pitchRecogniser = PitchRecogniser(
+                val pitchRecogniser = SwiftF0PitchRecogniser(
                     context, "C2", "C6",
-                    micSettings.energyThreshold, micSettings.maxUncertainty
+                    micSettings.energyThreshold, micSettings.minConfidence
                 )
                 MicrophoneChromaticNoteInput(MicrophoneNoteInput.withSettings(pitchRecogniser, micSettings))
             }
