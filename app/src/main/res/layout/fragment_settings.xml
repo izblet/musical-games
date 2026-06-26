@@ -100,7 +100,7 @@
             android:text="Customize the colours used to tell musical concepts apart."
             android:textSize="14sp" />
 
-        <com.example.musicalgames.utils.components.ui_components.ColorCodingBlock
+        <com.example.musicalgames.utils.components.ui_components.ColorCodingChoiceBlock
             android:id="@+id/intervalColorBlock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

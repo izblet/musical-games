@@ -1,28 +1,20 @@
 package com.example.musicalgames.main_app
 
-import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentSettingsBinding
 import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.settings.EnumColorSettingsRepository
 import com.example.musicalgames.settings.IntervalColorSettings
-import com.example.musicalgames.settings.IntervalColorSettingsRepository
 import com.example.musicalgames.settings.MicrophoneSettings
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.components.ui_components.EditableSettingsBlock
-import com.skydoves.colorpickerview.ColorPickerView
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -31,7 +23,7 @@ class FragmentSettings : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var micSettingsRepository: MicrophoneSettingsRepository
-    private lateinit var intervalColorRepository: IntervalColorSettingsRepository
+    private lateinit var enumColorSettingsRepository: EnumColorSettingsRepository
 
     private var currentlyEditingBlock: EditableSettingsBlock? = null
 
@@ -42,7 +34,7 @@ class FragmentSettings : Fragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         micSettingsRepository = MicrophoneSettingsRepository(requireContext())
-        intervalColorRepository = IntervalColorSettingsRepository(requireContext())
+        enumColorSettingsRepository = EnumColorSettingsRepository(requireContext())
 
         binding.energyThresholdRow.configure(
             label = "Noise gate (dBFS, -60 to -10)",
@@ -95,16 +87,17 @@ class FragmentSettings : Fragment() {
         )
         binding.intervalColorBlock.configure(
             title = "Intervals",
-            keys = Interval.entries.map { it.name },
-            onPickColor = {_, current, onPicked->{}},
-            onCommit = { colorsByName -> updateIntervalColors(colorsByName) }
+            keyNames = Interval.entries.associate{it.name to it.name},
+            onCommit = { colorsByEnum -> updateIntervalColors(colorsByEnum) }
         )
 
         allEditableBlocks().forEach { setUpEditing(it) }
         binding.editBlockOverlay.setOnTouchListener { _, event -> handleOverlayTouch(event) }
 
         populateMicFields(micSettingsRepository.get())
-        populateIntervalColors(intervalColorRepository.get())
+        val intervalColors = enumColorSettingsRepository.get(Interval::class.java,IntervalColorSettings::defaultColorFor)
+
+        populateIntervalColors(intervalColors)
 
         binding.resetAllSettingsButton.setOnClickListener { resetMicSettings() }
 
@@ -182,13 +175,13 @@ class FragmentSettings : Fragment() {
         micSettingsRepository.save(update(micSettingsRepository.get()))
     }
 
-    private fun populateIntervalColors(settings: IntervalColorSettings) {
-        binding.intervalColorBlock.setColors(settings.colors.mapKeys { (interval, _) -> interval.name })
+    private fun populateIntervalColors(colors: Map<Interval, Int>) {
+        binding.intervalColorBlock.setColors(colors.mapKeys { (interval, _) -> interval.name })
     }
 
-    private fun updateIntervalColors(colorsByName: Map<String, Int>) {
-        val colors = colorsByName.mapKeys { (name, _) -> Interval.valueOf(name) }
-        intervalColorRepository.save(IntervalColorSettings(colors))
+    private fun updateIntervalColors(colors: Map<String, Int>) {
+        val colors = colors.mapKeys { (name, _) -> Interval.valueOf(name) }
+        enumColorSettingsRepository.put(Interval::class.java, colors)
     }
 
     /**

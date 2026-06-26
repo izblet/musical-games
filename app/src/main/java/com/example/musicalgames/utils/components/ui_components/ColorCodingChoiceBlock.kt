@@ -25,7 +25,7 @@ import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
  * or discards together). Generic over a String key rather than any specific musical concept
  * (e.g. interval), so the same block can back other colour-coded concepts later.
  */
-class ColorCodingBlock @JvmOverloads constructor(
+class ColorCodingChoiceBlock @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0
@@ -35,7 +35,7 @@ class ColorCodingBlock @JvmOverloads constructor(
     private val title: TextView
     private val itemsContainer: LinearLayout
 
-    private var keys: List<String> = emptyList()
+    private var keyNames: Map<String,String> = mapOf()
     private var itemsPerRow: Int = DEFAULT_ITEMS_PER_ROW
     private var currentColors: MutableMap<String, Int> = mutableMapOf()
     private var colorsBeforeEdit: Map<String, Int> = emptyMap()
@@ -64,15 +64,17 @@ class ColorCodingBlock @JvmOverloads constructor(
         }
     }
 
+    //each element is keyed by a String id, because we're mostly going to be using this class for
+    //enums - the keys will be the enum constants' `.name` then, with `keyNames`'s values free to
+    //hold a separate, friendlier display name
     fun configure(
         title: String,
-        keys: List<String>,
+        keyNames: Map<String, String>,
         itemsPerRow: Int = DEFAULT_ITEMS_PER_ROW,
-        onPickColor: (key: String, current: Int, onPicked: (Int) -> Unit) -> Unit,
         onCommit: (Map<String, Int>) -> Unit
     ) {
         this.title.text = title
-        this.keys = keys
+        this.keyNames = keyNames
         this.itemsPerRow = itemsPerRow
         this.onCommit = onCommit
         rebuildItems()
@@ -81,7 +83,7 @@ class ColorCodingBlock @JvmOverloads constructor(
     /** Sets the displayed colours without touching edit state - for initial population. */
     fun setColors(colors: Map<String, Int>) {
         this.currentColors = colors.toMutableMap()
-        keys.forEach { updateSwatch(it) }
+        keyNames.forEach { updateSwatch(it.key) }
     }
 
     override fun beginEdit() {
@@ -98,7 +100,7 @@ class ColorCodingBlock @JvmOverloads constructor(
 
     override fun discardEdit() {
         currentColors = colorsBeforeEdit.toMutableMap()
-        keys.forEach { updateSwatch(it) }
+        keyNames.forEach { updateSwatch(it.key) }
         endEdit()
     }
 
@@ -126,10 +128,11 @@ class ColorCodingBlock @JvmOverloads constructor(
     private fun rebuildItems() {
         itemsContainer.removeAllViews()
         val swatchMap = mutableMapOf<String, View>()
-        keys.chunked(itemsPerRow).forEach { rowKeys ->
+
+        keyNames.keys.chunked(itemsPerRow).forEach { rowKeys ->
             val row = LinearLayout(context).apply {
                 orientation = HORIZONTAL
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             }
             rowKeys.forEach { key -> row.addView(buildPair(row, key, swatchMap)) }
             repeat(itemsPerRow - rowKeys.size) {
@@ -138,12 +141,12 @@ class ColorCodingBlock @JvmOverloads constructor(
             itemsContainer.addView(row)
         }
         swatches = swatchMap
-        keys.forEach { updateSwatch(it) }
+        keyNames.forEach { updateSwatch(it.key) }
     }
 
     private fun buildPair(row: LinearLayout, key: String, swatchMap: MutableMap<String, View>): View {
         val pairView = LayoutInflater.from(context).inflate(R.layout.view_color_coding_pair, row, false)
-        pairView.findViewById<TextView>(R.id.itemLabel).text = key
+        pairView.findViewById<TextView>(R.id.itemLabel).text = keyNames[key]
         val swatch = pairView.findViewById<View>(R.id.colorSwatch)
         // explicit rather than relying solely on the XML android:enabled="false" attribute -
         // that alone left swatches clickable until the first real beginEdit()/endEdit() cycle
