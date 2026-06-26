@@ -1,9 +1,11 @@
 package com.example.musicalgames.settings
 
+import android.graphics.Color
 import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.music_model.Mode
 
 /** Per-interval colour coding, used to tint interval names in the Mental Intervals game. */
-object IntervalColorSettings {
+object EnumColorSettings {
         // matches the colours MentalView.kt's Interval.findColour() has always used
         fun defaultColorFor(interval: Interval): Int = when (interval) {
             Interval.P1 -> 0xffffffff.toInt()
@@ -20,5 +22,6 @@ object IntervalColorSettings {
             Interval.M7 -> 0xfffc00c2.toInt()
             Interval.P8 -> 0xffffffff.toInt()
         }
+    fun defaultColorFor(mode: Mode): Int = Color.BLUE
 }
 

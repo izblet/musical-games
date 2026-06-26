@@ -12,6 +12,7 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.display.ModeSpelling
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
@@ -25,6 +26,7 @@ data class CircleViewState(
     val showKeyboard: Boolean = false,
     val question: String? = null,
     val highlightedNote: Int? = null,
+    val currentMode: Mode? = null,
     val screenCommandMessage: String? = null
 )
 
@@ -81,6 +83,7 @@ class CircleViewModel: ViewModel(), GameController {
             showKeyboard = true,
             question = ModeSpelling.common(gameLogic.questionMode),
             highlightedNote = gameLogic.questionNoteIndex,
+            currentMode = gameLogic.questionMode,
             screenCommandMessage = null
         )
         _viewState.value = newState
@@ -93,6 +96,7 @@ class CircleViewModel: ViewModel(), GameController {
             showKeyboard = false,
             question = "$noteName\n$modeName",
             highlightedNote = null,
+            currentMode = null,
             screenCommandMessage = null
         )
         _viewState.value = newState
@@ -139,8 +143,13 @@ class CircleViewModel: ViewModel(), GameController {
             } else {
                 answerResult.rightAnsIndex
             }
+            val currentMode = if(answerResult.correct) {
+                null
+            } else {
+                answerResult.rightAnsMode
+            }
 
-            val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote)
+            val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote, currentMode = currentMode)
 
             _viewState.value = newState
             delayAndNext()

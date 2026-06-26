@@ -19,7 +19,7 @@ open class CircleOfFifthsPaletteView(
     }
 
     private val axisPaintMajor : Paint = ComponentPaints.getLightgrayFillPaint(context)
-    private val highlightPaint = ComponentPaints.getBlueFillPaint(context)
+    private var highlightPaint = ComponentPaints.getBlueFillPaint(context)
 
     private var highlightedIndices:List<Int> = listOf()
     private var centerText: String? = null
@@ -47,7 +47,13 @@ open class CircleOfFifthsPaletteView(
 
     private val pieceAngleLength = 360f/totalSegments
     private val rotationOffset = -90f-pieceAngleLength/2f //so that C is on the top
-
+    fun setHighlightColour(newColor: Int) {
+       highlightPaint = Paint().apply{
+           color = newColor
+           style=Paint.Style.FILL
+           isAntiAlias=true
+       }
+    }
     fun setHighlightedIndices(list:List<Int>) {
         highlightedIndices = list
         invalidate()

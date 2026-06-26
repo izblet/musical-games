@@ -17,7 +17,7 @@ import com.example.musicalgames.music_model.Interval
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.settings.EnumColorSettingsRepository
-import com.example.musicalgames.settings.IntervalColorSettings
+import com.example.musicalgames.settings.EnumColorSettings
 import kotlin.math.roundToInt
 
 class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener {
@@ -34,7 +34,7 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     // user-configurable via the Settings screen - loaded once, since there's no path from
     // gameplay back to Settings without leaving/ending this game first
     private val intervalColors: Map<Interval, Int> = EnumColorSettingsRepository(context).get(
-        Interval::class.java, IntervalColorSettings::defaultColorFor
+        Interval::class.java, EnumColorSettings::defaultColorFor
     )
 
     init {

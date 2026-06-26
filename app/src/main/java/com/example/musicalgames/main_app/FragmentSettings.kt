@@ -10,8 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.musicalgames.databinding.FragmentSettingsBinding
 import com.example.musicalgames.music_model.Interval
+import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.settings.EnumColorSettingsRepository
-import com.example.musicalgames.settings.IntervalColorSettings
+import com.example.musicalgames.settings.EnumColorSettings
 import com.example.musicalgames.settings.MicrophoneSettings
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.components.ui_components.EditableSettingsBlock
@@ -85,19 +86,29 @@ class FragmentSettings : Fragment() {
             format = { it.toLong().toString() },
             onCommit = { value -> updateMicSettings { it.copy(onsetRefractoryMs = value.toLong()) } }
         )
+        //TODO: calculate items per row dynamically -> descriptions should fit in one line
+        //perhaps calculate inside the EnumColorSettings if the itemsPerRow is not set manually
         binding.intervalColorBlock.configure(
             title = "Intervals",
             keyNames = Interval.entries.associate{it.name to it.name},
-            onCommit = { colorsByEnum -> updateIntervalColors(colorsByEnum) }
+            onCommit = { colorsByEnum -> updateEnumColors<Interval>(colorsByEnum) }
+        )
+        binding.modeColorBlock.configure(
+            title = "Modes",
+            keyNames = Mode.entries.associate{ it.name to it.name.lowercase() },
+            onCommit = {colorsByEnum -> updateEnumColors<Mode>(colorsByEnum)},
+            itemsPerRow = 2
         )
 
         allEditableBlocks().forEach { setUpEditing(it) }
         binding.editBlockOverlay.setOnTouchListener { _, event -> handleOverlayTouch(event) }
 
         populateMicFields(micSettingsRepository.get())
-        val intervalColors = enumColorSettingsRepository.get(Interval::class.java,IntervalColorSettings::defaultColorFor)
+        val intervalColors = enumColorSettingsRepository.get(Interval::class.java,EnumColorSettings::defaultColorFor)
+        val modeColors = enumColorSettingsRepository.get(Mode::class.java, EnumColorSettings::defaultColorFor)
 
         populateIntervalColors(intervalColors)
+        populateModeColors(modeColors)
 
         binding.resetAllSettingsButton.setOnClickListener { resetMicSettings() }
 
@@ -117,7 +128,8 @@ class FragmentSettings : Fragment() {
         binding.windowMsRow,
         binding.onsetRiseFactorRow,
         binding.onsetRefractoryMsRow,
-        binding.intervalColorBlock
+        binding.intervalColorBlock,
+        binding.modeColorBlock
     )
 
     /** Only one block edits at a time - the overlay physically blocks reaching any other block's
@@ -178,10 +190,14 @@ class FragmentSettings : Fragment() {
     private fun populateIntervalColors(colors: Map<Interval, Int>) {
         binding.intervalColorBlock.setColors(colors.mapKeys { (interval, _) -> interval.name })
     }
+    private fun populateModeColors(colors: Map<Mode, Int>) {
+        binding.modeColorBlock.setColors(colors.mapKeys { (mode, _) -> mode.name })
+    }
 
-    private fun updateIntervalColors(colors: Map<String, Int>) {
-        val colors = colors.mapKeys { (name, _) -> Interval.valueOf(name) }
-        enumColorSettingsRepository.put(Interval::class.java, colors)
+    private inline fun <reified T :Enum<T>> updateEnumColors (colors: Map<String, Int>) {
+        //note: this throws if there is no enum matching the name
+        val colors = colors.mapKeys { (name, _) -> enumValueOf<T>(name) }
+        enumColorSettingsRepository.put(T::class.java, colors)
     }
 
     /**
