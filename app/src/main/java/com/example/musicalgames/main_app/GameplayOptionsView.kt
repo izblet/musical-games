@@ -21,7 +21,12 @@ import com.example.musicalgames.game.game_core.creation.Level
  * option wants the exact same control for it, there's no per-game/per-option domain variation
  * here to justify subclassing the way CustomGameCreator's level-editing UI needs to.
  */
-class GameplayOptionsView(context: Context, options: Set<GameplayOptions>, level: Level?) : LinearLayout(context) {
+class GameplayOptionsView(
+    context: Context,
+    options: Set<GameplayOptions>,
+    level: Level?,
+    initial: GamePlayInstance = GamePlayInstance()
+) : LinearLayout(context) {
 
     private var bpmEditText: EditText? = null
     private var inputMethodButtons: Map<InputMethod, RadioButton> = emptyMap()
@@ -36,6 +41,7 @@ class GameplayOptionsView(context: Context, options: Set<GameplayOptions>, level
             bpmEditText = EditText(context).apply {
                 inputType = InputType.TYPE_CLASS_NUMBER
                 filters = arrayOf(InputFilter.LengthFilter(3))
+                setText(initial.bpm.toString())
             }
             val row = LinearLayout(context).apply {
                 orientation = HORIZONTAL
@@ -55,7 +61,7 @@ class GameplayOptionsView(context: Context, options: Set<GameplayOptions>, level
                 }
             }
             buttons.values.forEach { group.addView(it) }
-            group.check(buttons.getValue(GamePlayInstance().inputMethod).id)
+            group.check(buttons.getValue(initial.inputMethod).id)
             inputMethodButtons = buttons
             addView(label)
             addView(group)

@@ -20,6 +20,7 @@ import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.settings.GameplaySettingsRepository
 
 class FragmentLevelOptions : Fragment() {
     private var _binding: FragmentLevelOptionsBinding? = null
@@ -50,6 +51,7 @@ class FragmentLevelOptions : Fragment() {
             Toast.makeText(context, "Could not create a game with these options, probably an illegal value", Toast.LENGTH_SHORT).show()
             return
         }
+        controller.game?.let { GameplaySettingsRepository(requireContext()).save(it, gameplay) }
         if (controller.hasRequiredPermissions(requireContext(), gameplay)) {
             controller.startGame(gameplay)
         } else {
@@ -257,7 +259,12 @@ class FragmentLevelOptions : Fragment() {
     private fun rebuildOptionsView() {
         binding.gameplayOptionsContainer.removeAllViews()
         val options = controller.game?.let { GameMap.gameplayOptions[it] } ?: emptySet()
-        optionsView = GameplayOptionsView(requireContext(), options, controller.level)
+        val restored = controller.game?.let { GameplaySettingsRepository(requireContext()).get(it) }
+        optionsView = if (restored != null) {
+            GameplayOptionsView(requireContext(), options, controller.level, restored)
+        } else {
+            GameplayOptionsView(requireContext(), options, controller.level)
+        }
         binding.gameplayOptionsContainer.addView(optionsView)
     }
 
