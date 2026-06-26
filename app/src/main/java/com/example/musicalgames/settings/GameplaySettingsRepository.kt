@@ -6,9 +6,10 @@ import com.example.musicalgames.game.game_core.GameplayType
 import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.keyEstablishOption
 import com.example.musicalgames.games.Game
+import androidx.core.content.edit
 
 class GameplaySettingsRepository(context: Context) {
-    private val prefs = context.getSharedPreferences(MicrophoneSettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences(SettingsStorage.PREFS_NAME, Context.MODE_PRIVATE)
 
     fun get(game: Game): GamePlayInstance {
         val defaults = GamePlayInstance()
@@ -28,13 +29,13 @@ class GameplaySettingsRepository(context: Context) {
     }
 
     fun save(game: Game, gameplay: GamePlayInstance) {
-        prefs.edit()
-            .putString(keyFor(game, "type"), gameplay.type.name)
-            .putInt(keyFor(game, "bpm"), gameplay.bpm)
-            .putBoolean(keyFor(game, "display_score"), gameplay.displayScore)
-            .putString(keyFor(game, "input_method"), gameplay.inputMethod.name)
-            .putString(keyFor(game, "establish_key_with"), gameplay.establishKeyWith.name)
-            .apply()
+        prefs.edit {
+            putString(keyFor(game, "type"), gameplay.type.name)
+                .putInt(keyFor(game, "bpm"), gameplay.bpm)
+                .putBoolean(keyFor(game, "display_score"), gameplay.displayScore)
+                .putString(keyFor(game, "input_method"), gameplay.inputMethod.name)
+                .putString(keyFor(game, "establish_key_with"), gameplay.establishKeyWith.name)
+        }
     }
 
     private fun keyFor(game: Game, field: String) = "gameplay_${game.name}_$field"

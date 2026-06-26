@@ -3,7 +3,7 @@ package com.example.musicalgames.settings
 import android.content.Context
 
 class MicrophoneSettingsRepository(context: Context) {
-    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences(SettingsStorage.PREFS_NAME, Context.MODE_PRIVATE)
 
     fun get(): MicrophoneSettings {
         val defaults = MicrophoneSettings()
@@ -33,9 +33,6 @@ class MicrophoneSettingsRepository(context: Context) {
     }
 
     companion object {
-        // shared by any future settings-group repository added to this package
-        const val PREFS_NAME = "musical_games_settings"
-
         private const val KEY_ENERGY_THRESHOLD = "microphone_energy_threshold"
         private const val KEY_MAX_UNCERTAINTY = "microphone_max_uncertainty"
         private const val KEY_MIN_CONFIDENCE = "microphone_min_confidence"

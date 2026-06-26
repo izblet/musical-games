@@ -32,6 +32,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
 ) : LinearLayout(context, attributeSet, defStyle), EditableSettingsBlock {
 
     private val editButton: ImageButton
+    private val colourToggleButton: ImageButton
     private val title: TextView
     private val itemsContainer: LinearLayout
 
@@ -42,7 +43,12 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
     private var swatches: Map<String, View> = emptyMap()
 
     private var isEditing = false
+    private var coloursEnabled = true
     private var onCommit: (Map<String, Int>) -> Unit = {}
+
+    /** Called when the user taps the top-right toggle to enable/disable this block's colours
+     * (e.g. to let a game fall back to its own colouring instead of the user's chosen palette). */
+    var onColoursEnabledChanged: ((Boolean) -> Unit)? = null
 
     override var onEditRequested: (() -> Unit)? = null
     override var onEditButtonReTapped: (() -> Unit)? = null
@@ -52,6 +58,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.view_color_coding_block, this, true)
         editButton = findViewById(R.id.editButton)
+        colourToggleButton = findViewById(R.id.colourToggleButton)
         title = findViewById(R.id.title)
         itemsContainer = findViewById(R.id.itemsContainer)
 
@@ -61,6 +68,12 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
             } else {
                 onEditRequested?.invoke()
             }
+        }
+
+        colourToggleButton.setOnClickListener {
+            coloursEnabled = !coloursEnabled
+            applyColoursEnabledState()
+            onColoursEnabledChanged?.invoke(coloursEnabled)
         }
     }
 
@@ -86,11 +99,18 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
         keyNames.forEach { updateSwatch(it.key) }
     }
 
+    /** Sets the enabled/disabled (greyed-out) state without firing [onColoursEnabledChanged] -
+     * for initial population from whatever was last persisted. */
+    fun setColoursEnabled(enabled: Boolean) {
+        coloursEnabled = enabled
+        applyColoursEnabledState()
+    }
+
     override fun beginEdit() {
         isEditing = true
         colorsBeforeEdit = currentColors.toMap()
         editButton.isActivated = true
-        swatches.values.forEach { it.isEnabled = true }
+        swatches.values.forEach { it.isEnabled = coloursEnabled }
     }
 
     override fun confirmEdit() {
@@ -113,6 +133,14 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
         editButton.isActivated = false
         swatches.values.forEach { it.isEnabled = false }
         onEditEnded?.invoke()
+    }
+
+    /** Greys out the swatches and blocks clicks on them while disabled; re-applied whenever the
+     * toggle is flipped (including mid-edit, though that's not really an expected case in practice). */
+    private fun applyColoursEnabledState() {
+        colourToggleButton.isActivated = !coloursEnabled
+        itemsContainer.alpha = if (coloursEnabled) 1f else DISABLED_ALPHA
+        swatches.values.forEach { it.isEnabled = isEditing && coloursEnabled }
     }
 
     /**
@@ -150,7 +178,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
         val swatch = pairView.findViewById<View>(R.id.colorSwatch)
         // explicit rather than relying solely on the XML android:enabled="false" attribute -
         // that alone left swatches clickable until the first real beginEdit()/endEdit() cycle
-        swatch.isEnabled = isEditing
+        swatch.isEnabled = isEditing && coloursEnabled
         swatch.setOnClickListener {
             val current = currentColors[key] ?: Color.WHITE
             showColorPicker(current) {picked->
@@ -249,5 +277,6 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
 
     companion object {
         const val DEFAULT_ITEMS_PER_ROW = 3
+        private const val DISABLED_ALPHA = 0.4f
     }
 }
