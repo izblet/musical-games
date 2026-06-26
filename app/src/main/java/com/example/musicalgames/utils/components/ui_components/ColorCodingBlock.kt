@@ -3,14 +3,20 @@ package com.example.musicalgames.utils.components.ui_components
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.example.musicalgames.R
+import com.skydoves.colorpickerview.ColorPickerView
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
 
 /**
  * A titled, lockable block showing a list of <label, colour swatch> pairs sharing a single
@@ -31,17 +37,17 @@ class ColorCodingBlock @JvmOverloads constructor(
 
     private var keys: List<String> = emptyList()
     private var itemsPerRow: Int = DEFAULT_ITEMS_PER_ROW
-    private var colors: MutableMap<String, Int> = mutableMapOf()
+    private var currentColors: MutableMap<String, Int> = mutableMapOf()
     private var colorsBeforeEdit: Map<String, Int> = emptyMap()
     private var swatches: Map<String, View> = emptyMap()
 
     private var isEditing = false
-    private var onPickColor: ((key: String, current: Int, onPicked: (Int) -> Unit) -> Unit)? = null
     private var onCommit: (Map<String, Int>) -> Unit = {}
 
     override var onEditRequested: (() -> Unit)? = null
     override var onEditButtonReTapped: (() -> Unit)? = null
     override var onEditEnded: (() -> Unit)? = null
+
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_color_coding_block, this, true)
@@ -68,31 +74,30 @@ class ColorCodingBlock @JvmOverloads constructor(
         this.title.text = title
         this.keys = keys
         this.itemsPerRow = itemsPerRow
-        this.onPickColor = onPickColor
         this.onCommit = onCommit
         rebuildItems()
     }
 
     /** Sets the displayed colours without touching edit state - for initial population. */
     fun setColors(colors: Map<String, Int>) {
-        this.colors = colors.toMutableMap()
+        this.currentColors = colors.toMutableMap()
         keys.forEach { updateSwatch(it) }
     }
 
     override fun beginEdit() {
         isEditing = true
-        colorsBeforeEdit = colors.toMap()
+        colorsBeforeEdit = currentColors.toMap()
         editButton.isActivated = true
         swatches.values.forEach { it.isEnabled = true }
     }
 
     override fun confirmEdit() {
-        onCommit(colors.toMap())
+        onCommit(currentColors.toMap())
         endEdit()
     }
 
     override fun discardEdit() {
-        colors = colorsBeforeEdit.toMutableMap()
+        currentColors = colorsBeforeEdit.toMutableMap()
         keys.forEach { updateSwatch(it) }
         endEdit()
     }
@@ -144,11 +149,12 @@ class ColorCodingBlock @JvmOverloads constructor(
         // that alone left swatches clickable until the first real beginEdit()/endEdit() cycle
         swatch.isEnabled = isEditing
         swatch.setOnClickListener {
-            val current = colors[key] ?: Color.WHITE
-            onPickColor?.invoke(key, current) { picked ->
-                colors[key] = picked
+            val current = currentColors[key] ?: Color.WHITE
+            showColorPicker(current) {picked->
+                currentColors[key] = picked
                 setSwatchColor(swatch, picked)
             }
+
         }
         swatchMap[key] = swatch
         return pairView
@@ -156,7 +162,7 @@ class ColorCodingBlock @JvmOverloads constructor(
 
     private fun updateSwatch(key: String) {
         val swatch = swatches[key] ?: return
-        setSwatchColor(swatch, colors[key] ?: Color.WHITE)
+        setSwatchColor(swatch, currentColors[key] ?: Color.WHITE)
     }
 
     private fun setSwatchColor(swatch: View, color: Int) {
@@ -167,6 +173,75 @@ class ColorCodingBlock @JvmOverloads constructor(
             swatch.background = it
         }
         drawable.setColor(color)
+    }
+    private fun showColorPicker(current: Int, onPicked: (Int) -> Unit) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null)
+        val preview = dialogView.findViewById<View>(R.id.colorPreview)
+        val colorPickerView = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
+        val brightnessSlideBar = dialogView.findViewById<BrightnessSlideBar>(R.id.brightnessSlideBar)
+        val redSeekBar = dialogView.findViewById<SeekBar>(R.id.redSeekBar)
+        val greenSeekBar = dialogView.findViewById<SeekBar>(R.id.greenSeekBar)
+        val blueSeekBar = dialogView.findViewById<SeekBar>(R.id.blueSeekBar)
+
+        // the gradient is what we want visible across the whole track, not the seekbar's own
+        // default "filled up to thumb" accent-colour look, which would otherwise paint over it
+        for (seekBar in listOf(redSeekBar, greenSeekBar, blueSeekBar)) {
+            seekBar.progressDrawable = ColorDrawable(Color.TRANSPARENT)
+        }
+
+        fun updateRgbGradients() {
+            val r = redSeekBar.progress
+            val g = greenSeekBar.progress
+            val b = blueSeekBar.progress
+            redSeekBar.background = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.rgb(0, g, b), Color.rgb(255, g, b))
+            )
+            greenSeekBar.background = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.rgb(r, 0, b), Color.rgb(r, 255, b))
+            )
+            blueSeekBar.background = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.rgb(r, g, 0), Color.rgb(r, g, 255))
+            )
+        }
+
+        fun setRgbSliders(color: Int) {
+            redSeekBar.progress = Color.red(color)
+            greenSeekBar.progress = Color.green(color)
+            blueSeekBar.progress = Color.blue(color)
+            updateRgbGradients()
+        }
+
+        colorPickerView.attachBrightnessSlider(brightnessSlideBar)
+        colorPickerView.setInitialColor(current)
+        preview.setBackgroundColor(current)
+        setRgbSliders(current)
+
+        colorPickerView.setColorListener(ColorEnvelopeListener { envelope, _ ->
+            preview.setBackgroundColor(envelope.color)
+            setRgbSliders(envelope.color)
+        })
+
+        val rgbListener = object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (!fromUser) return
+                val color = Color.rgb(redSeekBar.progress, greenSeekBar.progress, blueSeekBar.progress)
+                preview.setBackgroundColor(color)
+                updateRgbGradients()
+                colorPickerView.setInitialColor(color)
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        }
+        redSeekBar.setOnSeekBarChangeListener(rgbListener)
+        greenSeekBar.setOnSeekBarChangeListener(rgbListener)
+        blueSeekBar.setOnSeekBarChangeListener(rgbListener)
+
+        AlertDialog.Builder(context)
+            .setTitle("Choose a colour")
+            .setView(dialogView)
+            .setPositiveButton("Select") { _, _ -> onPicked(colorPickerView.color) }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     companion object {

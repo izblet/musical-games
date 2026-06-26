@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
 
+        <!--
         <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
             android:id="@+id/entryThresholdPercentRow"
             android:layout_width="match_parent"
@@ -50,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp" />
-
+        -->
         <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
             android:id="@+id/windowMsRow"
             android:layout_width="match_parent"
