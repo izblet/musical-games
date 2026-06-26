@@ -1,6 +1,7 @@
 package com.example.musicalgames.games.mental_intervals
 
 import android.content.Context
+import android.graphics.Color
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -33,9 +34,13 @@ class MentalView(context: Context) : ViewGroup(context), MentalViewmodelListener
     }
     // user-configurable via the Settings screen - loaded once, since there's no path from
     // gameplay back to Settings without leaving/ending this game first
-    private val intervalColors: Map<Interval, Int> = EnumColorSettingsRepository(context).get(
-        Interval::class.java, EnumColorSettings::defaultColorFor
-    )
+
+    private val colorsDisabled = EnumColorSettingsRepository(context).isEnumColorBlocked(Interval::class.java)
+    private val intervalColors: Map<Interval, Int> =
+        if(!colorsDisabled) {
+            EnumColorSettingsRepository(context).get(
+        Interval::class.java, EnumColorSettings::defaultColorFor)
+        } else Interval.entries.associateWith { Color.WHITE }
 
     init {
         addView(messageTextView)

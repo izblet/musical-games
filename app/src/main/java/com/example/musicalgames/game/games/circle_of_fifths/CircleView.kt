@@ -20,6 +20,7 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
     private val circle = CircleOfFifthsPalette(context, null)
     private val keyboard = KeyPaletteView(context)
     private val textView = TextView(context)
+    private val coloursDisabled = EnumColorSettingsRepository(context).isEnumColorBlocked(Mode::class.java)
     private val modeColours = EnumColorSettingsRepository(context).get(Mode::class.java, EnumColorSettings::defaultColorFor)
 
     init {
@@ -41,7 +42,10 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
     }
 
     private fun updateView(state: CircleViewState) {
-        state.currentMode?.let { circle.setHighlightColour(modeColours.getValue(it)) }
+
+        if(!coloursDisabled)
+            state.currentMode?.let { circle.setHighlightColour(modeColours.getValue(it)) }
+
         circle.setHighlightedIndices(
             if (state.highlightedNote == null) listOf() else listOf(state.highlightedNote)
         )

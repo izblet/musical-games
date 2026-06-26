@@ -15,6 +15,7 @@ import com.example.musicalgames.settings.EnumColorSettingsRepository
 import com.example.musicalgames.settings.EnumColorSettings
 import com.example.musicalgames.settings.MicrophoneSettings
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
+import com.example.musicalgames.utils.components.ui_components.ColorCodingChoiceBlock
 import com.example.musicalgames.utils.components.ui_components.EditableSettingsBlock
 import kotlin.math.log10
 import kotlin.math.pow
@@ -109,6 +110,8 @@ class FragmentSettings : Fragment() {
 
         populateIntervalColors(intervalColors)
         populateModeColors(modeColors)
+        setupColourToggle<Interval>(binding.intervalColorBlock)
+        setupColourToggle<Mode>(binding.modeColorBlock)
 
         binding.resetAllSettingsButton.setOnClickListener { resetMicSettings() }
 
@@ -198,6 +201,13 @@ class FragmentSettings : Fragment() {
         //note: this throws if there is no enum matching the name
         val colors = colors.mapKeys { (name, _) -> enumValueOf<T>(name) }
         enumColorSettingsRepository.put(T::class.java, colors)
+    }
+
+    //restores the persisted blocked/enabled state into the block's toggle, then wires the toggle
+    //straight to the repository - no confirm step, it commits on every tap
+    private inline fun <reified T : Enum<T>> setupColourToggle(block: ColorCodingChoiceBlock) {
+        block.setColoursEnabled(!enumColorSettingsRepository.isEnumColorBlocked(T::class.java))
+        block.onColoursEnabledChanged = { enabled -> enumColorSettingsRepository.blockEnumColor(T::class.java, !enabled) }
     }
 
     /**
