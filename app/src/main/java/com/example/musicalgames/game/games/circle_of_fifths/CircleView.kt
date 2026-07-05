@@ -29,7 +29,7 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
         textView.textSize = 40f
         textView.gravity = Gravity.CENTER
 
-        keyboard.visibility = View.GONE
+        keyboard.visibility = GONE
 
         addView(circle, LayoutParams(LayoutParams.MATCH_PARENT, 0, 3f))
         addView(textView, LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f))
@@ -50,7 +50,8 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
             if (state.highlightedNote == null) listOf() else listOf(state.highlightedNote)
         )
         circle.setCenterText(state.question)
-        keyboard.visibility = if (state.showKeyboard) View.VISIBLE else View.GONE
+        //circle.setTextColour()
+        keyboard.visibility = if (state.showKeyboard) VISIBLE else GONE
         textView.text = state.screenCommandMessage ?: ""
     }
 

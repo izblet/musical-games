@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
 import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
@@ -12,6 +11,7 @@ import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.CircleOfFifths
 import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.display.ModeSpelling
 import com.example.musicalgames.music_model.display.NoteSpelling
@@ -123,7 +123,7 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     fun clickCircle(index: Int) {
-        val note = CircleOfFifthsPalette.noteAtIndex(index, gameLogic.questionMode)
+        val note = CircleOfFifths.atIndex(index, gameLogic.questionMode)
 
         if(!gameLogic.awaitingAnswer())
             return
