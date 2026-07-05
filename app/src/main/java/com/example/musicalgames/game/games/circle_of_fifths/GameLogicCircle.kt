@@ -7,8 +7,7 @@ import com.example.musicalgames.music_model.Mode
 data class AnswerResult (
     val correct: Boolean,
     val rightAnsIndex: Int?,
-    val rightAnsNote: ChromaticNote?,
-    val rightAnsMode: Mode?
+    val rightAnsNote: ChromaticNote?
 )
 
 class GameLogicCircle (private val level: CircleLevel) {
@@ -52,18 +51,18 @@ class GameLogicCircle (private val level: CircleLevel) {
 
     fun answer(answerNote: ChromaticNote) : AnswerResult {
         if(!awaitingAnswer()) {
-            return AnswerResult(correct = false, rightAnsIndex = null, rightAnsNote = null, rightAnsMode = null)
+            return AnswerResult(correct = false, rightAnsIndex = null, rightAnsNote = null)
         }
         if(answerNote== questionNote) {
             _rightAnsNum++
-            val receipt = AnswerResult(correct = true, rightAnsIndex = questionNoteIndex, rightAnsNote = questionNote, rightAnsMode = questionMode)
+            val receipt = AnswerResult(correct = true, rightAnsIndex = questionNoteIndex, rightAnsNote = questionNote)
             nextQuestion()
             return receipt
         }
         else {
             //only in infinite mode
             _wrongAnsNum++
-            val receipt = AnswerResult(correct = false, rightAnsIndex = questionNoteIndex, rightAnsNote = questionNote, rightAnsMode = questionMode)
+            val receipt = AnswerResult(correct = false, rightAnsIndex = questionNoteIndex, rightAnsNote = questionNote)
             nextQuestion()
             return receipt
         }

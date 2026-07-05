@@ -25,8 +25,8 @@ import kotlinx.coroutines.launch
 data class CircleViewState(
     val showKeyboard: Boolean = false,
     val question: String? = null,
+    val questionMode: Mode? = null,
     val highlightedNote: Int? = null,
-    val currentMode: Mode? = null,
     val screenCommandMessage: String? = null
 )
 
@@ -82,8 +82,8 @@ class CircleViewModel: ViewModel(), GameController {
         val newState = _viewState.value.copy(
             showKeyboard = true,
             question = ModeSpelling.common(gameLogic.questionMode),
+            questionMode = gameLogic.questionMode,
             highlightedNote = gameLogic.questionNoteIndex,
-            currentMode = gameLogic.questionMode,
             screenCommandMessage = null
         )
         _viewState.value = newState
@@ -95,8 +95,8 @@ class CircleViewModel: ViewModel(), GameController {
         val newState = _viewState.value.copy(
             showKeyboard = false,
             question = "$noteName\n$modeName",
+            questionMode = gameLogic.questionMode,
             highlightedNote = null,
-            currentMode = null,
             screenCommandMessage = null
         )
         _viewState.value = newState
@@ -143,13 +143,8 @@ class CircleViewModel: ViewModel(), GameController {
             } else {
                 answerResult.rightAnsIndex
             }
-            val currentMode = if(answerResult.correct) {
-                null
-            } else {
-                answerResult.rightAnsMode
-            }
 
-            val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote, currentMode = currentMode)
+            val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote)
 
             _viewState.value = newState
             delayAndNext()

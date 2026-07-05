@@ -43,8 +43,12 @@ class CircleView(context: Context, private val viewModel: CircleViewModel, lifec
 
     private fun updateView(state: CircleViewState) {
 
-        if(!coloursDisabled)
-            state.currentMode?.let { paletteModel.highlightColor = modeColours.getValue(it) }
+        if(!coloursDisabled) {
+            state.questionMode?.let {
+                paletteModel.highlightColor = modeColours.getValue(it)
+                paletteModel.centerTextColor = modeColours.getValue(it)
+            }
+        }
 
         paletteModel.highlightedIndices =
             if (state.highlightedNote == null) listOf() else listOf(state.highlightedNote)
