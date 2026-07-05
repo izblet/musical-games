@@ -27,6 +27,7 @@ class TunableSliderRow @JvmOverloads constructor(
     private val label: TextView
     private val valueText: TextView
     private val editButton: ImageButton
+    private val infoButton: InfoIconButton
     private val resetButton: ImageButton
     private val slider: Slider
     private val decreaseButton: ImageButton
@@ -48,6 +49,7 @@ class TunableSliderRow @JvmOverloads constructor(
         label = findViewById(R.id.label)
         valueText = findViewById(R.id.valueText)
         editButton = findViewById(R.id.editButton)
+        infoButton = findViewById(R.id.infoButton)
         resetButton = findViewById(R.id.resetButton)
         slider = findViewById(R.id.slider)
         decreaseButton = findViewById(R.id.decreaseButton)
@@ -84,7 +86,8 @@ class TunableSliderRow @JvmOverloads constructor(
         stepSize: Float,
         defaultValue: Float,
         format: (Float) -> String,
-        onCommit: (Float) -> Unit
+        onCommit: (Float) -> Unit,
+        helpText: String
     ) {
         this.label.text = label
         slider.valueFrom = valueFrom
@@ -93,6 +96,7 @@ class TunableSliderRow @JvmOverloads constructor(
         this.defaultValue = defaultValue
         this.format = format
         this.onCommit = onCommit
+        infoButton.configure(helpText)
     }
 
     /** Sets the displayed value without touching edit state - for initial population/reset-all. */

@@ -29,24 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/valueText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="64dp"
-            android:textAlignment="textEnd" />
-
-        <ImageButton
-            android:id="@+id/resetButton"
+        <com.example.musicalgames.utils.components.ui_components.InfoIconButton
+            android:id="@+id/infoButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginStart="4dp"
             android:padding="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Reset to default"
-            android:scaleX="-1"
-            android:enabled="false"
-            android:src="@drawable/reset" />
+            android:background="?attr/selectableItemBackgroundBorderless" />
     </LinearLayout>
 
     <com.google.android.material.slider.Slider
@@ -71,16 +60,36 @@
             android:enabled="false"
             android:src="@drawable/arrow_left_bold" />
 
+        <TextView
+            android:id="@+id/valueText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:minWidth="64dp"
+            android:textAlignment="center" />
+
         <ImageButton
             android:id="@+id/increaseButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginStart="32dp"
             android:padding="6dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Increase"
             android:enabled="false"
             android:src="@drawable/arrow_right_bold" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/resetButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="6dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Reset to default"
+        android:scaleX="-1"
+        android:enabled="false"
+        android:src="@drawable/reset" />
 
 </LinearLayout>

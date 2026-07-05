@@ -43,14 +43,21 @@ class FragmentSettings : Fragment() {
             valueFrom = -60f, valueTo = -10f, stepSize = 1f,
             defaultValue = energyToDbfs(MicrophoneSettings.DEFAULT_ENERGY_THRESHOLD),
             format = { "${it.toInt()} dBFS" },
-            onCommit = { dbfs -> updateMicSettings { it.copy(energyThreshold = dbfsToEnergy(dbfs)) } }
+            onCommit = { dbfs -> updateMicSettings { it.copy(energyThreshold = dbfsToEnergy(dbfs)) } },
+            helpText = "How loud a sound must be before the app tries to recognise it as a note. " +
+                "Raise this (toward -10) if background noise or a noisy room is triggering false " +
+                "notes; lower it (toward -60) if quiet or distant playing isn't being picked up."
         )
         binding.maxUncertaintyRow.configure(
             label = "Max pitch uncertainty (0.01 - 1.0)",
             valueFrom = 0.01f, valueTo = 1f, stepSize = 0.01f,
             defaultValue = MicrophoneSettings.DEFAULT_MAX_UNCERTAINTY,
             format = { it.toString() },
-            onCommit = { value -> updateMicSettings { it.copy(maxUncertainty = value) } }
+            onCommit = { value -> updateMicSettings { it.copy(maxUncertainty = value) } },
+            helpText = "How unsure the pitch detector is allowed to be about a note before it's " +
+                "rejected. Lower this for stricter, more reliable recognition (useful with a clean " +
+                "input signal); raise it if valid notes are being rejected too often, e.g. with a " +
+                "noisy microphone or an instrument with a less pure tone."
         )
 //        binding.entryThresholdPercentRow.configure(
 //            label = "Note entry confidence % (1 - 100)",
@@ -71,21 +78,31 @@ class FragmentSettings : Fragment() {
             valueFrom = 10f, valueTo = 1000f, stepSize = 10f,
             defaultValue = MicrophoneSettings.DEFAULT_WINDOW_MS.toFloat(),
             format = { it.toLong().toString() },
-            onCommit = { value -> updateMicSettings { it.copy(windowMs = value.toLong()) } }
+            onCommit = { value -> updateMicSettings { it.copy(windowMs = value.toLong()) } },
+            helpText = "How long a pitch must be sustained before it's accepted as a recognised " +
+                "note. Shorten this if note recognition feels laggy or slow to respond; lengthen " +
+                "it if short blips or fast passing sounds are being wrongly recognised as notes."
         )
         binding.onsetRiseFactorRow.configure(
             label = "Onset sensitivity (rise factor) (1.2 - 5.0)",
             valueFrom = 1.2f, valueTo = 5f, stepSize = 0.1f,
             defaultValue = MicrophoneSettings.DEFAULT_ONSET_RISE_FACTOR,
             format = { "%.1fx".format(it) },
-            onCommit = { value -> updateMicSettings { it.copy(onsetRiseFactor = value) } }
+            onCommit = { value -> updateMicSettings { it.copy(onsetRiseFactor = value) } },
+            helpText = "How sharply the sound must get louder to count as the start of a new note " +
+                "(an \"onset\"). Lower this if new notes aren't being detected, e.g. with a soft " +
+                "attack instrument; raise it if a single note is being counted as several separate " +
+                "onsets, e.g. from vibrato or a wavering sound."
         )
         binding.onsetRefractoryMsRow.configure(
             label = "Onset refractory period (ms) (20 - 500)",
             valueFrom = 20f, valueTo = 500f, stepSize = 10f,
             defaultValue = MicrophoneSettings.DEFAULT_ONSET_REFRACTORY_MS.toFloat(),
             format = { it.toLong().toString() },
-            onCommit = { value -> updateMicSettings { it.copy(onsetRefractoryMs = value.toLong()) } }
+            onCommit = { value -> updateMicSettings { it.copy(onsetRefractoryMs = value.toLong()) } },
+            helpText = "The minimum time after one detected note-onset before another can be " +
+                "detected. Raise this if vibrato or a wavering note is being split into multiple " +
+                "notes; lower it if quick, deliberately repeated notes are being missed."
         )
         //TODO: calculate items per row dynamically -> descriptions should fit in one line
         //perhaps calculate inside the EnumColorSettings if the itemsPerRow is not set manually
