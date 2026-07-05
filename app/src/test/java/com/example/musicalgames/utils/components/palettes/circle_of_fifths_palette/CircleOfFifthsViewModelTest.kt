@@ -3,11 +3,11 @@ package com.example.musicalgames.utils.components.palettes.circle_of_fifths_pale
 import org.junit.Assert.*
 import org.junit.Test
 
-class CircleOfFifthsPaletteModelTest {
+class CircleOfFifthsViewModelTest {
 
     @Test
     fun `defaults are empty highlights and no text`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         assertEquals(listOf<Int>(), model.highlightedIndices)
         assertNull(model.centerText)
         assertNull(model.centerTextColor)
@@ -15,7 +15,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `setting highlightedIndices invokes onChange exactly once`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         var changeCount = 0
         model.onChange = { changeCount++ }
 
@@ -27,7 +27,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `setting highlightColor invokes onChange exactly once`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         var changeCount = 0
         model.onChange = { changeCount++ }
 
@@ -39,7 +39,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `setting centerText invokes onChange exactly once`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         var changeCount = 0
         model.onChange = { changeCount++ }
 
@@ -51,7 +51,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `setting centerTextColor invokes onChange exactly once`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         var changeCount = 0
         model.onChange = { changeCount++ }
 
@@ -63,7 +63,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `onChange is not invoked for mutations before it is registered`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         model.centerText = "before registering a listener"
 
         var changeCount = 0
@@ -74,7 +74,7 @@ class CircleOfFifthsPaletteModelTest {
 
     @Test
     fun `a newly assigned onChange only fires on subsequent mutations`() {
-        val model = CircleOfFifthsPaletteModel()
+        val model = CircleOfFifthsViewModel()
         var firstListenerCalls = 0
         model.onChange = { firstListenerCalls++ }
         model.centerText = "first"

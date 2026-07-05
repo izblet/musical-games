@@ -2,7 +2,6 @@ package com.example.musicalgames.game.games.circle_of_fifths
 
 import android.content.Context
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
@@ -11,13 +10,13 @@ import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.settings.EnumColorSettings
 import com.example.musicalgames.settings.EnumColorSettingsRepository
 import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPaletteView
-import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPaletteModel
+import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsViewModel
 import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteView
 import kotlinx.coroutines.launch
 
 class CircleView(context: Context, private val viewModel: CircleViewModel, lifecycleOwner: LifecycleOwner) : LinearLayout(context) {
-    private val paletteModel = CircleOfFifthsPaletteModel()
+    private val paletteModel = CircleOfFifthsViewModel()
     private val circle = CircleOfFifthsPaletteView(context, null, paletteModel)
     private val keyboard = KeyPaletteView(context)
     private val textView = TextView(context)

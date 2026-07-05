@@ -2,7 +2,7 @@ package com.example.musicalgames.utils.components.palettes.circle_of_fifths_pale
 
 import android.graphics.Color
 
-class CircleOfFifthsPaletteModel {
+class CircleOfFifthsViewModel {
     var onChange: (() -> Unit)? = null
 
     var highlightedIndices: List<Int> = listOf()

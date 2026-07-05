@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 
-class CircleOfFifthsPaletteView(context: Context, attr: AttributeSet?, model: CircleOfFifthsPaletteModel) : CircleOfFifthsView(
+class CircleOfFifthsPaletteView(context: Context, attr: AttributeSet?, model: CircleOfFifthsViewModel) : CircleOfFifthsView(
     context,
     attr,
     model

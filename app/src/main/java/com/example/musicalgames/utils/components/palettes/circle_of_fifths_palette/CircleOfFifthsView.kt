@@ -10,7 +10,7 @@ import kotlin.math.*
 open class CircleOfFifthsView(
     context: Context,
     attrs: AttributeSet?,
-    private val model: CircleOfFifthsPaletteModel
+    private val model: CircleOfFifthsViewModel
 ) : View(context, attrs) {
 
     init {
