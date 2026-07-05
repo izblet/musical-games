@@ -52,7 +52,7 @@ class FragmentSettings : Fragment() {
             label = "Max pitch uncertainty (0.01 - 1.0)",
             valueFrom = 0.01f, valueTo = 1f, stepSize = 0.01f,
             defaultValue = MicrophoneSettings.DEFAULT_MAX_UNCERTAINTY,
-            format = { it.toString() },
+            format = { "%.2f".format(it) },
             onCommit = { value -> updateMicSettings { it.copy(maxUncertainty = value) } },
             helpText = "How unsure the pitch detector is allowed to be about a note before it's " +
                 "rejected. Lower this for stricter, more reliable recognition (useful with a clean " +
