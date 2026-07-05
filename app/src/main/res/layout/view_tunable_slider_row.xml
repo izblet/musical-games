@@ -58,6 +58,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Decrease"
             android:enabled="false"
+            android:tint="@color/disableable_icon_tint"
             android:src="@drawable/arrow_left_bold" />
 
         <TextView
@@ -77,6 +78,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Increase"
             android:enabled="false"
+            android:tint="@color/disableable_icon_tint"
             android:src="@drawable/arrow_right_bold" />
     </LinearLayout>
 
@@ -90,6 +92,7 @@
         android:contentDescription="Reset to default"
         android:scaleX="-1"
         android:enabled="false"
+        android:tint="@color/disableable_icon_tint"
         android:src="@drawable/reset" />
 
 </LinearLayout>
