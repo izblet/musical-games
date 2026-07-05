@@ -25,6 +25,7 @@ class FlappyController(
 
     override fun setViewModel(viewModel: ViewModel) {
         // the view model is provided through the constructor instead
+        //TODO: should be removed from the base class
     }
 
     override fun initGame(context: Context, listener: GameListener) {
@@ -53,6 +54,7 @@ class FlappyController(
                 delay(ScreenHighlighter.FLASH_DURATION_MS)
             }
             gameListener?.onGameEnded()
+
         }
     }
 

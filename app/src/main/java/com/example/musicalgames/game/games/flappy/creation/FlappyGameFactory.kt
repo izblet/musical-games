@@ -78,6 +78,8 @@ class FlappyGameFactory : GameFactory {
     ): GameController {
         val viewModel = ViewModelProvider(activity)[FlappyViewModel::class.java]
         viewModel.setScreenHighlighter(screenHighlighter)
+        viewModel.clear() //viewmodel might be reused between games, makes sure no leftover view
+        //TODO: the need for the line above seems ugly, consider scoping the viewmodel to fragment
         val level = viewModel.level
 
         //the game-space rectangle's height directly represents the level's midi pitch range

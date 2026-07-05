@@ -105,6 +105,9 @@ class FlappyViewModel : ViewModel() {
 
         return refreshView
     }
+    fun clear() {
+        _renderState.value = null
+    }
 
     fun stopGameLoop() {
         refreshViewJob?.cancel()
