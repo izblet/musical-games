@@ -7,7 +7,7 @@
     <!-- The top buttons -->
     <LinearLayout
         android:id="@+id/iconContainer"
-        android:background="?attr/colorPrimary"
+        android:background="@drawable/tab_strip_background"
         android:layout_width="match_parent"
         android:layout_height="25pt"
         android:gravity="center"
@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/surfaceHeaderColor"
         >
 
 
@@ -88,8 +88,8 @@
             android:padding="16dp" />
         <View
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/colorOnPrimary"
+            android:layout_height="1dp"
+            android:background="?attr/hairlineColor"
             android:layout_marginTop="4dp"
             />
 

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Toolbar chrome: header surface background, near-white title, turquoise overflow/menu icons. -->
+    <style name="ThemeOverlay.MusicalGames.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">?attr/colorOnBackground</item>
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+    </style>
+
     <style name="customLabelStyle">
         <item name="android:textAlignment">textEnd</item>
         <item name="android:gravity">center_vertical</item>
@@ -9,8 +15,8 @@
         <item name="android:layout_width">match_parent</item>
     </style>
     <style name="customInputElementStyle">
-        <item name="android:background">@drawable/item_bordered</item>
-        <item name="android:popupBackground">@drawable/item_bordered</item>
+        <item name="android:background">@drawable/spinner_chip_background</item>
+        <item name="android:popupBackground">@drawable/spinner_popup_background</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_height">50dp</item>

@@ -36,7 +36,7 @@
 
         <com.example.musicalgames.utils.components.ui_components.EnumSpinner
             style="@style/customInputElementStyle"
-            android:popupBackground="@drawable/item_bordered"
+            android:popupBackground="@drawable/spinner_popup_background"
             android:id="@+id/root_spinner"/>
     </TableRow>
 
@@ -70,7 +70,7 @@
 
         <com.example.musicalgames.utils.components.ui_components.EnumSpinner
             android:id="@+id/scaleSpinner"
-            android:popupBackground="@drawable/item_bordered"
+            android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle" />
     </TableRow>
     <TableRow
@@ -82,7 +82,7 @@
             android:text="Selection:"/>
         <com.example.musicalgames.utils.components.ui_components.KeyboardSelector
             android:id="@+id/keyboard_selector"
-            android:popupBackground="@drawable/item_bordered"
+            android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle"
             />
     </TableRow>
@@ -99,7 +99,7 @@
 
         <com.example.musicalgames.utils.components.ui_components.EnumSpinner
             android:id="@+id/max_interval_spinner"
-            android:popupBackground="@drawable/item_bordered"
+            android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle" />
     </TableRow>
 
@@ -118,11 +118,11 @@
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/min_note_spinner"
-                android:popupBackground="@drawable/item_bordered"
+                android:popupBackground="@drawable/spinner_popup_background"
                 style="@style/customInputElementStyle" />
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
-                android:popupBackground="@drawable/item_bordered"
+                android:popupBackground="@drawable/spinner_popup_background"
                 android:id="@+id/min_note_octave"
                 style="@style/customInputElementStyle" />
         </TableRow>
@@ -143,12 +143,12 @@
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/max_note_spinner"
-                android:popupBackground="@drawable/item_bordered"
+                android:popupBackground="@drawable/spinner_popup_background"
                 style="@style/customInputElementStyle" />
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/max_octave_spinner"
-                android:popupBackground="@drawable/item_bordered"
+                android:popupBackground="@drawable/spinner_popup_background"
                 style="@style/customInputElementStyle" />
         </TableRow>
     </TableRow>

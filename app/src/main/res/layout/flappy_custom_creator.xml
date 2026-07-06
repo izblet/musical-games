@@ -188,12 +188,13 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="vertical"
+        android:background="?attr/surfaceHeaderColor"
         app:layout_constraintTop_toBottomOf="@id/scrollView3"
         app:layout_constraintBottom_toBottomOf="parent">
         <View
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="?attr/colorOnPrimary"/>
+            android:layout_height="1dp"
+            android:background="?attr/hairlineColor"/>
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent"
@@ -201,16 +202,16 @@
 
         <Button
             android:id="@+id/addButton"
-            style="@style/basicListButtonStyle"
+            style="@style/buttonGhostStyle"
             android:text="Save"
             />
         <View
-            android:layout_width="4dp"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="?attr/colorOnPrimary"/>
+            android:background="?attr/hairlineColor"/>
         <Button
             android:id="@+id/playButton"
-            style="@style/basicListButtonStyle"
+            style="@style/buttonFilledStyle"
             android:text="Play"
             />
        </LinearLayout>
