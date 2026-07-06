@@ -3,7 +3,7 @@
     android:height="800px"
     android:viewportWidth="18"
     android:viewportHeight="18"
-    android:tint="?attr/colorOnPrimary">
+    android:tint="?attr/iconTintColor">
   <group
     android:translateY="1"
     android:translateX="1">

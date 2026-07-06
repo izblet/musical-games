@@ -15,8 +15,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
-        app:tint="@color/white"
-        android:src="@drawable/default_game_icon" />
+        app:tint="?attr/colorPrimary"
+        android:src="@drawable/ic_default_game" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -38,8 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Game Description"
-            android:textColor="?attr/colorOnPrimary"
+            android:textColor="?attr/secondaryTextColor"
             android:textSize="14sp" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_row_chevron" />
 
 </LinearLayout>

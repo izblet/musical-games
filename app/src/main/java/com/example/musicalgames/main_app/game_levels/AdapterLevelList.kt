@@ -40,10 +40,10 @@ class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onI
         fun bind(level: TaggedLevel) {
             favouriteImageView.setImageResource(
                 if(level.isFavourite) {
-                    R.drawable.favourite_filled
+                    R.drawable.ic_favourite_filled
                 }
                 else {
-                    R.drawable.favourite_countour
+                    R.drawable.ic_favourite_outline
                 }
             )
             favouriteImageView.setOnClickListener {
@@ -54,10 +54,13 @@ class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onI
             binImageView.setOnClickListener{
                 onItemClickListener.onBinClick(level)
             }
+            val chevronImageView = itemView.findViewById<ImageView>(R.id.chevronIconView)
             if(!level.isCustom) {
                 binImageView.visibility = View.GONE
+                chevronImageView.visibility = View.VISIBLE
             } else {
                 binImageView.visibility = View.VISIBLE
+                chevronImageView.visibility = View.GONE
             }
 
             nameTextView.text = level.name

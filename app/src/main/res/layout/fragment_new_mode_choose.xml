@@ -21,12 +21,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/button_background"
-            app:tint="@color/white"
+            app:tint="?attr/colorPrimary"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:padding="6pt"
             app:backgroundTint="@null"
-            android:src="@drawable/heart_large" />
+            android:src="@drawable/ic_heart" />
 
         <ImageButton
             android:id="@+id/levelsButton"
@@ -37,9 +37,9 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:padding="6pt"
-            app:tint="@color/white"
+            app:tint="?attr/colorPrimary"
             app:backgroundTint="@null"
-            android:src="@drawable/levels_icon" />
+            android:src="@drawable/ic_levels" />
 
         <ImageButton
             android:id="@+id/customButton"
@@ -49,10 +49,10 @@
             android:background="@drawable/button_background"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            app:tint="@color/white"
+            app:tint="?attr/colorPrimary"
             android:padding="6pt"
             app:backgroundTint="@null"
-            android:src="@drawable/custom_icon" />
+            android:src="@drawable/ic_custom" />
 
         <ImageButton
             android:id="@+id/createButton"
@@ -63,9 +63,9 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:padding="6pt"
-            app:tint="@color/white"
+            app:tint="?attr/colorPrimary"
             app:backgroundTint="@null"
-            android:src="@drawable/plus_icon" />
+            android:src="@drawable/ic_plus" />
     </LinearLayout>
 
 

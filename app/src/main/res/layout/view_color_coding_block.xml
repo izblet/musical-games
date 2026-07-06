@@ -21,7 +21,7 @@
             android:background="@drawable/edit_toggle_background"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit"
-            android:src="@drawable/pencil" />
+            android:src="@drawable/ic_pencil" />
 
         <TextView
             android:id="@+id/title"
@@ -39,7 +39,7 @@
             android:background="@drawable/edit_toggle_background"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Toggle colours"
-            android:src="@drawable/block" />
+            android:src="@drawable/ic_block" />
     </LinearLayout>
 
     <LinearLayout

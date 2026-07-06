@@ -21,7 +21,7 @@
             android:background="@drawable/edit_toggle_background"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit"
-            android:src="@drawable/pencil" />
+            android:src="@drawable/ic_pencil" />
 
         <TextView
             android:id="@+id/label"
@@ -59,7 +59,7 @@
             android:contentDescription="Decrease"
             android:enabled="false"
             android:tint="@color/disableable_icon_tint"
-            android:src="@drawable/arrow_left_bold" />
+            android:src="@drawable/ic_arrow_left" />
 
         <TextView
             android:id="@+id/valueText"
@@ -79,7 +79,7 @@
             android:contentDescription="Increase"
             android:enabled="false"
             android:tint="@color/disableable_icon_tint"
-            android:src="@drawable/arrow_right_bold" />
+            android:src="@drawable/ic_arrow_right" />
     </LinearLayout>
 
     <ImageButton
@@ -93,6 +93,6 @@
         android:scaleX="-1"
         android:enabled="false"
         android:tint="@color/disableable_icon_tint"
-        android:src="@drawable/reset" />
+        android:src="@drawable/ic_reset" />
 
 </LinearLayout>

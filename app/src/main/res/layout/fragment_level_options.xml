@@ -42,7 +42,7 @@
                 android:background="@android:color/transparent"
                 android:inputType="text"
                 android:textAlignment="center"
-                android:textColor="?attr/colorOnPrimary"
+                android:textColor="?attr/secondaryTextColor"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -72,7 +72,7 @@
             android:padding="8dp"
             android:background="@drawable/edit_toggle_background"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/pencil" />
+            android:src="@drawable/ic_pencil" />
 
     </LinearLayout>
 
@@ -131,7 +131,7 @@
                 android:padding="8dp"
                 android:background="@drawable/edit_toggle_background"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/pencil" />
+                android:src="@drawable/ic_pencil" />
 
         </LinearLayout>
 

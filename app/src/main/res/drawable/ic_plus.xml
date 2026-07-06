@@ -3,7 +3,7 @@
     android:height="800px"
     android:viewportWidth="349.03"
     android:viewportHeight="349.03"
-    android:tint="?attr/colorOnPrimary">
+    android:tint="?attr/iconTintColor">
   <path
       android:fillColor="@android:color/white"
       android:pathData="M349.03,141.226v66.579c0,5.012-4.061,9.079-9.079,9.079H216.884v123.067c0,5.019-4.067,9.079-9.079,9.079h-66.579
