@@ -53,7 +53,6 @@ class GameplayOptionsView(
 
     init {
         orientation = VERTICAL
-        setBackgroundColor(themeColor(R.attr.surfaceChipColor))
 
         val content = LinearLayout(context).apply {
             orientation = VERTICAL
@@ -115,7 +114,7 @@ class GameplayOptionsView(
             setPadding(dp(12), dp(11), dp(12), dp(11))
             isClickable = true
             isFocusable = true
-            setBackgroundResource(R.drawable.underline_input)
+            setBackgroundResource(R.drawable.spinner_chip_background)
             addView(label)
             addView(spacer, LinearLayout.LayoutParams(0, 0, 1f))
             addView(summaryTextView)

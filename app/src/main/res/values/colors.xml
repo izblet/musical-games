@@ -10,14 +10,16 @@
     <color name="white">#FFFFFFFF</color>
     <color name="dark_white">#bfc5c9</color>
 
-    <!-- Turquoise/sharp-corner redesign tokens -->
-    <color name="page_background">#1B1E24</color>
-    <color name="surface_header">#23272F</color>
-    <color name="surface_chip">#2F353E</color>
-    <color name="accent_turquoise">#1AA0B3</color>
+    <!-- Turquoise/sharp-corner redesign tokens - matched to docs/Clean app interface
+         redesign/colour_reference.jpg via dominant-colour sampling of content_background.jpg,
+         top_bar_background.jpg and accent_colour.jpg. -->
+    <color name="page_background">#252525</color>
+    <color name="surface_header">#303030</color>
+    <color name="surface_chip">#404040</color>
+    <color name="accent_turquoise">#39B3B6</color>
     <color name="accent_on">#06343B</color>
-    <color name="accent_soft">#291AA0B3</color>
-    <color name="accent_soft_strong">#331AA0B3</color>
+    <color name="accent_soft">#2939B3B6</color>
+    <color name="accent_soft_strong">#3339B3B6</color>
     <color name="text_primary">#ECEEF1</color>
     <color name="text_secondary">#9AA1AA</color>
     <color name="text_tertiary">#6B727B</color>

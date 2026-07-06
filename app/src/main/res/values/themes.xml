@@ -1,10 +1,58 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme. This app has no separate light theme - it's always the
+         turquoise/dark design from the mockups - so every token lives here rather than a
+         values-night override, which would only apply on devices actually in system dark mode
+         and leave everyone else on stock Material3's light purple defaults. -->
     <style name="Base.Theme.MusicalGames" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <!--<item name="android:buttonTint">@color/blue</item> -->
-        <!--<item name="android:colorButtonNormal">@color/blue</item>-->
+        <!-- Material's dark-theme elevation overlay mixes colorPrimary into elevated surfaces
+             (AppBarLayout, BottomSheetDialog, dialogs/popups) regardless of an explicit
+             android:background/elevation="0dp" - that's what was washing the toolbar out to a
+             bright cyan instead of surfaceHeaderColor. This app wants flat, explicit colours
+             everywhere, not Material's automatic elevation tinting. -->
+        <item name="elevationOverlayEnabled">false</item>
+
+        <item name="backgroundColor">@color/page_background</item>
+        <item name="android:windowBackground">@color/page_background</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+
+        <item name="colorPrimary">@color/accent_turquoise</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
+        <item name="colorPrimaryVariant">@color/accent_turquoise</item>
+
+        <item name="colorSecondary">@color/red</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/dark_red</item>
+
+        <!-- Pin every core Material3 surface/outline role to our own palette too, so any
+             stock-styled dialog/popup/bottom sheet we haven't hand-skinned (BottomSheetDialog,
+             PopupMenu, AlertDialog) matches the redesign instead of falling back to Material3's
+             own baseline tones. -->
+        <item name="colorSurface">@color/surface_chip</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/surface_header</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/text_tertiary</item>
+        <item name="colorOutlineVariant">@color/hairline</item>
+
+        <item name="rightAnswerColor">@color/blue</item>
+        <item name="wrongAnswerColor">@color/red</item>
+
+        <item name="textFillColor">@color/white</item>
+        <item name="android:textColor">@color/text_primary</item>
+
+        <!-- Turquoise/sharp-corner redesign tokens -->
+        <item name="surfaceHeaderColor">@color/surface_header</item>
+        <item name="surfaceChipColor">@color/surface_chip</item>
+        <item name="accentSoftColor">@color/accent_soft</item>
+        <item name="accentSoftStrongColor">@color/accent_soft_strong</item>
+        <item name="secondaryTextColor">@color/text_secondary</item>
+        <item name="tertiaryTextColor">@color/text_tertiary</item>
+        <item name="disabledTextColor">@color/text_disabled</item>
+        <item name="hairlineColor">@color/hairline</item>
+        <item name="iconTintColor">@color/accent_turquoise</item>
+
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
     </style>
 
     <style name="Theme.MusicalGames" parent="Base.Theme.MusicalGames" >
