@@ -2,4 +2,15 @@
 <resources>
     <attr name="rightAnswerColor" format="color"/>
     <attr name="wrongAnswerColor" format="color"/>
+
+    <!-- Turquoise/sharp-corner redesign tokens -->
+    <attr name="surfaceHeaderColor" format="color"/>
+    <attr name="surfaceChipColor" format="color"/>
+    <attr name="accentSoftColor" format="color"/>
+    <attr name="accentSoftStrongColor" format="color"/>
+    <attr name="secondaryTextColor" format="color"/>
+    <attr name="tertiaryTextColor" format="color"/>
+    <attr name="disabledTextColor" format="color"/>
+    <attr name="hairlineColor" format="color"/>
+    <attr name="iconTintColor" format="color"/>
 </resources>

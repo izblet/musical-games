@@ -9,4 +9,18 @@
     <color name="dark_red">#770e1b</color>
     <color name="white">#FFFFFFFF</color>
     <color name="dark_white">#bfc5c9</color>
+
+    <!-- Turquoise/sharp-corner redesign tokens -->
+    <color name="page_background">#1B1E24</color>
+    <color name="surface_header">#23272F</color>
+    <color name="surface_chip">#2F353E</color>
+    <color name="accent_turquoise">#1AA0B3</color>
+    <color name="accent_on">#06343B</color>
+    <color name="accent_soft">#291AA0B3</color>
+    <color name="accent_soft_strong">#331AA0B3</color>
+    <color name="text_primary">#ECEEF1</color>
+    <color name="text_secondary">#9AA1AA</color>
+    <color name="text_tertiary">#6B727B</color>
+    <color name="text_disabled">#5F666E</color>
+    <color name="hairline">#12FFFFFF</color>
 </resources>
