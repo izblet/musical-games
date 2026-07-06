@@ -33,7 +33,7 @@ class SPICEModelManager (context: Context, modelFile: String){
     private fun getStandardDeviation(notes: MutableList<Float>, mean: Float): Float {
         return notes.map{abs(it-mean)}.average().toFloat()
     }
-    fun getMeanDominantPitch(data: FloatArray, inputSize:Int, outputSize:Int):Float? {
+    fun getMeanDominantPitch(data: FloatArray, inputSize:Int, outputSize:Int, maxUncertainty: Float):Float? {
         val inputs = arrayOf<Any>(data)
         val outputs = HashMap<Int, Any>()
         val pitches = FloatArray(inputSize)
@@ -48,7 +48,6 @@ class SPICEModelManager (context: Context, modelFile: String){
         }
 
         //first remove values that are too uncertain
-        val maxUncertainty = 0.15f
         val results: MutableList<Float> = mutableListOf()
 
         for(i in 0 until outputSize) {

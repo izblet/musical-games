@@ -1,7 +1,7 @@
 package com.example.musicalgames.game.games.circle_of_fifths
 
-import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.CircleOfFifths
 import com.example.musicalgames.music_model.Mode
 
 data class AnswerResult (
@@ -46,7 +46,7 @@ class GameLogicCircle (private val level: CircleLevel) {
     private fun nextQuestion() {
         _questionNote = ChromaticNote.entries.random()
         _questionMode = level.modes.random()
-        _questionNoteIndex = CircleOfFifthsPalette.noteIndex(_questionNote, _questionMode)
+        _questionNoteIndex = CircleOfFifths.indexOf(_questionNote, _questionMode)
     }
 
     fun answer(answerNote: ChromaticNote) : AnswerResult {

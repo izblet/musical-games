@@ -8,6 +8,7 @@
     <string name="previous">Previous</string>
     <string name="lorem_ipsum">lorem</string>
     <string name="spice_model">spice.tflite</string>
+    <string name="swiftf0_model">swiftf0.onnx</string>
     <string name="win_string">You have won!</string>
     <string name="lost_string">You have lost!</string>
     <string name="your_score_string">Your score: %1$s</string>

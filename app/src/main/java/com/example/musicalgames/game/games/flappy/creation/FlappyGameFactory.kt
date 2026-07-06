@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.R
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.GameFactory
@@ -36,13 +37,14 @@ import com.example.musicalgames.games.flappy.LEN_INF
 import com.example.musicalgames.main_app.game_levels.TaggedLevel
 import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.Note
+import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.components.StaffPainter
 import com.example.musicalgames.utils.geometry.Circle
 import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 import com.example.musicalgames.utils.question_generation.ListNoteGenerator
 import com.example.musicalgames.utils.wrappers.BitmapUtil
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
+import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 
 class FlappyGameFactory : GameFactory {
 
@@ -50,7 +52,7 @@ class FlappyGameFactory : GameFactory {
         return FlappyLevels.baseLevels
     }
 
-    override fun getPermissions(): Array<String> {
+    override fun getPermissions(gameplay: GamePlayInstance): Array<String> {
         return arrayOf(Manifest.permission.RECORD_AUDIO)
     }
 
@@ -71,9 +73,13 @@ class FlappyGameFactory : GameFactory {
         context: Context,
         activity: FragmentActivity,
         gameContainer: ViewGroup,
+        screenHighlighter: ScreenHighlighter,
         gameListener: GameListener
     ): GameController {
         val viewModel = ViewModelProvider(activity)[FlappyViewModel::class.java]
+        viewModel.setScreenHighlighter(screenHighlighter)
+        viewModel.clear() //viewmodel might be reused between games, makes sure no leftover view
+        //TODO: the need for the line above seems ugly, consider scoping the viewmodel to fragment
         val level = viewModel.level
 
         //the game-space rectangle's height directly represents the level's midi pitch range
@@ -102,7 +108,11 @@ class FlappyGameFactory : GameFactory {
         // TODO: hardcoded for now, should probably come from a difficulty/precision setting
         val birdRadius = 0.25
 
-        val pitchRecogniser = PitchRecogniser(context, "C2", "C6")
+        val micSettings = MicrophoneSettingsRepository(context).get()
+        val pitchRecogniser = SwiftF0PitchRecogniser(
+            context, "C2", "C6",
+            micSettings.energyThreshold, micSettings.minConfidence
+        )
         val midiCoordinateController = MidiCoordinateController(
             pitchRecogniser,
             minCoordinate = gameRect.bottom,
@@ -168,30 +178,30 @@ class FlappyGameFactory : GameFactory {
             ViewGroup.LayoutParams.MATCH_PARENT
         ))
 
-        val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics).toInt()
-        val pauseButton = MaterialButton(context).apply {
-            text = "Pause"
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            setPadding(dp16 * 2, dp16, dp16 * 2, dp16)
-        }
-        gameContainer.addView(pauseButton, FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ).also {
-            it.gravity = Gravity.BOTTOM or Gravity.START
-            it.setMargins(dp16, 0, 0, dp16)
-        })
+//        val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics).toInt()
+//        val pauseButton = MaterialButton(context).apply {
+//            text = "Pause"
+//            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+//            setPadding(dp16 * 2, dp16, dp16 * 2, dp16)
+//        }
+//        gameContainer.addView(pauseButton, FrameLayout.LayoutParams(
+//            ViewGroup.LayoutParams.WRAP_CONTENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        ).also {
+//            it.gravity = Gravity.BOTTOM or Gravity.START
+//            it.setMargins(dp16, 0, 0, dp16)
+//        })
 
         val gameController = FlappyController(viewModel, pitchRecogniser)
         gameController.initGame(context, gameListener)
 
-        pauseButton.setOnClickListener {
-            pauseButton.isEnabled = false
-            gameController.pauseGame()
-            Handler(Looper.getMainLooper()).postDelayed({
-                pauseButton.isEnabled = true
-            }, 3000)
-        }
+//        pauseButton.setOnClickListener {
+//            pauseButton.isEnabled = false
+//            gameController.pauseGame()
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                pauseButton.isEnabled = true
+//            }, 3000)
+//        }
 
         return gameController
     }

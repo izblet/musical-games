@@ -4,10 +4,15 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicalgames.utils.components.palettes.circle_of_fifths_palette.CircleOfFifthsPalette
+import com.example.musicalgames.game.game_core.GamePlayInstance
+import com.example.musicalgames.game.game_core.input.ChromaticNoteInputSource
+import com.example.musicalgames.game.game_core.input.MicrophoneChromaticNoteInput
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.ChromaticNote
+import com.example.musicalgames.music_model.CircleOfFifths
+import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.display.ModeSpelling
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
@@ -20,6 +25,7 @@ import kotlinx.coroutines.launch
 data class CircleViewState(
     val showKeyboard: Boolean = false,
     val question: String? = null,
+    val questionMode: Mode? = null,
     val highlightedNote: Int? = null,
     val screenCommandMessage: String? = null
 )
@@ -32,11 +38,22 @@ class CircleViewModel: ViewModel(), GameController {
     private val gameLogic get() = _gameLogic ?: throw IllegalStateException("Game logic not set")
 
     private var gameListener: GameListener? = null
+    private var screenHighlighter: ScreenHighlighter? = null
 
     private var waitLen:Long =1000
 
+    var gameplay: GamePlayInstance = GamePlayInstance()
+
+    private var _noteInputSource: ChromaticNoteInputSource? = null
+    private val noteInputSource get() = _noteInputSource ?: throw IllegalStateException("Note input source not set")
+    fun setNoteInput(source: ChromaticNoteInputSource) { _noteInputSource = source }
+
     fun setLogic(logic: GameLogicCircle) {
         _gameLogic = logic
+    }
+
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
     }
 
     fun setBpm(bpm: Long) {
@@ -56,11 +73,16 @@ class CircleViewModel: ViewModel(), GameController {
            throw IllegalStateException("Game failed to start or game length 0")
         }
 
+        noteInputSource.start()
+        viewModelScope.launch {
+            noteInputSource.noteFinished.collect { note -> clickNote(note) }
+        }
     }
     private fun newQuestionCircleToNote() {
         val newState = _viewState.value.copy(
             showKeyboard = true,
             question = ModeSpelling.common(gameLogic.questionMode),
+            questionMode = gameLogic.questionMode,
             highlightedNote = gameLogic.questionNoteIndex,
             screenCommandMessage = null
         )
@@ -73,6 +95,7 @@ class CircleViewModel: ViewModel(), GameController {
         val newState = _viewState.value.copy(
             showKeyboard = false,
             question = "$noteName\n$modeName",
+            questionMode = gameLogic.questionMode,
             highlightedNote = null,
             screenCommandMessage = null
         )
@@ -100,13 +123,14 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     fun clickCircle(index: Int) {
-        val note = CircleOfFifthsPalette.noteAtIndex(index, gameLogic.questionMode)
+        val note = CircleOfFifths.atIndex(index, gameLogic.questionMode)
 
         if(!gameLogic.awaitingAnswer())
             return
 
         if(!gameLogic.isCircleToNote()) {
             val answerResult = gameLogic.answer(note)
+            if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
 
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
@@ -134,6 +158,7 @@ class CircleViewModel: ViewModel(), GameController {
 
         if(gameLogic.isCircleToNote()) {
             val answerResult = gameLogic.answer(note)
+            if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
             val screenCommandMessage = if(answerResult.correct) {
                 "Good"
             } else {
@@ -152,7 +177,8 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     override fun endGame() {
-        //TODO("Not yet implemented")
+        _noteInputSource?.stop()
+        (_noteInputSource as? MicrophoneChromaticNoteInput)?.release()
     }
 
     override fun getScore(): Int {

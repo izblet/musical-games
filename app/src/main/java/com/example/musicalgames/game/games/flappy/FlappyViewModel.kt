@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,6 +47,12 @@ class FlappyViewModel : ViewModel() {
         _gameLogic = logic
     }
 
+    private var screenHighlighter: ScreenHighlighter? = null
+
+    fun setScreenHighlighter(highlighter: ScreenHighlighter) {
+        screenHighlighter = highlighter
+    }
+
 
     private suspend fun awaitFrame(): Long = suspendCancellableCoroutine { cont ->
         val callback = Choreographer.FrameCallback { frameTimeNanos ->
@@ -61,6 +68,7 @@ class FlappyViewModel : ViewModel() {
 
         //redraw loop
         var lastFrameTimeNanos: Long? = null
+        var previousScore = gameLogic.score
 
         val refreshView = owner.lifecycleScope.launch {
 
@@ -73,6 +81,14 @@ class FlappyViewModel : ViewModel() {
 
                 gameLogic.tickBird()
                 gameLogic.tickFrame(deltaTimeSeconds)
+
+                if (gameLogic.score > previousScore) {
+                    //screenHighlighter?.correct()
+                    previousScore = gameLogic.score
+                }
+                if (gameLogic.gameEnded && gameLogic.endReason == GameEndReason.COLLISION) {
+                    screenHighlighter?.wrong()
+                }
 
                 _renderState.value = FlappyRenderState(
                     birdShape = gameLogic.getBirdShape(),
@@ -88,6 +104,9 @@ class FlappyViewModel : ViewModel() {
         refreshViewJob = refreshView
 
         return refreshView
+    }
+    fun clear() {
+        _renderState.value = null
     }
 
     fun stopGameLoop() {

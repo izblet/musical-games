@@ -4,14 +4,11 @@ import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.example.musicalgames.utils.components.palettes.interval_palette.IntervalPaletteListener
-import com.example.musicalgames.utils.components.palettes.key_palette.KeyPaletteListener
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
-import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
 //oh noo, why does it hold a reference to the viewwwww
-class MentalController(private val view: MentalView) : GameController, KeyPaletteListener,
-    IntervalPaletteListener {
+class MentalController(private val view: MentalView) : GameController, IntervalPaletteListener {
 
     private var viewModel: MentalViewModel? = null
     //TODO: temporary, viewmodel should be in constructor, view should have viewmodel in constructor
@@ -21,7 +18,6 @@ class MentalController(private val view: MentalView) : GameController, KeyPalett
 
         this.viewModel = viewModel
         view.setViewModel(viewModel)
-        view.setKeyboardListener(this)
         view.setIntervalListener(this)
         viewModel.registerUI(view)
     }
@@ -32,17 +28,13 @@ class MentalController(private val view: MentalView) : GameController, KeyPalett
 
     override fun pauseGame() { }
 
-    override fun endGame() { }
+    override fun endGame() { viewModel?.releaseNoteInput() }
 
     override fun getScore(): Int { return viewModel!!.score }
     override fun getEndDescription(): String {
         return ""
     }
 
-    override fun onClicked(note: ChromaticNote) {
-        viewModel?.select(note)
-
-    }
     override fun onClicked(interval: Interval) {
        viewModel?.select(interval)
     }

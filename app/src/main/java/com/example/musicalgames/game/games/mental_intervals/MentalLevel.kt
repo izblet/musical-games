@@ -11,4 +11,6 @@ data class MentalLevel (
     val startingNotes: List<ChromaticNote>,
     val intervals: List<Interval>,
     val mode: Type,
-): Level()
+): Level() {
+    override fun supportsMicrophoneInput(): Boolean = mode == Type.INTERVAL_NOTE
+}

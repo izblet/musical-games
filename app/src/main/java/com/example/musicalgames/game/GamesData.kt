@@ -58,21 +58,21 @@ object GameMap {
         GameRegistration(
             game = Game.PLAY_BY_EAR,
             info = GameInfo("Play By Ear", "Play back melodies on a piano", R.drawable.ear),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.ESTABLISH_KEY_WITH, GameplayOptions.INPUT_METHOD),
             factoryProvider = { EarGameFactory() },
             serialization = GameSerialization(PlayEarLevel::class, "ear"),
         ),
         GameRegistration(
             game = Game.MENTAL_INTERVALS,
             info = GameInfo("Note Arithmetic", "Practice relationships between notes", R.drawable.mental),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { MentalGameFactory() },
             serialization = GameSerialization(MentalLevel::class, "mental"),
         ),
         GameRegistration(
             game = Game.CIRCLE,
             info = GameInfo("Circle of Fifths", "Learn the positions of scales on the circle of fifths", R.drawable.clock_icon),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { CircleGameFactory() },
             serialization = GameSerialization(CircleLevel::class, "circle"),
             portrait = true,
@@ -80,7 +80,7 @@ object GameMap {
         GameRegistration(
             game = Game.CHORDS,
             info = GameInfo("Chords", "Learn the notes for chords", R.drawable.default_game_icon),
-            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE),
+            gameplayOptions = setOf(GameplayOptions.TYPE, GameplayOptions.BPM, GameplayOptions.DISPLAY_SCORE, GameplayOptions.INPUT_METHOD),
             factoryProvider = { GameFactoryChords() },
             serialization = GameSerialization(LevelChords::class, "chords"),
         ),

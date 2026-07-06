@@ -26,7 +26,7 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
         return permissions
     }
 
-    override suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener) {
+    override suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener, durationMs: Long?) {
         TODO("Not yet implemented")
     }
 
@@ -71,12 +71,12 @@ class FallbackSoundPlayerManager(private var context: Context) : SoundPlayerMana
         return factor
     }
 
-    override fun playNote(note: String, listener: SoundPlayerListener?) {
+    override fun playNote(note: String, listener: SoundPlayerListener?, durationMs: Long?) {
         val parsed = Note.parse(note) ?: throw IllegalArgumentException("Invalid note format $note")
         playNote(parsed.frequency, null)
     }
 
-    override fun playNote(midiCode: Int, listener: SoundPlayerListener?) {
+    override fun playNote(midiCode: Int, listener: SoundPlayerListener?, durationMs: Long?) {
         playNote(Note(midiCode).frequency, null)
     }
 

@@ -8,3 +8,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+claude_commands.txt
+/docs
+CLAUDE.md

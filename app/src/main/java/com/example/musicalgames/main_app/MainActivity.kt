@@ -87,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             if (game != null && destination.id in setOf(R.id.fragmentNewModeChoose, R.id.fragmentLevelOptions)) {
                 supportActionBar?.title = GameMap.gameInfos[game]?.name
             }
+            invalidateOptionsMenu()
         }
     }
 
@@ -96,9 +97,19 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    //hides the overflow menu's only entry - the settings shortcut - while already in settings
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val currentDestinationId = findNavController(R.id.nav_host_fragment_content_main).currentDestination?.id
+        menu.findItem(R.id.action_settings)?.isVisible = currentDestinationId != R.id.fragmentSettings
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            //R.id.action_settings -> true
+            R.id.action_settings -> {
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.fragmentSettings)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

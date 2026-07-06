@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Microphone settings"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tune how the microphone/instrument input recognises notes. These settings affect every game that uses microphone input. Tap the pencil to edit a value."
+            android:textSize="14sp" />
+
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/energyThresholdRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/maxUncertaintyRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <!--
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/entryThresholdPercentRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/exitThresholdPercentRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+        -->
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/windowMsRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/onsetRiseFactorRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
+            android:id="@+id/onsetRefractoryMsRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/resetAllSettingsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset microphone settings to defaults" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Colour coding"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Customize the colours used to tell musical concepts apart."
+            android:textSize="14sp" />
+
+        <com.example.musicalgames.utils.components.ui_components.ColorCodingChoiceBlock
+            android:id="@+id/intervalColorBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <com.example.musicalgames.utils.components.ui_components.ColorCodingChoiceBlock
+            android:id="@+id/modeColorBlock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+
+    </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/editBlockOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>

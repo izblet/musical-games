@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
@@ -16,8 +17,8 @@ import com.example.musicalgames.main_app.game_levels.TaggedLevel
 interface GameFactory {
 
     suspend fun getLevels(pack: GamePackage, context: Context) : List<TaggedLevel>
-    fun getPermissions() : Array<String>
-    fun getStartDelayMs() : Long { return 2000 }
+    fun getPermissions(gameplay: GamePlayInstance) : Array<String>
+    fun getStartDelayMs() : Long { return 0 }
     fun prepareViewModel(
         level: Level,
         gameplay: GamePlayInstance,
@@ -26,5 +27,5 @@ interface GameFactory {
 
     fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?) : CustomGameCreator
     fun getCustomCreatorFromLevel(context: Context, level: Level, attrs: AttributeSet?) : CustomGameCreator
-    fun createGame(context: Context, activity: FragmentActivity, gameContainer: ViewGroup, gameListener: GameListener) : GameController
+    fun createGame(context: Context, activity: FragmentActivity, gameContainer: ViewGroup, screenHighlighter: ScreenHighlighter, gameListener: GameListener) : GameController
 }

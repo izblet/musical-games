@@ -8,15 +8,16 @@ import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
+import com.example.musicalgames.game_activity.ScreenHighlighter
+import com.example.musicalgames.game.game_core.input.PitchSource
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
 import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerManager
-import com.example.musicalgames.utils.wrappers.sound_recording.PitchRecogniser
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FlappyController(
     private val viewModel: FlappyViewModel,
-    private val pitchRecogniser: PitchRecogniser
+    private val pitchRecogniser: PitchSource
 ) : GameController {
 
     private var soundPlayer: SoundPlayerManager? = null
@@ -24,6 +25,7 @@ class FlappyController(
 
     override fun setViewModel(viewModel: ViewModel) {
         // the view model is provided through the constructor instead
+        //TODO: should be removed from the base class
     }
 
     override fun initGame(context: Context, listener: GameListener) {
@@ -48,9 +50,14 @@ class FlappyController(
             pitchRecogniser.start()
             delay(1000)
             viewModel.startGameLoop(owner).join()
+            if (viewModel.endReason == GameEndReason.COLLISION) {
+                delay(ScreenHighlighter.FLASH_DURATION_MS)
+            }
             gameListener?.onGameEnded()
+
         }
     }
+
 
     override fun pauseGame() {
         // TODO: deferred until pause button wiring

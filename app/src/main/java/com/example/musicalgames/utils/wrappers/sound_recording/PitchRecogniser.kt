@@ -2,6 +2,7 @@ package com.example.musicalgames.utils.wrappers.sound_recording
 
 import android.content.Context
 import com.example.musicalgames.R
+import com.example.musicalgames.game.game_core.input.PitchSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,7 +16,9 @@ import com.example.musicalgames.music_model.MusicUtil as MU
 import kotlin.math.pow
 
 class PitchRecogniser (context: Context,
-                       minRecognised: String, maxRecognised: String) {
+                       minRecognised: String, maxRecognised: String,
+                       private val energyThreshold: Int,
+                       private val maxUncertainty: Float) : PitchSource {
     private var SPICE: SPICEModelManager? = null
     private var microphone: MicrophoneManager? = null
 
@@ -30,6 +33,8 @@ class PitchRecogniser (context: Context,
 
     @Volatile
     private var lastPitchSpice: Float? = null
+    @Volatile
+    private var lastFastEnergy: Float = 0f
 
     init {
         SPICE = SPICEModelManager(context, context.getString(R.string.spice_model))
@@ -37,14 +42,24 @@ class PitchRecogniser (context: Context,
     }
 
     companion object {
-        const val THRESHOLD_ENERGY= 30000
         const val UNDEFINED=-1f
+        //trailing slice of the 200ms buffer used for the fast/local energy reading that feeds
+        //onset detection - short enough that a real attack's energy rise shows up almost
+        //immediately, instead of being smeared across the whole (much longer) pitch buffer
+        private const val FAST_ENERGY_WINDOW_SAMPLES = 320 //20ms @ 16kHz
     }
 
 
-    fun getPitch(): Float {
+    override fun getPitch(): Float {
         return lastPitchSpice ?: UNDEFINED
     }
+
+    /** Fast, local energy reading (last ~20ms), for onset detection - distinct from the
+     * whole-buffer energy gate inside [recognizePitch], which is intentionally slower/smoother. */
+    override fun getEnergy(): Float {
+        return lastFastEnergy
+    }
+
     private fun calculateEnergy(audioData: ShortArray): Float {
         var sum = 0.0
         for (sample in audioData) {
@@ -52,11 +67,15 @@ class PitchRecogniser (context: Context,
         }
         return (sum / audioData.size).toFloat()
     }
-    private fun recognizePitch(): Float? {
 
-        val buffer: ShortArray = microphone?.getBufferIfFull() ?: return null
+    private fun calculateFastEnergy(audioData: ShortArray): Float {
+        if (audioData.size <= FAST_ENERGY_WINDOW_SAMPLES) return calculateEnergy(audioData)
+        return calculateEnergy(audioData.copyOfRange(audioData.size - FAST_ENERGY_WINDOW_SAMPLES, audioData.size))
+    }
 
-        if(calculateEnergy(buffer)< THRESHOLD_ENERGY)
+    private fun recognizePitch(buffer: ShortArray): Float? {
+
+        if(calculateEnergy(buffer)< energyThreshold)
             return null
 
         val maxAbsValue = Short.MAX_VALUE.toFloat()
@@ -64,7 +83,7 @@ class PitchRecogniser (context: Context,
 
 
         val outputSize = 7
-        val result = SPICE?.getMeanDominantPitch(audioData, outputSize, outputSize)
+        val result = SPICE?.getMeanDominantPitch(audioData, outputSize, outputSize, maxUncertainty)
             ?: return null
 
         if(result< minPitch || result> maxPitch)
@@ -73,7 +92,7 @@ class PitchRecogniser (context: Context,
         return result
     }
 
-    fun start() {
+    override fun start() {
         if(isActive)
             return
         isActive = true
@@ -85,19 +104,30 @@ class PitchRecogniser (context: Context,
 
         updateJob = recogniserScope.launch {
             while(isActive) {
-                lastPitchSpice = recognizePitch()
+                //TODO: fixed-delay scheduling - recognizePitch() (mic buffer read + SPICE
+                //model inference, not free) runs before the delay, so the actual period is
+                //recognizePitch()'s duration + updateRateMS, not a clean updateRateMS. If
+                //precise timing ever matters here, switch to fixed-rate scheduling (track an
+                //absolute next-tick target and delay only the remainder) - see
+                //MicrophoneNoteInput's polling loop for that pattern.
+                val buffer = microphone?.getBufferIfFull()
+                //fast energy must update every tick - including ticks where pitch comes back
+                //null/filtered - since onset detection needs to see the attack that precedes a
+                //confident pitch read, not just the ticks where one was found
+                lastFastEnergy = buffer?.let(::calculateFastEnergy) ?: 0f
+                lastPitchSpice = buffer?.let(::recognizePitch)
                 delay(updateRateMS)
             }
         }
     }
 
-    fun stop() {
+    override fun stop() {
         isActive = false
         updateJob?.cancel()
         microphone?.stopRecording()
     }
 
-    fun release() {
+    override fun release() {
         runBlocking { updateJob?.cancelAndJoin() }
         microphone?.stopRecording()
         SPICE?.close()

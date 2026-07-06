@@ -69,27 +69,16 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
         mainViewModel.saveNewLevel(name, description, onSaved)
     }
 
-    val requiredPermissions: Array<String>
-        get() = game?.let { GameMap.createFactory(it).getPermissions() } ?: emptyArray()
+    fun requiredPermissions(gameplay: GamePlayInstance): Array<String> =
+        game?.let { GameMap.createFactory(it).getPermissions(gameplay) } ?: emptyArray()
 
-    fun hasRequiredPermissions(context: Context): Boolean =
-        requiredPermissions.all {
+    fun hasRequiredPermissions(context: Context, gameplay: GamePlayInstance): Boolean =
+        requiredPermissions(gameplay).all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
-    //returns false if the bpm couldn't be used to start the game (caller should show an error)
-    fun startGame(bpmInput: String?): Boolean {
-        val bpm = bpmInput?.toIntOrNull()
-        if (bpm == null) {
-            mainViewModel.playLevel(GamePlayInstance())
-            return true
-        }
-        return try {
-            mainViewModel.playLevel(GamePlayInstance(bpm = bpm))
-            true
-        } catch (e: Exception) {
-            false
-        }
+    fun startGame(gameplay: GamePlayInstance) {
+        mainViewModel.playLevel(gameplay)
     }
 
 
