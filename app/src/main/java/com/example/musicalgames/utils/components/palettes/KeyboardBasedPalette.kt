@@ -39,17 +39,23 @@ abstract class KeyboardBasedPalette @JvmOverloads constructor(context: Context, 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
+        //This view has no content of its own to size from - it's meant to always fill
+        //whatever height its host chip gives it, not guess at a preferred height itself.
+        //The host chip is what's responsible for giving a real, fixed size (see
+        //customInputElementStyle), so just read it straight off the spec.
+        val resolvedHeight = MeasureSpec.getSize(heightMeasureSpec)
+
         keyWidth = measuredWidth / (DiatonicNote.valuesSize().toFloat())
-        keyHeight = (measuredHeight/2f)
-        height = measuredHeight
-        setMeasuredDimension(measuredWidth, measuredHeight)
+        keyHeight = (resolvedHeight/2f)
+        height = resolvedHeight
+        setMeasuredDimension(measuredWidth, resolvedHeight)
 
         if(keyHeight ==0f || keyWidth == 0f) {
             return
         }
 
-        if (bitmap == null || bitmap?.width != measuredWidth || bitmap?.height != measuredHeight) {
-            bitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+        if (bitmap == null || bitmap?.width != measuredWidth || bitmap?.height != resolvedHeight) {
+            bitmap = Bitmap.createBitmap(measuredWidth, resolvedHeight, Bitmap.Config.ARGB_8888)
             canvas = Canvas(bitmap!!)
             drawKeys(canvas!!)
         }

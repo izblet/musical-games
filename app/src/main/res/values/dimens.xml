@@ -1,10 +1,10 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
-    <!-- Minimum row height for customInputElementStyle's chip fields - also used as the real
-         pixel height CustomGameCreator.kt needs for its programmatically-built TableRow cells,
-         since customInputElementStyle's own layout_height is wrap_content (with this as a
-         minHeight floor) and TableRow can't size itself from that at runtime. -->
+    <!-- Fixed row height for every chip field, shared by customInputElementStyle's
+         layout_height (XML rows, Play By Ear) and CustomGameCreator.kt's inputElementHeight
+         (programmatic TableRow cells, every other game) so both row-building paths always
+         resolve to the exact same height rather than sizing to content. -->
     <dimen name="custom_creator_row_height">44dp</dimen>
 
     <!-- Shared between customLabelStyle/customInputStyle (XML rows, Play By Ear only) and

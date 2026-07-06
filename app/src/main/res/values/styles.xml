@@ -17,19 +17,18 @@
         <item name="android:layout_width">@dimen/custom_creator_label_width</item>
         <item name="android:layout_marginEnd">@dimen/custom_creator_label_margin</item>
     </style>
-    <!-- Chip field to the right of a customLabelStyle label. layout_height is wrap_content with
-         a minHeight floor (not a fixed height) so plain text chips size to their content while
-         the "Selection" piano/interval-preview chips - whose internal content has no intrinsic
-         size at all - don't collapse to 0: FrameLayout runs a second measurement pass for
-         MATCH_PARENT children once minHeight establishes its own floor, so this one attribute
-         fixes both cases without special-casing either. paddingEnd leaves room for
+    <!-- Chip field to the right of a customLabelStyle label. layout_height is a fixed row
+         height, not wrap_content, so every chip in a row - including the "Selection"
+         piano/interval-preview chips, whose internal content has no intrinsic size of its
+         own - resolves to the exact same height. This matches CustomGameCreator.kt's
+         programmatic TableRow path, which has always given its cells a fixed pixel height
+         (see inputElementHeight there) rather than wrap_content. paddingEnd leaves room for
          spinner_chip_background's composited caret glyph. -->
     <style name="customInputElementStyle">
         <item name="android:background">@drawable/spinner_chip_background</item>
         <item name="android:popupBackground">@drawable/spinner_popup_background</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">@dimen/custom_creator_row_height</item>
+        <item name="android:layout_height">@dimen/custom_creator_row_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_vertical|start</item>
         <item name="android:paddingStart">@dimen/custom_creator_chip_padding_horizontal</item>
