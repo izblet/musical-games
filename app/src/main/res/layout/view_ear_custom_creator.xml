@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TableLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TableRow
+    <LinearLayout
         android:id="@+id/len_row"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/len"
@@ -21,28 +22,34 @@
             android:inputType="number"
             android:maxLength="2" />
 
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/root_row"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/rootNoteLabel"
             style="@style/customLabelStyle"
             android:text="Root Note:" />
 
-
         <com.example.musicalgames.utils.components.ui_components.EnumSpinner
             style="@style/customInputElementStyle"
             android:popupBackground="@drawable/spinner_popup_background"
             android:id="@+id/root_spinner"/>
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
         <TextView
             style="@style/customLabelStyle"
             android:text="Notes from:"
@@ -56,12 +63,15 @@
             android:text="ToggleButton"
             android:textOff="Scale"
             android:textOn="Selection" />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/scale_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/scaleLabel"
@@ -72,25 +82,34 @@
             android:id="@+id/scaleSpinner"
             android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle" />
-    </TableRow>
-    <TableRow
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/custom_notes_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
         <TextView
             style="@style/customLabelStyle"
             android:text="Selection:"/>
+
         <com.example.musicalgames.utils.components.ui_components.KeyboardSelector
             android:id="@+id/keyboard_selector"
             android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle"
             />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/max_interval_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/maxIntervalLabel"
@@ -101,20 +120,22 @@
             android:id="@+id/max_interval_spinner"
             android:popupBackground="@drawable/spinner_popup_background"
             style="@style/customInputElementStyle" />
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/min_note_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/minSoundLabel"
             style="@style/customLabelStyle"
-
             android:text="Min Sound:" />
 
-        <TableRow style="@style/customInputStyle">
+        <LinearLayout style="@style/customInputStyle">
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/min_note_spinner"
@@ -124,22 +145,26 @@
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:popupBackground="@drawable/spinner_popup_background"
                 android:id="@+id/min_note_octave"
+                android:layout_marginStart="@dimen/custom_creator_chip_gap"
                 style="@style/customInputElementStyle" />
-        </TableRow>
+        </LinearLayout>
 
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/max_note_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/maxSoundLabel"
             style="@style/customLabelStyle"
             android:text="Max Sound:" />
 
-        <TableRow style="@style/customInputStyle">
+        <LinearLayout style="@style/customInputStyle">
 
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/max_note_spinner"
@@ -149,7 +174,8 @@
             <com.example.musicalgames.utils.components.ui_components.EnumSpinner
                 android:id="@+id/max_octave_spinner"
                 android:popupBackground="@drawable/spinner_popup_background"
+                android:layout_marginStart="@dimen/custom_creator_chip_gap"
                 style="@style/customInputElementStyle" />
-        </TableRow>
-    </TableRow>
-</TableLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

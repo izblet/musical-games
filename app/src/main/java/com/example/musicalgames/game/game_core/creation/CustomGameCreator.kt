@@ -62,17 +62,19 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
         }
     }
 
-    //customInputElementStyle fixes layout_height to 50dp - XML's style= attribute applies this
-    //automatically via generateLayoutParams, but layoutParams built by hand here would otherwise
-    //fall back to each widget's own intrinsic height, which differs between widget types
+    //TableRow.LayoutParams built by hand here need a real pixel height (unlike the
+    //wrap_content+minHeight chips used by LinearLayout-row-based creator layouts) - kept as its
+    //own dimen rather than read from customInputElementStyle at runtime, since that style's
+    //layout_height is intentionally wrap_content, not a fixed dimension
     private val inputElementHeight: Int = run {
-        val a = context.obtainStyledAttributes(
-            com.example.musicalgames.R.style.customInputElementStyle, intArrayOf(
-                R.attr.layout_height))
-        val height = a.getDimensionPixelSize(0, LayoutParams.MATCH_PARENT)
-        a.recycle()
-        height
+        context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_row_height)
     }
+
+    //Shared with customLabelStyle/customInputStyle (styles.xml) so the XML-row path (Play By
+    //Ear) and this programmatic TableRow path (every other game) align identically.
+    private val labelWidth: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_label_width)
+    private val labelMargin: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_label_margin)
+    private val chipGap: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_chip_gap)
 
     private fun styleSelector(selector : View, column: Int = 2) {
         //some of the parameters unnecessary for now but will probably be used later
@@ -82,15 +84,17 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
                     this.column = column
                     span = 1
                     weight = 1f
+                    if (column > 2) marginStart = chipGap
                 }
         }
     }
     private fun styleLabel(label : TextView) {
         label.apply {
-            layoutParams = TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
+            layoutParams = TableRow.LayoutParams(labelWidth, LayoutParams.MATCH_PARENT).apply {
                column =1
                span =1
                weight = 0f
+               marginEnd = labelMargin
             }
         }
     }
