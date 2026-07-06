@@ -224,7 +224,6 @@ class FragmentLevelChoose : Fragment() {
         content.removeAllViews()
         content.addView(recyclerView)
         content.addView(stateTextView)
-        binding.pageTitle.text = title
         adapter.setData(cachedList)
         setListState(cachedList, emptyMessage, isLoading = cachedList.isEmpty())
         lifecycleScope.launch {
@@ -260,7 +259,6 @@ class FragmentLevelChoose : Fragment() {
     private fun showCreate() {
         content.removeAllViews()
         content.addView(viewCreate)
-        binding.pageTitle.text = "Create"
 
     }
     override fun onDestroyView() {

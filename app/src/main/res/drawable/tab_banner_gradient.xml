@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Continues the active tab's gradient (button_background_active.xml) a bit further:
-     starts at the exact same 20% alpha the tab's own gradient ends at, then fades that
-     out to fully transparent, revealing the opaque page-background base beneath. -->
+     starts at the app's shared highlight colour (accentSoftColor), the exact colour the
+     tab's own gradient ends at, then fades that out to fully transparent, revealing the
+     opaque page-background base beneath. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
@@ -15,7 +16,7 @@
             <gradient
                 android:type="linear"
                 android:angle="270"
-                android:startColor="?attr/accentSoftStrongColor"
+                android:startColor="?attr/accentSoftColor"
                 android:endColor="@android:color/transparent" />
         </shape>
     </item>

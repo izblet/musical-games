@@ -14,15 +14,6 @@
         >
 
 
-        <TextView
-            android:id="@+id/pageTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="24sp"
-            android:layout_gravity="center_horizontal"
-            android:padding="16dp" />
-
         <!-- Pause before the tab row starts; inherits contentContainer's surfaceHeaderColor. -->
         <View
             android:layout_width="match_parent"

@@ -15,17 +15,19 @@
         </shape>
     </item>
 
-    <!-- Translucent accent tint, strong at the top fading down to 20% alpha at the tab's
-         own bottom edge - the banner strip below (tab_banner_gradient.xml) picks up at
-         that exact same 20% alpha and continues fading it out from there, so the two
-         gradients read as one continuous fade instead of a seam. -->
+    <!-- Translucent accent tint, strong at the top fading down to the app's shared
+         highlight colour (accentSoftColor - same token used for selected/activated
+         states elsewhere, e.g. edit_toggle_background.xml) at the tab's own bottom edge.
+         The banner strip below (tab_banner_gradient.xml) picks up at that exact same
+         colour and continues fading it out from there, so the two gradients read as one
+         continuous fade instead of a seam. -->
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
                 android:angle="270"
                 android:startColor="?attr/accentSoftStrongestColor"
-                android:endColor="?attr/accentSoftStrongColor" />
+                android:endColor="?attr/accentSoftColor" />
             <corners
                 android:topLeftRadius="12dp"
                 android:topRightRadius="12dp"
