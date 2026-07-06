@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -24,6 +25,7 @@ class TunableSliderRow @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle), EditableSettingsBlock {
 
+    private val rowRoot: View
     private val label: TextView
     private val valueText: TextView
     private val editButton: ImageButton
@@ -46,6 +48,7 @@ class TunableSliderRow @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_tunable_slider_row, this, true)
+        rowRoot = findViewById(R.id.rowRoot)
         label = findViewById(R.id.label)
         valueText = findViewById(R.id.valueText)
         editButton = findViewById(R.id.editButton)
@@ -112,6 +115,7 @@ class TunableSliderRow @JvmOverloads constructor(
         isEditing = true
         valueBeforeEdit = slider.value
         editButton.isActivated = true
+        rowRoot.isActivated = true
         setControlsEnabled(true)
     }
 
@@ -132,6 +136,7 @@ class TunableSliderRow @JvmOverloads constructor(
     private fun endEdit() {
         isEditing = false
         editButton.isActivated = false
+        rowRoot.isActivated = false
         setControlsEnabled(false)
         onEditEnded?.invoke()
     }

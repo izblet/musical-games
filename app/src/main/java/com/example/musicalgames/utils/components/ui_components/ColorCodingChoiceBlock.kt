@@ -31,6 +31,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle), EditableSettingsBlock {
 
+    private val rowRoot: View
     private val editButton: ImageButton
     private val colourToggleButton: ImageButton
     private val title: TextView
@@ -57,6 +58,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_color_coding_block, this, true)
+        rowRoot = findViewById(R.id.rowRoot)
         editButton = findViewById(R.id.editButton)
         colourToggleButton = findViewById(R.id.colourToggleButton)
         title = findViewById(R.id.title)
@@ -110,6 +112,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
         isEditing = true
         colorsBeforeEdit = currentColors.toMap()
         editButton.isActivated = true
+        rowRoot.isActivated = true
         swatches.values.forEach { it.isEnabled = coloursEnabled }
     }
 
@@ -131,6 +134,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
     private fun endEdit() {
         isEditing = false
         editButton.isActivated = false
+        rowRoot.isActivated = false
         swatches.values.forEach { it.isEnabled = false }
         onEditEnded?.invoke()
     }
