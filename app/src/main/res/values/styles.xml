@@ -21,6 +21,8 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <!-- Superseded by buttonGhostStyle/buttonFilledStyle/buttonOutlinedStyle; kept until all
+         consumers are migrated, then removed in the leftover-cleanup pass. -->
     <style name="basicListButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -28,5 +30,39 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">?attr/textFillColor</item>
         <item name="android:background">@drawable/button_basic</item>
+    </style>
+
+    <!-- Ghost button: transparent, turquoise text (e.g. "Save"). -->
+    <style name="buttonGhostStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <!-- Filled button: solid turquoise, dark text (e.g. "Play"/"Start Game"). -->
+    <style name="buttonFilledStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:background">@drawable/button_basic</item>
+    </style>
+
+    <!-- Outlined button: turquoise stroke, sharp corners (e.g. "Reset all to defaults"). -->
+    <style name="buttonOutlinedStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:background">@drawable/button_outlined</item>
+        <item name="android:paddingHorizontal">22dp</item>
+        <item name="android:paddingVertical">11dp</item>
     </style>
 </resources>
