@@ -53,8 +53,15 @@
 
         <item name="android:fontFamily">@font/manrope</item>
         <item name="fontFamily">@font/manrope</item>
-    </style>
 
-    <style name="Theme.MusicalGames" parent="Base.Theme.MusicalGames" >
+        <!-- AndroidManifest.xml's <application> points directly at this style (not
+             Theme.MusicalGames, which nothing actually references), so the status/nav bar
+             items have to live here to take effect - minSdk is 24, so there's no need for an
+             API-gated values-v23 override either. Without an explicit statusBarColor, Material3
+             was deriving it from colorPrimaryVariant, which is why the status bar showed the
+             turquoise accent instead of surfaceHeaderColor. -->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/surface_header</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
