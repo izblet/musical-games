@@ -4,70 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <!-- The top buttons -->
-    <LinearLayout
-        android:id="@+id/iconContainer"
-        android:background="@drawable/tab_strip_background"
-        android:layout_width="match_parent"
-        android:layout_height="25pt"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <!--android:background="@drawable/button_shape"-->
-        <!-- Bookmark Buttons -->
-        <ImageButton
-            android:id="@+id/favouritesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            app:tint="?attr/colorPrimary"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:padding="6pt"
-            app:backgroundTint="@null"
-            android:src="@drawable/ic_heart" />
-
-        <ImageButton
-            android:id="@+id/levelsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:padding="6pt"
-            app:tint="?attr/colorPrimary"
-            app:backgroundTint="@null"
-            android:src="@drawable/ic_levels" />
-
-        <ImageButton
-            android:id="@+id/customButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            app:tint="?attr/colorPrimary"
-            android:padding="6pt"
-            app:backgroundTint="@null"
-            android:src="@drawable/ic_custom" />
-
-        <ImageButton
-            android:id="@+id/createButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:padding="6pt"
-            app:tint="?attr/colorPrimary"
-            app:backgroundTint="@null"
-            android:src="@drawable/ic_plus" />
-    </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/contentContainer"
@@ -86,12 +22,74 @@
             android:textSize="24sp"
             android:layout_gravity="center_horizontal"
             android:padding="16dp" />
+
+        <!-- Pause before the tab row starts; inherits contentContainer's surfaceHeaderColor. -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/hairlineColor"
-            android:layout_marginTop="4dp"
-            />
+            android:layout_height="12dp" />
+
+        <!-- The top buttons -->
+        <LinearLayout
+            android:id="@+id/iconContainer"
+            android:background="@drawable/tab_strip_background"
+            android:layout_width="match_parent"
+            android:layout_height="25pt"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Bookmark Buttons -->
+            <ImageButton
+                android:id="@+id/favouritesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                app:tint="?attr/colorPrimary"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="6pt"
+                app:backgroundTint="@null"
+                android:src="@drawable/ic_heart" />
+
+            <ImageButton
+                android:id="@+id/levelsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="6pt"
+                app:tint="?attr/colorPrimary"
+                app:backgroundTint="@null"
+                android:src="@drawable/ic_levels" />
+
+            <ImageButton
+                android:id="@+id/customButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                app:tint="?attr/colorPrimary"
+                android:padding="6pt"
+                app:backgroundTint="@null"
+                android:src="@drawable/ic_custom" />
+
+            <ImageButton
+                android:id="@+id/createButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="6pt"
+                app:tint="?attr/colorPrimary"
+                app:backgroundTint="@null"
+                android:src="@drawable/ic_plus" />
+        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/contentFrame"

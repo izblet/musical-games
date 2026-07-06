@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="?attr/surfaceHeaderColor" />
-    <stroke
-        android:width="1dp"
-        android:color="?attr/hairlineColor" />
-    <corners
-        android:topLeftRadius="12dp"
-        android:topRightRadius="12dp"
-        android:bottomLeftRadius="0dp"
-        android:bottomRightRadius="0dp" />
-</shape>
+<!-- Inset from the bottom by the rail's own height so iconContainer's colorPrimary rail
+     (tab_strip_background.xml) shows through underneath inactive tabs. The active tab's
+     drawable has no such inset, so its own fill reaches the true bottom edge and covers
+     the rail there instead, blending seamlessly into the content below. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:bottom="1.5dp">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/backgroundColor" />
+            <stroke
+                android:width="1dp"
+                android:color="?attr/hairlineColor" />
+            <corners
+                android:topLeftRadius="12dp"
+                android:topRightRadius="12dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+        </shape>
+    </item>
+</layer-list>
