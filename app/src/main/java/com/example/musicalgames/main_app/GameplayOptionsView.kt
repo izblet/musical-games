@@ -115,6 +115,7 @@ class GameplayOptionsView(
             setPadding(dp(12), dp(11), dp(12), dp(11))
             isClickable = true
             isFocusable = true
+            setBackgroundResource(R.drawable.underline_input)
             addView(label)
             addView(spacer, LinearLayout.LayoutParams(0, 0, 1f))
             addView(summaryTextView)
@@ -140,7 +141,7 @@ class GameplayOptionsView(
         val parts = mutableListOf<String>()
         bpmEditText?.text?.toString()?.let { parts.add("$it bpm") }
         inputMethodButtons.entries.find { it.value.isChecked }?.key?.let {
-            parts.add("Input " + if (it == InputMethod.EXTERNAL_INSTRUMENT) "on" else "off")
+            parts.add("External instrument: " + if (it == InputMethod.EXTERNAL_INSTRUMENT) "ON" else "OFF")
         }
         summaryTextView?.text = parts.joinToString(" · ")
     }
@@ -175,7 +176,7 @@ class GameplayOptionsView(
 
     private fun buildInputMethodRow(initial: GamePlayInstance): LinearLayout {
         val label = TextView(context).apply {
-            text = "Input method:"
+            text = "External instrument:"
             setTextColor(themeColor(R.attr.secondaryTextColor))
         }
         val group = RadioGroup(context).apply {
@@ -190,7 +191,7 @@ class GameplayOptionsView(
         val buttons = InputMethod.entries.associateWith { method ->
             RadioButton(context).apply {
                 id = generateViewId()
-                text = method.toString()
+                text = if (method == InputMethod.EXTERNAL_INSTRUMENT) "ON" else "OFF"
                 buttonDrawable = null
                 textSize = 11.5f
                 setPadding(dp(13), dp(5), dp(13), dp(5))
