@@ -53,15 +53,23 @@ class GameplayOptionsView(
 
     init {
         orientation = VERTICAL
+        setBackgroundColor(themeColor(R.attr.surfaceChipColor))
 
-        val content = LinearLayout(context).apply { orientation = VERTICAL }
-
-        if (GameplayOptions.BPM in options) {
-            content.addView(buildBpmRow(initial))
+        val content = LinearLayout(context).apply {
+            orientation = VERTICAL
+            setPadding(dp(12), 0, dp(12), 0)
         }
 
+        val rows = mutableListOf<LinearLayout>()
+        if (GameplayOptions.BPM in options) {
+            rows.add(buildBpmRow(initial))
+        }
         if (GameplayOptions.INPUT_METHOD in options && (level == null || level.supportsMicrophoneInput())) {
-            content.addView(buildInputMethodRow(initial))
+            rows.add(buildInputMethodRow(initial))
+        }
+        rows.forEachIndexed { index, row ->
+            if (index > 0) content.addView(buildRowDivider())
+            content.addView(row)
         }
 
         if (content.childCount > 0) {
@@ -122,6 +130,12 @@ class GameplayOptionsView(
         chevronView?.rotation = if (isExpanded) 180f else 0f
     }
 
+    private fun buildRowDivider(): View = View(context).apply {
+        setBackgroundColor(themeColor(R.attr.hairlineColor))
+    }.also {
+        it.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1))
+    }
+
     private fun updateSummary() {
         val parts = mutableListOf<String>()
         bpmEditText?.text?.toString()?.let { parts.add("$it bpm") }
@@ -143,6 +157,7 @@ class GameplayOptionsView(
             setBackgroundResource(R.drawable.underline_input)
             setTextColor(ContextCompat.getColor(context, R.color.text_primary))
             setTypeface(typeface, Typeface.BOLD)
+            gravity = Gravity.END
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -152,9 +167,9 @@ class GameplayOptionsView(
         return LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(12), dp(8), dp(12), dp(8))
-            addView(label)
-            addView(bpmEditText)
+            setPadding(0, dp(13), 0, dp(13))
+            addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            addView(bpmEditText, LinearLayout.LayoutParams(dp(56), LinearLayout.LayoutParams.WRAP_CONTENT))
         }
     }
 
@@ -189,8 +204,8 @@ class GameplayOptionsView(
         return LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(12), dp(8), dp(12), dp(8))
-            addView(label)
+            setPadding(0, dp(13), 0, dp(13))
+            addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
             addView(group)
         }
     }

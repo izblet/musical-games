@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="18dp">
 
     <LinearLayout
         android:id="@+id/heading_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@drawable/item_bordered"
@@ -23,25 +23,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="Level"
+                android:textColor="?attr/tertiaryTextColor"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:textAllCaps="true" />
 
             <EditText
                 android:id="@+id/levelTitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@drawable/underline_input_if_enabled"
                 android:inputType="text"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:letterSpacing="0.04" />
 
             <EditText
                 android:id="@+id/levelDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:background="@drawable/underline_input_if_enabled"
                 android:inputType="text"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textColor="?attr/secondaryTextColor"
                 android:textSize="16sp" />
 
@@ -80,6 +94,7 @@
         android:id="@+id/gameplay_options_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -91,7 +106,7 @@
         android:text="Start Game"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="18dp"
         app:layout_constraintTop_toBottomOf="@+id/gameplay_options_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +116,7 @@
         android:id="@+id/level_info_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginTop="18dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -120,10 +135,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAlignment="center"
                 android:text="Game Parameters"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="-0.01" />
 
             <ImageButton
                 android:id="@+id/editLevelButton"
@@ -142,8 +157,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/item_bordered"
-            android:padding="4dp"
-            android:layout_marginTop="4dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="14dp"
+            android:layout_marginTop="8dp"
             />
 
     </LinearLayout>

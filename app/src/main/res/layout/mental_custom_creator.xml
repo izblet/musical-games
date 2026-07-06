@@ -26,7 +26,7 @@
         android:id="@+id/starting_notes_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="@dimen/custom_creator_row_gap"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -45,7 +45,7 @@
         android:id="@+id/intervals_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="@dimen/custom_creator_row_gap"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 

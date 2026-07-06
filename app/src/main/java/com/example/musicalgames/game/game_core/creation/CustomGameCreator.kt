@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import com.example.musicalgames.utils.components.ui_components.IntervalSelector
+import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 
 abstract class CustomGameCreator(context : Context, private val createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : TableLayout(context, attrSet) {
     abstract fun getLevel(): Level?
@@ -75,10 +77,27 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
     private val labelWidth: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_label_width)
     private val labelMargin: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_label_margin)
     private val chipGap: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_chip_gap)
+    private val rowGap: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_row_gap)
+    private val chipPaddingHorizontal: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_chip_padding_horizontal)
+    private val chipPaddingEnd: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_chip_padding_end)
+    private val chipPaddingVertical: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_chip_padding_vertical)
+    private val previewChipPadding: Int = context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_preview_chip_padding)
 
     private fun styleSelector(selector : View, column: Int = 2) {
         //some of the parameters unnecessary for now but will probably be used later
         selector.apply {
+            //Not every selector reliably gets customInputElementStyle applied through its own
+            //construction (KeyboardSelector/IntervalSelector/MultiEnumSpinner are built with a
+            //plain context in several creators, never picking it up at all) - apply the same
+            //chip look here once, so every selector gets it regardless of how it was built.
+            setBackgroundResource(com.example.musicalgames.R.drawable.spinner_chip_background)
+            if (selector is KeyboardSelector || selector is IntervalSelector) {
+                //these draw their own piano/interval preview and should nearly fill the chip,
+                //unlike text selectors which need room for a label
+                setPadding(previewChipPadding, previewChipPadding, previewChipPadding, previewChipPadding)
+            } else {
+                setPaddingRelative(chipPaddingHorizontal, chipPaddingVertical, chipPaddingEnd, chipPaddingVertical)
+            }
             layoutParams = TableRow.LayoutParams(0, inputElementHeight)
                 .apply {
                     this.column = column
@@ -151,12 +170,14 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
 
     protected fun addNewRow(label: String, selector : View) : TableRow {
         val row = makeRow(label, selector)
+        if (childCount > 0) (row.layoutParams as LayoutParams).topMargin = rowGap
         addView(row)
         return row
     }
 
     protected fun addNewRow(label: String, selector1: View, selector2: View) : TableRow {
         val row = makeRow(label, selector1, selector2)
+        if (childCount > 0) (row.layoutParams as LayoutParams).topMargin = rowGap
         addView(row)
         return row
     }

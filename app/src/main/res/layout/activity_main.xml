@@ -12,6 +12,8 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/surfaceHeaderColor"
+        android:elevation="0dp"
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar

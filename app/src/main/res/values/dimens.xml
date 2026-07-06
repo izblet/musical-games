@@ -13,4 +13,18 @@
     <dimen name="custom_creator_label_width">96dp</dimen>
     <dimen name="custom_creator_label_margin">12dp</dimen>
     <dimen name="custom_creator_chip_gap">10dp</dimen>
+    <dimen name="custom_creator_row_gap">13dp</dimen>
+
+    <!-- customInputElementStyle's own chip padding, reused by CustomGameCreator.kt's
+         styleSelector() since some selectors (KeyboardSelector/IntervalSelector/
+         MultiEnumSpinner) never get that style applied through their own construction. -->
+    <dimen name="custom_creator_chip_padding_horizontal">11dp</dimen>
+    <dimen name="custom_creator_chip_padding_end">32dp</dimen>
+    <dimen name="custom_creator_chip_padding_vertical">10dp</dimen>
+
+    <!-- The "Selection" piano/interval-preview chip draws its own content edge-to-edge and
+         needs to nearly fill the chip - unlike text chips, which need room for the label plus
+         (formerly) a caret, this is just enough to reveal a sliver of chip background/underline
+         around it. -->
+    <dimen name="custom_creator_preview_chip_padding">1.5dp</dimen>
 </resources>

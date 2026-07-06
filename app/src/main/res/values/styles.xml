@@ -32,10 +32,19 @@
         <item name="android:minHeight">@dimen/custom_creator_row_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_vertical|start</item>
-        <item name="android:paddingStart">11dp</item>
-        <item name="android:paddingEnd">32dp</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingStart">@dimen/custom_creator_chip_padding_horizontal</item>
+        <item name="android:paddingEnd">@dimen/custom_creator_chip_padding_end</item>
+        <item name="android:paddingTop">@dimen/custom_creator_chip_padding_vertical</item>
+        <item name="android:paddingBottom">@dimen/custom_creator_chip_padding_vertical</item>
+    </style>
+    <!-- Same chip as customInputElementStyle, but for the "Selection" piano/interval-preview
+         chip (KeyboardSelector/IntervalSelector), which draws its own content and should nearly
+         fill the chip rather than leave room for a text label. -->
+    <style name="previewSelectorChipStyle" parent="customInputElementStyle">
+        <item name="android:paddingStart">@dimen/custom_creator_preview_chip_padding</item>
+        <item name="android:paddingEnd">@dimen/custom_creator_preview_chip_padding</item>
+        <item name="android:paddingTop">@dimen/custom_creator_preview_chip_padding</item>
+        <item name="android:paddingBottom">@dimen/custom_creator_preview_chip_padding</item>
     </style>
     <!-- Wraps 2 chips sharing one row slot (e.g. min sound note+octave); gap between them is a
          marginStart on the second chip, matching the mockups' 10dp inter-chip gap. -->

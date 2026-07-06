@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
-import com.example.musicalgames.R
 
 class MultiEnumSpinner @JvmOverloads constructor(
     context: Context,
@@ -14,7 +13,8 @@ class MultiEnumSpinner @JvmOverloads constructor(
 ) : AppCompatButton(context, attributeSet, defStyleAttr) {
 
     init {
-        setBackgroundResource(R.drawable.item_bordered)
+        //background comes from CustomGameCreator.styleSelector(), applied once this is added
+        //as a row's selector - this widget has no meaningful stand-alone background of its own
         gravity = Gravity.CENTER
     }
 
