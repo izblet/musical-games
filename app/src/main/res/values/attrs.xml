@@ -8,6 +8,7 @@
     <attr name="surfaceChipColor" format="color"/>
     <attr name="accentSoftColor" format="color"/>
     <attr name="accentSoftStrongColor" format="color"/>
+    <attr name="accentSoftStrongestColor" format="color"/>
     <attr name="secondaryTextColor" format="color"/>
     <attr name="tertiaryTextColor" format="color"/>
     <attr name="disabledTextColor" format="color"/>

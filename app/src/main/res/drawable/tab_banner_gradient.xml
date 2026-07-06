@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Continues the active tab's gradient (button_background_active.xml) a bit further:
+     starts at the exact same 20% alpha the tab's own gradient ends at, then fades that
+     out to fully transparent, revealing the opaque page-background base beneath. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/backgroundColor" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="270"
+                android:startColor="?attr/accentSoftStrongColor"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+
+</layer-list>

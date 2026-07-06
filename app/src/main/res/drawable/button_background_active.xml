@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Fill: accent-tinted at the top, fading into the page/content background at the
-         bottom, so the active tab visually flows into the content section below it. -->
+    <!-- Opaque base: same flat page background as the inactive tabs, so the accent tint
+         above is a translucent overlay on a consistent surface rather than blending with
+         whatever sits behind the tab row. -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/backgroundColor" />
+            <corners
+                android:topLeftRadius="12dp"
+                android:topRightRadius="12dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+        </shape>
+    </item>
+
+    <!-- Translucent accent tint, strong at the top fading down to 20% alpha at the tab's
+         own bottom edge - the banner strip below (tab_banner_gradient.xml) picks up at
+         that exact same 20% alpha and continues fading it out from there, so the two
+         gradients read as one continuous fade instead of a seam. -->
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
                 android:angle="270"
-                android:startColor="?attr/accentSoftStrongColor"
-                android:endColor="?attr/backgroundColor" />
+                android:startColor="?attr/accentSoftStrongestColor"
+                android:endColor="?attr/accentSoftStrongColor" />
             <corners
                 android:topLeftRadius="12dp"
                 android:topRightRadius="12dp"
