@@ -70,6 +70,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">15sp</item>
+        <item name="android:padding">@dimen/text_component_padding_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:background">@drawable/button_basic</item>
