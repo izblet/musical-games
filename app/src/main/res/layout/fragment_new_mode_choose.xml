@@ -13,12 +13,6 @@
         android:background="?attr/surfaceHeaderColor"
         >
 
-
-        <!-- Pause before the tab row starts; inherits contentContainer's surfaceHeaderColor. -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="12dp" />
-
         <!-- The top buttons -->
         <LinearLayout
             android:id="@+id/iconContainer"
