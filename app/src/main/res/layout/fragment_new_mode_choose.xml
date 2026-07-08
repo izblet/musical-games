@@ -92,7 +92,7 @@
         <FrameLayout
             android:id="@+id/contentFrame"
             android:layout_width="match_parent"
-            android:background="?attr/backgroundColor"
+            android:background="?attr/pageBackgroundColor"
             android:layout_height="0dp"
             android:layout_weight="1">
 

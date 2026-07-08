@@ -16,7 +16,7 @@
         android:orientation="vertical"
         android:layout_centerInParent="true"
         android:padding="16dp"
-        android:background="?attr/backgroundColor">
+        android:background="?attr/pageBackgroundColor">
 
         <TextView
             android:id="@+id/text_game_ended"

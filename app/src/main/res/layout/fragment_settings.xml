@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Tune how the microphone/instrument input recognises notes. These settings affect every game that uses microphone input. Tap the pencil to edit a value."
-            android:textColor="?attr/secondaryTextColor"
+            android:textColor="?attr/textSecondaryColor"
             android:textSize="14sp" />
 
         <com.example.musicalgames.utils.components.ui_components.TunableSliderRow
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Customize the colours used to tell musical concepts apart."
-            android:textColor="?attr/secondaryTextColor"
+            android:textColor="?attr/textSecondaryColor"
             android:textSize="14sp" />
 
         <com.example.musicalgames.utils.components.ui_components.ColorCodingChoiceBlock

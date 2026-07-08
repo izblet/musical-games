@@ -4,13 +4,14 @@
     <attr name="wrongAnswerColor" format="color"/>
 
     <!-- Turquoise/sharp-corner redesign tokens -->
+    <attr name="pageBackgroundColor" format="color"/>
     <attr name="surfaceHeaderColor" format="color"/>
     <attr name="surfaceChipColor" format="color"/>
     <attr name="accentSoftColor" format="color"/>
     <attr name="accentSoftStrongestColor" format="color"/>
-    <attr name="secondaryTextColor" format="color"/>
-    <attr name="tertiaryTextColor" format="color"/>
-    <attr name="disabledTextColor" format="color"/>
+    <attr name="textSecondaryColor" format="color"/>
+    <attr name="textTertiaryColor" format="color"/>
+    <attr name="textDisabledColor" format="color"/>
     <attr name="hairlineColor" format="color"/>
     <attr name="iconTintColor" format="color"/>
 </resources>

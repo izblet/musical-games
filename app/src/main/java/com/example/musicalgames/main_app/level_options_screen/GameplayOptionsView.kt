@@ -92,13 +92,13 @@ class GameplayOptionsView(
     private fun buildHeaderRow(): LinearLayout {
         val label = TextView(context).apply {
             text = "Gameplay"
-            setTextColor(themeColor(R.attr.tertiaryTextColor))
+            setTextColor(themeColor(R.attr.textTertiaryColor))
             textSize = 10.5f
             isAllCaps = true
             setTypeface(typeface, Typeface.BOLD)
         }
         summaryTextView = TextView(context).apply {
-            setTextColor(themeColor(R.attr.secondaryTextColor))
+            setTextColor(themeColor(R.attr.textSecondaryColor))
             textSize = 12.5f
             ellipsize = TextUtils.TruncateAt.END
             maxLines = 1
@@ -148,7 +148,7 @@ class GameplayOptionsView(
     private fun buildBpmRow(initial: GamePlayInstance): LinearLayout {
         val label = TextView(context).apply {
             text = "Set bpm (min: ${GamePlayInstance.getMinBpmValue()}, max: ${GamePlayInstance.getMaxBpmValue()}):"
-            setTextColor(themeColor(R.attr.secondaryTextColor))
+            setTextColor(themeColor(R.attr.textSecondaryColor))
         }
         bpmEditText = EditText(context).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -176,7 +176,7 @@ class GameplayOptionsView(
     private fun buildInputMethodRow(initial: GamePlayInstance): LinearLayout {
         val label = TextView(context).apply {
             text = "External instrument:"
-            setTextColor(themeColor(R.attr.secondaryTextColor))
+            setTextColor(themeColor(R.attr.textSecondaryColor))
         }
         val group = RadioGroup(context).apply {
             orientation = HORIZONTAL

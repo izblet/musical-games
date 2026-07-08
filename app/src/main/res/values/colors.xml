@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="light_gray">#2d3549</color>
-    <color name="dark_gray">#1c1f26</color>
+    <!-- Small shared utility palette - not redesign tokens, and not tied to one single role:
+         read directly by Flappy Bird's rendering code (lane colour, score text, key fills)
+         as well as reused for a couple of generic Material role/feedback colours below. -->
     <color name="blue">#1a6f87</color>
-    <color name="dark_blue">#083854</color>
     <color name="red">#c04151</color>
     <color name="dark_red">#770e1b</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dark_white">#bfc5c9</color>
 
     <!-- Turquoise/sharp-corner redesign tokens - matched to docs/Clean app interface
          redesign/colour_reference.jpg via dominant-colour sampling of content_background.jpg,

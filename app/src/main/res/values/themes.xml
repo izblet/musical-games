@@ -11,12 +11,16 @@
              everywhere, not Material's automatic elevation tinting. -->
         <item name="elevationOverlayEnabled">false</item>
 
-        <item name="backgroundColor">@color/page_background</item>
+        <item name="pageBackgroundColor">@color/page_background</item>
         <item name="android:windowBackground">@color/page_background</item>
         <item name="colorOnBackground">@color/text_primary</item>
 
         <item name="colorPrimary">@color/accent_turquoise</item>
         <item name="colorOnPrimary">@color/accent_on</item>
+        <!-- Duplicates colorPrimary - nothing reads ?attr/colorPrimaryVariant directly, but
+             Material's internal default derivation for some legacy roles falls back to it
+             (this is what silently drove the status bar's colour before android:statusBarColor
+             was set explicitly below), so keep it pinned rather than deleting it as dead. -->
         <item name="colorPrimaryVariant">@color/accent_turquoise</item>
 
         <item name="colorSecondary">@color/red</item>
@@ -37,7 +41,6 @@
         <item name="rightAnswerColor">@color/blue</item>
         <item name="wrongAnswerColor">@color/red</item>
 
-        <item name="textFillColor">@color/white</item>
         <item name="android:textColor">@color/text_primary</item>
 
         <!-- Turquoise/sharp-corner redesign tokens -->
@@ -45,9 +48,9 @@
         <item name="surfaceChipColor">@color/surface_chip</item>
         <item name="accentSoftColor">@color/accent_soft</item>
         <item name="accentSoftStrongestColor">@color/accent_soft_strongest</item>
-        <item name="secondaryTextColor">@color/text_secondary</item>
-        <item name="tertiaryTextColor">@color/text_tertiary</item>
-        <item name="disabledTextColor">@color/text_disabled</item>
+        <item name="textSecondaryColor">@color/text_secondary</item>
+        <item name="textTertiaryColor">@color/text_tertiary</item>
+        <item name="textDisabledColor">@color/text_disabled</item>
         <item name="hairlineColor">@color/hairline</item>
         <item name="iconTintColor">@color/accent_turquoise</item>
 

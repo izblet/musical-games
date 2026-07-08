@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="Level"
-                    android:textColor="?attr/tertiaryTextColor"
+                    android:textColor="?attr/textTertiaryColor"
                     android:textSize="10.5sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.1"
@@ -60,7 +60,7 @@
                     android:background="@drawable/underline_input_if_enabled"
                     android:inputType="text"
                     android:textAlignment="viewStart"
-                    android:textColor="?attr/secondaryTextColor"
+                    android:textColor="?attr/textSecondaryColor"
                     android:textSize="16sp" />
 
             </LinearLayout>

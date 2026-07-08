@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:textColor="?attr/secondaryTextColor"
+                    android:textColor="?attr/textSecondaryColor"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.02"
@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/underline_input"
-                    android:textColorHint="?attr/tertiaryTextColor"
+                    android:textColorHint="?attr/textTertiaryColor"
                     android:hint="Enter level name"
                     android:inputType="text" />
             </LinearLayout>
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:textColor="?attr/secondaryTextColor"
+                android:textColor="?attr/textSecondaryColor"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.02"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/underline_input"
-                android:textColorHint="?attr/tertiaryTextColor"
+                android:textColorHint="?attr/textTertiaryColor"
                 android:hint="Enter description"
                 android:inputType="text" />
             </LinearLayout>

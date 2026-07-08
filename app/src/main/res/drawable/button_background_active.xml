@@ -6,7 +6,7 @@
          whatever sits behind the tab row. -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/backgroundColor" />
+            <solid android:color="?attr/pageBackgroundColor" />
             <corners
                 android:topLeftRadius="12dp"
                 android:topRightRadius="12dp"
