@@ -3,6 +3,7 @@ package com.example.musicalgames.main_app.game_options_screen
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,7 @@ import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
+import com.example.musicalgames.utils.ThemeUtil.themeColor
 
 class FragmentLevelChoose : Fragment() {
 
@@ -48,6 +50,9 @@ class FragmentLevelChoose : Fragment() {
     private var baseList: List<TaggedLevel> = listOf()
     private var favouriteList: List<TaggedLevel> = listOf()
     private lateinit var levelDao: LevelDao
+
+    //TODO: this function should be extracted to utils, something along these lines was defined three times already
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -119,6 +124,7 @@ class FragmentLevelChoose : Fragment() {
             textSize = 18f
             visibility = View.GONE
         }
+        stateTextView.setTextColor(themeColor(context, R.attr.textSecondaryColor))
         content.addView(recyclerView)
         content.addView(stateTextView)
 

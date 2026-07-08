@@ -19,11 +19,13 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isNotEmpty
 import com.example.musicalgames.R
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.GameplayOptions
 import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.utils.ThemeUtil.themeColor
 
 /**
  * Shows whichever of a game's supported [com.example.musicalgames.game.game_core.GameplayOptions] have a rendered control today, and
@@ -72,7 +74,7 @@ class GameplayOptionsView(
             content.addView(row)
         }
 
-        if (content.childCount > 0) {
+        if (content.isNotEmpty()) {
             contentContainer = content
             content.visibility = View.GONE
             addView(buildHeaderRow())
@@ -82,23 +84,18 @@ class GameplayOptionsView(
         }
     }
 
-    private fun themeColor(attr: Int): Int {
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
-    }
 
     private fun buildHeaderRow(): LinearLayout {
         val label = TextView(context).apply {
             text = "Gameplay"
-            setTextColor(themeColor(R.attr.textTertiaryColor))
+            setTextColor(themeColor(context,R.attr.textTertiaryColor))
             textSize = 10.5f
             isAllCaps = true
             setTypeface(typeface, Typeface.BOLD)
         }
         val elementPaddingPx = resources.getDimensionPixelSize(R.dimen.list_item_padding)
         summaryTextView = TextView(context).apply {
-            setTextColor(themeColor(R.attr.textSecondaryColor))
+            setTextColor(themeColor(context,R.attr.textSecondaryColor))
             textSize = 12.5f
             ellipsize = TextUtils.TruncateAt.END
             maxLines = 1
@@ -133,7 +130,7 @@ class GameplayOptionsView(
     }
 
     private fun buildRowDivider(): View = View(context).apply {
-        setBackgroundColor(themeColor(R.attr.hairlineColor))
+        setBackgroundColor(themeColor(context,R.attr.hairlineColor))
     }.also {
         val dividerHeightPx = resources.getDimensionPixelSize(R.dimen.divider_height)
         it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dividerHeightPx)
@@ -152,7 +149,7 @@ class GameplayOptionsView(
 
         val label = TextView(context).apply {
             text = "Set bpm (min: ${GamePlayInstance.getMinBpmValue()}, max: ${GamePlayInstance.getMaxBpmValue()}):"
-            setTextColor(themeColor(R.attr.textSecondaryColor))
+            setTextColor(themeColor(context,R.attr.textSecondaryColor))
         }
         bpmEditText = EditText(context).apply {
             inputType = InputType.TYPE_CLASS_NUMBER
@@ -183,7 +180,7 @@ class GameplayOptionsView(
     private fun buildInputMethodRow(initial: GamePlayInstance): LinearLayout {
         val label = TextView(context).apply {
             text = "External instrument:"
-            setTextColor(themeColor(R.attr.textSecondaryColor))
+            setTextColor(themeColor(context,R.attr.textSecondaryColor))
         }
         val group = RadioGroup(context).apply {
             orientation = HORIZONTAL
@@ -191,7 +188,7 @@ class GameplayOptionsView(
                 shape = GradientDrawable.RECTANGLE
                 setColor(Color.TRANSPARENT)
                 val dividerHeightPx = resources.getDimensionPixelSize(R.dimen.divider_height)
-                setStroke(dividerHeightPx, themeColor(R.attr.hairlineColor))
+                setStroke(dividerHeightPx, themeColor(context,R.attr.hairlineColor))
             }
             setOnCheckedChangeListener { _, _ -> updateSummary() }
         }

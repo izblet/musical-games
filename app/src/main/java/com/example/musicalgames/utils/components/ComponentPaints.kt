@@ -19,13 +19,6 @@ object ComponentPaints {
         }
     }
 
-    fun Context.getColour(context: Context, attributeId: Int) : Int {
-        val typedValue = TypedValue()
-        val theme = context.theme
-        theme.resolveAttribute(attributeId, typedValue, true)
-        return typedValue.data
-    }
-
     private fun getTextPaint(paintColor: Int) : Paint {
         return Paint().apply {
             textSize = 70f
