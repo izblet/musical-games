@@ -9,10 +9,8 @@ import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.game_activity.ScreenHighlighter
-import com.example.musicalgames.game.game_core.creation.Level
-import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 
 interface GameFactory {
 

@@ -2,7 +2,7 @@ package com.example.musicalgames.games.flappy
 
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.MusicUtil

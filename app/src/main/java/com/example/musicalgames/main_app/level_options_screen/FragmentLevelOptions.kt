@@ -1,5 +1,6 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.main_app.level_options_screen
 
+import android.R
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
@@ -14,12 +15,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.main_app.MainViewModel
 import com.example.musicalgames.settings.GameplaySettingsRepository
 
 class FragmentLevelOptions : Fragment() {
@@ -69,7 +70,7 @@ class FragmentLevelOptions : Fragment() {
                 infoEditTextColors[editText]?.let { editText.setTextColor(it) }
             } else {
                 val originalColors = infoEditTextColors.getOrPut(editText) { editText.textColors }
-                editText.setTextColor(originalColors.getColorForState(intArrayOf(android.R.attr.state_enabled), originalColors.defaultColor))
+                editText.setTextColor(originalColors.getColorForState(intArrayOf(R.attr.state_enabled), originalColors.defaultColor))
             }
             editText.isEnabled = editable
         }
@@ -106,9 +107,9 @@ class FragmentLevelOptions : Fragment() {
 
             //the containers are not clickable
             binding.headingContainer.isClickable = false
-            binding.headingContainer.setBackgroundResource(R.drawable.item_bordered)
+            binding.headingContainer.setBackgroundResource(com.example.musicalgames.R.drawable.item_bordered)
             binding.levelInfoSection.isClickable = false
-            binding.levelInfoContainer.setBackgroundResource(R.drawable.item_bordered)
+            binding.levelInfoContainer.setBackgroundResource(com.example.musicalgames.R.drawable.item_bordered)
 
             levelInfoView?.setEditable(false)
             setInfoEditable(false)
@@ -128,14 +129,14 @@ class FragmentLevelOptions : Fragment() {
 
        if(controller.activeEditSection == LevelOptionsController.EditSection.PARAMS) {
            binding.editLevelButton.isActivated = true
-           binding.levelInfoContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+           binding.levelInfoContainer.setBackgroundResource(com.example.musicalgames.R.drawable.item_selected_bordered)
            binding.levelInfoSection.isClickable = true //this is here temporarily, can be moved to initialisation (the "clickable" just so that it is not click-through)
            binding.levelInfoSection.bringToFront()
            levelInfoView?.setEditable(true)
        }
        else {
            binding.editLevelInfoButton.isActivated = true
-           binding.headingContainer.setBackgroundResource(R.drawable.item_selected_bordered)
+           binding.headingContainer.setBackgroundResource(com.example.musicalgames.R.drawable.item_selected_bordered)
            binding.headingContainer.isClickable = true //tmp
            binding.headingContainer.bringToFront()
            setInfoEditable(true)

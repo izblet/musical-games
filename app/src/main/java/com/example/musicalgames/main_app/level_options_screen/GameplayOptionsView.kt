@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.main_app.level_options_screen
 
 import android.content.Context
 import android.graphics.Color
@@ -26,8 +26,8 @@ import com.example.musicalgames.game.game_core.InputMethod
 import com.example.musicalgames.game.game_core.creation.Level
 
 /**
- * Shows whichever of a game's supported [GameplayOptions] have a rendered control today, and
- * assembles the edited values into one [GamePlayInstance]. Same role as `CustomGameCreator`
+ * Shows whichever of a game's supported [com.example.musicalgames.game.game_core.GameplayOptions] have a rendered control today, and
+ * assembles the edited values into one [com.example.musicalgames.game.game_core.GamePlayInstance]. Same role as `CustomGameCreator`
  * (configure, then hand back a value or null if something's invalid), but deliberately a
  * single class rather than one-per-game or one-per-option: every game that supports a given
  * option wants the exact same control for it, there's no per-game/per-option domain variation
@@ -116,9 +116,9 @@ class GameplayOptionsView(
             isFocusable = true
             setBackgroundResource(R.drawable.spinner_chip_background)
             addView(label)
-            addView(spacer, LinearLayout.LayoutParams(0, 0, 1f))
+            addView(spacer, LayoutParams(0, 0, 1f))
             addView(summaryTextView)
-            addView(chevronView, LinearLayout.LayoutParams(dp(20), dp(20)))
+            addView(chevronView, LayoutParams(dp(20), dp(20)))
             setOnClickListener { toggleExpanded() }
         }
     }
@@ -133,7 +133,7 @@ class GameplayOptionsView(
     private fun buildRowDivider(): View = View(context).apply {
         setBackgroundColor(themeColor(R.attr.hairlineColor))
     }.also {
-        it.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1))
+        it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dp(1))
     }
 
     private fun updateSummary() {
@@ -168,8 +168,8 @@ class GameplayOptionsView(
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(0, dp(13), 0, dp(13))
-            addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            addView(bpmEditText, LinearLayout.LayoutParams(dp(56), LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(label, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
+            addView(bpmEditText, LayoutParams(dp(56), LayoutParams.WRAP_CONTENT))
         }
     }
 
@@ -205,7 +205,7 @@ class GameplayOptionsView(
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(0, dp(13), 0, dp(13))
-            addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            addView(label, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
             addView(group)
         }
     }

@@ -1,7 +1,6 @@
-package com.example.musicalgames.main_app.game_levels
+package com.example.musicalgames.main_app.game_options_screen
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -24,13 +23,11 @@ import com.example.musicalgames.R
 import com.example.musicalgames.databinding.FragmentNewModeChooseBinding
 import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.database.LevelDao
-import com.example.musicalgames.game_activity.GameActivity
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.GameFactory
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
-import java.io.Console
 
 class FragmentLevelChoose : Fragment() {
 

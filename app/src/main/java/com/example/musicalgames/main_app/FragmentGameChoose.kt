@@ -76,7 +76,7 @@ class AdapterGameList(private val gameInfoList: List<Map.Entry<Game, GameInfo>>,
         return gameInfoList.size
     }
 
-    inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val iconImageView: ImageView = itemView.findViewById(R.id.iconImageView)
         private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)

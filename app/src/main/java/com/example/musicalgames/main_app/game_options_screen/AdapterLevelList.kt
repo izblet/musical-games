@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app.game_levels
+package com.example.musicalgames.main_app.game_options_screen
 
 import android.view.LayoutInflater
 import android.view.View

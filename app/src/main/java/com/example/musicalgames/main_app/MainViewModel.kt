@@ -7,7 +7,7 @@ import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 

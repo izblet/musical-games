@@ -2,7 +2,7 @@ package com.example.musicalgames.game.games.circle_of_fifths.level_data
 
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.Mode
 
 object CircleLevels {

@@ -2,14 +2,10 @@ package com.example.musicalgames.game.games.flappy.creation
 
 import android.Manifest
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.ViewGroup
 import android.util.TypedValue
 import android.widget.FrameLayout
-import com.google.android.material.button.MaterialButton
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -34,7 +30,7 @@ import com.example.musicalgames.game.games.flappy.graphics.flappy_renderer.Staff
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.flappy.LEN_INF
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.settings.MicrophoneSettingsRepository

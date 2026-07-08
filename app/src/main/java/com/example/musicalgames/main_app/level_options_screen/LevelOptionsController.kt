@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app
+package com.example.musicalgames.main_app.level_options_screen
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,6 +7,7 @@ import com.example.musicalgames.game.game_core.GamePlayInstance
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
+import com.example.musicalgames.main_app.MainViewModel
 
 class LevelOptionsController(private val mainViewModel: MainViewModel) {
 

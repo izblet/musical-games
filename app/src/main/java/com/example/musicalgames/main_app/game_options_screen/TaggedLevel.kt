@@ -1,4 +1,4 @@
-package com.example.musicalgames.main_app.game_levels
+package com.example.musicalgames.main_app.game_options_screen
 
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game

@@ -11,7 +11,7 @@ import com.example.musicalgames.game.games.circle_of_fifths.level_data.CircleLev
 import com.example.musicalgames.games.flappy.FlappyLevels
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

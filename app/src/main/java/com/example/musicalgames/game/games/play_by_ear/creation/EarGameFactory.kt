@@ -24,7 +24,7 @@ import com.example.musicalgames.game.games.play_by_ear.EarViewModel
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.games.GamePackage
 import com.example.musicalgames.games.play_by_ear.EarPlayLevels
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference

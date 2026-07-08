@@ -25,7 +25,7 @@ import com.example.musicalgames.games.mental_intervals.MentalController
 import com.example.musicalgames.games.mental_intervals.MentalLevels
 import com.example.musicalgames.games.mental_intervals.MentalView
 import com.example.musicalgames.games.mental_intervals.MentalViewModel
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 

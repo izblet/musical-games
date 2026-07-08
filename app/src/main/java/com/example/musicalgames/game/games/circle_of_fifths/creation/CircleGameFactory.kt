@@ -25,7 +25,7 @@ import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.games.GamePackage
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 

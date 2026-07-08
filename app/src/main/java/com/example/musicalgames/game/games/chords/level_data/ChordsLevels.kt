@@ -2,7 +2,7 @@ package com.example.musicalgames.game.games.chords.level_data
 
 import com.example.musicalgames.game.games.chords.LevelChords
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.Chord
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.DiatonicNote

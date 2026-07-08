@@ -2,7 +2,7 @@ package com.example.musicalgames.games.play_by_ear
 
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.games.Game
-import com.example.musicalgames.main_app.game_levels.TaggedLevel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.MusicUtil
 import com.example.musicalgames.music_model.MusicUtil.getWhiteKeysFrom
