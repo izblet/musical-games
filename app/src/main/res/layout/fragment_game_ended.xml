@@ -15,8 +15,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:padding="@dimen/screen_padding"
-        android:background="?attr/pageBackgroundColor">
+        android:paddingVertical="@dimen/container_padding"
+        android:paddingHorizontal="@dimen/container_padding_huge"
+        android:background="?attr/colorSurface"
+        >
 
         <TextView
             android:id="@+id/text_game_ended"
@@ -32,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your Score: [score]"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/textSecondaryColor"
             android:textSize="18sp"/>
 
         <TextView
@@ -40,28 +42,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="You have beaten your highest score!"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/textSecondaryColor"
             android:textSize="18sp"/>
     </LinearLayout>
 
-    <Button
+        <Button
         android:id="@+id/button_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/box_layout"
-        android:layout_centerHorizontal="true"
+        style="@style/buttonFilledStyleSmall"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/label_gap_tight"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/element_spacing_large"
         android:text="Exit" />
 
     <Button
         android:id="@+id/button_retry"
-        android:layout_width="wrap_content"
+        style="@style/buttonFilledStyleSmall"
+        android:layout_gravity="center_horizontal"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_exit"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/label_gap_tight"
+        android:layout_marginTop="@dimen/element_spacing"
         android:text="Retry" />
     </LinearLayout>
 </RelativeLayout>

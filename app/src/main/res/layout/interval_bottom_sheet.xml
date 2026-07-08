@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_marginVertical="@dimen/bottom_sheet_vertical_padding"
         android:layout_height="150dp"/>
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         style="@style/buttonFilledStyle"
         android:id="@+id/confirm_button"
         android:text="Confirm"/>

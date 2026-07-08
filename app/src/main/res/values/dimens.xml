@@ -15,7 +15,7 @@
     <dimen name="screen_padding">16dp</dimen>
 
     <!-- padding inside a text component (basic text button, label container, chip value) -->
-    <dimen name="text_component_padding_basic">16dp</dimen>
+    <dimen name="text_component_padding_basic">12dp</dimen>
 
     <!-- large padding inside a text component e.g. the start/play buttons -->
     <dimen name="text_component_padding_large">20dp</dimen>
@@ -29,6 +29,8 @@
 
     <!-- -->
     <dimen name="container_padding">12dp</dimen>
+    <dimen name="container_padding_large">16dp</dimen>
+    <dimen name="container_padding_huge">24dp</dimen>
 
 
     <!-- *** -->
@@ -61,6 +63,14 @@
          layout_height (XML rows, Play By Ear) and CustomGameCreator.kt's inputElementHeight
          (programmatic TableRow cells, every other game)-->
     <dimen name="editable_row_height">44dp</dimen>
+
+    <!-- *** -->
+    <!-- MARGINS -->
+    <!-- *** -->
+
+    <dimen name="element_spacing_tight">4dp</dimen>
+    <dimen name="element_spacing">8dp</dimen>
+    <dimen name="element_spacing_large">16dp</dimen>
 
 
 
