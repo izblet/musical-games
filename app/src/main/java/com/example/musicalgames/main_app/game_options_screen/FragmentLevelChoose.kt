@@ -106,7 +106,8 @@ class FragmentLevelChoose : Fragment() {
         recyclerView = RecyclerView(requireContext()).apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = this@FragmentLevelChoose.adapter
-            setPadding(0, 15, 0, 0)
+            val topPaddingPx = resources.getDimensionPixelSize(R.dimen.screen_padding)
+            setPadding(0, topPaddingPx, 0, 0)
             clipToPadding = false
         }
         stateTextView = TextView(requireContext()).apply {

@@ -43,9 +43,8 @@
          flappy_custom_creator's Name/Description groups. -->
     <dimen name="field_label_gap">8dp</dimen>
 
-    <!-- Small "tight" gap below a label/heading before its following content - canonicalised
-         from three near-identical 5dp instances (fragment_level_options, fragment_game_ended,
-         GameplayOptionsView.kt) onto the app's 4dp grid step. -->
+    <!-- Small "tight" gap below a label/heading before its following content (fragment_level_options, fragment_game_ended,
+         GameplayOptionsView.kt)-->
     <dimen name="label_gap_tight">4dp</dimen>
 
     <!-- Fixed row height for every chip field, shared by customInputElementStyle's
@@ -70,8 +69,6 @@
     <dimen name="custom_creator_chip_padding_vertical">10dp</dimen>
 
     <!-- The "Selection" piano/interval-preview chip draws its own content edge-to-edge and
-         needs to nearly fill the chip - unlike text chips, which need room for the label plus
-         (formerly) a caret, this is just enough to reveal a sliver of chip background/underline
-         around it. -->
+         needs to nearly fill the chip -->
     <dimen name="custom_creator_preview_chip_padding">1.5dp</dimen>
 </resources>
