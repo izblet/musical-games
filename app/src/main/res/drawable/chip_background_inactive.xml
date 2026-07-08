@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flat fill matching a chip's inactive/disabled state (see spinner_chip_background.xml's
+     state_enabled=false branch) - for components that always want that "inactive chip" gray,
+     not the state-selector's clickable/underlined variant. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="?attr/surfaceChipColor"/>
+</shape>

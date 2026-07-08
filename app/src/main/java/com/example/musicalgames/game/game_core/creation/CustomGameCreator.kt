@@ -69,7 +69,7 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
     //own dimen rather than read from customInputElementStyle at runtime, since that style's
     //layout_height is intentionally wrap_content, not a fixed dimension
     private val inputElementHeight: Int = run {
-        context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.custom_creator_row_height)
+        context.resources.getDimensionPixelSize(com.example.musicalgames.R.dimen.editable_row_height)
     }
 
     //Shared with customLabelStyle/customInputStyle (styles.xml) so the XML-row path (Play By

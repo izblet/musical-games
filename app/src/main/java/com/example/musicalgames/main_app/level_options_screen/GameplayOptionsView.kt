@@ -56,7 +56,8 @@ class GameplayOptionsView(
 
         val content = LinearLayout(context).apply {
             orientation = VERTICAL
-            setPadding(dp(12), 0, dp(12), 0)
+            val paddingPx = resources.getDimensionPixelSize(R.dimen.editable_row_padding)
+            setPadding(paddingPx, 0, paddingPx, paddingPx)
         }
 
         val rows = mutableListOf<LinearLayout>()
@@ -75,13 +76,11 @@ class GameplayOptionsView(
             contentContainer = content
             content.visibility = View.GONE
             addView(buildHeaderRow())
+            content.setBackgroundResource(R.drawable.chip_background_inactive)
             addView(content)
             updateSummary()
         }
     }
-
-    private fun dp(value: Int): Int =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics).toInt()
 
     private fun themeColor(attr: Int): Int {
         val typedValue = TypedValue()
@@ -97,28 +96,31 @@ class GameplayOptionsView(
             isAllCaps = true
             setTypeface(typeface, Typeface.BOLD)
         }
+        val elementPaddingPx = resources.getDimensionPixelSize(R.dimen.list_item_padding)
         summaryTextView = TextView(context).apply {
             setTextColor(themeColor(R.attr.textSecondaryColor))
             textSize = 12.5f
             ellipsize = TextUtils.TruncateAt.END
             maxLines = 1
-            setPadding(dp(10), 0, dp(10), 0)
+            setPadding(elementPaddingPx, 0, elementPaddingPx, 0)
         }
         chevronView = ImageView(context).apply {
             setImageResource(R.drawable.ic_chevron_down)
         }
+        val chevronIconSizePx = resources.getDimensionPixelSize(R.dimen.icon_tiny_size)
+
         val spacer = View(context)
         return LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(12), dp(11), dp(12), dp(11))
+            setPadding(elementPaddingPx, elementPaddingPx, elementPaddingPx, elementPaddingPx)
             isClickable = true
             isFocusable = true
             setBackgroundResource(R.drawable.spinner_chip_background)
             addView(label)
             addView(spacer, LayoutParams(0, 0, 1f))
             addView(summaryTextView)
-            addView(chevronView, LayoutParams(dp(20), dp(20)))
+            addView(chevronView, LayoutParams(chevronIconSizePx, chevronIconSizePx))
             setOnClickListener { toggleExpanded() }
         }
     }
@@ -133,7 +135,8 @@ class GameplayOptionsView(
     private fun buildRowDivider(): View = View(context).apply {
         setBackgroundColor(themeColor(R.attr.hairlineColor))
     }.also {
-        it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dp(1))
+        val dividerHeightPx = resources.getDimensionPixelSize(R.dimen.divider_height)
+        it.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, dividerHeightPx)
     }
 
     private fun updateSummary() {
@@ -146,6 +149,7 @@ class GameplayOptionsView(
     }
 
     private fun buildBpmRow(initial: GamePlayInstance): LinearLayout {
+
         val label = TextView(context).apply {
             text = "Set bpm (min: ${GamePlayInstance.getMinBpmValue()}, max: ${GamePlayInstance.getMaxBpmValue()}):"
             setTextColor(themeColor(R.attr.textSecondaryColor))
@@ -167,9 +171,12 @@ class GameplayOptionsView(
         return LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, dp(13), 0, dp(13))
+            val paddingPx = resources.getDimensionPixelSize(R.dimen.container_padding)
+            setPadding(0, paddingPx, 0, paddingPx)
             addView(label, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
-            addView(bpmEditText, LayoutParams(dp(56), LayoutParams.WRAP_CONTENT))
+
+            val heightPx = resources.getDimensionPixelSize(R.dimen.editable_row_height)
+            addView(bpmEditText, LayoutParams(heightPx, LayoutParams.WRAP_CONTENT))
         }
     }
 
@@ -183,18 +190,21 @@ class GameplayOptionsView(
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 setColor(Color.TRANSPARENT)
-                setStroke(dp(1), themeColor(R.attr.hairlineColor))
+                val dividerHeightPx = resources.getDimensionPixelSize(R.dimen.divider_height)
+                setStroke(dividerHeightPx, themeColor(R.attr.hairlineColor))
             }
             setOnCheckedChangeListener { _, _ -> updateSummary() }
         }
         val labelGapTight = resources.getDimensionPixelSize(R.dimen.label_gap_tight)
+        val contentPaddingPx = resources.getDimensionPixelSize(R.dimen.container_padding)
         val buttons = InputMethod.entries.associateWith { method ->
             RadioButton(context).apply {
                 id = generateViewId()
                 text = if (method == InputMethod.EXTERNAL_INSTRUMENT) "ON" else "OFF"
                 buttonDrawable = null
                 textSize = 11.5f
-                setPadding(dp(13), labelGapTight, dp(13), labelGapTight)
+                val paddingPx = resources.getDimensionPixelSize(R.dimen.container_padding)
+                setPadding(paddingPx, labelGapTight, paddingPx, labelGapTight)
                 setBackgroundResource(R.drawable.segment_toggle_background)
                 setTextColor(context.getColorStateList(R.color.segment_toggle_text))
             }
@@ -205,7 +215,7 @@ class GameplayOptionsView(
         return LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, dp(13), 0, dp(13))
+            setPadding(0, contentPaddingPx, 0, contentPaddingPx)
             addView(label, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
             addView(group)
         }

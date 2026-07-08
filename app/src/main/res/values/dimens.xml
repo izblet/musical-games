@@ -7,11 +7,33 @@
          used by the two ConstraintLayout-based form screens (fragment_level_options,
          view_create_game), whose original 18dp padding was folded into this value since it was
          only 2dp off. -->
+
+    <!-- *** -->
+    <!-- PADDINGS -->
+    <!-- *** -->
+
     <dimen name="screen_padding">16dp</dimen>
 
-    <!-- Row padding shared by the simple icon+text(+chevron) list rows: item_device, item_game,
+    <!-- padding inside a text component (basic text button, label container, chip value) -->
+    <dimen name="text_component_padding_basic">16dp</dimen>
+
+    <!-- large padding inside a text component e.g. the start/play buttons -->
+    <dimen name="text_component_padding_large">20dp</dimen>
+
+    <!-- Row padding shared by the simple icon+text list rows: item_device, item_game,
          item_option. -->
     <dimen name="list_item_padding">16dp</dimen>
+
+    <!-- TODO: collapse with editable row padding -->
+    <dimen name="list_item_padding_small">12dp</dimen>
+
+    <!-- -->
+    <dimen name="container_padding">12dp</dimen>
+
+
+    <!-- *** -->
+    <!-- ICONS -->
+    <!-- *** -->
 
     <!-- Gap between a list row's leading icon and its text block - item_game, item_level. -->
     <dimen name="list_item_icon_gap">16dp</dimen>
@@ -22,10 +44,27 @@
     <dimen name="icon_button_size_small">36dp</dimen>
     <dimen name="icon_button_padding_small">6dp</dimen>
 
+    <!-- Tiny icons, like the chevron in chips -->
+    <dimen name="icon_tiny_size">20dp</dimen>
+
     <!-- Larger edit-icon buttons on fragment_level_options' section headers (editLevelInfoButton,
          editLevelButton) - size and internal icon padding. -->
     <dimen name="icon_button_size_large">48dp</dimen>
     <dimen name="icon_button_padding_large">8dp</dimen>
+
+
+    <!-- *** -->
+    <!-- COMPONENTS SIZES -->
+    <!-- *** -->
+
+    <!-- Fixed row height for every chip field, customInputElementStyle's
+         layout_height (XML rows, Play By Ear) and CustomGameCreator.kt's inputElementHeight
+         (programmatic TableRow cells, every other game)-->
+    <dimen name="editable_row_height">44dp</dimen>
+
+
+
+
 
     <!-- Outer padding of the "editable row" card component (background=editable_row_background),
          shared by view_tunable_slider_row and view_color_coding_block. -->
@@ -47,11 +86,6 @@
          GameplayOptionsView.kt)-->
     <dimen name="label_gap_tight">4dp</dimen>
 
-    <!-- Fixed row height for every chip field, shared by customInputElementStyle's
-         layout_height (XML rows, Play By Ear) and CustomGameCreator.kt's inputElementHeight
-         (programmatic TableRow cells, every other game) so both row-building paths always
-         resolve to the exact same height rather than sizing to content. -->
-    <dimen name="custom_creator_row_height">44dp</dimen>
 
     <!-- Shared between customLabelStyle/customInputStyle (XML rows, Play By Ear only) and
          CustomGameCreator.kt's styleLabel()/styleSelector() (programmatic TableRow, every other
@@ -71,4 +105,6 @@
     <!-- The "Selection" piano/interval-preview chip draws its own content edge-to-edge and
          needs to nearly fill the chip -->
     <dimen name="custom_creator_preview_chip_padding">1.5dp</dimen>
+
+    <dimen name="divider_height">1dp</dimen>
 </resources>

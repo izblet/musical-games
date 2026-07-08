@@ -28,7 +28,7 @@
         <item name="android:background">@drawable/spinner_chip_background</item>
         <item name="android:popupBackground">@drawable/spinner_popup_background</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">@dimen/custom_creator_row_height</item>
+        <item name="android:layout_height">@dimen/editable_row_height</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center_vertical|start</item>
         <item name="android:paddingStart">@dimen/custom_creator_chip_padding_horizontal</item>
