@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Continues the active tab's gradient (button_background_active.xml) a bit further:
-     starts at the app's shared highlight colour (accentSoftColor), the exact colour the
-     tab's own gradient ends at, then fades that out to fully transparent, revealing the
-     opaque page-background base beneath. -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="?attr/pageBackgroundColor" />
-        </shape>
-    </item>
-
-    <item>
-        <shape android:shape="rectangle">
-            <gradient
-                android:type="linear"
-                android:angle="270"
-                android:startColor="?attr/accentSoftColor"
-                android:endColor="@android:color/transparent" />
-        </shape>
-    </item>
-
-</layer-list>
+<!-- True alpha fade, no opaque backing: this sits as an overlay on top of contentFrame
+     (see fragment_new_mode_choose.xml), so whatever is scrolled underneath - list rows,
+     the create form, etc. - stays visible through it instead of being hidden behind a
+     flat page-coloured strip. Starts at the same accentSoftColor the active tab's own
+     gradient ends at (button_background_active.xml), continuing that fade down to fully
+     transparent. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="linear"
+        android:angle="270"
+        android:startColor="?attr/accentSoftColor"
+        android:endColor="@android:color/transparent" />
+</shape>

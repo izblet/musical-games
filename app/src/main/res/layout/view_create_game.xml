@@ -49,6 +49,7 @@
                     android:textColorHint="?attr/textTertiaryColor"
                     android:hint="Enter level name"
                     android:inputType="text" />
+
             </LinearLayout>
 
             <!-- Description Note Group -->
@@ -80,10 +81,14 @@
                 android:inputType="text" />
             </LinearLayout>
 
+            <!-- Level Creator container -->
+
             <FrameLayout
                 android:id="@+id/level_creator_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingVertical="24dp"
+                >
             </FrameLayout>
         </LinearLayout>
     </ScrollView>

@@ -106,6 +106,8 @@ class FragmentLevelChoose : Fragment() {
         recyclerView = RecyclerView(requireContext()).apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = this@FragmentLevelChoose.adapter
+            setPadding(0, 15, 0, 0)
+            clipToPadding = false
         }
         stateTextView = TextView(requireContext()).apply {
             layoutParams = FrameLayout.LayoutParams(

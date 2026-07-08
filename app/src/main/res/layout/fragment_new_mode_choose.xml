@@ -82,19 +82,25 @@
                 android:src="@drawable/ic_plus" />
         </LinearLayout>
 
-        <!-- Banner: continues the accent gradient a bit further down, fading into the
-             content area below, instead of it cutting off flush at the tab row. -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/tab_banner_gradient" />
-
         <FrameLayout
-            android:id="@+id/contentFrame"
             android:layout_width="match_parent"
-            android:background="?attr/pageBackgroundColor"
             android:layout_height="0dp"
             android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/contentFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/pageBackgroundColor">
+
+            </FrameLayout>
+
+            <!-- Banner with a gradient, sits above the frame layout-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="top"
+                android:background="@drawable/tab_banner_gradient" />
 
         </FrameLayout>
 
