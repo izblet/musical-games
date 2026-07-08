@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:padding="16dp"
+        android:padding="@dimen/screen_padding"
         android:background="?attr/pageBackgroundColor">
 
         <TextView
@@ -51,7 +51,7 @@
         android:layout_below="@id/box_layout"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/label_gap_tight"
         android:text="Exit" />
 
     <Button
@@ -61,7 +61,7 @@
         android:layout_below="@id/button_exit"
         android:layout_gravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/label_gap_tight"
         android:text="Retry" />
     </LinearLayout>
 </RelativeLayout>

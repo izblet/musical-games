@@ -187,13 +187,14 @@ class GameplayOptionsView(
             }
             setOnCheckedChangeListener { _, _ -> updateSummary() }
         }
+        val labelGapTight = resources.getDimensionPixelSize(R.dimen.label_gap_tight)
         val buttons = InputMethod.entries.associateWith { method ->
             RadioButton(context).apply {
                 id = generateViewId()
                 text = if (method == InputMethod.EXTERNAL_INSTRUMENT) "ON" else "OFF"
                 buttonDrawable = null
                 textSize = 11.5f
-                setPadding(dp(13), dp(5), dp(13), dp(5))
+                setPadding(dp(13), labelGapTight, dp(13), labelGapTight)
                 setBackgroundResource(R.drawable.segment_toggle_background)
                 setTextColor(context.getColorStateList(R.color.segment_toggle_text))
             }

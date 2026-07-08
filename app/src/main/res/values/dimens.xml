@@ -1,6 +1,53 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!-- Root padding shared by every standalone fragment/dialog screen: dialog_color_picker,
+         fragment_first, fragment_flappy_levels, fragment_game_create, fragment_game_ended,
+         fragment_game_join, fragment_high_score, fragment_mode_choose, fragment_settings. Also
+         used by the two ConstraintLayout-based form screens (fragment_level_options,
+         view_create_game), whose original 18dp padding was folded into this value since it was
+         only 2dp off. -->
+    <dimen name="screen_padding">16dp</dimen>
+
+    <!-- Row padding shared by the simple icon+text(+chevron) list rows: item_device, item_game,
+         item_option. -->
+    <dimen name="list_item_padding">16dp</dimen>
+
+    <!-- Gap between a list row's leading icon and its text block - item_game, item_level. -->
+    <dimen name="list_item_icon_gap">16dp</dimen>
+
+    <!-- Small circular icon buttons used inside "editable row" components
+         (view_tunable_slider_row, view_color_coding_block: edit/info/increase/decrease/reset/
+         colour-toggle buttons) - size and internal icon padding. -->
+    <dimen name="icon_button_size_small">36dp</dimen>
+    <dimen name="icon_button_padding_small">6dp</dimen>
+
+    <!-- Larger edit-icon buttons on fragment_level_options' section headers (editLevelInfoButton,
+         editLevelButton) - size and internal icon padding. -->
+    <dimen name="icon_button_size_large">48dp</dimen>
+    <dimen name="icon_button_padding_large">8dp</dimen>
+
+    <!-- Outer padding of the "editable row" card component (background=editable_row_background),
+         shared by view_tunable_slider_row and view_color_coding_block. -->
+    <dimen name="editable_row_padding">12dp</dimen>
+
+    <!-- Gap between an editable row's leading icon and its label, same two files. -->
+    <dimen name="editable_row_icon_gap">8dp</dimen>
+
+    <!-- Vertical padding/margin shared by the palette bottom sheets (interval_bottom_sheet,
+         keyboard_bottom_sheet) - both the sheet's own root padding and the margin around its
+         palette content use this value. -->
+    <dimen name="bottom_sheet_vertical_padding">8dp</dimen>
+
+    <!-- Gap between a form field's label and its input, shared by view_create_game and
+         flappy_custom_creator's Name/Description groups. -->
+    <dimen name="field_label_gap">8dp</dimen>
+
+    <!-- Small "tight" gap below a label/heading before its following content - canonicalised
+         from three near-identical 5dp instances (fragment_level_options, fragment_game_ended,
+         GameplayOptionsView.kt) onto the app's 4dp grid step. -->
+    <dimen name="label_gap_tight">4dp</dimen>
+
     <!-- Fixed row height for every chip field, shared by customInputElementStyle's
          layout_height (XML rows, Play By Ear) and CustomGameCreator.kt's inputElementHeight
          (programmatic TableRow cells, every other game) so both row-building paths always

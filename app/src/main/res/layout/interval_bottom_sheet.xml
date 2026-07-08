@@ -3,12 +3,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?attr/pageBackgroundColor"
-    android:paddingVertical="8dp"
+    android:paddingVertical="@dimen/bottom_sheet_vertical_padding"
     >
     <com.example.musicalgames.utils.components.palettes.interval_palette.IntervalPaletteView
         android:id="@+id/keyboard_view"
         android:layout_width="match_parent"
-        android:layout_marginVertical="8dp"
+        android:layout_marginVertical="@dimen/bottom_sheet_vertical_padding"
         android:layout_height="150dp"/>
     <Button
         style="@style/buttonFilledStyle"

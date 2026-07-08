@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/editable_row_background"
-    android:padding="12dp">
+    android:padding="@dimen/editable_row_padding">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,10 +15,10 @@
 
         <ImageButton
             android:id="@+id/editButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:padding="6dp"
+            android:layout_width="@dimen/icon_button_size_small"
+            android:layout_height="@dimen/icon_button_size_small"
+            android:layout_marginEnd="@dimen/editable_row_icon_gap"
+            android:padding="@dimen/icon_button_padding_small"
             android:background="@drawable/edit_toggle_background"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit"
@@ -32,10 +32,10 @@
 
         <com.example.musicalgames.utils.components.ui_components.InfoIconButton
             android:id="@+id/infoButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/icon_button_size_small"
+            android:layout_height="@dimen/icon_button_size_small"
             android:layout_marginStart="4dp"
-            android:padding="6dp"
+            android:padding="@dimen/icon_button_padding_small"
             android:background="?attr/selectableItemBackgroundBorderless" />
     </LinearLayout>
 
@@ -53,9 +53,9 @@
 
         <ImageButton
             android:id="@+id/decreaseButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="6dp"
+            android:layout_width="@dimen/icon_button_size_small"
+            android:layout_height="@dimen/icon_button_size_small"
+            android:padding="@dimen/icon_button_padding_small"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Decrease"
             android:enabled="false"
@@ -73,9 +73,9 @@
 
         <ImageButton
             android:id="@+id/increaseButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="6dp"
+            android:layout_width="@dimen/icon_button_size_small"
+            android:layout_height="@dimen/icon_button_size_small"
+            android:padding="@dimen/icon_button_padding_small"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Increase"
             android:enabled="false"
@@ -85,10 +85,10 @@
 
     <ImageButton
         android:id="@+id/resetButton"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/icon_button_size_small"
+        android:layout_height="@dimen/icon_button_size_small"
         android:layout_gravity="center_horizontal"
-        android:padding="6dp"
+        android:padding="@dimen/icon_button_padding_small"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Reset to default"
         android:scaleX="-1"

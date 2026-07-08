@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="18dp">
+            android:padding="@dimen/screen_padding">
 
             <!-- Name Note Group -->
             <LinearLayout
@@ -33,7 +33,7 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/field_label_gap"
                     android:textColor="?attr/textSecondaryColor"
                     android:textSize="12sp"
                     android:textStyle="bold"

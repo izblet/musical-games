@@ -2,5 +2,5 @@
     android:id="@+id/optionTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:padding="@dimen/list_item_padding"
     android:textSize="16sp" />

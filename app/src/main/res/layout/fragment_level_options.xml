@@ -8,7 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="18dp">
+        android:padding="@dimen/screen_padding">
 
         <LinearLayout
             android:id="@+id/heading_container"
@@ -34,7 +34,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="@dimen/label_gap_tight"
                     android:text="Level"
                     android:textColor="?attr/textTertiaryColor"
                     android:textSize="10.5sp"
@@ -85,9 +85,9 @@
 
             <ImageButton
                 android:id="@+id/editLevelInfoButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="8dp"
+                android:layout_width="@dimen/icon_button_size_large"
+                android:layout_height="@dimen/icon_button_size_large"
+                android:padding="@dimen/icon_button_padding_large"
                 android:background="@drawable/edit_toggle_background"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_pencil" />
@@ -146,9 +146,9 @@
 
                 <ImageButton
                     android:id="@+id/editLevelButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/icon_button_size_large"
+                    android:layout_height="@dimen/icon_button_size_large"
+                    android:padding="@dimen/icon_button_padding_large"
                     android:background="@drawable/edit_toggle_background"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_pencil" />
