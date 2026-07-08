@@ -44,6 +44,7 @@ class FlappyCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
         textOn = "Selection"
         gravity = Gravity.CENTER
         setSingleLine(true)
+        isChecked=true
     }
 
     private val scaleSpinner = EnumSpinner(inputThemedContext)
