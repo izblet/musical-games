@@ -2,25 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Not editable/clickable right now (e.g. Game Parameters chips while not in edit mode) -
          no underline, since it'd otherwise imply the chip can be tapped. -->
-    <item android:state_enabled="false">
-        <shape android:shape="rectangle">
-            <solid android:color="?attr/surfaceChipColor"/>
-        </shape>
-    </item>
-    <item>
-        <layer-list>
-            <item>
-                <shape android:shape="rectangle">
-                    <solid android:color="?attr/surfaceChipColor"/>
-                </shape>
-            </item>
-            <item
-                android:gravity="bottom"
-                android:height="2dp">
-                <shape android:shape="rectangle">
-                    <solid android:color="?attr/colorPrimary"/>
-                </shape>
-            </item>
-        </layer-list>
-    </item>
+    <item android:state_enabled="false" android:drawable="@drawable/background_block"/>
+    <item android:drawable="@drawable/background_block_active"/>
 </selector>

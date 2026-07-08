@@ -76,7 +76,7 @@ class GameplayOptionsView(
             contentContainer = content
             content.visibility = View.GONE
             addView(buildHeaderRow())
-            content.setBackgroundResource(R.drawable.chip_background_inactive)
+            content.setBackgroundResource(R.drawable.background_block)
             addView(content)
             updateSummary()
         }

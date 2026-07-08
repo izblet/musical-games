@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flat "inactive chip" fill: no underline, for blocks that aren't clickable/active right
+     now. Paired with background_block_active (adds the bottom colorPrimary underline);
+     spinner_chip_background.xml switches between the two based on state_enabled. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="?attr/surfaceChipColor"/>
+</shape>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same flat chip fill as background_block, plus a bottom colorPrimary underline marking
+     the block as active/clickable (e.g. a spinner chip that can be tapped to open). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/surfaceChipColor"/>
+        </shape>
+    </item>
+    <item
+        android:gravity="bottom"
+        android:height="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorPrimary"/>
+        </shape>
+    </item>
+</layer-list>
