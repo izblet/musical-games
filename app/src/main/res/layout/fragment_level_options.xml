@@ -7,19 +7,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/screen_padding">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/heading_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:layout_marginTop="@dimen/screen_padding"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/item_bordered"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -85,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/screen_padding"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             app:layout_constraintTop_toBottomOf="@id/heading_container"
@@ -107,19 +110,22 @@
                 app:tint="@color/disableable_icon_tint"
                 android:src="@drawable/ic_pencil" />
 
-            <!-- Explicit size (2x icon_button_size_large), not wrap_content: heartBinBlockOverlay below is
-                 match_parent, and a wrap_content FrameLayout inside a wrap_content row/ConstraintLayout
-                 chain resolves a match_parent child against the ConstraintLayout's leftover-space budget,
-                 ballooning this container (and the row) to near-full screen width once the overlay shows. -->
-            <FrameLayout
+            <!-- ConstraintLayout (not FrameLayout): heartBinBlockOverlay below is 0dp, constrained to
+                 heartBinButtonsRow's own edges rather than match_parent - ConstraintLayout specifically
+                 resolves a 0dp child inside a wrap_content parent using the *other* children's natural
+                 size, so this container's size always derives from the two buttons, no hardcoded size. -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/heartBinContainer"
-                android:layout_width="128dp"
-                android:layout_height="@dimen/icon_button_size_large">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/heartBinButtonsRow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <ImageButton
                         android:id="@+id/favouriteButton"
@@ -145,14 +151,18 @@
 
                 <View
                     android:id="@+id/heartBinBlockOverlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:visibility="gone"
                     android:clickable="true"
                     android:focusable="true"
-                    android:background="@color/scrim" />
+                    android:background="@color/scrim"
+                    app:layout_constraintTop_toTopOf="@id/heartBinButtonsRow"
+                    app:layout_constraintBottom_toBottomOf="@id/heartBinButtonsRow"
+                    app:layout_constraintStart_toStartOf="@id/heartBinButtonsRow"
+                    app:layout_constraintEnd_toEndOf="@id/heartBinButtonsRow" />
 
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
@@ -163,6 +173,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
             app:layout_constraintTop_toBottomOf="@id/levelActionsRow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -173,9 +185,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/startGameButton" />
 
         <LinearLayout
@@ -183,9 +197,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
+            android:layout_marginStart="@dimen/screen_padding"
+            android:layout_marginEnd="@dimen/screen_padding"
+            android:layout_marginBottom="@dimen/screen_padding"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gameplay_options_container">
 
             <LinearLayout
@@ -229,7 +247,6 @@
                 />
 
         </LinearLayout>
-
         <View
             android:id="@+id/editBlockOverlay"
             android:layout_width="0dp"
@@ -242,6 +259,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </ScrollView>
