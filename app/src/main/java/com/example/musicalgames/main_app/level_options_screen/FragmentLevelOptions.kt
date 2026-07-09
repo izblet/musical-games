@@ -203,6 +203,23 @@ class FragmentLevelOptions : Fragment() {
             .show()
     }
 
+    private fun promptToggleFavourite() {
+        val verb = if (controller.isFavourite) "Remove from" else "Add to"
+        AlertDialog.Builder(requireContext())
+            .setTitle("$verb favourites?")
+            .setPositiveButton("Yes") { _, _ -> controller.toggleFavourite { refreshUI() } }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun promptDeleteLevel() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete level?")
+            .setPositiveButton("Delete") { _, _ -> controller.deleteLevel { findNavController().navigateUp() } }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
     //handles editing of the game-specific level parameters (the custom creator view)
     private fun setupParamsEditMode(game: Game, level: Level) {
         val factory = GameMap.createFactory(game)
@@ -321,12 +338,8 @@ class FragmentLevelOptions : Fragment() {
             attemptStartGame()
         }
 
-        binding.favouriteButton.setOnClickListener {
-            controller.toggleFavourite { refreshUI() }
-        }
-        binding.binButton.setOnClickListener {
-            controller.deleteLevel { findNavController().navigateUp() }
-        }
+        binding.favouriteButton.setOnClickListener { promptToggleFavourite() }
+        binding.binButton.setOnClickListener { promptDeleteLevel() }
 
         return binding.root
     }

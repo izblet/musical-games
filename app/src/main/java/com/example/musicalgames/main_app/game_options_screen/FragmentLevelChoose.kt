@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -94,11 +95,7 @@ class FragmentLevelChoose : Fragment() {
             }
 
             override fun onFavouriteClick(level: TaggedLevel) {
-                val id = level.levelId ?: return
-                lifecycleScope.launch {
-                    levelDao.changeFavourite(!level.isFavourite, id)
-                    refresh()
-                }
+                promptToggleFavourite(level)
             }
         })
 
@@ -174,6 +171,21 @@ class FragmentLevelChoose : Fragment() {
         Log.d("level choose", "launchlevel")
         val tagged = taggedLevel ?: TaggedLevel(viewModel.game!!, levelId = null, name = "", description = "", level = level, isFavourite = false, isCustom = true)
         viewModel.chooseLevel(tagged)
+    }
+
+    private fun promptToggleFavourite(level: TaggedLevel) {
+        val id = level.levelId ?: return
+        val verb = if (level.isFavourite) "Remove from" else "Add to"
+        AlertDialog.Builder(requireContext())
+            .setTitle("$verb favourites?")
+            .setPositiveButton("Yes") { _, _ ->
+                lifecycleScope.launch {
+                    levelDao.changeFavourite(!level.isFavourite, id)
+                    refresh()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun updateButtons(newClicked : ImageButton) {
