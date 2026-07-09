@@ -90,19 +90,21 @@ class FragmentLevelChoose : Fragment() {
 
         adapter = AdapterLevelList(favouriteList, object : AdapterLevelList.OnItemClickListener {
             override fun onItemClick(level: TaggedLevel) {
-               launchLevel(level.level, level.name, level.description, level.levelId, level.isCustom)
+               launchLevel(level.level, level)
             }
 
             override fun onBinClick(level: TaggedLevel) {
+               val id = level.levelId ?: return
                lifecycleScope.launch {
-                   levelDao.deleteLevel(level.levelId)
+                   levelDao.deleteLevel(id)
                    refresh()
                }
             }
 
             override fun onFavouriteClick(level: TaggedLevel) {
+                val id = level.levelId ?: return
                 lifecycleScope.launch {
-                    levelDao.changeFavourite(!level.isFavourite, level.levelId)
+                    levelDao.changeFavourite(!level.isFavourite, id)
                     refresh()
                 }
             }
@@ -150,7 +152,7 @@ class FragmentLevelChoose : Fragment() {
             if(level != null) {
                 val name = viewCreate.findViewById<EditText>(R.id.nameInput).text.toString()
                 val description = viewCreate.findViewById<EditText>(R.id.descriptionInput).text.toString()
-                val taggedLevel = TaggedLevel(viewModel.game!!, 0, name, description, level, isFavourite = false, isCustom = true)
+                val taggedLevel = TaggedLevel(viewModel.game!!, null, name, description, level, isFavourite = false, isCustom = true)
                 lifecycleScope.launch {
                     levelDao.addLevel(taggedLevel, viewModel.game!!)
                 }
@@ -176,10 +178,10 @@ class FragmentLevelChoose : Fragment() {
         }
     }
 
-    private fun launchLevel(level: Level, name: String? = null, description: String? = null, levelId: Int? = null, isCustom: Boolean? = null) {
+    private fun launchLevel(level: Level, taggedLevel: TaggedLevel? = null) {
         Log.d("level choose", "launchlevel")
-        viewModel.chooseLevel(level, name, description, levelId, isCustom)
-
+        val tagged = taggedLevel ?: TaggedLevel(viewModel.game!!, levelId = null, name = "", description = "", level = level, isFavourite = false, isCustom = true)
+        viewModel.chooseLevel(tagged)
     }
 
     private fun updateButtons(newClicked : ImageButton) {

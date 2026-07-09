@@ -5,10 +5,15 @@ import com.example.musicalgames.games.Game
 
 data class TaggedLevel(
     val game: Game,
-    val levelId: Int,
+    val levelId: Int?,     // null => not yet persisted (a temporary/unsaved level)
     val name: String,
     val description: String,
     val level: Level,
     val isFavourite: Boolean,
     val isCustom: Boolean
-)
+) {
+    fun isEditable(): Boolean = isCustom
+    fun isInfoEditable(): Boolean = levelId != null && isCustom
+    fun isFavouritable(): Boolean = levelId != null
+    fun isDeletable(): Boolean = levelId != null && isCustom
+}

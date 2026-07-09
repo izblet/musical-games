@@ -70,7 +70,7 @@ abstract class GameDatabase : RoomDatabase() {
 
             return levels.map {
                 LevelEntity(
-                    id = it.levelId,
+                    id = it.levelId ?: 0,
                     gameId = it.game.ordinal,
                     name = it.name,
                     description = it.description,

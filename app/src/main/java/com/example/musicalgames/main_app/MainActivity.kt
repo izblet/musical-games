@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setCollectFor(viewModel.navigateToLevels, toLevelsFunction)
 
         val toGamePlayFunction: (Unit)->Unit = {
-            if (viewModel.level != null) {
+            if (viewModel.taggedLevel != null) {
                 navController.navigate(R.id.action_fragmentNewModeChoose_to_fragmentLevelOptions)
             } else {
                 throw IllegalStateException("The level is null, cannot navigate to start game")
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                 val game = viewModel.game!!
                 val activityClass = if (GameMap.isPortrait(game)) PortraitGameActivity::class.java else LandscapeGameActivity::class.java
                 val intent = Intent(this@MainActivity, activityClass).apply {
-                    putExtra(GameActivity.ARG_LEVEL, viewModel.level)
+                    putExtra(GameActivity.ARG_LEVEL, viewModel.taggedLevel?.level)
                     putExtra(GameActivity.ARG_GAMEPlAY_INFO, viewModel.gameplay)
                     putExtra(GameActivity.ARG_GAME_TYPE, game.name)
                 }

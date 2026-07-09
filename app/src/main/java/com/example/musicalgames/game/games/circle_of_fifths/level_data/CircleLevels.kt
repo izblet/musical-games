@@ -20,8 +20,8 @@ object CircleLevels {
     )
 
     private fun nameToPosition(name: String, description: String, modes: List<Mode>): TaggedLevel =
-        TaggedLevel(Game.CIRCLE, 0, name, description, CircleLevel(positionToName = false, modes), isFavourite = false, isCustom = false)
+        TaggedLevel(Game.CIRCLE, null, name, description, CircleLevel(positionToName = false, modes), isFavourite = false, isCustom = false)
 
     private fun positionToName(name: String, description: String, modes: List<Mode>): TaggedLevel =
-        TaggedLevel(Game.CIRCLE, 0, name, description, CircleLevel(positionToName = true, modes), isFavourite = false, isCustom = false)
+        TaggedLevel(Game.CIRCLE, null, name, description, CircleLevel(positionToName = true, modes), isFavourite = false, isCustom = false)
 }

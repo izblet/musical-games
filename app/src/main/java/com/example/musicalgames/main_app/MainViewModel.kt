@@ -18,15 +18,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     @Volatile
     var game: Game? = null
     @Volatile
-    var level: Level? = null
-    @Volatile
-    var levelName: String? = null
-    @Volatile
-    var levelDescription: String? = null
-    @Volatile
-    var levelId: Int? = null
-    @Volatile
-    var isCustom: Boolean? = null
+    var taggedLevel: TaggedLevel? = null   // null only before any level has ever been chosen; levelId null within it means temporary/unsaved
     @Volatile
     var gameplay: GamePlayInstance? = null
 
@@ -39,12 +31,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch { navigateToLevels.emit(Unit) }
     }
 
-    fun chooseLevel(level: Level, name: String? = null, description: String? = null, levelId: Int? = null, isCustom: Boolean? = null) {
-        this.level = level
-        this.levelName = name
-        this.levelDescription = description
-        this.levelId = levelId
-        this.isCustom = isCustom
+    fun chooseLevel(taggedLevel: TaggedLevel) {
+        this.taggedLevel = taggedLevel
         viewModelScope.launch { navigateToGamePlay.emit(Unit) }
     }
 
@@ -55,27 +43,31 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     //inserts the current working level as a new custom level, turning a temporary level into a saved one
     fun saveNewLevel(name: String, description: String, onSaved: () -> Unit) {
-        val game = this.game ?: return
-        val level = this.level ?: return
+        val tagged = taggedLevel ?: return
         viewModelScope.launch {
-            val taggedLevel = TaggedLevel(game, 0, name, description, level, isFavourite = false, isCustom = true)
-            levelId = levelDao.addLevel(taggedLevel, game)
-            levelName = name
-            levelDescription = description
-            isCustom = true
+            val toInsert = tagged.copy(name = name, description = description, isCustom = true)
+            val id = levelDao.addLevel(toInsert, tagged.game)
+            taggedLevel = toInsert.copy(levelId = id)
             onSaved()
         }
     }
 
     //writes the current working level/name/description back to the existing custom level's row
     fun updateLevel() {
-        val game = this.game ?: return
-        val id = this.levelId ?: return
-        val level = this.level ?: return
-        val name = levelName ?: ""
-        val description = levelDescription ?: ""
+        val tagged = taggedLevel ?: return
+        val id = tagged.levelId ?: return
         viewModelScope.launch {
-            levelDao.updateLevel(id, game, name, description, level)
+            levelDao.updateLevel(id, tagged.game, tagged.name, tagged.description, tagged.level)
         }
+    }
+
+    fun updateLevelInfo(name: String, description: String) {
+        taggedLevel = taggedLevel?.copy(name = name, description = description)
+        updateLevel()
+    }
+
+    fun updateLevelParams(newLevel: Level) {
+        taggedLevel = taggedLevel?.copy(level = newLevel)
+        updateLevel()
     }
 }

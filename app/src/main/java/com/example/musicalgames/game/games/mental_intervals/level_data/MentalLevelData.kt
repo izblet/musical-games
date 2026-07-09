@@ -19,7 +19,7 @@ object MentalLevels {
                 intervals = intervals.toList(),
                 mode = Type.INTERVAL_NOTE
             )
-            levels.add(TaggedLevel(Game.MENTAL_INTERVALS, 0, "at most $maxSemitones semitones", "", level, isFavourite = false, isCustom = false))
+            levels.add(TaggedLevel(Game.MENTAL_INTERVALS, null, "at most $maxSemitones semitones", "", level, isFavourite = false, isCustom = false))
 
         }
         return levels

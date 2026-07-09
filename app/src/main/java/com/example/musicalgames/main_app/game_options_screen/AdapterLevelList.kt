@@ -55,7 +55,7 @@ class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onI
                 onItemClickListener.onBinClick(level)
             }
             val chevronImageView = itemView.findViewById<ImageView>(R.id.chevronIconView)
-            if(!level.isCustom) {
+            if(!level.isDeletable()) {
                 binImageView.visibility = View.GONE
                 chevronImageView.visibility = View.VISIBLE
             } else {

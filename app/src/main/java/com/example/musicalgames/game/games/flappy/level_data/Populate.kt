@@ -21,7 +21,7 @@ object FlappyLevels {
         val name = "${NoteSpelling.spell(Note(minPitch), SpellingPreference.SHARPS)} to ${NoteSpelling.spell(Note(maxPitch), SpellingPreference.SHARPS)}, root: ${NoteSpelling.spell(Note(root).noteChromatic, SpellingPreference.SHARPS)} $mode"
         val description = "Arcade"
         val level = FlappyLevel(minPitch, maxPitch, root, Mode.IONIAN, notes, LEN_INF)
-        return TaggedLevel(Game.FLAPPY, 0, name, description, level, isFavourite = false, isCustom = false)
+        return TaggedLevel(Game.FLAPPY, null, name, description, level, isFavourite = false, isCustom = false)
 
     }
 

@@ -281,9 +281,9 @@ class FragmentLevelOptions : Fragment() {
         val game = controller.game
         val level = controller.level
 
-        //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can -
+        //predefined levels can't be edited; temporary (unsaved) levels can -
         //refreshUI below already handles the text/visibility for all three cases via `controller`
-        if (controller.isCustom == null) {
+        if (controller.temporaryTitle) {
             setupTemporaryLevel()
         }
 

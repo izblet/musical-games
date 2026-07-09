@@ -23,5 +23,5 @@ object ChordsLevels {
     )
 
     private fun level(name: String, description: String, roots: Set<ChromaticNote>, qualities: Set<Chord.Companion.Quality>, extensions: Set<Chord.Companion.Extension?>): TaggedLevel =
-        TaggedLevel(Game.CHORDS, 0, name, description, LevelChords(roots, qualities, extensions), isFavourite = false, isCustom = false)
+        TaggedLevel(Game.CHORDS, null, name, description, LevelChords(roots, qualities, extensions), isFavourite = false, isCustom = false)
 }

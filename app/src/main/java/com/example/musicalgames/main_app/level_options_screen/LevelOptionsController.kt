@@ -8,28 +8,29 @@ import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
+import com.example.musicalgames.main_app.game_options_screen.TaggedLevel
 
 class LevelOptionsController(private val mainViewModel: MainViewModel) {
 
     enum class EditSection { NONE, INFO, PARAMS }
 
     val game: Game? get() = mainViewModel.game
-    val level: Level? get() = mainViewModel.level
-    val levelName: String? get() = mainViewModel.levelName
-    val levelDescription: String? get() = mainViewModel.levelDescription
-    val levelId: Int? get() = mainViewModel.levelId
-    val isCustom: Boolean? get() = mainViewModel.isCustom
+    val taggedLevel: TaggedLevel? get() = mainViewModel.taggedLevel
+    val level: Level? get() = taggedLevel?.level
+    val levelName: String get() = taggedLevel?.name ?: ""
+    val levelDescription: String get() = taggedLevel?.description ?: ""
+    val isCustom: Boolean? get() = taggedLevel?.isCustom
+    val temporaryTitle: Boolean get() = taggedLevel?.levelId == null
 
-    //predefined levels (isCustom == false) can't be edited; temporary levels (isCustom == null) can
-    val infoEditable: Boolean get() = isCustom == true
-    val parametersEditable: Boolean get() = isCustom != false
-    val temporaryTitle: Boolean get() = isCustom == null
+    //info editing needs an already-persisted custom level; params stay editable for a temporary (not-yet-saved) level too
+    val infoEditable: Boolean get() = taggedLevel?.isInfoEditable() ?: false
+    val parametersEditable: Boolean get() = taggedLevel?.isEditable() ?: false
 
     var activeEditSection: EditSection = EditSection.NONE
         private set
 
     //the last-known-good level for the params section - "discard" reverts to this
-    private var workingLevel: Level? = mainViewModel.level
+    private var workingLevel: Level? = mainViewModel.taggedLevel?.level
 
     fun beginEditingParams() {
         activeEditSection = EditSection.PARAMS
@@ -41,10 +42,7 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
 
     fun saveParamsEdit(newLevel: Level) {
         workingLevel = newLevel
-        mainViewModel.level = newLevel
-        if (mainViewModel.levelId != null) {
-            mainViewModel.updateLevel()
-        }
+        mainViewModel.updateLevelParams(newLevel)
         activeEditSection = EditSection.NONE
     }
 
@@ -54,11 +52,7 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
     }
 
     fun saveInfoEdit(name: String, description: String) {
-        mainViewModel.levelName = name
-        mainViewModel.levelDescription = description
-        if (mainViewModel.levelId != null) {
-            mainViewModel.updateLevel()
-        }
+        mainViewModel.updateLevelInfo(name, description)
         activeEditSection = EditSection.NONE
     }
 
