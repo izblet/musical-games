@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
@@ -81,18 +82,28 @@ class FragmentLevelOptions : Fragment() {
         binding.levelDescriptionText.setText(controller.levelDescription)
 
         binding.editLevelButton.visibility = if (controller.parametersEditable) View.VISIBLE else View.GONE
-        binding.editLevelInfoButton.visibility = if (controller.infoEditable) View.VISIBLE else View.GONE
 
-        //For temporary levels we substitute the title with a "temporary level message"
-        //and add an option to make the level permanent
+        //For temporary levels we substitute the title with a "temporary level message" and the action
+        //row with a single "Save Level" button; once saved, the row switches to the pencil/heart/bin icons
         if(controller.temporaryTitle) {
             binding.temporaryLevelMessage.isVisible = true
-            binding.saveLevelButton.isVisible = true
             binding.levelTitleDescContainer.isVisible = false
+            binding.saveLevelButton.isVisible = true
+            binding.editLevelInfoButton.isVisible = false
+            binding.heartBinContainer.isVisible = false
         } else {
             binding.temporaryLevelMessage.isVisible = false
-            binding.saveLevelButton.isVisible = false
             binding.levelTitleDescContainer.isVisible = true
+            binding.saveLevelButton.isVisible = false
+            binding.editLevelInfoButton.isVisible = true
+            binding.heartBinContainer.isVisible = true
+            binding.editLevelInfoButton.isEnabled = controller.infoEditable
+            binding.favouriteButton.isEnabled = controller.favouriteEditable
+            binding.binButton.isEnabled = controller.deletable
+            binding.favouriteButton.setImageResource(
+                if (controller.isFavourite) com.example.musicalgames.R.drawable.ic_favourite_filled
+                else com.example.musicalgames.R.drawable.ic_favourite_outline
+            )
         }
 
         //Now we will draw the editing sections
@@ -101,6 +112,7 @@ class FragmentLevelOptions : Fragment() {
             //section (brought to front by that section) and blocks taps on the rest of the screen;
             //tapping the overlay itself exits edit mode for whichever section is currently active
             binding.editBlockOverlay.visibility = View.GONE
+            binding.heartBinBlockOverlay.visibility = View.GONE
 
             binding.editLevelInfoButton.isActivated = false
             binding.editLevelButton.isActivated = false
@@ -126,6 +138,8 @@ class FragmentLevelOptions : Fragment() {
         //We know something is being edited
         binding.editBlockOverlay.visibility = View.VISIBLE
         binding.editBlockOverlay.bringToFront()
+        //heart/bin stay blocked like the rest of the screen even when their row is brought to front for the pencil's sake (INFO branch below)
+        binding.heartBinBlockOverlay.visibility = View.VISIBLE
 
        if(controller.activeEditSection == LevelOptionsController.EditSection.PARAMS) {
            binding.editLevelButton.isActivated = true
@@ -139,6 +153,9 @@ class FragmentLevelOptions : Fragment() {
            binding.headingContainer.setBackgroundResource(com.example.musicalgames.R.drawable.item_selected_bordered)
            binding.headingContainer.isClickable = true //tmp
            binding.headingContainer.bringToFront()
+           //the pencil no longer lives inside headingContainer - bring its new row to front too so it stays reachable
+           //through editBlockOverlay; heartBinBlockOverlay (see above) keeps heart/bin blocked regardless
+           binding.levelActionsRow.bringToFront()
            setInfoEditable(true)
        }
     }
@@ -288,6 +305,7 @@ class FragmentLevelOptions : Fragment() {
         }
 
         binding.editBlockOverlay.setOnClickListener { promptSaveChanges() }
+        binding.heartBinBlockOverlay.setOnClickListener { promptSaveChanges() }
 
         if (game != null && level != null) {
             setupParamsEditMode(game, level)
@@ -302,7 +320,14 @@ class FragmentLevelOptions : Fragment() {
         binding.startGameButton.setOnClickListener {
             attemptStartGame()
         }
+
+        binding.favouriteButton.setOnClickListener {
+            controller.toggleFavourite { refreshUI() }
+        }
+        binding.binButton.setOnClickListener {
+            controller.deleteLevel { findNavController().navigateUp() }
+        }
+
         return binding.root
     }
-
 }

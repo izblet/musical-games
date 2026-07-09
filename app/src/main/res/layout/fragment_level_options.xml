@@ -78,6 +78,18 @@
                 android:textStyle="bold"
                 android:text="New Level (Unsaved)" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/levelActionsRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/heading_container"
+            app:layout_constraintEnd_toEndOf="parent">
+
             <Button
                 android:id="@+id/saveLevelButton"
                 android:layout_width="wrap_content"
@@ -89,10 +101,58 @@
                 android:id="@+id/editLevelInfoButton"
                 android:layout_width="@dimen/icon_button_size_large"
                 android:layout_height="@dimen/icon_button_size_large"
-                android:padding="@dimen/icon_button_padding_large"
+                android:padding="@dimen/icon_button_padding_small"
                 android:background="@drawable/edit_toggle_background"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="fitCenter"
+                app:tint="@color/disableable_icon_tint"
                 android:src="@drawable/ic_pencil" />
+
+            <!-- Explicit size (2x icon_button_size_large), not wrap_content: heartBinBlockOverlay below is
+                 match_parent, and a wrap_content FrameLayout inside a wrap_content row/ConstraintLayout
+                 chain resolves a match_parent child against the ConstraintLayout's leftover-space budget,
+                 ballooning this container (and the row) to near-full screen width once the overlay shows. -->
+            <FrameLayout
+                android:id="@+id/heartBinContainer"
+                android:layout_width="128dp"
+                android:layout_height="@dimen/icon_button_size_large">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/favouriteButton"
+                        android:layout_width="@dimen/icon_button_size_large"
+                        android:layout_height="@dimen/icon_button_size_large"
+                        android:padding="@dimen/icon_button_padding_small"
+                        android:background="?attr/pageBackgroundColor"
+                        android:scaleType="centerInside"
+                        app:tint="@color/disableable_icon_tint"
+                        android:src="@drawable/ic_favourite_outline" />
+
+                    <ImageButton
+                        android:id="@+id/binButton"
+                        android:layout_width="@dimen/icon_button_size_large"
+                        android:layout_height="@dimen/icon_button_size_large"
+                        android:padding="@dimen/icon_button_padding_small"
+                        android:background="?attr/pageBackgroundColor"
+                        android:scaleType="centerInside"
+                        app:tint="@color/disableable_icon_tint"
+                        android:src="@drawable/ic_bin" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/heartBinBlockOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@color/scrim" />
+
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -103,7 +163,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            app:layout_constraintTop_toBottomOf="@id/heading_container"
+            app:layout_constraintTop_toBottomOf="@id/levelActionsRow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
              />
@@ -148,9 +208,9 @@
 
                 <ImageButton
                     android:id="@+id/editLevelButton"
-                    android:layout_width="@dimen/icon_button_size_large"
-                    android:layout_height="@dimen/icon_button_size_large"
-                    android:padding="@dimen/icon_button_padding_large"
+                    android:layout_width="@dimen/icon_button_size"
+                    android:layout_height="@dimen/icon_button_size"
+                    android:padding="@dimen/icon_button_padding"
                     android:background="@drawable/edit_toggle_background"
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_pencil" />
@@ -177,7 +237,7 @@
             android:visibility="gone"
             android:clickable="true"
             android:focusable="true"
-            android:background="@android:color/transparent"
+            android:background="@color/scrim"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

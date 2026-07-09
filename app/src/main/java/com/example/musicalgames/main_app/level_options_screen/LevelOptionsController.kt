@@ -25,6 +25,9 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
     //info editing needs an already-persisted custom level; params stay editable for a temporary (not-yet-saved) level too
     val infoEditable: Boolean get() = taggedLevel?.isInfoEditable() ?: false
     val parametersEditable: Boolean get() = taggedLevel?.isEditable() ?: false
+    val favouriteEditable: Boolean get() = taggedLevel?.isFavouritable() ?: false
+    val deletable: Boolean get() = taggedLevel?.isDeletable() ?: false
+    val isFavourite: Boolean get() = taggedLevel?.isFavourite ?: false
 
     var activeEditSection: EditSection = EditSection.NONE
         private set
@@ -76,5 +79,8 @@ class LevelOptionsController(private val mainViewModel: MainViewModel) {
         mainViewModel.playLevel(gameplay)
     }
 
+    fun toggleFavourite(onDone: () -> Unit) = mainViewModel.toggleFavourite(onDone)
+
+    fun deleteLevel(onDone: () -> Unit) = mainViewModel.deleteLevel(onDone)
 
 }

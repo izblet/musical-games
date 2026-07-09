@@ -23,4 +23,7 @@
     <color name="text_tertiary">#6B727B</color>
     <color name="text_disabled">#5F666E</color>
     <color name="hairline">#12FFFFFF</color>
+
+    <!-- Dims the rest of the screen behind an edit-block overlay (fragment_level_options). -->
+    <color name="scrim">#99000000</color>
 </resources>

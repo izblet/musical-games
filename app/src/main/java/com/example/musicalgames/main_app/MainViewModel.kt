@@ -70,4 +70,24 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         taggedLevel = taggedLevel?.copy(level = newLevel)
         updateLevel()
     }
+
+    fun toggleFavourite(onDone: () -> Unit) {
+        val tagged = taggedLevel ?: return
+        val id = tagged.levelId ?: return
+        viewModelScope.launch {
+            val newVal = !tagged.isFavourite
+            levelDao.changeFavourite(newVal, id)
+            taggedLevel = tagged.copy(isFavourite = newVal)
+            onDone()
+        }
+    }
+
+    fun deleteLevel(onDone: () -> Unit) {
+        val tagged = taggedLevel ?: return
+        val id = tagged.levelId ?: return
+        viewModelScope.launch {
+            levelDao.deleteLevel(id)
+            onDone()
+        }
+    }
 }
