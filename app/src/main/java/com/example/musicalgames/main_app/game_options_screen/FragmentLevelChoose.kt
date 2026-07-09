@@ -93,14 +93,6 @@ class FragmentLevelChoose : Fragment() {
                launchLevel(level.level, level)
             }
 
-            override fun onBinClick(level: TaggedLevel) {
-               val id = level.levelId ?: return
-               lifecycleScope.launch {
-                   levelDao.deleteLevel(id)
-                   refresh()
-               }
-            }
-
             override fun onFavouriteClick(level: TaggedLevel) {
                 val id = level.levelId ?: return
                 lifecycleScope.launch {

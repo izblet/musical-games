@@ -42,14 +42,6 @@
     </LinearLayout>
 
         <ImageView
-            android:id="@+id/binIconView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="centerCrop"
-            app:tint="?attr/colorPrimary"
-            android:src="@drawable/ic_bin" />
-
-        <ImageView
             android:id="@+id/chevronIconView"
             android:layout_width="24dp"
             android:layout_height="24dp"

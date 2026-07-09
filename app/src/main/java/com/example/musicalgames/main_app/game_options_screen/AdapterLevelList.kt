@@ -50,19 +50,6 @@ class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onI
                 onItemClickListener.onFavouriteClick(level)
             }
 
-            val binImageView = itemView.findViewById<ImageView>(R.id.binIconView)
-            binImageView.setOnClickListener{
-                onItemClickListener.onBinClick(level)
-            }
-            val chevronImageView = itemView.findViewById<ImageView>(R.id.chevronIconView)
-            if(!level.isDeletable()) {
-                binImageView.visibility = View.GONE
-                chevronImageView.visibility = View.VISIBLE
-            } else {
-                binImageView.visibility = View.VISIBLE
-                chevronImageView.visibility = View.GONE
-            }
-
             nameTextView.text = level.name
             descriptionTextView.text = level.description
         }
@@ -70,6 +57,5 @@ class AdapterLevelList(private var levelList: List<TaggedLevel>, private val onI
     interface OnItemClickListener {
         fun onItemClick(level: TaggedLevel)
         fun onFavouriteClick(level: TaggedLevel)
-        fun onBinClick(level: TaggedLevel)
     }
 }
