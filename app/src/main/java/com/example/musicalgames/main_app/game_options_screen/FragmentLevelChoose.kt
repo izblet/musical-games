@@ -27,6 +27,7 @@ import com.example.musicalgames.game.database.GameDatabase
 import com.example.musicalgames.game.database.LevelDao
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.GameFactory
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
@@ -130,25 +131,27 @@ class FragmentLevelChoose : Fragment() {
         tableCreate.layoutParams = layoutParams //I don't remember what it does, but okay
         viewCreate.findViewById<FrameLayout>(R.id.level_creator_container).addView(tableCreate)
         viewCreate.findViewById<Button>(R.id.playButton).setOnClickListener {
-            val level = tableCreate.getLevel()
-            if (level != null) {
-                launchLevel(level)
+            when (val result = tableCreate.getLevel()) {
+                is LevelCreationResult.Success -> launchLevel(result.level)
+                is LevelCreationResult.Failure -> Toast.makeText(context, result.reason, Toast.LENGTH_SHORT).show()
             }
         }
 
         viewCreate.findViewById<Button>(R.id.saveButton).setOnClickListener {
-            val level = tableCreate.getLevel()
-            if(level != null) {
-                val name = viewCreate.findViewById<EditText>(R.id.nameInput).text.toString()
-                val description = viewCreate.findViewById<EditText>(R.id.descriptionInput).text.toString()
-                val taggedLevel = TaggedLevel(viewModel.game!!, null, name, description, level, isFavourite = false, isCustom = true)
-                lifecycleScope.launch {
-                    levelDao.addLevel(taggedLevel, viewModel.game!!)
+            when (val result = tableCreate.getLevel()) {
+                is LevelCreationResult.Success -> {
+                    val name = viewCreate.findViewById<EditText>(R.id.nameInput).text.toString()
+                    val description = viewCreate.findViewById<EditText>(R.id.descriptionInput).text.toString()
+                    val taggedLevel = TaggedLevel(viewModel.game!!, null, name, description, result.level, isFavourite = false, isCustom = true)
+                    lifecycleScope.launch {
+                        levelDao.addLevel(taggedLevel, viewModel.game!!)
+                    }
+                    tableCreate.clearSelection()
+                    viewCreate.findViewById<EditText>(R.id.nameInput).setText("")
+                    viewCreate.findViewById<EditText>(R.id.descriptionInput).setText("")
+                    Toast.makeText(context, "Level Created", Toast.LENGTH_SHORT).show()
                 }
-                tableCreate.clearSelection()
-                viewCreate.findViewById<EditText>(R.id.nameInput).setText("")
-                viewCreate.findViewById<EditText>(R.id.descriptionInput).setText("")
-                Toast.makeText(context, "Level Created", Toast.LENGTH_SHORT).show()
+                is LevelCreationResult.Failure -> Toast.makeText(context, result.reason, Toast.LENGTH_SHORT).show()
             }
         }
 

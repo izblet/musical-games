@@ -2,9 +2,7 @@ package com.example.musicalgames.game.games.mental_intervals.creation
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ContextThemeWrapper
-import android.widget.Toast
 import com.example.musicalgames.R
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.IntervalSelector
@@ -12,6 +10,7 @@ import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.games.mental_intervals.MentalLevel
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.games.mental_intervals.Type
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
@@ -60,23 +59,14 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
         return intervalList
     }
 
-    private fun makeLevelOrThrow(): Level {
+    override fun getLevel(): LevelCreationResult {
         val intervals = getIntervalsFromSelection()
         val startingNotes = getNotesFromSelection()
         val mode = modeSpinnerValue.getSelectedValue()
+        if(startingNotes.isEmpty()) return LevelCreationResult.Failure("no starting notes chosen")
+        if(intervals.isEmpty()) return LevelCreationResult.Failure("no intervals chosen")
 
-        return MentalLevel(startingNotes, intervals, mode)
-    }
-
-    override fun getLevel(): Level? {
-        try {
-            val level = makeLevelOrThrow()
-            Log.d("level", level.toString())
-            return level
-        } catch (e: Exception) {
-            Log.d("level", e.toString())
-            return null
-        }
+        return LevelCreationResult.Success(MentalLevel(startingNotes, intervals, mode))
     }
     override fun clearSelection() {
         modeSpinner.setSelection(0)
@@ -85,6 +75,5 @@ class MentalCustomCreator(context: Context, createLevelAction: (Level)->Unit, at
     }
 
     override fun highlightMissing() {
-        Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()
     }
 }

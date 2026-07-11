@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Toast
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.databinding.ViewEarCustomCreatorBinding
 import com.example.musicalgames.game.games.play_by_ear.PlayEarLevel
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Interval
 import com.example.musicalgames.music_model.MusicUtil
@@ -130,35 +130,26 @@ class EarCreatorView(context: Context, createLevelAction: (Level)->Unit, attrs: 
         return MusicUtil.getScaleNotesBetween(scale, root, Note(min), Note(max)).map { it.midiCode }
     }
 
-    private fun makeLevelOrThrow(): Level {
-        val len = binding.editLen.text!!.toString().toInt()
+    override fun getLevel(): LevelCreationResult {
+        val len = binding.editLen.text!!.toString().toIntOrNull()
+        if (len == null || len == 0) return LevelCreationResult.Failure("melody length has to be nonnegative")
         val root = rootSpinnerValue.getSelectedValue()
         val maxInterval = maxIntervalSpinner.getSelectedValue().getSemitones()
         val minNote = Note(minSoundNoteSpinner.getSelectedValue(), minSoundOctaveSpinner.getSelectedValue()).midiCode
         val maxNote = Note(maxSoundNoteSpinner.getSelectedValue(), maxSoundOctaveSpinner.getSelectedValue()).midiCode
-        if(maxNote<=minNote) throw IllegalArgumentException("maxNote is greater than minNote")
-        val noteList = if(binding.isSelectionToggle.isChecked) {
+        if (maxNote <= minNote) return LevelCreationResult.Failure("max note must be greater than min note")
+        val noteList = if (binding.isSelectionToggle.isChecked) {
                 getNotesFromSelection(minNote, maxNote)
             } else {
                 getNotesFromScale(minNote, maxNote)
             }
+        if (noteList.isEmpty()) return LevelCreationResult.Failure("note range is empty")
 
-        return PlayEarLevel(minNote, maxNote, root, len, maxInterval, noteList)
-    }
-
-    override fun getLevel(): Level? {
-        try {
-            val level = makeLevelOrThrow()
-            Log.d("level", level.toString())
-            return level
-        } catch (e: Exception) {
-            Log.d("level",e.toString())
-            return null
-        }
+        val level = PlayEarLevel(minNote, maxNote, root, len, maxInterval, noteList)
+        return LevelCreationResult.Success(level)
     }
 
     override fun highlightMissing() {
-        Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()
     }
 
     override fun clearSelection() {

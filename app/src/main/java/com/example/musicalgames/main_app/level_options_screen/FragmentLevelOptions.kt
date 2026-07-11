@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.musicalgames.databinding.FragmentLevelOptionsBinding
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
 import com.example.musicalgames.game.game_core.creation.Level
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.games.Game
 import com.example.musicalgames.games.GameMap
 import com.example.musicalgames.main_app.MainViewModel
@@ -239,15 +240,19 @@ class FragmentLevelOptions : Fragment() {
         }
 
         fun saveParamsEdit() {
-            val newLevel = levelInfoView?.getLevel()
-            if (newLevel == null) {
-                levelInfoView?.highlightMissing()
-                return
+            when (val result = levelInfoView?.getLevel()) {
+                is LevelCreationResult.Success -> {
+                    controller.saveParamsEdit(result.level)
+                    refreshUI()
+                    rebuildOptionsView()
+                    resetEditActions()
+                }
+                is LevelCreationResult.Failure -> {
+                    levelInfoView?.highlightMissing()
+                    Toast.makeText(context, result.reason, Toast.LENGTH_SHORT).show()
+                }
+                null -> {}
             }
-            controller.saveParamsEdit(newLevel)
-            refreshUI()
-            rebuildOptionsView()
-            resetEditActions()
         }
 
         binding.editLevelButton.setOnClickListener {

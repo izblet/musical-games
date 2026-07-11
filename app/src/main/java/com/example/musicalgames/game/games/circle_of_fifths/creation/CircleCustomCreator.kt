@@ -9,6 +9,7 @@ import com.example.musicalgames.utils.components.ui_components.MultiEnumSpinner
 import com.example.musicalgames.game.games.circle_of_fifths.CircleLevel
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.music_model.Mode
 import com.example.musicalgames.music_model.display.ModeSpelling
 
@@ -43,11 +44,11 @@ class CircleCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
         modesValue.setSelectedValues(level.modes.toSet())
     }
 
-    override fun getLevel(): Level? {
+    override fun getLevel(): LevelCreationResult {
         val modes = modesValue.getSelectedValues().toList()
-        if (modes.isEmpty()) return null
+        if (modes.isEmpty()) return LevelCreationResult.Failure("Select at least one mode")
         val positionToName = modeSpinnerValue.getSelectedValue() == QuestionDirection.CIRCLE_TO_NOTE
-        return CircleLevel(positionToName = positionToName, modes = modes)
+        return LevelCreationResult.Success(CircleLevel(positionToName = positionToName, modes = modes))
     }
 
     override fun highlightMissing() {

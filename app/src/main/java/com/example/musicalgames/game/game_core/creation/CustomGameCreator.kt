@@ -13,7 +13,7 @@ import com.example.musicalgames.utils.components.ui_components.IntervalSelector
 import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 
 abstract class CustomGameCreator(context : Context, private val createLevelAction: (Level)->Unit, attrSet: AttributeSet?) : TableLayout(context, attrSet) {
-    abstract fun getLevel(): Level?
+    abstract fun getLevel(): LevelCreationResult
     abstract fun highlightMissing()
     abstract fun clearSelection()
 
@@ -51,17 +51,6 @@ abstract class CustomGameCreator(context : Context, private val createLevelActio
     //for creators that build their selectors from an inflated layout instead of makeRow/addNewRow
     protected fun registerSelector(selector: View) {
         selectors.add(selector)
-    }
-
-    fun saveLevel() : Boolean {
-        val level = getLevel()
-        if (level == null) {
-            highlightMissing()
-            return false
-        } else {
-            createLevelAction(level)
-            return true
-        }
     }
 
     //TableRow.LayoutParams built by hand here need a real pixel height (unlike the

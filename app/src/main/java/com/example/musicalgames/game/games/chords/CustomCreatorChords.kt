@@ -6,6 +6,7 @@ import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.music_model.Chord
 
 class CustomCreatorChords(
@@ -28,11 +29,12 @@ class CustomCreatorChords(
 
     //TODO: not yet filled in from level data - shows the default/empty view
     constructor(context: Context, level: LevelChords, attrs: AttributeSet?) : this(context, {}, attrs)
-    override fun getLevel(): Level? {
+    override fun getLevel(): LevelCreationResult {
         val quality = qualitiesValue.getSelectedValue()
         val extension = extensionsValue.getSelectedValue()
         val notes = startingNotes.getSelected()
-        return LevelChords(notes, setOf(quality), setOf(extension))
+        if (notes.isEmpty()) return LevelCreationResult.Failure("Select at least one starting note")
+        return LevelCreationResult.Success(LevelChords(notes, setOf(quality), setOf(extension)))
     }
 
     override fun highlightMissing() {

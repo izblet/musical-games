@@ -2,19 +2,18 @@ package com.example.musicalgames.game.games.flappy.creation
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
 import android.widget.ToggleButton
-import android.widget.Toast
 import com.example.musicalgames.R
 import com.example.musicalgames.utils.components.ui_components.EnumSpinner
 import com.example.musicalgames.utils.components.ui_components.KeyboardSelector
 import com.example.musicalgames.game.games.flappy.FlappyLevel
 import com.example.musicalgames.game.game_core.creation.Level
 import com.example.musicalgames.game.game_core.creation.CustomGameCreator
+import com.example.musicalgames.game.game_core.creation.LevelCreationResult
 import com.example.musicalgames.games.flappy.LEN_INF
 import com.example.musicalgames.music_model.ChromaticNote
 import com.example.musicalgames.music_model.Mode
@@ -132,38 +131,27 @@ class FlappyCustomCreator(context: Context, createLevelAction: (Level) -> Unit, 
         return pitch
     }
 
-    private fun makeLevelOrThrow(): Level {
+    override fun getLevel(): LevelCreationResult {
         val root = rootSpinnerValue.getSelectedValue()
         val mode = modeSpinnerValue.getSelectedValue()
         val minNote = Note(minNoteSpinnerValue.getSelectedValue(), minOctaveSpinnerValue.getSelectedValue()).midiCode
         val maxNote = Note(maxNoteSpinnerValue.getSelectedValue(), maxOctaveSpinnerValue.getSelectedValue()).midiCode
-        if (maxNote <= minNote) throw IllegalArgumentException("maxNote must be greater than minNote")
+        if (maxNote <= minNote) return LevelCreationResult.Failure("maxNote must be greater than minNote")
 
         val keyList = if (isSelectionToggle.isChecked) {
             getNotesFromSelection(minNote, maxNote)
         } else {
             getNotesFromScale(minNote, maxNote)
         }
-        if (keyList.isEmpty()) throw IllegalArgumentException("no notes selected")
+        if (keyList.isEmpty()) return LevelCreationResult.Failure("no notes selected")
 
         val rootPitch = getRootPitch(root, minNote, maxNote)
 
-        return FlappyLevel(minNote, maxNote, rootPitch, mode, keyList, LEN_INF)
-    }
-
-    override fun getLevel(): Level? {
-        return try {
-            val level = makeLevelOrThrow()
-            Log.d("level", level.toString())
-            level
-        } catch (e: Exception) {
-            Log.d("level", e.toString())
-            null
-        }
+        val level = FlappyLevel(minNote, maxNote, rootPitch, mode, keyList, LEN_INF)
+        return LevelCreationResult.Success(level)
     }
 
     override fun highlightMissing() {
-        Toast.makeText(context, "Some fields are missing", Toast.LENGTH_SHORT).show()
     }
 
     override fun clearSelection() {
