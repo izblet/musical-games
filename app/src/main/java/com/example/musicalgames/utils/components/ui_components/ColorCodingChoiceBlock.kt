@@ -212,6 +212,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
     private fun showColorPicker(current: Int, onPicked: (Int) -> Unit) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null)
         val preview = dialogView.findViewById<View>(R.id.colorPreview)
+        val hexText = dialogView.findViewById<TextView>(R.id.colorHexText)
         val colorPickerView = dialogView.findViewById<ColorPickerView>(R.id.colorPickerView)
         val brightnessSlideBar = dialogView.findViewById<BrightnessSlideBar>(R.id.brightnessSlideBar)
         val redSeekBar = dialogView.findViewById<SeekBar>(R.id.redSeekBar)
@@ -239,6 +240,11 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
             )
         }
 
+        fun setPreview(color: Int) {
+            preview.setBackgroundColor(color)
+            hexText.text = String.format("#%06X", 0xFFFFFF and color)
+        }
+
         fun setRgbSliders(color: Int) {
             redSeekBar.progress = Color.red(color)
             greenSeekBar.progress = Color.green(color)
@@ -248,11 +254,11 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
 
         colorPickerView.attachBrightnessSlider(brightnessSlideBar)
         colorPickerView.setInitialColor(current)
-        preview.setBackgroundColor(current)
+        setPreview(current)
         setRgbSliders(current)
 
         colorPickerView.setColorListener(ColorEnvelopeListener { envelope, _ ->
-            preview.setBackgroundColor(envelope.color)
+            setPreview(envelope.color)
             setRgbSliders(envelope.color)
         })
 
@@ -260,7 +266,7 @@ class ColorCodingChoiceBlock @JvmOverloads constructor(
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (!fromUser) return
                 val color = Color.rgb(redSeekBar.progress, greenSeekBar.progress, blueSeekBar.progress)
-                preview.setBackgroundColor(color)
+                setPreview(color)
                 updateRgbGradients()
                 colorPickerView.setInitialColor(color)
             }

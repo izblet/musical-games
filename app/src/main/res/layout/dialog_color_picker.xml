@@ -11,6 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="40dp" />
 
+    <TextView
+        android:id="@+id/colorHexText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:textSize="12sp" />
+
     <com.skydoves.colorpickerview.ColorPickerView
         android:id="@+id/colorPickerView"
         android:layout_width="match_parent"
