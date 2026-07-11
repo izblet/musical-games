@@ -9,6 +9,7 @@ import com.example.musicalgames.game_activity.ScreenHighlighter
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
+import com.example.musicalgames.utils.components.key_establishment.KeyEstablishmentPlayer
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -65,6 +66,14 @@ class EarViewModel() : ViewModel() {
 
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
+    }
+
+    private var keyEstablishmentPlayer: KeyEstablishmentPlayer? = null
+
+    fun setKeyEstablishmentPlayer(player: KeyEstablishmentPlayer) {
+        player.onEndAction = ::onPlaybackFinished
+        player.onMessageChangeAction = { msg -> _renderState.value = _renderState.value.copy(message = msg) }
+        keyEstablishmentPlayer = player
     }
 
     //null plays each note recording to its natural end; set this once note recordings are
@@ -151,7 +160,7 @@ class EarViewModel() : ViewModel() {
             //TODO: the following assumes that we have at least one note available, this should be checked somewhere
             rootPlaying = true
             _renderState.value = _renderState.value.copy(playbackActive = true)
-            soundPlayer!!.playNote(rootNote!!.midiCode, ::onPlaybackFinished, noteDurationMs)
+            keyEstablishmentPlayer?.play(soundPlayer!!)
         }
     }
 

@@ -29,6 +29,7 @@ import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
+import com.example.musicalgames.utils.components.key_establishment.RootKeyEstablishmentPlayer
 import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
 
 class EarGameFactory : GameFactory {
@@ -48,7 +49,9 @@ class EarGameFactory : GameFactory {
     override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         val viewModel = ViewModelProvider(owner)[EarViewModel::class.java]
         viewModel.setLevel(level, gameplay)
-        return
+        viewModel.rootNote?.let {
+            viewModel.setKeyEstablishmentPlayer(RootKeyEstablishmentPlayer(it.midiCode, NOTE_DURATION_MS))
+        }
     }
 
 

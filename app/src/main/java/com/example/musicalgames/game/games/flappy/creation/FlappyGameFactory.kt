@@ -3,12 +3,15 @@ package com.example.musicalgames.game.games.flappy.creation
 import android.Manifest
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.ViewGroup
 import android.util.TypedValue
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.lifecycleScope
 import com.example.musicalgames.R
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
@@ -35,12 +38,14 @@ import com.example.musicalgames.music_model.KeySignature
 import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.settings.MicrophoneSettingsRepository
 import com.example.musicalgames.utils.components.StaffPainter
+import com.example.musicalgames.utils.components.key_establishment.RootKeyEstablishmentPlayer
 import com.example.musicalgames.utils.geometry.Circle
 import com.example.musicalgames.utils.geometry.Point
 import com.example.musicalgames.utils.geometry.Rect
 import com.example.musicalgames.utils.question_generation.ListNoteGenerator
 import com.example.musicalgames.utils.wrappers.BitmapUtil
 import com.example.musicalgames.utils.wrappers.sound_recording.SwiftF0PitchRecogniser
+import kotlinx.coroutines.launch
 
 class FlappyGameFactory : GameFactory {
 
@@ -54,7 +59,9 @@ class FlappyGameFactory : GameFactory {
 
     override fun prepareViewModel(level: Level, gameplay: GamePlayInstance, owner: ViewModelStoreOwner) {
         val viewModel = ViewModelProvider(owner)[FlappyViewModel::class.java]
-        viewModel.setLevel(level as FlappyLevel)
+        val flappyLevel = level as FlappyLevel
+        viewModel.setLevel(flappyLevel)
+        viewModel.setKeyEstablishmentPlayer(RootKeyEstablishmentPlayer(flappyLevel.root))
     }
 
     override fun getCustomCreator(context: Context, createLevelAction: (Level)->Unit, attrs: AttributeSet?): CustomGameCreator {
@@ -173,6 +180,20 @@ class FlappyGameFactory : GameFactory {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         ))
+
+        val messageTextView = TextView(context).apply {
+            textSize = 20f
+            gravity = Gravity.CENTER_HORIZONTAL
+            setTextColor(foregroundColor)
+        }
+        gameContainer.addView(messageTextView, FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply { gravity = Gravity.TOP })
+
+        activity.lifecycleScope.launch {
+            viewModel.keyEstablishmentMessage.collect { messageTextView.text = it }
+        }
 
 //        val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, context.resources.displayMetrics).toInt()
 //        val pauseButton = MaterialButton(context).apply {

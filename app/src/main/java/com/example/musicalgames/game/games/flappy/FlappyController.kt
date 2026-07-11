@@ -42,7 +42,7 @@ class FlappyController(
             delay(1000)
             player?.playNote(level.maxPitch)
             delay(1000)
-            player?.playNote(level.root)
+            player?.let { viewModel.keyEstablishmentPlayer?.play(it) }
         }
 
         owner.lifecycleScope.launch {

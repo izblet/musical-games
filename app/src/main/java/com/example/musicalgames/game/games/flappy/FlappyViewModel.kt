@@ -9,6 +9,7 @@ import com.example.musicalgames.game.games.flappy.game_logic.GameEndReason
 import com.example.musicalgames.game.games.flappy.game_logic.GameLogic
 import com.example.musicalgames.game.games.flappy.graphics.FlappyRenderState
 import com.example.musicalgames.game_activity.ScreenHighlighter
+import com.example.musicalgames.utils.components.key_establishment.KeyEstablishmentPlayer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,6 +46,18 @@ class FlappyViewModel : ViewModel() {
 
     fun setLogic(logic: GameLogic) {
         _gameLogic = logic
+    }
+
+    var keyEstablishmentPlayer: KeyEstablishmentPlayer? = null
+        private set
+
+    private val _keyEstablishmentMessage = MutableStateFlow("")
+    val keyEstablishmentMessage: StateFlow<String> = _keyEstablishmentMessage.asStateFlow()
+
+    fun setKeyEstablishmentPlayer(player: KeyEstablishmentPlayer) {
+        player.onMessageChangeAction = { _keyEstablishmentMessage.value = it }
+        player.onEndAction = { _keyEstablishmentMessage.value = "" }
+        keyEstablishmentPlayer = player
     }
 
     private var screenHighlighter: ScreenHighlighter? = null
