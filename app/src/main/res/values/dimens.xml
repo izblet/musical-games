@@ -120,4 +120,8 @@
     <dimen name="custom_creator_preview_chip_padding">1.5dp</dimen>
 
     <dimen name="divider_height">1dp</dimen>
+
+    <!-- android:fadingEdgeLength for scrollable lists/containers (see listFadingEdgeStyle) -
+         the gradient fade shown at the top/bottom edge when there's more content to scroll to. -->
+    <dimen name="list_fading_edge_length">40dp</dimen>
 </resources>

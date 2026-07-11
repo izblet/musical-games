@@ -6,6 +6,16 @@
         <item name="colorControlNormal">?attr/colorPrimary</item>
     </style>
 
+    <!-- Applied to any vertically-scrolling container (ScrollView, NestedScrollView,
+         RecyclerView) that can overflow its screen, so it fades toward its own background
+         color at the top/bottom edge when there's more content to scroll to. Not used on
+         RecyclerViews that are input widgets rather than content lists (e.g. the onscreen
+         keyboard palettes in fragment_game_chase.xml/view_game_chase.xml). -->
+    <style name="listFadingEdgeStyle">
+        <item name="android:requiresFadingEdge">vertical</item>
+        <item name="android:fadingEdgeLength">@dimen/list_fading_edge_length</item>
+    </style>
+
     <!-- Fixed-width row label to the left of a chip field, matching the mockups' 96dp label
          column - not textEnd/fill-width, which is what made TableLayout's cross-row column
          matching stretch these unpredictably. -->

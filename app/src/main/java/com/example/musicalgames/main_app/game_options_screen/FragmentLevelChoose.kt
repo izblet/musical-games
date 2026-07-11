@@ -33,6 +33,12 @@ import com.example.musicalgames.main_app.MainViewModel
 import kotlinx.coroutines.launch
 import com.example.musicalgames.utils.ThemeUtil.themeColor
 
+// The screen already has its own top gradient (tab_banner_gradient, see fragment_new_mode_choose.xml)
+// sitting over the top of contentFrame, so the list only gets the native fade at its bottom edge.
+private class BottomOnlyFadingRecyclerView(context: Context) : RecyclerView(context) {
+    override fun getTopFadingEdgeStrength(): Float = 0f
+}
+
 class FragmentLevelChoose : Fragment() {
 
     private var _binding: FragmentNewModeChooseBinding? = null
@@ -52,8 +58,6 @@ class FragmentLevelChoose : Fragment() {
     private var baseList: List<TaggedLevel> = listOf()
     private var favouriteList: List<TaggedLevel> = listOf()
     private lateinit var levelDao: LevelDao
-
-    //TODO: this function should be extracted to utils, something along these lines was defined three times already
 
 
     override fun onAttach(context: Context) {
@@ -100,12 +104,14 @@ class FragmentLevelChoose : Fragment() {
             }
         })
 
-        recyclerView = RecyclerView(requireContext()).apply {
+        recyclerView = BottomOnlyFadingRecyclerView(requireContext()).apply {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = this@FragmentLevelChoose.adapter
             val topPaddingPx = resources.getDimensionPixelSize(R.dimen.screen_padding)
             setPadding(0, topPaddingPx, 0, 0)
             clipToPadding = false
+            isVerticalFadingEdgeEnabled = true
+            setFadingEdgeLength(resources.getDimensionPixelSize(R.dimen.list_fading_edge_length))
         }
         stateTextView = TextView(requireContext()).apply {
             layoutParams = FrameLayout.LayoutParams(
