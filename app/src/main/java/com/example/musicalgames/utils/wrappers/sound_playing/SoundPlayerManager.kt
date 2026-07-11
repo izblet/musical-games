@@ -3,9 +3,9 @@ package com.example.musicalgames.utils.wrappers.sound_playing
 import com.example.musicalgames.music_model.Note
 
 interface SoundPlayerManager  {
-    fun playNote(midiCode: Int, listener: SoundPlayerListener?=null, durationMs: Long?=null)
-    fun playNote(note: String, listener: SoundPlayerListener?=null, durationMs: Long?=null)
-    fun playNote(frequency: Double, listener: SoundPlayerListener?=null)
+    fun playNote(midiCode: Int, onPlaybackFinished: (() -> Unit)?=null, durationMs: Long?=null)
+    fun playNote(note: String, onPlaybackFinished: (() -> Unit)?=null, durationMs: Long?=null)
+    fun playNote(frequency: Double, onPlaybackFinished: (() -> Unit)?=null)
     fun listPermissions():Array<String>
-    suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener, durationMs: Long?=null)
+    suspend fun playSequence(sequence: List<Note>, onPlaybackFinished: () -> Unit, durationMs: Long?=null)
 }

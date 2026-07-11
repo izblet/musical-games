@@ -10,7 +10,6 @@ import com.example.musicalgames.music_model.Note
 import com.example.musicalgames.music_model.display.NoteSpelling
 import com.example.musicalgames.music_model.display.SpellingPreference
 import com.example.musicalgames.utils.wrappers.sound_playing.DefaultSoundPlayerManager
-import com.example.musicalgames.utils.wrappers.sound_playing.SoundPlayerListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +25,7 @@ data class EarRenderState(
     val playbackActive: Boolean = false
 )
 
-class EarViewModel() : ViewModel(), SoundPlayerListener {
+class EarViewModel() : ViewModel() {
 
     fun setLevel(level: Level, gameplay: GamePlayInstance) {
         this.level = level as PlayEarLevel
@@ -99,7 +98,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         problemPlaying = true
         _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false, playbackActive = true)
         viewModelScope.launch {
-            soundPlayer!!.playSequence(problem, this@EarViewModel, noteDurationMs)
+            soundPlayer!!.playSequence(problem, ::onPlaybackFinished, noteDurationMs)
         }
     }
 
@@ -138,7 +137,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
         return available.random()
     }
 
-    override fun onPlaybackFinished() {
+    private fun onPlaybackFinished() {
         if(rootPlaying) {
             rootPlaying = false
         } else if(problemPlaying) {
@@ -152,7 +151,7 @@ class EarViewModel() : ViewModel(), SoundPlayerListener {
             //TODO: the following assumes that we have at least one note available, this should be checked somewhere
             rootPlaying = true
             _renderState.value = _renderState.value.copy(playbackActive = true)
-            soundPlayer!!.playNote(rootNote!!.midiCode, this, noteDurationMs)
+            soundPlayer!!.playNote(rootNote!!.midiCode, ::onPlaybackFinished, noteDurationMs)
         }
     }
 

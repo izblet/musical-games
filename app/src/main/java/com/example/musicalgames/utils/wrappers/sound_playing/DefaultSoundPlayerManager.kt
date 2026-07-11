@@ -40,16 +40,16 @@ class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManag
         }
     }
 
-    override fun playNote(frequency: Double, listener: SoundPlayerListener?) {
+    override fun playNote(frequency: Double, onPlaybackFinished: (() -> Unit)?) {
         TODO("Not implemented")
     }
 
-    override fun playNote(note: String, listener: SoundPlayerListener?, durationMs: Long?) {
+    override fun playNote(note: String, onPlaybackFinished: (() -> Unit)?, durationMs: Long?) {
         val parsed = Note.parse(note) ?: throw IllegalArgumentException("Invalid note format $note")
-        play(parsed.midiCode, durationMs) { listener?.onPlaybackFinished() }
+        play(parsed.midiCode, durationMs, onPlaybackFinished)
     }
 
-    override suspend fun playSequence(sequence: List<Note>, listener: SoundPlayerListener, durationMs: Long?) {
+    override suspend fun playSequence(sequence: List<Note>, onPlaybackFinished: () -> Unit, durationMs: Long?) {
         for (note in sequence) {
             suspendCancellableCoroutine<Unit> { cont ->
                 play(note.midiCode, durationMs) {
@@ -57,11 +57,11 @@ class DefaultSoundPlayerManager(private val context: Context) : SoundPlayerManag
                 }
             }
         }
-        listener.onPlaybackFinished()
+        onPlaybackFinished()
     }
 
-    override fun playNote(midicode: Int, listener: SoundPlayerListener?, durationMs: Long?) {
-        play(midicode, durationMs) { listener?.onPlaybackFinished() }
+    override fun playNote(midicode: Int, onPlaybackFinished: (() -> Unit)?, durationMs: Long?) {
+        play(midicode, durationMs, onPlaybackFinished)
     }
 
     private fun play(midicode: Int, durationMs: Long? = null, onComplete: (() -> Unit)? = null) {
