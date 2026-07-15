@@ -80,7 +80,8 @@ class CircleViewModel: ViewModel(), GameController {
 
         noteInputSource.start()
         viewModelScope.launch {
-            noteInputSource.noteFinished.collect { note -> clickNote(note) }
+            noteInputSource.noteStarted.collect { note -> clickNote(note) }
+            noteInputSource.noteFinished.collect { note -> delayAndNext() }
         }
     }
     private fun newQuestionCircleToNote() {
@@ -155,8 +156,6 @@ class CircleViewModel: ViewModel(), GameController {
             val newState :CircleViewState = _viewState.value.copy(screenCommandMessage = screenCommandMessage, highlightedNote = highlightedNote)
 
             _viewState.value = newState
-            delayAndNext()
-
         }
     }
 
