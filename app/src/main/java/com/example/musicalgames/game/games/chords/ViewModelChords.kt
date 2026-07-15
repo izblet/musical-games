@@ -95,7 +95,7 @@ class ViewModelChords(): ViewModel(), GameController {
         val question = gameLogic.newQuestion()
         confirmGesture.setTrigger(question.root)
         val newState = _viewState.value.copy(
-            screenMessage = question.getName(Random.nextBoolean()),
+            screenMessage = "${question.getName(Random.nextBoolean())}\nPlay root twice to submit",
             highlightedNotes = setOf()
         )
         _viewState.value = newState

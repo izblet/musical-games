@@ -38,8 +38,10 @@ class FlappyController(
         val player = soundPlayer
 
         owner.lifecycleScope.launch {
+            viewModel.setKeyEstablishmentMessage("lowest note")
             player?.playNote(level.minPitch)
             delay(1000)
+            viewModel.setKeyEstablishmentMessage("highest note")
             player?.playNote(level.maxPitch)
             delay(1000)
             player?.let { viewModel.keyEstablishmentPlayer?.play(it) }

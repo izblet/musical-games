@@ -60,6 +60,10 @@ class FlappyViewModel : ViewModel() {
         keyEstablishmentPlayer = player
     }
 
+    fun setKeyEstablishmentMessage(message: String) {
+        _keyEstablishmentMessage.value = message
+    }
+
     private var screenHighlighter: ScreenHighlighter? = null
 
     fun setScreenHighlighter(highlighter: ScreenHighlighter) {

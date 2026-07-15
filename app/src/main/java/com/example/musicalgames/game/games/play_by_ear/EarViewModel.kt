@@ -64,6 +64,12 @@ class EarViewModel() : ViewModel() {
     private var rootPlaying = false
     private var problemPlaying = false
 
+    //the message currently reflecting actual game state (as opposed to the transient "root
+    //note" overlay set while a root replay is sounding) - restored once that overlay clears,
+    //so a manual root replay via the button never permanently clobbers answer feedback
+    private var phaseMessage = ""
+    private var rootFinishedCallback: (() -> Unit)? = null
+
     fun setPlayer(pl : DefaultSoundPlayerManager) {
         soundPlayer = pl
     }
@@ -85,7 +91,6 @@ class EarViewModel() : ViewModel() {
     }
 
     fun newProblem() {
-        _renderState.value = _renderState.value.copy(message = "Play the melody")
         index = 0
         questionActive = true
         problemStarted = true
@@ -105,7 +110,8 @@ class EarViewModel() : ViewModel() {
 
     private fun playProblem() {
         problemPlaying = true
-        _renderState.value = _renderState.value.copy(message = "Listen to the melody...", keyboardEnabled = false, playbackActive = true)
+        phaseMessage = "Listen to the melody..."
+        _renderState.value = _renderState.value.copy(message = phaseMessage, keyboardEnabled = false, playbackActive = true)
         viewModelScope.launch {
             soundPlayer!!.playSequence(problem, ::onPlaybackFinished, noteDurationMs)
         }
@@ -125,7 +131,8 @@ class EarViewModel() : ViewModel() {
         if (problem[index] != note) {
             screenHighlighter?.wrong()
             val playedNote = NoteSpelling.spell(note, SpellingPreference.SHARPS)
-            _renderState.value = _renderState.value.copy(message = "Wrong! The correct note was ${getCorrectNote()}. You played $playedNote.")
+            phaseMessage = "Wrong! The correct note was ${getCorrectNote()}. You played $playedNote. Play root twice for next question."
+            _renderState.value = _renderState.value.copy(message = phaseMessage)
             questionActive = false
             return
         }
@@ -134,7 +141,8 @@ class EarViewModel() : ViewModel() {
         if (index == problem.size) {
             questionActive = false
             score++
-            _renderState.value = _renderState.value.copy(message = "Good!")
+            phaseMessage = "Good! Play root twice for next question."
+            _renderState.value = _renderState.value.copy(message = phaseMessage)
         }
     }
 
@@ -147,20 +155,30 @@ class EarViewModel() : ViewModel() {
     }
 
     private fun onPlaybackFinished() {
+        val wasRootPlaying = rootPlaying
         if(rootPlaying) {
             rootPlaying = false
         } else if(problemPlaying) {
             problemPlaying = false
+            phaseMessage = "Play the melody"
         }
-        _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = "Play the melody", playbackActive = false)
+        _renderState.value = _renderState.value.copy(keyboardEnabled = true, message = phaseMessage, playbackActive = false)
+        if (wasRootPlaying) {
+            val callback = rootFinishedCallback
+            rootFinishedCallback = null
+            callback?.invoke()
+        }
     }
 
-    fun playRoot() {
+    fun playRoot(onFinished: (() -> Unit)? = null) {
         if((!problemPlaying)&&(!rootPlaying)&&(rootNote!=null)) {
             //TODO: the following assumes that we have at least one note available, this should be checked somewhere
             rootPlaying = true
+            rootFinishedCallback = onFinished
             _renderState.value = _renderState.value.copy(playbackActive = true)
             keyEstablishmentPlayer?.play(soundPlayer!!)
+        } else {
+            onFinished?.invoke()
         }
     }
 

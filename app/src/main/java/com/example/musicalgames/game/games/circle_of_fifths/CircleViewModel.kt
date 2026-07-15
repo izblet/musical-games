@@ -42,6 +42,11 @@ class CircleViewModel: ViewModel(), GameController {
 
     private var waitLen:Long =1000
 
+    //guards against gameLogic.answer() being invoked a second time before the next question
+    //is actually rendered - gameLogic.awaitingAnswer() alone doesn't gate this, since it stays
+    //true for the whole (infinite-mode) game including the post-answer feedback delay
+    private var answered = false
+
     var gameplay: GamePlayInstance = GamePlayInstance()
 
     private var _noteInputSource: ChromaticNoteInputSource? = null
@@ -79,6 +84,7 @@ class CircleViewModel: ViewModel(), GameController {
         }
     }
     private fun newQuestionCircleToNote() {
+        answered = false
         val newState = _viewState.value.copy(
             showKeyboard = true,
             question = ModeSpelling.common(gameLogic.questionMode),
@@ -90,6 +96,7 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     private fun newQuestionNoteToCircle() {
+        answered = false
         val noteName = NoteSpelling.spell(gameLogic.questionNote, SpellingPreference.MIXED)
         val modeName = ModeSpelling.common(gameLogic.questionMode)
         val newState = _viewState.value.copy(
@@ -125,10 +132,11 @@ class CircleViewModel: ViewModel(), GameController {
     fun clickCircle(index: Int) {
         val note = CircleOfFifths.atIndex(index, gameLogic.questionMode)
 
-        if(!gameLogic.awaitingAnswer())
+        if(!gameLogic.awaitingAnswer() || answered)
             return
 
         if(!gameLogic.isCircleToNote()) {
+            answered = true
             val answerResult = gameLogic.answer(note)
             if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
 
@@ -153,10 +161,11 @@ class CircleViewModel: ViewModel(), GameController {
     }
 
     fun clickNote(note: ChromaticNote) {
-        if(!gameLogic.awaitingAnswer())
+        if(!gameLogic.awaitingAnswer() || answered)
             return
 
         if(gameLogic.isCircleToNote()) {
+            answered = true
             val answerResult = gameLogic.answer(note)
             if (answerResult.correct) screenHighlighter?.correct() else screenHighlighter?.wrong()
             val screenCommandMessage = if(answerResult.correct) {

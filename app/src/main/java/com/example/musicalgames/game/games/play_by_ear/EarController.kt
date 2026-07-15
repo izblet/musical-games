@@ -12,7 +12,6 @@ import com.example.musicalgames.game.game_core.input.RepeatNoteConfirmGesture
 import com.example.musicalgames.game_activity.GameController
 import com.example.musicalgames.game_activity.GameListener
 import com.example.musicalgames.music_model.Note
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class EarController(
@@ -112,11 +111,7 @@ class EarController(
             }
         }
 
-        viewModel.playRoot()
-        owner.lifecycleScope.launch {
-            delay(2000)
-            viewModel.newProblem()
-        }
+        viewModel.playRoot(onFinished = { viewModel.newProblem() })
     }
 
     override fun pauseGame() {
